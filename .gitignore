@@ -5,3 +5,6 @@ lammps-tutorials.log
 lammps-tutorials.out
 lammps-tutorials.pdf
 lammps-tutorials.suppinfo
+
+__pycache__
+**/__pycache__
