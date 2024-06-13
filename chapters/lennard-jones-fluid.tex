@@ -1,7 +1,60 @@
 \subsection{Tutorial 1: Lennard-Jones fluid}
 \label{lennard-jones-label}
 
-\noindent The objective of this tutorial is to perform the simulation of a binary fluid using LAMMPS. The system is a Lennard-Jones fluid made of neutral particles with two different diameters in a cubic box with periodic
-boundary conditions. The temperature of the system is maintained
-using a Langevin thermostat \cite{schneider1978molecular}, and
-basic quantities are extracted from the system, including the potential and kinetic energies. 
+\noindent The objective of this tutorial is to perform the simulation of a binary fluid using LAMMPS. The system is a Lennard-Jones fluid made of neutral particles with two different diameters in a cubic box with periodic boundary conditions. The temperature of the system is maintained using a Langevin thermostat \cite{schneider1978molecular}, and basic quantities are extracted from the system, including the potential and kinetic energies. 
+
+\subsubsection{My first input}
+
+\noindent To run a simulation using LAMMPS, one needs to write a series of commands in an input script. For clarity, this script will be divided into five categories which we are going to fill up one by one. Create a folder, call it \textit{my-first-input/}, and then create a blank text file in it called \textit{input.lammps}. Copy the following lines in \textit{input.lammps}, where a line starting with a brace ($\#$) is a comment that is ignored by LAMMPS:
+{\small  \begin{verbatim}
+# PART A - ENERGY MINIMIZATION
+# 1) Initialization
+# 2) System definition
+# 3) Simulation settings
+# 4) Visualization
+# 5) Run
+\end{verbatim} }
+\noindent These five categories are not required in every input script, and should not necessarily be in that exact order. For instance, parts 3 and 4 could be inverted, or part 4 could be omitted. Note however that LAMMPS reads input files from top to bottom, therefore the \textit{Initialization} and \textit{System definition} categories must appear at the top of the input, and the \textit{Run} category at the bottom.
+
+\paragraph{System initialization}
+In the first section of the script, called \textit{Initialization}, let us indicate to LAMMPS the most basic information about the simulation, such as:
+\begin{itemize}
+\item the conditions at the boundaries of the box (e.g. periodic or non-periodic),
+\item the type of atoms (e.g. uncharged single dots or spheres with angular velocities).
+\end{itemize}
+Enter the following lines in \textit{input.lammps}:
+{\small \begin{verbatim}
+# 1) Initialization
+units lj
+dimension 3
+atom_style atomic
+pair_style lj/cut 2.5
+boundary p p p
+\end{verbatim}}
+The first line, \textit{units lj}, indicates that we want to use the system of unit called \textit{LJ}, for Lennard-Jones, for which all quantities are unitless. The second line, \textit{dimension 3}, indicates that the simulation is 3D. The third line, \textit{atom$\_$style atomic}, that the \textit{atomic} style
+will be used, therefore each atom is just a dot with a mass. The fourth line, \textit{pair$\_$style lj/cut 2.5}, indicates that atoms will be interacting through a Lennard-Jones potential with a cut-off equal to $r_c = 2.5$ (unitless) \cite{wang2020lennard,fischer2023history}:
+$$E_{ij} (r) = 4 \epsilon_{ij} \left[ \left( \dfrac{\sigma_{ij}}{r} \right)^{12} - \left( \dfrac{\sigma_{ij}}{r} \right)^{6} \right], ~ \text{for} ~ r < r_c,$$
+where $r$ is the inter-particles distance, $\epsilon_{ij}$ the depth of potential well that sets the interaction strength, and $\sigma_{ij}$ the distance parameter, or particle effective size. Here, the indexes \textit{ij} refer to the particle types \textit{i} and \textit{j}. The last line, \textit{boundary p p p}, indicates that the periodic boundary conditions will be used along all three directions of space (the 3 \textit{p} stand for \textit{x}, \textit{y}, and \textit{z}, respectively).
+
+\paragraph{System definition}
+Let us fill the \textit{System definition} category of the input script:
+{\small \begin{verbatim}
+# 2) System definition
+region simulation_box block -20 20 -20 20 -20 20
+create_box 2 simulation_box
+create_atoms 1 random 1500 341341 simulation_box
+create_atoms 2 random 100 127569 simulation_box
+\end{verbatim}}
+\noindent The first line, \textit{region simulation$\_$box (...)}, creates a region named \textit{simulation$\_$box} that is a block (i.e. a rectangular cuboid) that extends from -20 to 20 (no unit) along all 3 directions of space. The second line, \textit{create$\_$box 2 simulation$\_$box}, creates a simulation box based on the region \textit{simulation$\_$box} with \textit{2} types of atoms. The third line, \textit{create$\_$atoms (...)} creates 1500 atoms of type 1 randomly within the region \textit{simulation$\_$box}. The integer \textit{341341} is a seed that can be changed in order to create different
+initial conditions for the simulation. The fourth line creates 100 atoms of type 2.
+
+\paragraph{Simulation Settings}
+Let us fill the \textit{Simulation Settings} category section of the \textit{input} script:
+{\small \begin{verbatim}
+# 3) Simulation settings
+mass 1 1
+mass 2 1
+pair_coeff 1 1 1.0 1.0
+pair_coeff 2 2 0.5 3.0
+\end{verbatim}}
+The two first commands, \textit{mass (...)}, attribute a mass equal to 1 (unitless) to both atoms of type 1 and 2. Alternatively, one could have written these two commands into one single line: \textit{mass $\star 1$}, where the star symbol means \textit{all} the atom types of the simulation.  The third line, \textit{pair$\_$coeff 1 1 1.0 1.0}, sets the Lennard-Jones coefficients for the interactions between atoms of type 1, respectively the energy parameter $\epsilon_{11} = 1.0$ and the distance parameter $\sigma_{11} = 1.0$. Similarly, the last line sets the Lennard-Jones coefficients for the interactions between atoms of type 2, $\epsilon_{22} = 0.5$, and $\sigma_{22} = 3.0$. By default, LAMMPS calculates the cross coefficients between the different atom types using geometric average: $\epsilon_{ij} = \sqrt{\epsilon_{ii} \epsilon_{jj}}$, $\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$. 

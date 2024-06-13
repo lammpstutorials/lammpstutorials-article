@@ -5,44 +5,44 @@ The style file: vancouver-livecoms.bst
 A level-1 auxiliary file: chapters/lennard-jones-fluid.aux
 Database file #1: journal-article.bib
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
-You've used 1 entry,
+You've used 3 entries,
             3450 wiz_defined-function locations,
-            717 strings with 5559 characters,
-and the built_in function-call counts, 1564 in all, are:
-= -- 206
-> -- 8
-< -- 1
-+ -- 4
-- -- 2
-* -- 132
-:= -- 169
-add.period$ -- 3
-call.type$ -- 1
+            734 strings with 5946 characters,
+and the built_in function-call counts, 6099 in all, are:
+= -- 814
+> -- 32
+< -- 2
++ -- 16
+- -- 8
+* -- 532
+:= -- 639
+add.period$ -- 9
+call.type$ -- 3
 change.case$ -- 0
-chr.to.int$ -- 1
-cite$ -- 1
-duplicate$ -- 183
-empty$ -- 141
-format.name$ -- 6
-if$ -- 362
+chr.to.int$ -- 3
+cite$ -- 3
+duplicate$ -- 657
+empty$ -- 560
+format.name$ -- 18
+if$ -- 1424
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 9
-newline$ -- 11
-num.names$ -- 2
-pop$ -- 12
+missing$ -- 29
+newline$ -- 21
+num.names$ -- 6
+pop$ -- 42
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 13
+skip$ -- 39
 stack$ -- 0
-substring$ -- 238
-swap$ -- 24
+substring$ -- 1079
+swap$ -- 71
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 6
+type$ -- 18
 warning$ -- 0
-while$ -- 8
+while$ -- 27
 width$ -- 0
-write$ -- 18
+write$ -- 44

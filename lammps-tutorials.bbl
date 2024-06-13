@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{3}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\urlprefix}{}
 \providecommand{\doiprefix}{https://doi.org/}
@@ -9,5 +9,18 @@
 \newblock Molecular-dynamics study of a three-dimensional one-component model
   for distortive phase transitions.
 \newblock Physical Review B.  1978; 17(3):1302.
+
+\bibitem[{Wang et~al.(2020)Wang, Xipeng and Ram{\'\i}rez-Hinestrosa, Sim{\'o}n
+  and Dobnikar, Jure and Frenkel, Daan}]{wang2020lennard}
+\textbf{\color{LiveCoMSMediumGrey} Wang X}, Ram{\'\i}rez-Hinestrosa S, Dobnikar
+  J, Frenkel D.
+\newblock The Lennard-Jones potential: when (not) to use it.
+\newblock Physical Chemistry Chemical Physics.  2020; 22(19):10624--10633.
+
+\bibitem[{Fischer and Wendland(2023)Fischer, Johann and Wendland,
+  Martin}]{fischer2023history}
+\textbf{\color{LiveCoMSMediumGrey} Fischer J}, Wendland M.
+\newblock On the history of key empirical intermolecular potentials.
+\newblock Fluid Phase Equilibria.  2023; 573:113876.
 
 \end{thebibliography}
