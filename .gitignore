@@ -3,8 +3,11 @@
 lammps-tutorials.aux
 lammps-tutorials.log
 lammps-tutorials.out
+lammps-tutorials.bbl
+lammps-tutorials.blg
 lammps-tutorials.pdf
 lammps-tutorials.suppinfo
 
+**/*.aux
 __pycache__
 **/__pycache__

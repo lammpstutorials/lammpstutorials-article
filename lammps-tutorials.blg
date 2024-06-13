@@ -5,44 +5,46 @@ The style file: vancouver-livecoms.bst
 A level-1 auxiliary file: chapters/lennard-jones-fluid.aux
 Database file #1: journal-article.bib
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
-You've used 3 entries,
+Warning--can't use both volume and number fields in hestenes1952methods
+You've used 4 entries,
             3450 wiz_defined-function locations,
-            734 strings with 5946 characters,
-and the built_in function-call counts, 6099 in all, are:
-= -- 814
-> -- 32
-< -- 2
-+ -- 16
-- -- 8
-* -- 532
-:= -- 639
-add.period$ -- 9
-call.type$ -- 3
+            740 strings with 6101 characters,
+and the built_in function-call counts, 7726 in all, are:
+= -- 1017
+> -- 44
+< -- 3
++ -- 22
+- -- 11
+* -- 674
+:= -- 808
+add.period$ -- 12
+call.type$ -- 4
 change.case$ -- 0
-chr.to.int$ -- 3
-cite$ -- 3
-duplicate$ -- 657
-empty$ -- 560
-format.name$ -- 18
-if$ -- 1424
+chr.to.int$ -- 4
+cite$ -- 5
+duplicate$ -- 812
+empty$ -- 717
+format.name$ -- 23
+if$ -- 1804
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 29
-newline$ -- 21
-num.names$ -- 6
-pop$ -- 42
+missing$ -- 38
+newline$ -- 26
+num.names$ -- 8
+pop$ -- 64
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 39
+skip$ -- 51
 stack$ -- 0
-substring$ -- 1079
-swap$ -- 71
-text.length$ -- 0
+substring$ -- 1369
+swap$ -- 93
+text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 18
-warning$ -- 0
-while$ -- 27
+type$ -- 22
+warning$ -- 1
+while$ -- 33
 width$ -- 0
-write$ -- 44
+write$ -- 57
+(There was 1 warning)

@@ -1,4 +1,4 @@
-\begin{thebibliography}{3}
+\begin{thebibliography}{4}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\urlprefix}{}
 \providecommand{\doiprefix}{https://doi.org/}
@@ -22,5 +22,11 @@
 \textbf{\color{LiveCoMSMediumGrey} Fischer J}, Wendland M.
 \newblock On the history of key empirical intermolecular potentials.
 \newblock Fluid Phase Equilibria.  2023; 573:113876.
+
+\bibitem[{Hestenes et~al.(1952)Hestenes, Magnus Rudolph and Stiefel, Eduard and
+  others}]{hestenes1952methods}
+\textbf{\color{LiveCoMSMediumGrey} Hestenes MR}, Stiefel E, et~al.
+\newblock Methods of conjugate gradients for solving linear systems, vol.~49.
+\newblock NBS Washington, DC; 1952.
 
 \end{thebibliography}
