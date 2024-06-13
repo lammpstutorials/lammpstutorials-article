@@ -1,0 +1,13 @@
+\begin{thebibliography}{1}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\urlprefix}{}
+\providecommand{\doiprefix}{https://doi.org/}
+
+\bibitem[{Schneider and Stoll(1978)Schneider, T and Stoll,
+  E}]{schneider1978molecular}
+\textbf{\color{LiveCoMSMediumGrey} Schneider T}, Stoll E.
+\newblock Molecular-dynamics study of a three-dimensional one-component model
+  for distortive phase transitions.
+\newblock Physical Review B.  1978; 17(3):1302.
+
+\end{thebibliography}

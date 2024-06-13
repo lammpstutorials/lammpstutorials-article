@@ -8,3 +8,6 @@ git pull
 git submodule update --remote
 
 pdflatex lammps-tutorials.tex
+bibtex lammps-tutorials
+pdflatex lammps-tutorials.tex
+pdflatex lammps-tutorials.tex

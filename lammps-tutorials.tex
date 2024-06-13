@@ -12,12 +12,58 @@
 % Omit the bestpractices option to remove the marking as a LiveCoMS paper.
 % Please note that these options may affect formatting.
 
-\usepackage{lipsum} % Required to insert dummy text
+
+
+
+
+
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{fancyvrb}
+\usepackage{float}
+\usepackage{listings}
+\usepackage[svgnames]{xcolor}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{times}
+\usepackage{subcaption}
+\usepackage{mathtools}
+\usepackage{microtype}
+\usepackage{tcolorbox}
+\usepackage{newverbs}
+
+\usepackage{listings}
+
+\usepackage[
+    type={CC},
+    modifier={by-nc-sa},
+    version={4.0},
+]{doclicense}
+
+\usepackage{wrapfig}
+\usepackage{geometry}
+
 \usepackage[version=4]{mhchem}
 \usepackage{siunitx}
 \DeclareSIUnit\Molar{M}
 \usepackage[italic]{mathastext}
 \graphicspath{{figures/}}
+
+\definecolor{mylightblue}{RGB}{68.085,183.09,194.055} 
+\definecolor{mystrongblue}{RGB}{2.04,74.97,121.89}
+\definecolor{myorange}{RGB}{255.0,173.91,72.93}
+\definecolor{graytitle}{gray}{0.5}
+\definecolor{cverbbg}{gray}{0.93}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% IMPORTANT USER CONFIGURATION
@@ -110,6 +156,8 @@ Tutorials should clearly define what system and/or software requirements the res
 A tutorial will normally draw on additional files and materials; clearly indicate where and how these are available, with links, and how they are being archived for the long-term and maintained so they stay current.
 You will likely want to reference your GitHub repository as a central point to access all of this information, and then the GitHub repository may link out to other content as needed.
 
+\include{chapters/lennard-jones-fluid.tex}
+
 \section*{Author Contributions}
 
 SG conceived and wrote all the online tutorials and underlying Sphinx
@@ -127,7 +175,7 @@ innovation programme under the Marie Skłodowska-Curie grant agreement N$^\circ\
 \section*{Author Information}
 \makeorcid
 
-\bibliography{livecoms-sample}
+\bibliography{journal-article}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% APPENDICES
