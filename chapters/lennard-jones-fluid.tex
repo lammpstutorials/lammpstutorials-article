@@ -3,7 +3,7 @@
 
 \begin{figure}
 {\centering
-\includegraphics[width=0.75\linewidth]{binary_LJ_fluid}
+\includegraphics[width=0.55\linewidth]{binary_LJ_fluid}
 \caption{Snapshot of the Lennard-Jones fluid made using VMD, with both types of atoms represented as spheres.}}
 \label{fig:binary_LJ_fluid}
 \end{figure}
@@ -20,7 +20,7 @@
 # 3) Simulation settings
 # 4) Visualization
 # 5) Run
-\end{verbatim} }
+\end{verbatim}}
 \noindent These five categories are not required in every input script, and should not necessarily be in that exact order. For instance, parts 3 and 4 could be inverted, or part 4 could be omitted. Note however that LAMMPS reads input files from top to bottom, therefore the \textit{Initialization} and \textit{System definition} categories must appear at the top of the input, and the \textit{Run} category at the bottom.
 
 \paragraph{System initialization}
@@ -144,10 +144,10 @@ To create the atoms of types 1 and 2 in two separate regions, let us create thre
 # 2) System definition
 region simulation_box block -20 20 -20 20 -20 20
 create_box 2 simulation_box
-region region_cylinder_in cylinder z 0 0 10 INF INF side in
-region region_cylinder_out cylinder z 0 0 10 INF INF side out
-create_atoms 1 random 1000 341341 region_cylinder_out
-create_atoms 2 random 150 127569 region_cylinder_in
+region cylinder_in cylinder z 0 0 10 INF INF side in
+region cylinder_out cylinder z 0 0 10 INF INF side out
+create_atoms 1 random 1000 341341 cylinder_out
+create_atoms 2 random 150 127569 cylinder_in
 \end{verbatim}
 The \textit{side in} and \textit{side out} keywords are used to define regions that are respectively inside and outside of the cylinder of radius 10. Then, copy similar lines as previously into \textit{input.min.lammps}:
 \begin{verbatim}
@@ -223,12 +223,12 @@ By visualizing the previously generated \textit{dump.min.lammpstrj} file, you ma
 1 outside the cylinder, let us delete the misplaced atoms by adding the following commands to \textit{input.md.lammps}:
 \begin{verbatim}
 read_data minimized_coordinate.data
-region region_cylinder_in cylinder z 0 0 10 INF INF side in
-region region_cylinder_out cylinder z 0 0 10 INF INF side out
+region cylinder_in cylinder z 0 0 10 INF INF side in
+region cylinder_out cylinder z 0 0 10 INF INF side out
 group group_type_1 type 1
 group group_type_2 type 2
-group group_region_in region region_cylinder_in
-group group_region_out region region_cylinder_out
+group group_region_in region cylinder_in
+group group_region_out region cylinder_out
 group group_type_1_in intersect group_type_1 group_region_in
 group group_type_2_out intersect group_type_2 group_region_out
 delete_atoms group group_type_1_in
@@ -256,14 +256,14 @@ dump mydmp all atom 1000 dump.md.lammpstrj
 \end{verbatim}
 Let us extract the number of atoms of each type inside the cylinder as a function of time, by adding the following commands to \textit{input.md.lammps}:
 \begin{verbatim}
-variable number_type1_in equal count(group_type_1,region_cylinder_in)
-variable number_type2_in equal count(group_type_2,region_cylinder_in)
+variable number_type1_in equal count(group_type_1,cylinder_in)
+variable number_type2_in equal count(group_type_2,cylinder_in)
 fix myat1 all ave/time 10 200 2000 v_number_type1_in &
     file output-population1vstime.dat
 fix myat2 all ave/time 10 200 2000 v_number_type2_in &
     file output-population2vstime.dat
 \end{verbatim}
-The 2 \textit{variables} are used to count the number of atoms of a specific group in the \textit{region$\_$cylinder$\_$in} region. The two \textit{fix ave/time} are calling the previously defined variables and are printing their values into text files. By using \textit{10 200 2000}, variables are evaluated every 10 steps, averaged 200 times, and printed in the \textit{.dat} files every 2000 steps.
+The 2 \textit{variables} are used to count the number of atoms of a specific group in the \textit{cylinder$\_$in} region. The two \textit{fix ave/time} are calling the previously defined variables and are printing their values into text files. By using \textit{10 200 2000}, variables are evaluated every 10 steps, averaged 200 times, and printed in the \textit{.dat} files every 2000 steps.
 
 Let us also extract the coordination number per atom between atoms of type 1 and 2, i.e. the average number of atoms of type 2 in the vicinity of the atoms of type 1. This coordination number will be used as an indicator of the degree of mixing of our binary mixture. Add the following lines into \textit{input.md.lammps}:
 \begin{verbatim}
@@ -284,13 +284,20 @@ write_data mixed.data
 \end{verbatim}
 There are a few differences from the previous simulation. First, the \textit{velocity create} command attributes an initial velocity to every atom.
 The initial velocity is chosen so that the average initial temperature is equal to 1 (unitless). The additional keywords ensure that no linear momentum (\textit{mom yes}) and no angular momentum (\textit{rot yes}) are given to the system and that the generated velocities are distributed as a Gaussian. Another improvement is the \textit{zero yes} keyword in the Langevin thermostat, which ensures that the total random force is equal to zero.
-{\color{red}Run \textit{input.md.lammps} using LAMMPS and visualize the trajectory
-using VMD}
+Run \textit{input.md.lammps} using LAMMPS. Open the \textit{dump.md.lammpstrj} using VMD to observe the mixing of the two populations as the time evolves (Fig.\,\ref{fig:evolution-population}). The generated \textit{.dat} files indicate the number of atoms in each region as a function time (Fig.\,\ref{fig:mixing}\,a). In addition, as the mixing progresses, the calculated coordination number increases from about $0.01$ to $0.35$ (Fig.\,\ref{fig:mixing}\,b).
 
-{\color{red}Figure: Evolution of the atom populations during mixing.}
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{evolution}
+\caption{Evolution of the system during mixing.}
+\label{fig:evolution-population}
+\end{figure}
 
-After running \textit{input.md.lammps} using LAMMPS, you can observe the number of atoms in each region from the generated data files, as
-well as the evolution of the coordination number due to mixing.
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{mixing}
+\caption{Evolution of the number $N$ of atoms within the \textit{cylinder$\_$in} region as a function of the time $t$ (a),
+and evolution of the coordination number (b).}
+\label{fig:mixing}
+\end{figure}
 
-{\color{red}Figure: Evolution of the number of atoms within the \textit{region$\_$cylinder$\_$in} region
-[legend-to-add]as a function of time (a), and evolution of the coordination number (b).} 
