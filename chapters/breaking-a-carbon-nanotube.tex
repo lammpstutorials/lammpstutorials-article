@@ -42,3 +42,131 @@ read_data cnt_molecular.data
 The chosen unit system is \textit{real} (therefore distances are in Ångstrom, time in femtosecond), the \textit{atom$\_$style} is molecular (therefore atoms are dots that can be bonded with each other), and the boundary conditions are fixed. The boundary conditions do not matter here, as the box boundaries were placed far from the CNT. 
 
 Just like in the previous tutorial, \hyperref[lennard-jones-label]{Lennard Jones fluid}, the pair style is \textit{lj/cut} (i.e. a Lennard-Jones potential with a short-range cutoff) with parameter 14, which means that only the atoms closer than 14 Ångstroms from each other interact through a Lennard-Jones potential. The \textit{bond$\_$style}, \textit{angle$\_$style}, \textit{dihedral$\_$style}, and \textit{improper$\_$style} commands specify the different potentials used to restrain the relative positions of the atoms. For more details about the potentials used here, you can have a look at the LAMMPS website. The \textit{special$\_$bonds} command sets the weighting factors for the Lennard-Jones interaction between atoms directly connected by a bond, separated by two bonds, and separated by three bonds, respectively. The last command, \textit{read$\_$data}, imports the \textit{cnt$\_$molecular.data} file previously generated with VMD, which contains the information about the box size, atom positions, etc.
+
+We need to specify the parameters of both bonded and non-bonded potentials. Here, the parameters are taken from the OPLS-AA (Optimised Potentials for Liquid Simulations-All-Atom) force field \cite{jorgensenDevelopmentTestingOPLS1996}. Create a new text file in the \textit{unbreakable-bonds/} folder and name it \textit{parm.lammps}. Copy the following lines in it:
+\begin{verbatim}
+pair_coeff 1 1 0.066 3.4
+bond_coeff 1 469 1.4
+angle_coeff 1 63 120
+dihedral_coeff 1 0 7.25 0 0
+improper_coeff 1 5 180
+\end{verbatim}
+The \textit{pair$\_$coeff} command sets the parameters for the non-bonded Lennard-Jones interaction $\epsilon_{11} = 0.066 \, \text{kcal/mol}$ and $\sigma_{11} = 3.4 \, \text{Å}$ for the only type of atom of the simulation; the carbon atom of type 1.  The \textit{bond$\_$coeff} provides the equilibrium distance $r_0= 1.4 \, \text{Å}$ as well as the spring constant $k_b = 469 \, \text{kcal/mol/Å}^2$ for the harmonic potential imposed between two neighboring carbon atoms, where the potential is $U_b = k_b ( r - r_0)^2$. The
+\textit{angle$\_$coeff} gives the equilibrium angle $\theta_0$ and constant for the potential between three neighbor atoms :
+$U_\theta = k_\theta ( \theta - \theta_0)^2$. The \textit{dihedral$\_$coeff} and \textit{improper$\_$coeff} gives the potential for the constraints between 4 atoms. The file \textit{parm.lammps} is included in the simulation by adding the following line to the \textit{input.lammps} file:
+\begin{verbatim}
+include parm.lammps
+\end{verbatim}
+
+
+\paragraph{Prepare initial state}
+Before starting the molecular dynamics simulation, let us make sure that we start from a clean initial state
+by recentering the CNT at the origin (0, 0, 0). In addition, let us make sure that the box boundaries are symmetric with respect to (0, 0, 0), which is not initially the case, as seen in \textit{cnt$\_$molecular.data}:
+\begin{verbatim}
+-40.000000 40.000000  xlo xhi
+-40.000000 40.000000  ylo yhi
+-12.130411 67.869589  zlo zhi
+\end{verbatim}
+Let us recenter the CNT by adding the following lines to \textit{input.lammps}:
+\begin{verbatim}
+group carbon_atoms type 1
+variable carbon_xcm equal -1*xcm(carbon_atoms,x)
+variable carbon_ycm equal -1*xcm(carbon_atoms,y)
+variable carbon_zcm equal -1*xcm(carbon_atoms,z)
+displace_atoms carbon_atoms &
+    move ${carbon_xcm} ${carbon_ycm} ${carbon_zcm}
+\end{verbatim}
+The first command includes all the atoms of type 1 (i.e. all the atoms here) in a group named \textit{carbon$\_$atoms}. 
+The 3 variables, \textit{carbon$\_$xcm}, \textit{carbon$\_$ycm}, and \textit{carbon$\_$zcm} are used to measure
+the current position of the group \textit{carbon$\_$atoms} along all 3 directions, respectively. Then, the \textit{displace$\_$atoms} 
+command move the group \textit{carbon$\_$atoms}, ensuring that its center of mass is located at the origin (0, 0, 0).
+Let us also change the box boundaries by adding the following line to \textit{input.lammps}:
+\begin{verbatim}
+change_box all x final -40 40 y final -40 40 &
+    z final -40 40
+\end{verbatim}
+Such a cleaner and more symmetrical initial state can simplify future data analysis, but won't make any difference to the molecular dynamics.
+
+A displacement will be imposed on the edges of the CNT. To do so, let us isolate the atoms from the two edges and place them into groups named \textit{rtop} and \textit{rbot}, respectively. Add the following lines to \textit{input.lammps}:
+\begin{verbatim}
+variable zmax equal bound(carbon_atoms,zmax)-0.5
+variable zmin equal bound(carbon_atoms,zmin)+0.5
+region rtop block INF INF INF INF ${zmax} INF
+region rbot block INF INF INF INF INF ${zmin}
+region rmid block INF INF INF INF ${zmin} ${zmax}
+\end{verbatim}
+
+\noindent The variable $z_\mathrm{max}$ corresponds to the coordinate of the last atoms along $z$ minus 0.5 Ångstroms, and $z_\mathrm{min}$ to the coordinate of the first atoms along $z$ plus 0.5 Ångstroms. Then, 3 regions are defined, and correspond respectively to: $z < z_\mathrm{min}$, (bottom) $z_\mathrm{min} > z > z_\mathrm{max}$ (middle), and $z > z_\mathrm{max}$ (top). Finally, let us define 3 groups of atoms corresponding to the atoms located in each of the 3 regions, respectively, by adding to \textit{input.lammps}:
+\begin{verbatim}
+group carbon_top region rtop
+group carbon_bot region rbot
+group carbon_mid region rmid
+\end{verbatim}
+The atoms of the edges as selected within the \textit{carbon$\_$top} and \textit{carbon$\_$bot} groups can be represented with a different color.
+
+{\color{red}Figure: CNT with atoms from the \textit{carbon$\_$top} and the \textit{carbon$\_$bot} groups are represented with a different color.}
+
+When running a simulation, the number of atoms in each group is printed in the terminal (and in the \textit{log.lammps} file). Always make sure that the number of atoms in each group corresponds to what is expected, just like here:
+\begin{verbatim}
+10 atoms in group carbon_top
+10 atoms in group carbon_bot
+680 atoms in group carbon_mid
+\end{verbatim}
+Finally, let us randomly delete some of the carbon atoms. In order to avoid deleting atoms that are too close to the edges, let us define a new region name \textit{rdel} that starts $2\,Å$ from the CNT edges.
+\begin{verbatim}
+variable zmax_del equal ${zmax}-2
+variable zmin_del equal ${zmin}+2
+region rdel block INF INF INF INF &
+    ${zmin_del} ${zmax_del}
+group rdel region rdel
+delete_atoms random fraction 0.02 no rdel &
+    NULL 482793 bond yes
+\end{verbatim}
+The \textit{delete$\_$atoms} command randomly deletes $2\,\%$ of the atoms from the \textit{rdel} group (i.e. about 10 atoms).
+
+{\color{red}Figure: CNT with \textit{10} randomly deleted atoms. }
+
+\paragraph{The molecular dynamics}
+Let us specify the thermalization and the dynamics of the system. Add the following lines to \textit{input.lammps}:
+\begin{verbatim}
+reset_atoms id sort yes
+velocity carbon_mid create ${T} 48455 mom yes &
+    rot yes
+fix mynve all nve
+compute Tmid carbon_mid temp
+fix myber carbon_mid temp/berendsen ${T} ${T} 100
+fix_modify myber temp Tmid
+\end{verbatim}
+Re-setting the atom ids is necessary before using the \textit{velocity} command, this is done by the \textit{reset$\_$atoms} command.
+The \textit{velocity} command gives initial velocities to the atoms of the middle group \textit{carbon$\_$mid}, ensuring an initial temperature of 300 K for these atoms with no overall translational momentum, \textit{mom yes}, nor rotational momentum, \textit{rot yes}.
+The \textit{fix nve} is applied to all atoms so that all atom positions are recalculated at every step, and a \textit{Berendsen} thermostat is applied to the atoms of the group \textit{carbon$\_$mid} only \cite{berendsen1984molecular}. The \textit{fix$\_$modify myber} ensures that the \textit{fix Berendsen} uses the temperature of the group \textit{carbon$\_$mid} as an input, instead of the temperature of the whole system. This is necessary to make sure that the frozen edges won't bias the temperature. Note that the atoms
+of the edges do not need a thermostat because their motion will be restrained, see below.
+
+To restrain the motion of the atoms at the edges, let us add the following commands to \textit{input.lammps}:
+\begin{verbatim}
+fix mysf1 carbon_top setforce 0 0 0
+fix mysf2 carbon_bot setforce 0 0 0
+velocity carbon_top set 0 0 0
+velocity carbon_bot set 0 0 0
+\end{verbatim}
+The two \textit{setforce} commands cancel the forces applied on the atoms of the two edges, respectively. The cancellation of the forces
+is done at every step, and along all 3 directions of space, $x$, $y$, and $z$, due to the use of \textit{0 0 0}. The two \textit{velocity} commands set the initial velocities along $x$, $y$, and $z$ to 0 for the atoms of \textit{carbon$\_$top} and \textit{carbon$\_$bot}, respectively. As a consequence of these last four commands, the atoms of the edges will remain immobile during the simulation (or at least they would if no other command was applied to them). The \textit{velocity set} commands impose the velocity of a group of atoms at the start of a run, but does not enforce the velocity during the entire simulation. When \textit{velocity set} is used in combination with \textit{setforce 0 0 0}, as is the case here, the atoms won't feel any force during the entire simulation. According to the Newton equation, no force means no acceleration, meaning that the initial velocity will persist during the entire simulation, thus producing a constant velocity motion.
+
+\paragraph{Data extraction}
+Next, in order to measure the strain and stress suffered by the CNT, let us extract the distance $L$ between the two edges as well as the force applied on the edges.
+\begin{verbatim}
+variable L equal xcm(carbon_top,z)-xcm(carbon_bot,z)
+fix at1 all ave/time 10 10 100 v_L &
+    file output_cnt_length.dat
+fix at2 all ave/time 10 10 100 f_mysf1[1] &
+    f_mysf2[1] file output_edge_force.dat
+\end{verbatim}
+\noindent Let us also add a command to print the atom coordinates in a \textit{lammpstrj} file every 1000 steps.
+\begin{verbatim}
+dump mydmp all atom 1000 dump.lammpstrj
+\end{verbatim}
+\noindent Finally, let us check the temperature of the non-frozen group over time by printing it using a \textit{fix ave/time} command:
+\begin{verbatim}
+fix at3 all ave/time 10 10 100 c_Tmid &
+    file output_temperature_middle_group.dat
+\end{verbatim}

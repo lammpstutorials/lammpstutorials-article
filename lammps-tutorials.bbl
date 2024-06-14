@@ -1,4 +1,4 @@
-\begin{thebibliography}{6}
+\begin{thebibliography}{8}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\urlprefix}{}
 \providecommand{\doiprefix}{https://doi.org/}
@@ -41,5 +41,21 @@
 \textbf{\color{LiveCoMSMediumGrey} Kohlmeyer A}, Vermaas J, {{TopoTools}}:
   {{Release}} 1.9.
 \newblock Zenodo; 2021.
+
+\bibitem[{Jorgensen et~al.(1996)Jorgensen, William L. and Maxwell, David S. and
+  Tirado-Rives, Julian}]{jorgensenDevelopmentTestingOPLS1996}
+\textbf{\color{LiveCoMSMediumGrey} Jorgensen WL}, Maxwell DS, Tirado-Rives J.
+\newblock Development and {{Testing}} of the {{OPLS All-Atom Force Field}} on
+  {{Conformational Energetics}} and {{Properties}} of {{Organic Liquids}}.
+\newblock Journal of the American Chemical Society.  1996;
+  118(45):11225--11236.
+
+\bibitem[{Berendsen et~al.(1984)Berendsen, Herman JC and Postma, JPM van and
+  Van Gunsteren, Wilfred F and DiNola, ARHJ and Haak, Jan
+  R}]{berendsen1984molecular}
+\textbf{\color{LiveCoMSMediumGrey} Berendsen HJ}, Postma Jv, Van~Gunsteren WF,
+  DiNola A, Haak JR.
+\newblock Molecular dynamics with coupling to an external bath.
+\newblock The Journal of chemical physics.  1984; 81(8):3684--3690.
 
 \end{thebibliography}
