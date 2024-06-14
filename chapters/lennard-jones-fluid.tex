@@ -3,7 +3,7 @@
 
 \begin{figure}
 {\centering
-\includegraphics[width=0.55\linewidth]{binary_LJ_fluid}
+\includegraphics[width=0.55\linewidth]{LJ}
 \caption{Snapshot of the Lennard-Jones fluid made using VMD, with both types of atoms represented as spheres.}}
 \label{fig:binary_LJ_fluid}
 \end{figure}
@@ -13,7 +13,7 @@
 \subsubsection{My first input}
 
 \noindent To run a simulation using LAMMPS, one needs to write a series of commands in an input script. For clarity, this script will be divided into five categories which we are going to fill up one by one. Create a folder, call it \textit{my-first-input/}, and then create a blank text file in it called \textit{input.lammps}. Copy the following lines in \textit{input.lammps}, where a line starting with a brace ($\#$) is a comment that is ignored by LAMMPS:
-{\small  \begin{verbatim}
+{\small \begin{verbatim}
 # PART A - ENERGY MINIMIZATION
 # 1) Initialization
 # 2) System definition
@@ -68,46 +68,46 @@ The two first commands, \textit{mass (...)}, attribute a mass equal to 1 (unitle
 
 \paragraph{Energy minimization}
 The system is now fully parametrized. Let us fill the two last remaining sections by adding the following lines to \textit{input.lammps}:
-\begin{verbatim}
+{\small \begin{verbatim}
 # 4) Visualization
 thermo 10
 thermo_style custom step temp pe ke etotal press
 
 # 5) Run
 minimize 1.0e-4 1.0e-6 1000 10000
-\end{verbatim}
+\end{verbatim}}
 The \textit{thermo} command asks LAMMPS to print thermodynamic information (e.g. temperature, energy) in the terminal every given number of steps, here 10 steps. The \textit{thermo$\_$style custom} requires LAMMPS to print the system temperature (\textit{temp}), potential energy (\textit{pe}), kinetic energy (\textit{ke}), total energy (\textit{etotal}), and pressure (\textit{press}). Finally, the \textit{minimize} line asks LAMMPS to perform an energy minimization of the system. By default, LAMMPS uses the conjugate gradient (CG) algorithm \cite{hestenes1952methods}.
 
 Run the simulation by typing in a terminal:
-\begin{verbatim}
+{\small \begin{verbatim}
 lmp -in input.lammps
-\end{verbatim}
+\end{verbatim}}
 where the command \textit{lmp} is linked to a compiled version of LAMMPS. As the simulation progresses, the potential energy can be seen to decrease from a large positive value to to a negative value. The initially large and positive value of the potential energy was expected because the atoms have been created at random positions within the simulation box and some of them are probably overlapping, resulting in a large initial energy which is the consequence of the repulsive part of the Lennard-Jones interaction potential. As the energy minimization progresses, the energy rapidly decreases and reaches a negative value, indicating that the atoms have been displaced at reasonable distances from each other.
 
 \paragraph{Molecular dynamics}
 The system is now ready. Let us continue filling up the input script and adding commands to perform a molecular dynamics simulation that will start from the final state of the previous energy minimization step. In the same input script, after the \textit{minimization} command, add the following
 lines:
-\begin{verbatim}
+{\small \begin{verbatim}
 # PART B - MOLECULAR DYNAMICS
 # 4) Visualization
 thermo 50
-\end{verbatim}
+\end{verbatim}}
 Since LAMMPS reads the input from top to bottom, these lines will be executed after the energy minimization. There is no need to re-initialize or re-define the system. The \textit{thermo} command is called a second time within the same input, so the previously entered value of 10 will be replaced by
 the value of 50 as soon as \textit{PART B} starts. Then, let us add a second \textit{Run} section:
-\begin{verbatim}
+{\small \begin{verbatim}
 # 5) Run
 fix mynve all nve
 fix mylgv all langevin 1.0 1.0 0.1 1530917
 timestep 0.005
 run 10000
-\end{verbatim}
+\end{verbatim}}
 The \textit{fix nve} is used to update the positions and the velocities of the atoms in the group \textit{all} at every step. The group \textit{all} is a default group that contains every atom. The second fix applies a Langevin thermostat to the atoms of the group \textit{all}, with a desired initial temperature of 1.0 (unitless), and a final temperature of 1.0 as well \cite{schneider1978molecular}. A \textit{damping} parameter of 0.1 is used. The \textit{damping} parameter determines how rapidly the temperature is relaxed to its desired value. The number \textit{1530917} is a seed, you can change it to perform statistically independent simulations. Finally, the last two lines set the value of the \textit{timestep} and the number of steps for the \textit{run}, respectively, corresponding to a total duration of 50 (unitless).
 
 Run the simulation again using LAMMPS. From the information printed in the terminal, one can see that the temperature \textit{Temp} starts from 0, but rapidly reaches the requested value and stabilize itself near $T=1$ (unitless). From what has been printed in the \textit{log} file, one can use Pyplot and plot the potential energy ($p_\text{e}$) and the kinetic energy ($k_\text{e}$) of the system over time (Fig.\,\ref{fig:evolution-energy}).
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{energy}
+\includegraphics[width=\linewidth]{LJ-energy}
 \caption{a) The potential energy ($p_\text{e}$) rapidly decreases during energy minimization (orange). Then, after the molecular dynamics simulation starts, $p_\text{e}$ increases until it reaches a plateau value of about -0.25 (blue). b) The kinetic energy ($k_\text{e}$) is equal to zero during energy minimization, then increases during molecular dynamics until it reaches a plateau value of about 1.5.}
 \label{fig:evolution-energy}
 \end{figure}
@@ -115,9 +115,9 @@ Run the simulation again using LAMMPS. From the information printed in the termi
 \paragraph{Trajectory visualization}
 
  To visualize the trajectories of the atoms, we first need to print the positions of the atoms in a file at a regular interval. Add the following command to the \textit{input.lammps} file, in the \textit{Visualization} section of \textit{PART B}:
-\begin{verbatim}
+ {\small \begin{verbatim}
 dump mydmp all atom 100 dump.lammpstrj
-\end{verbatim}
+\end{verbatim}}
 Run the \textit{input.lammps} using LAMMPS again. The file named \textit{dump.lammpstrj} created by LAMMPS within \textit{my-first-input/} can be opened using VMD.
 
 \subsubsection{Improving the script}
@@ -127,16 +127,16 @@ positions to the atoms, and restarting the simulation from a previously saved co
 
 \paragraph{Control the initial atom positions}
 \noindent Create a new folder next to \textit{my-first-input/}, and call it \textit{improved-input/}. Then, create a new input file within \textit{improved-input/} and call it \textit{input.min.lammps}. Similarly to what has been done previously, copy the following lines into \textit{input.min.lammps}:
-\begin{verbatim}
+{\small \begin{verbatim}
 # 1) Initialization
 units lj
 dimension 3
 atom_style atomic
 pair_style lj/cut 2.5
 boundary p p p
-\end{verbatim}
+\end{verbatim}}
 To create the atoms of types 1 and 2 in two separate regions, let us create three separate regions: A cubic region for the simulation box and two additional regions for placing the atoms:
-\begin{verbatim}
+{\small \begin{verbatim}
 # 2) System definition
 region simulation_box block -20 20 -20 20 -20 20
 create_box 2 simulation_box
@@ -144,9 +144,9 @@ region cylinder_in cylinder z 0 0 10 INF INF side in
 region cylinder_out cylinder z 0 0 10 INF INF side out
 create_atoms 1 random 1000 341341 cylinder_out
 create_atoms 2 random 150 127569 cylinder_in
-\end{verbatim}
+\end{verbatim}}
 The \textit{side in} and \textit{side out} keywords are used to define regions that are respectively inside and outside of the cylinder of radius 10. Then, copy similar lines as previously into \textit{input.min.lammps}:
-\begin{verbatim}
+{\small \begin{verbatim}
 # 3) Simulation settings
 mass 1 1
 mass 2 1
@@ -161,7 +161,7 @@ dump mydmp all atom 10 dump.min.lammpstrj
 # 5) Run
 minimize 1.0e-4 1.0e-6 1000 10000
 write_data minimized_coordinate.data
-\end{verbatim}
+\end{verbatim}}
 The main novelty, compared to the previous input script, is the \textit{write$\_$data} command. This command is used to print the final state of the simulation in a file named \textit{minimized$\_$coordinate.data}. Note that the \textit{write$\_$data} command is placed after the \textit{minimize} command. This \textit{.data} file will be used later to restart the simulation from the final state of the energy minimization step.
 
 Run the \textit{input.min.lammps} script using LAMMPS. A new dump file named \textit{dump.min.lammpstrj} will appear in the folder, allowing you to visualize
@@ -171,22 +171,22 @@ The first five columns of the \textit{Atoms} section correspond (from left to ri
 
 \paragraph{Restarting from a saved configuration}
 Let us create a new input file and start a molecular dynamics simulation directly from the previously saved configuration. Within \textit{improved-input/}, create a new file named \textit{input.md.lammps} and copy the same lines as previously:
-\begin{verbatim}
+{\small \begin{verbatim}
 # 1) Initialization
 units lj
 dimension 3
 atom_style atomic
 pair_style lj/cut 2.5
 boundary p p p
-\end{verbatim}
+\end{verbatim}}
 Here, instead of creating a new region and adding atoms to it, we can simply import the previously saved configuration by adding the following command to \textit{input.md.lammps}:
-\begin{verbatim}
+{\small \begin{verbatim}
 # 2) System definition
 read_data minimized_coordinate.data
-\end{verbatim}
+\end{verbatim}}
 By visualizing the previously generated \textit{dump.min.lammpstrj} file, you may have noticed that some atoms have moved from one region to the other during minimization. To start the simulation from a clean slate, with only atoms of type 2 within the cylinder and atoms of type
 1 outside the cylinder, let us delete the misplaced atoms by adding the following commands to \textit{input.md.lammps}:
-\begin{verbatim}
+{\small \begin{verbatim}
 read_data minimized_coordinate.data
 region cylinder_in cylinder z 0 0 10 INF INF &
     side in
@@ -202,17 +202,17 @@ group group_type_2_out &
     intersect group_type_2 group_region_out
 delete_atoms group group_type_1_in
 delete_atoms group group_type_2_out
-\end{verbatim}
+\end{verbatim}}
 The two first \textit{region} commands recreate the previously defined regions, which is necessary since regions are not saved by the \textit{write$\_$data} command. The first two \textit{group} commands create atom groups based on their types. The next two \textit{group} commands create atom groups based on their
 positions at the beginning of the simulation, i.e. when the commands are being read by LAMMPS. The last two \textit{group} commands create atom groups based on the intersection between the previously defined groups. Finally, the two \textit{delete$\_$atoms} commands delete the atoms of type 1 that are located within the cylinder, as well as the atoms of type 2 that are located outside the cylinder, respectively. 
 Add the following lines to \textit{input.md.lammps}. Note the absence of \textit{Simulation settings} section, because the settings are taken from the \textit{.data} file.
-\begin{verbatim}
+{\small \begin{verbatim}
 # 4) Visualization
 thermo 1000
 dump mydmp all atom 1000 dump.md.lammpstrj
-\end{verbatim}
+\end{verbatim}}
 Let us extract the number of atoms of each type inside the cylinder as a function of time, by adding the following commands to \textit{input.md.lammps}:
-\begin{verbatim}
+{\small \begin{verbatim}
 variable number_type1_in &
     equal count(group_type_1,cylinder_in)
 variable number_type2_in & 
@@ -223,26 +223,26 @@ fix myat1 all ave/time 10 200 2000 &
 fix myat2 all ave/time 10 200 2000 &
     v_number_type2_in &
     file output-population2vstime.dat
-\end{verbatim}
+\end{verbatim}}
 The 2 \textit{variables} are used to count the number of atoms of a specific group in the \textit{cylinder$\_$in} region. The two \textit{fix ave/time} are calling the previously defined variables and are printing their values into text files. By using \textit{10 200 2000}, variables are evaluated every 10 steps, averaged 200 times, and printed in the \textit{.dat} files every 2000 steps.
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{evolution}
+\includegraphics[width=\linewidth]{LJ-evolution}
 \caption{Evolution of the system during mixing.}
 \label{fig:evolution-population}
 \end{figure}
 
 Let us also extract the coordination number per atom between atoms of type 1 and 2, i.e. the average number of atoms of type 2 in the vicinity of the atoms of type 1. This coordination number will be used as an indicator of the degree of mixing of our binary mixture. Add the following lines into \textit{input.md.lammps}:
-\begin{verbatim}
+{\small \begin{verbatim}
 compute coor12 group_type_1 coord/atom &
     cutoff 2.0 group group_type_2
 compute sumcoor12 all reduce ave c_coor12
 fix myat3 all ave/time 10 200 2000 &
     c_sumcoor12 file coordinationnumber12.dat
-\end{verbatim}
+\end{verbatim}}
 The \textit{compute ave} is used to average the per atom coordination number that is calculated by the \textit{coord/atom} compute. This averaging is necessary as \textit{coord/atom} returns an array where each value corresponds to a certain couple of atoms i-j. Such an array can't be printed by \textit{fix ave/time}. Finally, let us complete the script by adding the following lines to \textit{input.md.lammps}:
-\begin{verbatim}
+{\small \begin{verbatim}
 # 5) Run
 velocity all create 1.0 4928459 mom yes rot yes &
     dist gaussian
@@ -251,14 +251,14 @@ fix mylgv all langevin 1.0 1.0 0.1 1530917 zero yes
 timestep 0.005
 run 300000
 write_data mixed.data
-\end{verbatim}
+\end{verbatim}}
 There are a few differences from the previous simulation. First, the \textit{velocity create} command attributes an initial velocity to every atom.
 The initial velocity is chosen so that the average initial temperature is equal to 1 (unitless). The additional keywords ensure that no linear momentum (\textit{mom yes}) and no angular momentum (\textit{rot yes}) are given to the system and that the generated velocities are distributed as a Gaussian. Another improvement is the \textit{zero yes} keyword in the Langevin thermostat, which ensures that the total random force is equal to zero.
 Run \textit{input.md.lammps} using LAMMPS. Open the \textit{dump.md.lammpstrj} using VMD to observe the mixing of the two populations as the time evolves (Fig.\,\ref{fig:evolution-population}). The generated \textit{.dat} files indicate the number of atoms in each region as a function time (Fig.\,\ref{fig:mixing}\,a). In addition, as the mixing progresses, the calculated coordination number increases from about $0.01$ to $0.35$ (Fig.\,\ref{fig:mixing}\,b).
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{mixing}
+\includegraphics[width=\linewidth]{LJ-mixing}
 \caption{a) Evolution of the number $N$ of atoms within the \textit{cylinder$\_$in} region as a function of the time $t$. b) Evolution of the coordination number.}
 \label{fig:mixing}
 \end{figure}

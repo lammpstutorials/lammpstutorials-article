@@ -170,3 +170,167 @@ dump mydmp all atom 1000 dump.lammpstrj
 fix at3 all ave/time 10 10 100 c_Tmid &
     file output_temperature_middle_group.dat
 \end{verbatim}
+
+Let us run a small equilibration step to bring the system to the required temperature before applying any deformation:
+\begin{verbatim}
+thermo 100
+thermo_modify temp Tmid
+
+timestep 1.0
+run 5000
+\end{verbatim}
+With the \textit{thermo$\_$modify} command, we specify to LAMMPS that we want the temperature $T_\mathrm{mid}$ to be printed in
+the terminal, not the temperature of the entire system (because of the frozen edges, the temperature of the entire system is not relevant).
+Let us impose a constant velocity deformation on the CNT by combining the \textit{velocity set} command with previously defined \textit{fix setforce}. Add the following lines in the \textit{input.lammps} file, right after the last \textit{run 5000} command:
+\begin{verbatim}
+velocity carbon_top set 0 0 0.0005
+velocity carbon_bot set 0 0 -0.0005
+run 10000
+\end{verbatim}
+\noindent The chosen velocity for the deformation is $100\,\text{m/s}$, or $0.001\,\text{Å/fs}$.
+
+{\color{red} Figure: Evolution of the length of the CNT with time. The CNT starts deforming at $t = 5\,\text{ps}$.}
+
+The energy, which can be accessed from the log file, shows a non-linear increase with time once the deformation starts, which is expected from the typical dependency of bond energy with bond distance $U_b = k_b \left( r - r_0 \right)^2$.
+
+{\color{red}Figure: Evolution of the total energy of the system with time. The CNT starts deforming at $t = 5\,\text{ps}$.}
+
+As always, is it important to ensure that the simulation behaves as expected by opening the \textit{dump.lammpstrj} file with VMD.
+
+{\color{red}Figure: CNT before (top) and after (bottom) deformation. See the corresponding \href{https://youtu.be/S05nzreQR18}{video}.}
+
+\subsubsection{Breakable bonds}
+When using a classical force field, as we just did, the bonds between atoms are non-breakable. Let us perform a similar simulation, 
+but this time using a reactive force field instead, allowing for the bonds to break if the applied deformation is large enough.
+
+\subsection{Input file initialization}
+\noindent Create a second folder named \textit{breakable-bonds/} next to \textit{unbreakable-bonds/}, and create a new input file in it called \textit{input.lammps}. Type into input.lammps:
+\begin{verbatim}
+# Initialisation
+variable T equal 300
+
+units metal
+atom_style atomic
+boundary p p p
+pair_style airebo 2.5 1 1
+\end{verbatim}
+The first difference with the previous part is the unit system, here \textit{metal} instead of \textit{real}, a choice that is imposed by the AIREBO force field. A second difference is the use of the \textit{atom$\_$style atomic} instead of \textit{molecular}, single no explicit bond information is required with AIREBO.
+
+\paragraph{Adapt the topology file}
+Since \textit{bond}, \textit{angle}, and \textit{dihedral} do not need to be explicitly set when using AIREBO, some small changes need to be made to the previously generated \textit{.data} file. Duplicate the previous file \textit{cnt$\_$molecular.data}, name the copy \textit{cnt$\_$atom.data}, place it within \textit{breakable-bonds/}. Then, remove all bond, angle, and dihedral information from \textit{cnt$\_$atom.data}. Also, remove the second column of the \textit{Atoms} table, so that the \textit{cnt$\_$atom.data} looks like the following: 
+\begin{verbatim}
+700 atoms
+1 atom types
+-40.000000 40.000000  xlo xhi
+-40.000000 40.000000  ylo yhi
+-12.130411 67.869589  zlo zhi
+
+Masses
+
+1 12.010700 # CA
+
+Atoms # atomic
+
+1 1 5.162323 0.464617 8.843235 # CA CNT
+2 1 4.852682 1.821242 9.111212 # CA CNT
+(...)
+\end{verbatim}
+In addition, remove the \textit{Bonds} table that is placed right after the \textit{Atoms} table (near line 743), as well as the \textit{Angles}, \textit{Dihedrals}, and \textit{Impropers} tables. The last lines of the file should look like this:
+\begin{verbatim}
+(...)
+697 1 4.669892 -2.248901 45.824036 # CA CNT
+698 1 5.099893 -0.925494 46.092010 # CA CNT
+699 1 5.162323 -0.464617 47.431896 # CA CNT
+700 1 5.099893 0.925494 47.699871 # CA CNT
+\end{verbatim}
+
+\paragraph{Use of AIREBO potential}
+Then, let us import the LAMMPS data file, and set the pair coefficients by adding the following lines to \textit{input.lammps}
+\begin{verbatim}
+# System definition
+read_data cnt_atom.data
+pair_coeff * * CH.airebo C
+\end{verbatim}
+Here, there is one single atom type. We impose this type to be carbon by using the letter \textit{C}. The \textit{CH.airebo} file can be
+downloaded by clicking \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level1/breaking-a-carbon-nanotube/breakable-bonds/CH.airebo}{here}, and must be placed within the \textit{breakable-bonds/} folder. The rest of the \textit{input.lammps} is very similar to the previous one:
+
+\begin{verbatim}
+change_box all x final -40 40 y final -40 40 &
+    z final -60 60
+
+group carbon_atoms type 1
+variable carbon_xcm equal -1*xcm(carbon_atoms,x)
+variable carbon_ycm equal -1*xcm(carbon_atoms,y)
+variable carbon_zcm equal -1*xcm(carbon_atoms,z)
+displace_atoms carbon_atoms move ${carbon_xcm} &
+    ${carbon_ycm} ${carbon_zcm}
+
+variable zmax equal bound(carbon_atoms,zmax)-0.5
+variable zmin equal bound(carbon_atoms,zmin)+0.5
+region rtop block INF INF INF INF ${zmax} INF
+region rbot block INF INF INF INF INF ${zmin}
+region rmid block INF INF INF INF ${zmin} ${zmax}
+
+group carbon_top region rtop
+group carbon_bot region rbot
+group carbon_mid region rmid
+
+variable zmax_del equal ${zmax}-2
+variable zmin_del equal ${zmin}+2
+region rdel block INF INF INF INF &
+    ${zmin_del} ${zmax_del}
+group rdel region rdel
+delete_atoms random fraction 0.02 no rdel &
+    NULL 482793
+
+reset_atoms id sort yes
+velocity carbon_mid create ${T} 48455 mom yes &
+    rot yes
+fix mynve all nve
+compute Tmid carbon_mid temp
+fix myber carbon_mid temp/berendsen ${T} ${T} 0.1
+fix_modify myber temp Tmid
+\end{verbatim}
+Note that a large distance of 120 Ångstroms was used for the box size along the \textit{z} axis, to allow for larger deformation. In addition, the \textit{change$\_$box} command was placed before the \textit{displace$\_$atoms} to avoid issue with the CNT crossing the edge of the box.
+
+\paragraph{Start the simulation}
+Here, let us impose a constant velocity deformation using the atoms of one edge, while maintaining the other edge fix. Do to so,
+one needs to cancel the forces (thus the acceleration) on the atoms of the edges using the \textit{setforce} command and set the value of the velocity along the \textit{z} direction. First, as an equilibration step, let us set the velocity to 0 for the atoms of both edges. Let us fully constrain the edges. Add the following lines to LAMMPS:
+\begin{verbatim}
+fix mysf1 carbon_bot setforce 0 0 0
+fix mysf2 carbon_top setforce 0 0 0
+velocity carbon_bot set 0 0 0
+velocity carbon_top set 0 0 0
+
+variable L equal &
+    xcm(carbon_top,z)-xcm(carbon_bot,z)
+fix at1 all ave/time 10 10 100 v_L file &
+    output_cnt_length.dat
+fix at2 all ave/time 10 10 100 f_mysf1[1] &
+    f_mysf2[1] file output_edge_force.dat
+
+dump mydmp all atom 1000 dump.lammpstrj
+
+thermo 100
+thermo_modify temp Tmid
+
+timestep 0.0005
+run 5000
+\end{verbatim}
+Note the relatively small timestep of $0.0005\,\text{ps}$ used. A reactive force field usually requires a smaller timestep than a classical one. When running \textit{input.lammps} with LAMMPS, you can see that the temperature deviates from the target temperature of $300\,\text{K}$ at the start of the equilibration, but that after a few steps, it reaches the target value.
+
+\paragraph{Launch the deformation}
+After equilibration, let us set the velocity to 15 m/s and run for a longer duration than previously. Add the following lines into \textit{input.lammps}:
+\begin{verbatim}
+# 0.15 A/ps = 15 m/s
+velocity carbon_top set 0 0 0.15
+run 280000
+\end{verbatim}
+The CNT should break around step 250000. If not, use a longer run. When looking at the \textit{lammpstrj} file using VMD, you will see
+the bonds breaking. Use the \textit{DynamicBonds} representation to properly visualize the bond breaking.
+
+{\color{red}Figure: CNT with broken bonds. See the corresponding \href{https://youtu.be/H2_cjoTcVAM}{video}.}
+
+Looking at the evolution of energy again, one can see that energy increasing with the deformation, before completely relaxing when the CNT finally breaks.
+
+{\color{red}Figure: Evolution of the total energy of the system with time.}
