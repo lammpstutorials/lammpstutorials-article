@@ -1,4 +1,4 @@
-\begin{thebibliography}{4}
+\begin{thebibliography}{6}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\urlprefix}{}
 \providecommand{\doiprefix}{https://doi.org/}
@@ -28,5 +28,18 @@
 \textbf{\color{LiveCoMSMediumGrey} Hestenes MR}, Stiefel E, et~al.
 \newblock Methods of conjugate gradients for solving linear systems, vol.~49.
 \newblock NBS Washington, DC; 1952.
+
+\bibitem[{Stuart et~al.(2000)Stuart, Steven J and Tutein, Alan B and Harrison,
+  Judith A}]{stuart2000reactive}
+\textbf{\color{LiveCoMSMediumGrey} Stuart SJ}, Tutein AB, Harrison JA.
+\newblock A reactive potential for hydrocarbons with intermolecular
+  interactions.
+\newblock The Journal of chemical physics.  2000; 112(14):6472--6486.
+
+\bibitem[{Kohlmeyer and Vermaas(2021)Kohlmeyer, Axel and Vermaas,
+  Josh}]{kohlmeyer2017topotools}
+\textbf{\color{LiveCoMSMediumGrey} Kohlmeyer A}, Vermaas J, {{TopoTools}}:
+  {{Release}} 1.9.
+\newblock Zenodo; 2021.
 
 \end{thebibliography}

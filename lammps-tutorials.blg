@@ -3,48 +3,50 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: lammps-tutorials.aux
 The style file: vancouver-livecoms.bst
 A level-1 auxiliary file: chapters/lennard-jones-fluid.aux
+A level-1 auxiliary file: chapters/breaking-a-carbon-nanotube.aux
 Database file #1: journal-article.bib
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
 Warning--can't use both volume and number fields in hestenes1952methods
-You've used 4 entries,
+Warning--empty author and editor in kohlmeyer2017topotools
+You've used 6 entries,
             3450 wiz_defined-function locations,
-            740 strings with 6101 characters,
-and the built_in function-call counts, 7726 in all, are:
-= -- 1017
-> -- 44
-< -- 3
-+ -- 22
-- -- 11
-* -- 674
-:= -- 808
-add.period$ -- 12
-call.type$ -- 4
+            755 strings with 6460 characters,
+and the built_in function-call counts, 11256 in all, are:
+= -- 1483
+> -- 64
+< -- 4
++ -- 32
+- -- 16
+* -- 980
+:= -- 1174
+add.period$ -- 17
+call.type$ -- 6
 change.case$ -- 0
-chr.to.int$ -- 4
-cite$ -- 5
-duplicate$ -- 812
-empty$ -- 717
-format.name$ -- 23
-if$ -- 1804
+chr.to.int$ -- 6
+cite$ -- 8
+duplicate$ -- 1184
+empty$ -- 1047
+format.name$ -- 34
+if$ -- 2630
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 38
-newline$ -- 26
-num.names$ -- 8
-pop$ -- 64
+missing$ -- 56
+newline$ -- 35
+num.names$ -- 12
+pop$ -- 99
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 51
+skip$ -- 78
 stack$ -- 0
-substring$ -- 1369
-swap$ -- 93
+substring$ -- 1987
+swap$ -- 135
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 22
-warning$ -- 1
-while$ -- 33
+type$ -- 34
+warning$ -- 2
+while$ -- 48
 width$ -- 0
-write$ -- 57
-(There was 1 warning)
+write$ -- 81
+(There were 2 warnings)

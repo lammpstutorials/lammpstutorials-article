@@ -101,11 +101,16 @@ fix mylgv all langevin 1.0 1.0 0.1 1530917
 timestep 0.005
 run 10000
 \end{verbatim}
-The \textit{fix nve} is used to update the positions and the velocities of the atoms in the group \textit{all} at every step. The group \textit{all} is a default group that contains every atom. The second fix applies a Langevin thermostat to the atoms of the group \textit{all}, with a desired initial temperature of 1.0 (unitless), and a final temperature of 1.0 as well \cite{schneider1978molecular}. A \textit{damping} parameter of 0.1 is used. The \textit{damping} parameter determines how rapidly the temperature is relaxed to its desired value. The number \textit{1530917} is a seed, you can change it to perform statistically independent simulations. Finally, the last two lines set the value of the \textit{timestep} and the number of steps for the *run*, respectively, corresponding to a total duration of 50 (unitless).
+The \textit{fix nve} is used to update the positions and the velocities of the atoms in the group \textit{all} at every step. The group \textit{all} is a default group that contains every atom. The second fix applies a Langevin thermostat to the atoms of the group \textit{all}, with a desired initial temperature of 1.0 (unitless), and a final temperature of 1.0 as well \cite{schneider1978molecular}. A \textit{damping} parameter of 0.1 is used. The \textit{damping} parameter determines how rapidly the temperature is relaxed to its desired value. The number \textit{1530917} is a seed, you can change it to perform statistically independent simulations. Finally, the last two lines set the value of the \textit{timestep} and the number of steps for the \textit{run}, respectively, corresponding to a total duration of 50 (unitless).
 
-Run the simulation again using LAMMPS. {\color{red}From the log file}, one can see that the temperature \textit{Temp} starts from 0, but rapidly reaches the requested value and stabilize itself near $T=1$ (unitless). \vspace{0.25cm} \noindent From what has been printed in the \textit{log} file, one can plot the potential energy ($p_\text{e}$) and the kinetic energy ($k_\text{e}$) of the system over time {\color{red}(see the figure below)}.
+Run the simulation again using LAMMPS. From the information printed in the terminal, one can see that the temperature \textit{Temp} starts from 0, but rapidly reaches the requested value and stabilize itself near $T=1$ (unitless). From what has been printed in the \textit{log} file, one can use Pyplot and plot the potential energy ($p_\text{e}$) and the kinetic energy ($k_\text{e}$) of the system over time (Fig.\,\ref{fig:evolution-energy}).
 
-{\color{red}Figure: a) The potential energy ($p_\text{e}$) rapidly decreases during energy minimization (orange). Then, after the molecular dynamics simulation starts, $p_\text{e}$ increases until it reaches a plateau value of about -0.25 (blue). b) The kinetic energy ($k_\text{e}$) is equal to zero during energy minimization, then increases during molecular dynamics until it reaches a plateau value of about 1.5.}
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{energy}
+\caption{a) The potential energy ($p_\text{e}$) rapidly decreases during energy minimization (orange). Then, after the molecular dynamics simulation starts, $p_\text{e}$ increases until it reaches a plateau value of about -0.25 (blue). b) The kinetic energy ($k_\text{e}$) is equal to zero during energy minimization, then increases during molecular dynamics until it reaches a plateau value of about 1.5.}
+\label{fig:evolution-energy}
+\end{figure}
 
 \paragraph{Trajectory visualization}
 
@@ -183,31 +188,23 @@ By visualizing the previously generated \textit{dump.min.lammpstrj} file, you ma
 1 outside the cylinder, let us delete the misplaced atoms by adding the following commands to \textit{input.md.lammps}:
 \begin{verbatim}
 read_data minimized_coordinate.data
-region cylinder_in cylinder z 0 0 10 INF INF side in
-region cylinder_out cylinder z 0 0 10 INF INF side out
+region cylinder_in cylinder z 0 0 10 INF INF &
+    side in
+region cylinder_out cylinder z 0 0 10 INF INF &
+    side out
 group group_type_1 type 1
 group group_type_2 type 2
 group group_region_in region cylinder_in
 group group_region_out region cylinder_out
-group group_type_1_in intersect group_type_1 group_region_in
-group group_type_2_out intersect group_type_2 group_region_out
+group group_type_1_in & 
+    intersect group_type_1 group_region_in
+group group_type_2_out &
+    intersect group_type_2 group_region_out
 delete_atoms group group_type_1_in
 delete_atoms group group_type_2_out
 \end{verbatim}
 The two first \textit{region} commands recreate the previously defined regions, which is necessary since regions are not saved by the \textit{write$\_$data} command. The first two \textit{group} commands create atom groups based on their types. The next two \textit{group} commands create atom groups based on their
 positions at the beginning of the simulation, i.e. when the commands are being read by LAMMPS. The last two \textit{group} commands create atom groups based on the intersection between the previously defined groups. Finally, the two \textit{delete$\_$atoms} commands delete the atoms of type 1 that are located within the cylinder, as well as the atoms of type 2 that are located outside the cylinder, respectively. 
-
-{\color{red}When you run the \textit{input.md.lammps} input using LAMMPS, you can see in the \textit{log} file how many atoms are in each group, and how many atoms have been deleted:}
-\begin{verbatim}
-1000 atoms in group group_type_1
-150 atoms in group group_type_2
-149 atoms in group group_region_in
-1001 atoms in group group_region_out
-0 atoms in group group_type_1_in
-1 atoms in group group_type_2_out
-Deleted 0 atoms, new total = 1150
-Deleted 1 atoms, new total = 1149
-\end{verbatim}
 Add the following lines to \textit{input.md.lammps}. Note the absence of \textit{Simulation settings} section, because the settings are taken from the \textit{.data} file.
 \begin{verbatim}
 # 4) Visualization
