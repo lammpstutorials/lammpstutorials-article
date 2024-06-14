@@ -1,5 +1,4 @@
 
-
 lammps-tutorials.aux
 lammps-tutorials.log
 lammps-tutorials.out
@@ -8,6 +7,9 @@ lammps-tutorials.blg
 lammps-tutorials.pdf
 lammps-tutorials.suppinfo
 
-**/*.aux
+chapters/*.aux
+
 __pycache__
 **/__pycache__
+
+

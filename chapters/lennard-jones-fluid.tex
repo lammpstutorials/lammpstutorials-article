@@ -66,7 +66,6 @@ pair_coeff 2 2 0.5 3.0
 \end{verbatim}}
 The two first commands, \textit{mass (...)}, attribute a mass equal to 1 (unitless) to both atoms of type 1 and 2. Alternatively, one could have written these two commands into one single line: \textit{mass $\star 1$}, where the star symbol means \textit{all} the atom types of the simulation.  The third line, \textit{pair$\_$coeff 1 1 1.0 1.0}, sets the Lennard-Jones coefficients for the interactions between atoms of type 1, respectively the energy parameter $\epsilon_{11} = 1.0$ and the distance parameter $\sigma_{11} = 1.0$. Similarly, the last line sets the Lennard-Jones coefficients for the interactions between atoms of type 2, $\epsilon_{22} = 0.5$, and $\sigma_{22} = 3.0$. By default, LAMMPS calculates the cross coefficients between the different atom types using geometric average: $\epsilon_{ij} = \sqrt{\epsilon_{ii} \epsilon_{jj}}$, $\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$. 
 
-
 \paragraph{Energy minimization}
 The system is now fully parametrized. Let us fill the two last remaining sections by adding the following lines to \textit{input.lammps}:
 \begin{verbatim}
@@ -110,19 +109,11 @@ Run the simulation again using LAMMPS. {\color{red}From the log file}, one can s
 
 \paragraph{Trajectory visualization}
 
-The simulation is running well, but we would like to visualize the trajectories of the atoms. To do so, we first need to print the positions of the atoms in a file at a regular interval. Add the following command to the \textit{input.lammps} file, in the \textit{Visualization} section of \textit{PART B}:
+ To visualize the trajectories of the atoms, we first need to print the positions of the atoms in a file at a regular interval. Add the following command to the \textit{input.lammps} file, in the \textit{Visualization} section of \textit{PART B}:
 \begin{verbatim}
 dump mydmp all atom 100 dump.lammpstrj
 \end{verbatim}
-Run the \textit{input.lammps} using LAMMPS again. A file named \textit{dump.lammpstrj} must appear within \textit{my-first-input/}. A \textit{.lammpstrj} file can be opened using VMD. {\color{red}With Ubuntu/Linux}, you can simply execute in the terminal:
-\begin{verbatim}
-vmd dump.lammpstrj
-\end{verbatim}
-Otherwise, you can open VMD and import the \textit{dump.lammpstrj} file manually using \textit{File -> New molecule}.
-By default, you should see a cloud of lines, but you can improve the representation (see this {\color{red}VMD tutorial} for basic instructions).
-
-{\color{red}Figure: View of a slice of the system using VMD, with both types of atoms represented as spheres. See the corresponding \href{https://youtu.be/vdSIJM5fVJE}{video}.}
-
+Run the \textit{input.lammps} using LAMMPS again. The file named \textit{dump.lammpstrj} created by LAMMPS within \textit{my-first-input/} can be opened using VMD.
 
 \subsubsection{Improving the script}
 
@@ -169,39 +160,8 @@ write_data minimized_coordinate.data
 The main novelty, compared to the previous input script, is the \textit{write$\_$data} command. This command is used to print the final state of the simulation in a file named \textit{minimized$\_$coordinate.data}. Note that the \textit{write$\_$data} command is placed after the \textit{minimize} command. This \textit{.data} file will be used later to restart the simulation from the final state of the energy minimization step.
 
 Run the \textit{input.min.lammps} script using LAMMPS. A new dump file named \textit{dump.min.lammpstrj} will appear in the folder, allowing you to visualize
-the atom's trajectories during minimization. In addition, a file named \textit{minimized$\_$coordinate.data} will be created. If you open \textit{minimized$\_$coordinate.data} with a text editor, you can see that it contains all the information necessary to restart the simulation, such as the number of atoms and the box size, the \textit{masses}, the \textit{pair$\_$coeffs}:
-\begin{verbatim}
-1150 atoms
-2 atom types
-
--20 20 xlo xhi
--20 20 ylo yhi
--20 20 zlo zhi
-
-Masses
-
-1 1
-2 1
-
-Pair Coeffs # lj/cut
-
-1 1 1
-2 0.5 3
-(...)
-\end{verbatim}
-The \textit{minimized$\_$coordinate.data} file also contains the final positions of the atoms:
-\begin{verbatim}
-(...)
-Atoms # atomic
-
-970 1 4.4615279184230525 -19.88248310680258 -19.497251754277872 0 0 0
-798 1 1.0773937287460968 -17.57843015813612 -19.353475858951473 0 0 0
-21 1 -17.542385434367777 -16.647460269156497 -18.93914807895693 0 0 0
-108 1 -15.96241088290946 -15.956274144833264 -19.016419910024062 0 0 0
-351 1 0.08197850837343444 -16.852380573900156 -19.28249747472579 0 0 0
-402 1 -5.270160783673711 -15.592291204068946 -19.6382667867645 0 0 0
-(...)
-\end{verbatim}
+the atom's trajectories during minimization. In addition, a file named \textit{minimized$\_$coordinate.data} will be created. If you open \textit{minimized$\_$coordinate.data} with a text editor, you can see that it contains all the information necessary to restart the simulation, such as the number of atoms and the box size, the \textit{masses}, the \textit{pair$\_$coeffs}.
+The \textit{minimized$\_$coordinate.data} file also contains the final positions of the atoms within the \textit{Atoms} section.
 The first five columns of the \textit{Atoms} section correspond (from left to right) to the atom indexes (from 1 to the total number of atoms, 1150), the atom types (1 or 2 here), and the atoms positions $x$, $y$, $z$. The last three columns are image flags that keep track of which atoms crossed the periodic boundary.
 
 \paragraph{Restarting from a saved configuration}
@@ -214,7 +174,7 @@ atom_style atomic
 pair_style lj/cut 2.5
 boundary p p p
 \end{verbatim}
-Now, instead of creating a new region and adding atoms to it, we can simply add the following command:
+Here, instead of creating a new region and adding atoms to it, we can simply import the previously saved configuration by adding the following command to \textit{input.md.lammps}:
 \begin{verbatim}
 # 2) System definition
 read_data minimized_coordinate.data
@@ -256,18 +216,30 @@ dump mydmp all atom 1000 dump.md.lammpstrj
 \end{verbatim}
 Let us extract the number of atoms of each type inside the cylinder as a function of time, by adding the following commands to \textit{input.md.lammps}:
 \begin{verbatim}
-variable number_type1_in equal count(group_type_1,cylinder_in)
-variable number_type2_in equal count(group_type_2,cylinder_in)
-fix myat1 all ave/time 10 200 2000 v_number_type1_in &
+variable number_type1_in &
+    equal count(group_type_1,cylinder_in)
+variable number_type2_in & 
+    equal count(group_type_2,cylinder_in)
+fix myat1 all ave/time 10 200 2000 &
+    v_number_type1_in &
     file output-population1vstime.dat
-fix myat2 all ave/time 10 200 2000 v_number_type2_in &
+fix myat2 all ave/time 10 200 2000 &
+    v_number_type2_in &
     file output-population2vstime.dat
 \end{verbatim}
 The 2 \textit{variables} are used to count the number of atoms of a specific group in the \textit{cylinder$\_$in} region. The two \textit{fix ave/time} are calling the previously defined variables and are printing their values into text files. By using \textit{10 200 2000}, variables are evaluated every 10 steps, averaged 200 times, and printed in the \textit{.dat} files every 2000 steps.
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{evolution}
+\caption{Evolution of the system during mixing.}
+\label{fig:evolution-population}
+\end{figure}
+
 Let us also extract the coordination number per atom between atoms of type 1 and 2, i.e. the average number of atoms of type 2 in the vicinity of the atoms of type 1. This coordination number will be used as an indicator of the degree of mixing of our binary mixture. Add the following lines into \textit{input.md.lammps}:
 \begin{verbatim}
-compute coor12 group_type_1 coord/atom cutoff 2.0 group group_type_2
+compute coor12 group_type_1 coord/atom &
+    cutoff 2.0 group group_type_2
 compute sumcoor12 all reduce ave c_coor12
 fix myat3 all ave/time 10 200 2000 &
     c_sumcoor12 file coordinationnumber12.dat
@@ -275,7 +247,8 @@ fix myat3 all ave/time 10 200 2000 &
 The \textit{compute ave} is used to average the per atom coordination number that is calculated by the \textit{coord/atom} compute. This averaging is necessary as \textit{coord/atom} returns an array where each value corresponds to a certain couple of atoms i-j. Such an array can't be printed by \textit{fix ave/time}. Finally, let us complete the script by adding the following lines to \textit{input.md.lammps}:
 \begin{verbatim}
 # 5) Run
-velocity all create 1.0 4928459 mom yes rot yes dist gaussian
+velocity all create 1.0 4928459 mom yes rot yes &
+    dist gaussian
 fix mynve all nve
 fix mylgv all langevin 1.0 1.0 0.1 1530917 zero yes
 timestep 0.005
@@ -288,16 +261,8 @@ Run \textit{input.md.lammps} using LAMMPS. Open the \textit{dump.md.lammpstrj} u
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{evolution}
-\caption{Evolution of the system during mixing.}
-\label{fig:evolution-population}
-\end{figure}
-
-\begin{figure}
-\centering
 \includegraphics[width=\linewidth]{mixing}
-\caption{Evolution of the number $N$ of atoms within the \textit{cylinder$\_$in} region as a function of the time $t$ (a),
-and evolution of the coordination number (b).}
+\caption{a) Evolution of the number $N$ of atoms within the \textit{cylinder$\_$in} region as a function of the time $t$. b) Evolution of the coordination number.}
 \label{fig:mixing}
 \end{figure}
 
