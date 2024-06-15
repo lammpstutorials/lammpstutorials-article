@@ -1,4 +1,4 @@
-\begin{thebibliography}{20}
+\begin{thebibliography}{22}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\urlprefix}{}
 \providecommand{\doiprefix}{https://doi.org/}
@@ -147,5 +147,19 @@
 \newblock Violations of {{Jeffery's}} theory in the dynamics of nanographene in
   shear flow.
 \newblock Physical Review Fluids.  2021; 6(3):034303.
+
+\bibitem[{Van~Duin et~al.(2001)Van Duin, Adri CT and Dasgupta, Siddharth and
+  Lorant, Francois and Goddard, William A}]{van2001reaxff}
+\textbf{\color{LiveCoMSMediumGrey} Van~Duin AC}, Dasgupta S, Lorant F, Goddard
+  WA.
+\newblock {{ReaxFF}}: a reactive force field for hydrocarbons.
+\newblock The Journal of Physical Chemistry A.  2001; 105(41):9396--9409.
+
+\bibitem[{Zou and Van~Duin(2012)Zou, Chenyu and Van Duin,
+  Adri}]{zou2012investigation}
+\textbf{\color{LiveCoMSMediumGrey} Zou C}, Van~Duin A.
+\newblock Investigation of complex iron surface catalytic chemistry using the
+  {{ReaxFF}} reactive force field method.
+\newblock Jom.  2012; 64:1426--1437.
 
 \end{thebibliography}

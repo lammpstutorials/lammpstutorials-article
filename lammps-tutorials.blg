@@ -6,45 +6,45 @@ Database file #1: journal-article.bib
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
 Warning--can't use both volume and number fields in hestenes1952methods
 Warning--empty author and editor in kohlmeyer2017topotools
-You've used 20 entries,
+You've used 22 entries,
             3450 wiz_defined-function locations,
-            849 strings with 9599 characters,
-and the built_in function-call counts, 45561 in all, are:
-= -- 6030
-> -- 284
-< -- 9
-+ -- 144
-- -- 71
-* -- 4007
-:= -- 4726
-add.period$ -- 59
-call.type$ -- 20
+            864 strings with 9977 characters,
+and the built_in function-call counts, 49651 in all, are:
+= -- 6572
+> -- 308
+< -- 10
++ -- 156
+- -- 77
+* -- 4366
+:= -- 5155
+add.period$ -- 65
+call.type$ -- 22
 change.case$ -- 2
-chr.to.int$ -- 20
-cite$ -- 22
-duplicate$ -- 4591
-empty$ -- 4237
-format.name$ -- 119
-if$ -- 10664
+chr.to.int$ -- 22
+cite$ -- 24
+duplicate$ -- 5003
+empty$ -- 4616
+format.name$ -- 131
+if$ -- 11618
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 206
-newline$ -- 105
-num.names$ -- 40
-pop$ -- 336
+missing$ -- 226
+newline$ -- 115
+num.names$ -- 44
+pop$ -- 366
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 285
+skip$ -- 311
 stack$ -- 0
-substring$ -- 8492
-swap$ -- 509
+substring$ -- 9245
+swap$ -- 556
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 118
+type$ -- 130
 warning$ -- 2
-while$ -- 194
+while$ -- 214
 width$ -- 0
-write$ -- 264
+write$ -- 290
 (There were 2 warnings)
