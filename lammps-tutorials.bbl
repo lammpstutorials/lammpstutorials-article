@@ -1,4 +1,4 @@
-\begin{thebibliography}{22}
+\begin{thebibliography}{24}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\urlprefix}{}
 \providecommand{\doiprefix}{https://doi.org/}
@@ -161,5 +161,19 @@
 \newblock Investigation of complex iron surface catalytic chemistry using the
   {{ReaxFF}} reactive force field method.
 \newblock Jom.  2012; 64:1426--1437.
+
+\bibitem[{Vashishta et~al.(1990)Vashishta, P and Kalia, Rajiv K and Rino,
+  Jos{\'e} P and Ebbsj{\"o}, Ingvar}]{vashishta1990interaction}
+\textbf{\color{LiveCoMSMediumGrey} Vashishta P}, Kalia RK, Rino JP, Ebbsj{\"o}
+  I.
+\newblock Interaction potential for {{SiO2}}: A molecular-dynamics study of
+  structural correlations.
+\newblock Physical Review B.  1990; 41(17):12197.
+
+\bibitem[{Frenkel and Smit(2023)Frenkel, Daan and Smit,
+  Berend}]{frenkel2023understanding}
+\textbf{\color{LiveCoMSMediumGrey} Frenkel D}, Smit B.
+\newblock Understanding molecular simulation: from algorithms to applications.
+\newblock Elsevier; 2023.
 
 \end{thebibliography}
