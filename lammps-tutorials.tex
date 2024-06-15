@@ -1074,10 +1074,340 @@ If you open the \textit{dump.lammpstrj} file using \textit{VMD}, you should see 
 \label{fig:PEG-distance}
 \end{figure}
 
+\subsection{Tutorial 4: Nanosheared electrolyte}
+\label{sheared-confined-label}
 
+\begin{figure}
+{\centering
+\includegraphics[width=0.55\linewidth]{NANOSHEAR}
+\caption{Snapshot of the electrolyte nano-confined in a slit pore.}}
+\label{fig:NANOSHEAR}
+\end{figure}
 
+The objective of this tutorial is to simulate an electrolyte nanoconfined and sheared by two walls (Fig.\,\ref{fig:NANOSHEAR}). Some properties of the sheared fluid, such as its density and velocity profiles, will be extracted. This tutorial illustrates some key aspects of
+combining a fluid and a solid in the same simulation. A major difference with the previous tutorial, \hyperref[all-atoms-label]{Polymer in water}, is that here a rigid four points water model named TIP4P is used \cite{abascal2005general}. TIP4P is one of the most common water models due to its high accuracy.
 
+\subsubsection{System preparation}
+The fluid and walls must first be generated, and then equilibrated at reasonable temperature and pressure.
 
+\paragraph{System generation}
+Create a new folder called \textit{systemcreation/}. Within \textit{systemcreation/}, open a blank file called \textit{input.lammps}, and copy the following lines into it:
+\begin{verbatim}
+units real
+atom_style full
+bond_style harmonic
+angle_style harmonic
+pair_style lj/cut/tip4p/long 1 2 1 1 0.1546 12.0
+kspace_style pppm/tip4p 1.0e-4
+\end{verbatim}
+These lines are used to define the most basic parameters, including the \textit{atom}, \textit{bond}, and \textit{angle} styles, as well as interaction potential. Here \textit{lj/cut/tip4p/long} imposes a Lennard Jones potential with a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential. So far, the commands are relatively similar to the 
+previous tutorial (\hyperref[all-atoms-label]{Polymer in water}), with two major differences; the use of \textit{lj/cut/tip4p/long} and \textit{pppm/tip4p}, instead of \textit{lj/cut/coul/long} and pppm. These two tip4p-specific commands allow us to model a four-point water molecule without explicitly defining the fourth massless atom \textit{M}. The value of 
+$0.1546\,\text{$\text{\AA{}}$}$ corresponds to the \textit{O-M} distance and is given by the water model. Here, TIP4P-2005 is used \cite{abascal2005general}.
+
+Let us create the box by adding the following lines to \textit{input.lammps}:
+\begin{verbatim}
+lattice fcc 4.04
+region box block -3 3 -3 3 -7 7
+create_box 5 box &
+bond/types 1 &
+angle/types 1 &
+extra/bond/per/atom 2 &
+extra/angle/per/atom 1 &
+extra/special/per/atom 2
+\end{verbatim}
+The \textit{lattice} command defines the unit cell. Here, the face-centered cubic (fcc) lattice with a scale factor of
+4.04 has been chosen for the future positioning of the atoms of the walls. The \textit{region} command defines a geometric
+region of space. By choosing \textit{xlo=-3} and \textit{xhi=3}, and because we have previously chosen a lattice with a scale
+factor of 4.04, the region box extends from -12.12 Å to 12.12 Å along the $x$ direction. The \textit{create$\_$box} command creates a simulation box with 5 types of atoms: the oxygen and hydrogen of the water molecules, the two ions ($\text{Na}^+$,
+$\text{Cl}^-$), and the atom of the walls. The \textit{create$\_$box} command extends over 6 lines thanks to the $\&$ character. The second and third lines are used to indicate that the simulation contains 1 type of bond and 1 type of angle (both required by the water molecule). The parameters for these bond and angle constraints will be given later. The
+three last lines are for memory allocation. Now, we can add atoms to the system. First, let us create two sub-regions corresponding respectively to the two solid walls, and create a larger region from the union of the two regions. Then, let us create atoms of type 5 (the wall) within the two regions. Add the following lines to \textit{input.lammps}:
+\begin{verbatim}
+region rbotwall block -3 3 -3 3 -4 -3
+region rtopwall block -3 3 -3 3 3 4
+region rwall union 2 rbotwall rtopwall
+create_atoms 5 region rwall
+\end{verbatim}
+Atoms will be placed in the positions of the previously defined lattice, thus forming fcc solids. In order to add the water molecules, first download the \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level2/nanosheared-electrolyte/systemcreation/RigidH2O.txt}{molecule template} and place it within \textit{systemcreation/}. The template contains all the
+necessary information concerning the water molecule, such as atom positions, bonds, and angles. Add the following lines to \textit{input.lammps}:
+\begin{verbatim}
+region rliquid block INF INF INF INF -2 2
+molecule h2omol RigidH2O.txt
+create_atoms 0 region rliquid mol h2omol 482793
+\end{verbatim}
+Within the last four lines, a \textit{region} named \textit{rliquid} for depositing the water molecules are created based on the last defined lattice, which is \textit{fcc 4.04}. The \textit{molecule} command opens up the molecule template named
+\textit{RigidH2O.txt}, and names the associated molecule \textit{h2omol}. Molecules are created on the \textit{fcc 4.04} lattice by the \textit{create$\_$atoms} command. The first parameter is '0', meaning that the atom ids from the \textit{RigidH2O.txt} file will be used. The number \textit{482793} is a seed that is required by LAMMPS, it can be any positive integer. Finally, let us create 30 ions (15 $\text{Na}^+$ and 15 $\text{Cl}^-$) in between the water molecules, by adding the following commands to \textit{input.lammps}:
+\begin{verbatim}
+create_atoms 3 random 15 52802 rliquid &
+    overlap 0.3 maxtry 500
+create_atoms 4 random 15 90182 rliquid &
+    overlap 0.3 maxtry 500
+set type 3 charge 1
+set type 4 charge -1
+\end{verbatim}
+Each \textit{create$\_$atoms} command will add 15 ions at random positions within the \textit{rliquid} region, ensuring that there is no \textit{overlap} with existing molecules. Feel free to increase or decrease the salt concentration by changing the number of desired ions. To keep the system charge neutral, always insert the same number of $\text{Na}^+$ and $\text{Cl}^-$, unless there are other charges in the system. The charges of the newly added ions are specified by the two \textit{set} commands.
+
+Before starting the simulation, we still need to define the parameters of the simulation: the mass of the 5 atom types (O, H, $\text{Na}^+$, $\text{Cl}^-$, and wall), the pairwise interaction parameters (here, the parameters for the Lennard-Jones potential), and the bond and angle parameters. Copy the following line into \textit{input.lammps}:
+\begin{verbatim}
+include ../PARM.lammps
+include ../GROUP.lammps
+\end{verbatim}
+Create a new text file, call it \textit{PARM.lammps}, and copy it next to the \textit{systemcreation/} folder. Copy the following lines into PARM.lammps:
+\begin{verbatim}
+mass 1 15.9994 # water
+mass 2 1.008 # water
+mass 3 28.990 # ion
+mass 4 35.453 # ion
+mass 5 26.9815 # wall
+
+pair_coeff 1 1 0.185199 3.1589 
+pair_coeff 2 2 0.0 1.0 # water
+pair_coeff 3 3 0.04690 2.4299
+pair_coeff 4 4 0.1500 4.04470
+pair_coeff 5 5 11.697 2.574
+pair_coeff 1 5 0.4 2.86645
+
+bond_coeff 1 0 0.9572
+
+angle_coeff 1 0 104.52
+\end{verbatim}
+Each \textit{mass} command assigns a mass in grams/mole to an atom type. Each \textit{pair$\_$coeff} assigns respectively the depth of the LJ potential (in Kcal/mole), and the distance (in Ångstrom) at which the particle-particle potential energy is 0.
+
+As already seen in previous tutorials, and with the important exception of \textit{pair$\_$coeff 1 5}, only pairwise interaction between atoms of identical types were assigned. By default, LAMMPS calculates the pair coefficients for the interactions between atoms of different types (i and j) by using geometrical average: $\epsilon_{ij} = (\epsilon_{ii} + \epsilon_{jj})/2$,  $\sigma_{ij} = (\sigma_{ii} + \sigma_{jj})/2.$ Other rules for cross coefficients can be set with the \textit{pair$\_$modify} command, but for the sake of simplicity, the default option is kept here. By default, the value of $\epsilon_\text{1-5} = 5.941\,\text{kcal/mol}$ would be extremely high (compared to the water-water energy $\epsilon_\text{1-1} = 0.185199\,\text{kcal/mol}$), which would make the surface extremely hydrophilic. The walls were made less hydrophilic by reducing the  LJ energy of interaction $\epsilon_\text{1-5}$. The \textit{bond$\_$coeff}, which is here used for the O-H bond of the water molecule, sets both the energy of the harmonic potential and the equilibrium distance in Ångstrom. The value is \textit{0} for the energy because we are going to use a rigid model for the water molecule. The shape of the molecule will be preserved later by the \textit{shake} algorithm. Similarly, the angle coefficient here for the H-O-H angle of the water molecule sets the energy of the harmonic potential (also 0) and the equilibrium angle is in degree.
+
+Let us also create another file called \textit{GROUP.lammps} next to \textit{PARM.lammps}, and copy the following lines into it:
+\begin{verbatim}
+group H2O type 1 2
+group Na type 3
+group Cl type 4
+group ions union Na Cl
+group fluid union H2O ions
+
+group wall type 5
+region rtop block INF INF INF INF 0 INF
+region rbot block INF INF INF INF INF 0
+group top region rtop
+group bot region rbot
+group walltop intersect wall top
+group wallbot intersect wall bot
+\end{verbatim}
+To avoid high density and pressure, let us add the following lines to \textit{input.lammps} to delete a few of the water molecules:
+\begin{verbatim}
+delete_atoms random fraction 0.15 yes &
+    H2O NULL 482793 mol yes
+\end{verbatim}
+Finally, add the following lines to \textit{input.lammps}:
+\begin{verbatim}
+run 0
+
+write_data system.data
+write_dump all atom dump.lammpstrj
+\end{verbatim}
+With \textit{run 0}, the simulation will run for 0 steps, which is enough for creating the system and saving the final state. The \textit{write$\_$data} creates a file named \textit{system.data} containing all the information required to restart the
+simulation from the final configuration generated by this input file. The \textit{write$\_$dump} command prints the final
+positions of the atoms, and can be opened with VMD to visualize the system. Run the \textit{input.lammps} file using LAMMPS. Always check that your system has been correctly created by looking at the periodic images. Atomic defects may occur at the boundary (Fig.\,\ref{fig:NANOSHEAR-system}).
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{NANOSHEAR-system}
+\caption{Side view of the system. Periodic images are represented in darker colors. Water molecules are in red and white, $\text{Na}^+$ ions in purple, $\text{Cl}^-$ ions in lime, and wall atoms in gray. Note the absence of atomic defect at the cell boundaries.}
+\label{fig:NANOSHEAR-system}
+\end{figure}
+
+\paragraph{Energy minimization}
+Let us move the atoms and place them in more energetically favorable positions before starting the simulation. Let us call this step \textit{energy minimization}, although it is not a conventional \textit{minimization} as done for instance
+in the first tutorial; \hyperref[lennard-jones-label]{Lennard Jones fluid}. To perform this energy minimization, let us
+create a new folder named \textit{minimization/} next to \textit{systemcreation/}, and create a new input file named \textit{input.lammps} in it. Copy the following lines in \textit{input.lammps}:
+\begin{verbatim}
+boundary p p p
+units real
+atom_style full
+bond_style harmonic
+angle_style harmonic
+pair_style lj/cut/tip4p/long 1 2 1 1 0.1546 12.0
+kspace_style pppm/tip4p 1.0e-4
+
+read_data ../systemcreation/system.data
+
+include ../PARM.lammps
+include ../GROUP.lammps
+\end{verbatim}
+The only difference with the previous input is that, instead of creating a new box and new atoms, we open the previously created file \textit{system.data} located in \textit{systemcreation/}. The file \textit{system.data} contains the definition of the simulation box and the positions of the atoms. Now, let us create a first simulation step using a relatively small 
+timestep ($0.5\,\text{fs}$), as well as a low temperature of $T = 1\,\text{K}$:
+\begin{verbatim}
+fix mynve fluid nve/limit 0.1
+fix myber fluid temp/berendsen 1 1 100
+fix myshk H2O shake 1.0e-4 200 0 b 1 a 1
+timestep 0.5
+\end{verbatim}
+Just like \textit{fix nve}, the fix \textit{nve/limit} performs constant NVE integration to update positions and velocities of the atoms at each timestep, but also limits the maximum distance atoms can travel at each timestep. Here, only the fluid molecules and ions will move. The \textit{fix temp/berendsen} rescales the velocities of the atoms to force the temperature of the system to reach the desired value of 1 K, and the shake algorithm is used in order to maintain the shape of the water molecules. Let us also print the atom positions in a \textit{.lammpstrj} file by adding the following line to \textit{input.lammps}:
+\begin{verbatim}
+dump mydmp all atom 1000 dump.lammpstrj
+thermo 200
+\end{verbatim}
+Finally, let us run for 4000 steps. Add the  following lines into \textit{input.lammps}:
+\begin{verbatim}
+run 4000
+\end{verbatim}
+In order to better equilibrate the system, let us perform two additional steps with a larger timestep and a larger imposed temperature:
+\begin{verbatim}
+fix myber fluid temp/berendsen 300 300 100
+timestep 1.0
+
+run 4000
+
+unfix mynve
+fix mynve fluid nve
+
+run 4000
+
+write_data system.data
+\end{verbatim}
+For the last of the 3 steps, fix \textit{nve} is used instead of \textit{nve/limit}, which will allow for a better relaxation of the atom positions. When running the \textit{input.lammps} file with LAMMPS, you should see that the total energy of the system decreases during the first of the 3 steps, before re-increasing a little after the temperature is increased from 1 to $300\,\text{K}$ (Fig.\,\ref{fig:NANOSHEAR-minimization}). If you look at the trajectory using VMD, you will see some of the atoms, in particular, the ones that were
+initially in problematic positions. 
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{NANOSHEAR-minimization}
+\caption{Energy as a function of time extracted from the log file using \textit{Python} and \textit{lammps$\_$logfile}.}
+\label{fig:NANOSHEAR-minimization}
+\end{figure}
+
+\paragraph{System equilibration}
+Now, let us equilibrate further the entire system by letting both fluid and piston relax at ambient temperature. Create a new folder called \textit{equilibration/} next to the previously created folders, and create a new \textit{input.lammps} file in it. Add the following lines into \textit{input.lammps}:
+\begin{verbatim}
+boundary p p p
+units real
+atom_style full
+bond_style harmonic
+angle_style harmonic
+pair_style lj/cut/tip4p/long 1 2 1 1 0.1546 12.0
+kspace_style pppm/tip4p 1.0e-4
+
+read_data ../minimization/system.data
+
+include ../PARM.lammps
+include ../GROUP.lammps
+\end{verbatim}
+Finally, let us complete the \textit{input.lammps} file:
+\begin{verbatim}
+fix mynve all nve
+fix myber all temp/berendsen 300 300 100
+fix myshk H2O shake 1.0e-4 200 0 b 1 a 1
+fix myrct all recenter NULL NULL 0
+timestep 1.0
+\end{verbatim}
+The fix \textit{recenter} has no influence on the dynamics, but will keep the system in the center of the box, which makes the
+visualization easier. Then, add the following lines to \textit{input.lammps} for the trajectory visualization and output:
+\begin{verbatim}
+dump mydmp all atom 1000 dump.lammpstrj
+thermo 500
+variable walltopz equal xcm(walltop,z)
+variable wallbotz equal xcm(wallbot,z)
+variable deltaz equal v_walltopz-v_wallbotz
+fix myat1 all ave/time 100 1 100 v_deltaz &
+    file interwall_distance.dat
+\end{verbatim}
+The first two variables extract the centers of mass of the two walls. Then, the \textit{deltaz} variable is used to calculate the distance between the two variables \textit{walltopz} and \textit{wallbotz}, i.e. the distance between the two walls.
+
+Finally, let us add the \textit{run} command: 
+\begin{verbatim}
+run 30000
+write_data system.data  
+\end{verbatim}
+Run the \textit{input.lammps} file using LAMMPS. As seen from the data printed by \textit{fix myat1}, the distance $\delta_z$ between the two walls reduces until it reaches an equilibrium value (Fig.\,\ref{fig:NANOSHEAR-equilibration}). Note that it is generally recommended to run longer equilibration. Here, for instance, the slowest process in the system is probably the ionic diffusion. Therefore the equilibration should in principle be longer than the time
+the ions need to diffuse over the size of the pore ($\approx 1.2\,\text{nm}$), i.e. of the order of half a nanosecond.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{NANOSHEAR-equilibration}
+\caption{Distance between the walls as a function of time. After a few picoseconds, the distance between the two walls equilibrates near its final value.}
+\label{fig:NANOSHEAR-equilibration}
+\end{figure}
+
+\subsubsection{Imposed shearing}
+
+From the equilibrated configuration, let us impose a laterial motion to the two walls and shear the electrolyte.
+In a new folder called \textit{shearing/}, create a new \textit{input.lammps} file that starts like the previous ones:
+\begin{verbatim}
+boundary p p p
+units real
+atom_style full
+bond_style harmonic
+angle_style harmonic
+pair_style lj/cut/tip4p/long 1 2 1 1 0.1546 12.0
+kspace_style pppm/tip4p 1.0e-4
+\end{verbatim}
+Let us import the previously equilibrated data, include the parameter and group files, and then deal with the dynamics of the system.
+\begin{verbatim}
+read_data ../equilibration/system.data
+
+include ../PARM.lammps
+include ../GROUP.lammps
+
+fix mynve all nve
+compute Tfluid fluid temp/partial 0 1 1
+fix myber1 fluid temp/berendsen 300 300 100
+fix_modify myber1 temp Tfluid
+compute Twall wall temp/partial 0 1 1
+fix myber2 wall temp/berendsen 300 300 100
+fix_modify myber2 temp Twall
+fix myshk H2O shake 1.0e-4 200 0 b 1 a 1
+fix myrct all recenter NULL NULL 0
+\end{verbatim}
+One difference here is that two thermostats are used, one for the fluid (\textit{myber1}) and one for the solid (\textit{myber2}). The use of \textit{fix$\_$modify} together with \textit{compute} ensures that the right temperature value is used by the thermostats. The use of temperature \textit{compute} with \textit{temp/partial 0 1 1} is meant to exclude the \textit{x} coordinate from the thermalization, which is important since a large velocity will be imposed along \textit{x}. 
+
+Then, let us impose the velocity of the two walls  by adding the following command to \textit{input.lammps}:
+\begin{verbatim}
+fix mysf1 walltop setforce 0 NULL NULL
+fix mysf2 wallbot setforce 0 NULL NULL
+velocity wallbot set -2e-4 NULL NULL
+velocity walltop set 2e-4 NULL NULL
+\end{verbatim}
+The \textit{setforce} commands cancel the forces on \textit{walltop} and \textit{wallbot}, respectively. Therefore the atoms of the two groups do not experience any force from the rest of the system. In the absence of force acting on those atoms, they will conserve their initial velocity. The \textit{velocity} commands act only once and impose the velocity of the atoms of the groups \textit{wallbot} and \textit{walltop}, respectively.
+
+Finally, let us dump the atom positions, extract the velocity profiles using several \textit{ave/chunk} commands, extract the
+force applied on the walls, and then run for $200\,\text{ps}$ Add the following lines to \textit{input.lammps}:
+\begin{verbatim}
+dump mydmp all atom 5000 dump.lammpstrj
+thermo 500
+thermo_modify temp Tfluid
+
+compute cc1 H2O chunk/atom bin/1d z 0.0 1.0
+compute cc2 wall chunk/atom bin/1d z 0.0 1.0
+compute cc3 ions chunk/atom bin/1d z 0.0 1.0
+
+fix myac1 H2O ave/chunk 10 15000 200000 &
+cc1 density/mass vx file water.profile_1A.dat
+fix myac2 wall ave/chunk 10 15000 200000 &
+cc2 density/mass vx file wall.profile_1A.dat
+fix myac3 ions ave/chunk 10 15000 200000 &
+cc3 density/mass vx file ions.profile_1A.dat
+
+fix myat1 all ave/time 10 100 1000 f_mysf1[1] &
+    f_mysf2[1] file forces.dat
+
+timestep 1.0
+run 200000
+write_data system.data
+\end{verbatim}
+Here, a binning of $1\,\text{Å}$ is used. For smoother profiles, you can reduce its value. The averaged velocity and density profiles of the fluid can be plotted (Figs.\ref{fig:NANOSHEAR-velocity}-\ref{fig:NANOSHEAR-density}). As expected here, the velocity of the fluid is found to increase linearly along $z$.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{NANOSHEAR-velocity}
+\caption{Velocity profiles for water molecules, ions and walls along the \textit{z} axis. The line is a linear fit assuming that the pore size is $h = 1.8\,\text{nm}$.}
+\label{fig:NANOSHEAR-velocity}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{NANOSHEAR-density}
+\caption{Water density $\rho$ profile along the \textit{z} axis.}
+\label{fig:NANOSHEAR-density}
+\end{figure}
+
+From the force applied by the fluid on the solid, one can extract the stress within the fluid, which allows one to
+measure its viscosity $\dot{\eta}$ according to: $\eta = \tau / \dot{\gamma}$ where $\tau$ is the stress applied by the fluid on the shearing wall, and $\dot{\gamma}$ the shear rate (which is imposed here) \cite{gravelle2021violations}. Here the shear rate is approximatively $\dot{\gamma} = 16 \cdot 10^9\,\text{s}^{-1}$, and using a surface area of $A = 6 \cdot 10^{-18}\,\text{m}^2$, one gets an estimate for the shear viscosity for the confined fluid of $\eta = 6.6\,\text{mPa.s}$. The viscosity calculated at such a high shear rate may differ from the expected \textit{bulk} value. In general, it is recommended to use a lower value for the shear rate. Note that for lower shear rates, the ratio of noise-to-signal is larger, and longer simulations are needed. Another important point is that the viscosity of a fluid next to a solid surface is typically larger than in bulk due to interaction with the walls. Therefore, one expects the present simulation to return a viscosity that is slightly larger than what would be measured in the absence of a wall.
 
 
 

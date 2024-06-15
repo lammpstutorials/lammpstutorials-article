@@ -1,4 +1,4 @@
-\begin{thebibliography}{18}
+\begin{thebibliography}{20}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\urlprefix}{}
 \providecommand{\doiprefix}{https://doi.org/}
@@ -133,5 +133,19 @@
   and solvation: the {{GROMOS}} force-field parameter sets {{53A5}} and
   {{53A6}}.
 \newblock Journal of computational chemistry.  2004; 25(13):1656--1676.
+
+\bibitem[{Abascal and Vega(2005)Abascal, Jose LF and Vega,
+  Carlos}]{abascal2005general}
+\textbf{\color{LiveCoMSMediumGrey} Abascal JL}, Vega C.
+\newblock A general purpose model for the condensed phases of water:
+  {{TIP4P/2005}}.
+\newblock The Journal of chemical physics.  2005; 123(23).
+
+\bibitem[{Gravelle et~al.(2021)Gravelle, Simon and Kamal, Catherine and Botto,
+  Lorenzo}]{gravelle2021violations}
+\textbf{\color{LiveCoMSMediumGrey} Gravelle S}, Kamal C, Botto L.
+\newblock Violations of {{Jeffery's}} theory in the dynamics of nanographene in
+  shear flow.
+\newblock Physical Review Fluids.  2021; 6(3):034303.
 
 \end{thebibliography}
