@@ -6,45 +6,48 @@ Database file #1: journal-article.bib
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
 Warning--can't use both volume and number fields in hestenes1952methods
 Warning--empty author and editor in kohlmeyer2017topotools
-You've used 24 entries,
+Warning--empty author and editor in grossfieldimplementation
+Warning--missing publisher in grossfieldimplementation
+Warning--there's a month but no year in grossfieldimplementation
+You've used 25 entries,
             3450 wiz_defined-function locations,
-            872 strings with 10295 characters,
-and the built_in function-call counts, 53149 in all, are:
-= -- 7023
-> -- 332
-< -- 11
-+ -- 168
-- -- 83
-* -- 4669
-:= -- 5522
-add.period$ -- 71
-call.type$ -- 24
+            875 strings with 10419 characters,
+and the built_in function-call counts, 54139 in all, are:
+= -- 7150
+> -- 336
+< -- 12
++ -- 170
+- -- 84
+* -- 4750
+:= -- 5628
+add.period$ -- 72
+call.type$ -- 25
 change.case$ -- 2
-chr.to.int$ -- 24
-cite$ -- 26
-duplicate$ -- 5354
-empty$ -- 4948
-format.name$ -- 143
-if$ -- 12437
+chr.to.int$ -- 25
+cite$ -- 30
+duplicate$ -- 5469
+empty$ -- 5042
+format.name$ -- 145
+if$ -- 12667
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 243
-newline$ -- 125
-num.names$ -- 48
-pop$ -- 401
+missing$ -- 249
+newline$ -- 128
+num.names$ -- 50
+pop$ -- 415
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 336
+skip$ -- 353
 stack$ -- 0
-substring$ -- 9869
-swap$ -- 599
+substring$ -- 10014
+swap$ -- 610
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 140
-warning$ -- 2
-while$ -- 229
+type$ -- 146
+warning$ -- 5
+while$ -- 233
 width$ -- 0
-write$ -- 315
-(There were 2 warnings)
+write$ -- 324
+(There were 5 warnings)

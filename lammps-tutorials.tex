@@ -760,7 +760,6 @@ Note the relatively small timestep of $0.0005\,\text{ps}$ used. A reactive force
 \paragraph{Launch the deformation}
 After equilibration, let us set the velocity to 15 m/s and run for a longer duration than previously. Add the following lines into \textit{input.lammps}:
 \begin{verbatim}
-# 0.15 A/ps = 15 m/s
 velocity carbon_top set 0 0 0.15
 run 280000
 \end{verbatim}
@@ -1782,7 +1781,7 @@ the temperature follows well the desired annealing procedure  (Fig.\,\ref{fig:GC
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{GCMC-snapshot}
+\includegraphics[width=0.9\linewidth]{GCMC-snapshot}
 \caption{Snapshot of the final amorphous silica (SiO2) with Si atom in yellow and O atoms in red.}
 \label{fig:GCMC-snapshot}
 \end{figure}
@@ -2004,6 +2003,245 @@ duration was made possible by the use of a large pressure.
 \includegraphics[width=\linewidth]{GCMC-solvated}
 \caption{Snapshot of the silica system after the adsorption of the water molecules, with the oxygen of the water molecules represented in cyan.}
 \label{fig:GCMC-solvated}
+\end{figure}
+
+\subsection{Tutorial 7: Free energy calculation}
+\label{umbrella-sampling-label}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{US}
+\caption{Snapshot of the atoms. The atom colored in pink feels the additional force used for the umbrella sampling method.}
+\label{fig:US}
+\end{figure}
+
+\noindent The objective of this tutorial is to measure a free energy profile of particles across a barrier potential
+using two methods; free sampling and umbrella sampling \cite{frenkel2023understanding} (Fig.\,\ref{fig:US}). For the sake of simplicity and to reduce the computation time, the barrier potential will be imposed artificially on the atoms. The procedure is valid for more complex systems, and can be adapted to many other situations, for instance for measuring the adsorption barrier near an interface, or for calculating translocation barrier through a membrane.
+
+\subsubsection{Method 1: Free sampling}
+The most direct way to calculate a free energy profile is to extract the partition function from a classic (unbiased) molecular
+dynamics simulation, and then to estimate the Gibbs free energy using 
+$$\Delta G = -RT \ln(p/p_0),$$
+where $\Delta G$ is the free energy difference, $R$ the gas constant, $T$ the temperature, $p$ the pressure, and $p_0$ the reference pressure. As an illustration, let us apply this method to an extremely simple configuration that consists of a few particles diffusing in a box in the presence of a position-dependent repealing force that makes the center of the box a relatively unfavorable area to explore.
+
+\paragraph{Basic LAMMPS parameters}
+\noindent Create a folder named \textit{FreeSampling/}, and create an input script named \textit{input.lammps} in it. Copy the following lines into it:
+\begin{verbatim}
+variable sigma equal 3.405 # Angstrom
+variable epsilon equal 0.238 # Kcal/mol
+variable U0 equal 1.5*${epsilon} # Kcal/mol
+variable dlt equal 1.0 # Angstrom
+variable x0 equal 10.0  # Angstrom
+
+units real
+atom_style atomic
+pair_style lj/cut 3.822
+pair_modify shift yes
+boundary p p p
+\end{verbatim}
+Here, we start by defining variables for the Lennard-Jones interaction $\sigma$ and $\epsilon$ and for the repulsive potential $U (x)$: $U_0$, $\delta$, and $x_0$, see the analytical expression below. The value of 3.822 for the cut-off was chosen to 
+create a WCA, purely repulsive, potential. It was calculated as $2^{1/6} \times 3.405$ where $3.405 = \sigma$. The system of unit \textit{real}, for which energy is in kcal/mol, distance in Ångstrom, or time in femtosecond, has been chosen for practical reasons: the WHAM algorithm used in the second part of the tutorial automatically assumes the energy to
+be in kcal/mol. Atoms will interact through a Lennard-Jones potential with a cut-off equal to $\sigma \times 2 ^ {1/6}$ (i.e. a WCA repulsive potential). The potential is shifted to be equal to 0 at the cut-off using the \textit{pair$\_$modify}.
+
+\paragraph{System creation and settings}
+\noindent Let us define the simulation block and randomly add atoms by adding the following lines to \textit{input.lammps}:
+\begin{verbatim}
+region myreg block -25 25 -5 5 -25 25
+create_box 1 myreg
+create_atoms 1 random 60 341341 myreg &
+    overlap 1.0 maxtry 50
+
+mass * 39.95
+pair_coeff * * ${epsilon} ${sigma}
+neigh_modify every 1 delay 4 check yes
+\end{verbatim}
+Here, the values for Lennard-Jones parameters $\sigma$ and $\epsilon$ as well as the mass $m = 39.95$ grams/mole were taken from argon. In the previous subsection, the variables $U_0$, $\delta$, and $x_0$ were defined. They are used to create
+the repulsive potential restricting the atoms to explore the center of the box: 
+$$U(x) = U_0 \left[ \arctan \left( \dfrac{x+x_0}{\delta} \right) - \arctan \left(\dfrac{x-x_0}{\delta} \right) \right]. $$
+From the derivative of the potential with respect to $x$, we obtain the expression
+for the force that will be imposed to the atoms:
+$$F(x)= \dfrac{U_0}{\delta} \left[ \dfrac{1}{(x-x_0)^2/\delta^2+1} - \dfrac{1}{(x+x_0)^2/\delta^2+1} \right].$$
+Fig.\,\ref{fig:potential} shows the potential and force along the $x$ axis.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{US-potential}
+\caption{Potential $U (x)$ (a) and force $F (x)$ (b) imposed to the atoms.}
+\label{fig:potential}
+\end{figure}
+
+Let us apply energy minimization to the system, and then impose the force $F(x)$ to all of the atoms in the simulation using the \textit{addforce} command. Add the following lines to \textit{input.lammps}:
+\begin{verbatim}
+minimize 1e-4 1e-6 100 1000
+reset_timestep 0
+
+variable U atom ${U0}*atan((x+${x0})/${dlt}) &
+    -${U0}*atan((x-${x0})/${dlt})
+variable F atom ${U0}/((x-${x0})^2/${dlt}^2+1)/${dlt} &
+    -${U0}/((x+${x0})^2/${dlt}^2+1)/${dlt}
+fix myadf all addforce v_F 0.0 0.0 energy v_U
+\end{verbatim}
+Finally, let us combine the \textit{fix nve} with a \textit{Langevin} thermostat and run a molecular dynamics simulation. With
+these two commands, the MD simulation is effectively in the NVT ensemble: constant number of atoms $N$, constant volume $V$, and constant temperature $T$. Let us perform an equilibration of 500000 steps in total, using a timestep of $2\,\text{fs}$ (i.e. a total duration of $1\,\text{ns}$). To make sure that $1\,\text{ns}$ is long enough, let us record the evolution of the number of atoms in the central (energetically unfavorable) region called \textit{mymes}:
+\begin{verbatim}
+fix mynve all nve
+fix mylgv all langevin 119.8 119.8 50 1530917
+
+region mymes block -${x0} ${x0} INF INF INF INF 
+variable n_center equal count(all,mymes)
+fix myat all ave/time 10 50 500 v_n_center &
+    file density_evolution.dat
+
+timestep 2.0
+thermo 10000
+run 500000
+\end{verbatim}
+
+\paragraph{Run and data acquisition}
+Finally, let us record the density profile of the atoms along the $x$ axis using the \textit{ave/chunk} command. A total of 10 density profiles will be printed. The step count is reset to 0 to synchronize with the output times of \textit{fix density/number}, and the \textit{fix myat} is canceled (it has to be canceled before a reset time):
+\begin{verbatim}
+unfix myat
+reset_timestep 0
+
+compute cc1 all chunk/atom bin/1d x 0.0 1.0
+fix myac all ave/chunk 10 400000 4000000 &
+    cc1 density/number file density_profile_8ns.dat
+dump mydmp all atom 200000 dump.lammpstrj
+
+thermo 100000
+run 4000000
+\end{verbatim}
+This simulation with a total duration of $9\,\text{ns}$ needs a few minutes to complete (Fig.\,\ref{fig:US-system}). Feel free to increase the duration of the last run for smoother results.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{US-system}
+\caption{Snapshot of the system. Notice that the density of atoms is lower in the central part of the box, due to the additional force $F (x)$.}
+\label{fig:US-system}
+\end{figure}
+
+\paragraph{Data analysis}
+First, let us make sure that the initial equilibration of $1\,\text{ns}$ is long enough by looking at the \textit{density$\_$evolution.dat} file. Here, we can see that the number of atoms in the central region, $n_\mathrm{central}$, evolves near its equilibrium value (which is close to 0) after about $0.1\,\text{ns}$ (Fig.\,\ref{fig:US-density-evolution}). One can also have a look at the density profile, which shows that the density in the center of the box is about two orders of magnitude lower than inside the reservoir (Fig.\,\ref{fig:US-density}). Then, let us plot $-R T \ln(\rho/\rho_\mathrm{bulk})$ and compare it with the imposed (reference) potential $U$. The agreement with the expected energy profile is reasonable,
+despite some noise in the central part (Fig.\,\ref{fig:US-FreeSampling}). 
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{US-density-evolution}
+\caption{Evolution of the number of atoms in the central region during equilibration.}
+\label{fig:US-density-evolution}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{US-density}
+\caption{Averaged density profiles for the $8\,\text{ns}$ run. The value for the reference density $\rho_\text{bulk} = 0.0033$ was estimated from the raw density profiles.}
+\label{fig:US-density}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{US-FreeSampling}
+\caption{Calculated potential $-R T \ln(\rho/\rho_\mathrm{bulk})$ compared to the imposed potential. The calculated potential is in blue.}
+\label{fig:US-FreeSampling}
+\end{figure}
+
+\paragraph{The limits of free sampling}
+If we increase the value of $U_0$, the average number of atoms in the central region will decrease, making it difficult to obtain a good resolution for the free energy profile. For instance, using $U_0 = 10 \epsilon$, not a single atom crosses the central part of the simulation, despite the 8 ns of simulation. In that case, it is better to use the umbrella sampling method to extract free energy profiles, see the next section.
+
+\subsubsection{Method 2: Umbrella sampling}
+Umbrella sampling is a biased molecular dynamics method, i.e. a method in which additional forces are added to the atoms in order to make the unfavorable states more likely to occur \cite{frenkel2023understanding}. Several simulations (or windows) will be performed with different parameters for the imposed biasing. Here, let us force one of the atoms to explore the central region of the box. To do so, let us add a potential $V$ to one of the particle, and force it to move along the axis $x$. The chosen path is called the axis of reaction. The results will be analyzed using the weighted histogram analysis method (WHAM), which allows to remove the effect of the bias and eventually deduce the unbiased free energy profile.
+
+\paragraph{LAMMPS input script}
+Create a new folder called \textit{BiasedSampling/}, and create a new input file named \textit{input.lammps} in it, and copy the following lines:
+\begin{verbatim}
+variable sigma equal 3.405 # Angstrom
+variable epsilon equal 0.238 # Kcal/mol
+variable U0 equal 10*${epsilon} # Kcal/mol
+variable dlt equal 0.5 # Angstrom
+variable x0 equal 5.0  # Angstrom
+variable k equal 1.5 # Kcal/mol/Angstrom^2
+
+units real
+atom_style atomic
+pair_style lj/cut 3.822 # 2^(1/6) * 3.405 &
+    WCA potential
+pair_modify shift yes
+boundary p p p
+
+region myreg block -25 25 -5 5 -25 25
+create_box 2 myreg
+create_atoms 2 single 0 0 0
+create_atoms 1 random 5 341341 myreg &
+    overlap 1.0 maxtry 50
+
+mass * 39.948
+pair_coeff * * ${epsilon} ${sigma}
+neigh_modify every 1 delay 4 check yes
+group topull type 2
+
+variable U atom ${U0}*atan((x+${x0})/${dlt}) &
+    -${U0}*atan((x-${x0})/${dlt})
+variable F atom ${U0}/((x-${x0})^2/${dlt}^2+1)/${dlt} &
+    -${U0}/((x+${x0})^2/${dlt}^2+1)/${dlt}
+fix pot all addforce v_F 0.0 0.0 energy v_U
+
+fix mynve all nve
+fix mylgv all langevin 119.8 119.8 50 1530917
+timestep 2.0
+thermo 100000
+run 500000
+reset_timestep 0
+
+dump mydmp all atom 1000000 dump.lammpstrj
+\end{verbatim}
+So far, this code resembles the one of Method 1, except for the additional particle of type 2. This particle is identical to the particles of type 1 (same mass and Lennard-Jones parameters), but will be exposed to the biasing potential.
+Let us create a loop with 50 steps, and move progressively the center of the bias potential by an increment of 0.1 nm. Add the following lines into \textit{input.lammps}:
+\begin{verbatim}
+variable a loop 50
+label loop
+variable xdes equal ${a}-25
+variable xave equal xcm(topull,x)
+fix mytth topull spring tether ${k} &
+    ${xdes} 0 0 0
+run 200000
+fix myat1 all ave/time 10 10 100 v_xave &
+    v_xdes file data-k1.5/position.${a}.dat
+run 1000000
+unfix myat1
+next a
+jump SELF loop
+\end{verbatim}
+A folder named \textit{data-k1.5/} needs to be created within \textit{BiasedSampling/}. The spring command serves to impose the
+additional harmonic potential with the spring constant $k$. Note that the value of $k$ should be chosen with care,
+if $k$ is too small, the particle won't follow the biasing potential center, if $k$ is too large, there will be no overlapping between the different windows. See the side note named \textit{on the choice of k} below. The center of the harmonic potential $x_\text{des}$ successively takes values from -25 to 25. For each value of $x_\text{des}$, an equilibration step of 0.4 ns is
+performed, followed by a step of 2 ns during which the position along $x$ of the particle is saved in data files (one data file per value of $x_\text{des}$). You can always increase the duration of the runs for better samplings.
+
+\paragraph{WHAM algorithm}
+\noindent In order to generate the free energy profile from the density distribution,
+let us use the WHAM algorithm \cite{grossfieldimplementation}. You can download it from \href{http://membrane.urmc.rochester.edu/?page_id=126}{Alan Grossfield} website, and compile it using: 
+\begin{verbatim}
+cd wham
+make clean
+make
+\end{verbatim}
+\noindent The compilation creates an executable called \textit{wham} that you can copy in the \textit{BiasedSampling/} folder. Alternatively, use the \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level3/free-energy-calculation/BiasedSampling/wham-release-2.0.11.tgz}{version 2.0.11} I have downloaded. In order to apply the WHAM algorithm to our simulation, we first need to create a metadata file. This file simply contains 
+\begin{itemize}
+\item the paths to all the data files,
+\item the value of $x_\text{des}$,
+\item and the values of $k$.
+\end{itemize}
+Download the \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level3/free-energy-calculation/BiasedSampling/metadata.dat}{metadata.dat} file I have written. Then, simply run the following command in the terminal:
+\begin{verbatim}
+./wham -25 25 50 1e-8 119.8 0 metadata.dat PMF.dat
+\end{verbatim}
+where -25 and 25 are the boundaries, 50 is the number of bins, 1e-8 the tolerance, and 119.8 the temperature. A file named
+PMF.dat has been created and contains the free energy profile in Kcal/mol. Again, one can compare the result of the PMF with the imposed potential $U$, which shows that the agreement is excellent (Fig.\,\ref{fig:US-freenergy}). We can see that the agreement is quite good despite the very short calculation time and the very high value for the energy barrier. Obtaining the same results with Free Sampling would require performing extremely long and costly simulations.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{US-freenergy}
+\caption{Calculated potential using umbrella sampling compared to the imposed potential. The calculated potential is in blue.}
+\label{fig:US-freenergy}
 \end{figure}
 
 \section*{Author Contributions}

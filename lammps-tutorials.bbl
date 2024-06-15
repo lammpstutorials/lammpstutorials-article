@@ -1,4 +1,4 @@
-\begin{thebibliography}{24}
+\begin{thebibliography}{25}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\urlprefix}{}
 \providecommand{\doiprefix}{https://doi.org/}
@@ -175,5 +175,9 @@
 \textbf{\color{LiveCoMSMediumGrey} Frenkel D}, Smit B.
 \newblock Understanding molecular simulation: from algorithms to applications.
 \newblock Elsevier; 2023.
+
+\bibitem[{Grossfield(????)Grossfield, Alan}]{grossfieldimplementation}
+\textbf{\color{LiveCoMSMediumGrey} Grossfield A}, An implementation of
+  {{WHAM}}: the Weighted Histogram Analysis Method Version 2.0.10;.
 
 \end{thebibliography}
