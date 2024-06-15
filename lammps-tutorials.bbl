@@ -1,4 +1,4 @@
-\begin{thebibliography}{8}
+\begin{thebibliography}{18}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\urlprefix}{}
 \providecommand{\doiprefix}{https://doi.org/}
@@ -57,5 +57,81 @@
   DiNola A, Haak JR.
 \newblock Molecular dynamics with coupling to an external bath.
 \newblock The Journal of chemical physics.  1984; 81(8):3684--3690.
+
+\bibitem[{Schmid et~al.(2011)Schmid, Nathan and Eichenberger, Andreas P and
+  Choutko, Alexandra and Riniker, Sereina and Winger, Moritz and Mark, Alan E
+  and Van Gunsteren, Wilfred F}]{schmid2011definition}
+\textbf{\color{LiveCoMSMediumGrey} Schmid N}, Eichenberger AP, Choutko A,
+  Riniker S, Winger M, Mark AE, Van~Gunsteren WF.
+\newblock Definition and testing of the GROMOS force-field versions 54A7 and
+  54B7.
+\newblock European biophysics journal.  2011; 40:843--856.
+
+\bibitem[{Wu et~al.(2006)Wu, Yujie and Tepper, Harald L and Voth, Gregory
+  A}]{wu2006flexible}
+\textbf{\color{LiveCoMSMediumGrey} Wu Y}, Tepper HL, Voth GA.
+\newblock Flexible simple point-charge water model with improved liquid-state
+  properties.
+\newblock The Journal of chemical physics.  2006; 124(2).
+
+\bibitem[{Luty and van Gunsteren(1996)Luty, Brock A and van Gunsteren, Wilfred
+  F}]{luty1996calculating}
+\textbf{\color{LiveCoMSMediumGrey} Luty BA}, van Gunsteren WF.
+\newblock Calculating electrostatic interactions using the particle-particle
+  particle-mesh method with nonperiodic long-range interactions.
+\newblock The Journal of Physical Chemistry.  1996; 100(7):2581--2587.
+
+\bibitem[{Liese et~al.(2017)Liese, Susanne and Gensler, Manuel and Krysiak,
+  Stefanie and Schwarzl, Richard and Achazi, Andreas and Paulus, Beate and
+  Hugel, Thorsten and Rabe, Jürgen P and Netz, Roland R}]{liese2017hydration}
+\textbf{\color{LiveCoMSMediumGrey} Liese S}, Gensler M, Krysiak S, Schwarzl R,
+  Achazi A, Paulus B, Hugel T, Rabe JP, Netz RR.
+\newblock Hydration effects turn a highly stretched polymer from an entropic
+  into an energetic spring.
+\newblock ACS nano.  2017; 11(1):702--712.
+
+\bibitem[{Berendsen et~al.(1981)Berendsen, Herman JC and Postma, James PM and
+  van Gunsteren, Wilfred F and Hermans, Jan}]{berendsen1981interaction}
+\textbf{\color{LiveCoMSMediumGrey} Berendsen HJ}, Postma JP, van Gunsteren WF,
+  Hermans J.
+\newblock Interaction models for water in relation to protein hydration.
+\newblock In: \emph{Intermolecular forces: proceedings of the fourteenth
+  Jerusalem symposium on quantum chemistry and biochemistry held in jerusalem,
+  israel, april 13--16, 1981} Springer; 1981. p. 331--342.
+
+\bibitem[{Nos{\'e}(1984)Nos{\'e}, Shuichi}]{nose1984unified}
+\textbf{\color{LiveCoMSMediumGrey} Nos{\'e} S}.
+\newblock A unified formulation of the constant temperature molecular dynamics
+  methods.
+\newblock The Journal of chemical physics.  1984; 81(1):511--519.
+
+\bibitem[{Hoover(1985)Hoover, William G}]{hoover1985canonical}
+\textbf{\color{LiveCoMSMediumGrey} Hoover WG}.
+\newblock Canonical dynamics: Equilibrium phase-space distributions.
+\newblock Physical review A.  1985; 31(3):1695.
+
+\bibitem[{Martyna et~al.(1994)Martyna, Glenn J and Tobias, Douglas J and Klein,
+  Michael L}]{martyna1994constant}
+\textbf{\color{LiveCoMSMediumGrey} Martyna GJ}, Tobias DJ, Klein ML.
+\newblock Constant pressure molecular dynamics algorithms.
+\newblock The Journal of chemical physics.  1994; 101(5):4177--4189.
+
+\bibitem[{Malde et~al.(2011)Malde, Alpeshkumar K and Zuo, Le and Breeze,
+  Matthew and Stroet, Martin and Poger, David and Nair, Pramod C and
+  Oostenbrink, Chris and Mark, Alan E}]{malde2011automated}
+\textbf{\color{LiveCoMSMediumGrey} Malde AK}, Zuo L, Breeze M, Stroet M, Poger
+  D, Nair PC, Oostenbrink C, Mark AE.
+\newblock An automated force field topology builder {{(ATB)}} and repository:
+  version 1.0.
+\newblock Journal of chemical theory and computation.  2011; 7(12):4026--4037.
+
+\bibitem[{Oostenbrink et~al.(2004)Oostenbrink, Chris and Villa, Alessandra and
+  Mark, Alan E and Van Gunsteren, Wilfred F}]{oostenbrink2004biomolecular}
+\textbf{\color{LiveCoMSMediumGrey} Oostenbrink C}, Villa A, Mark AE,
+  Van~Gunsteren WF.
+\newblock A biomolecular force field based on the free enthalpy of hydration
+  and solvation: the {{GROMOS}} force-field parameter sets {{53A5}} and
+  {{53A6}}.
+\newblock Journal of computational chemistry.  2004; 25(13):1656--1676.
 
 \end{thebibliography}

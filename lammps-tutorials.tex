@@ -149,36 +149,6 @@ Tutorials should clearly define what system and/or software requirements the res
 A tutorial will normally draw on additional files and materials; clearly indicate where and how these are available, with links, and how they are being archived for the long-term and maintained so they stay current.
 You will likely want to reference your GitHub repository as a central point to access all of this information, and then the GitHub repository may link out to other content as needed.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \subsection{Tutorial 1: Lennard-Jones fluid}
 \label{lennard-jones-label}
 
@@ -444,34 +414,6 @@ Run \textit{input.md.lammps} using LAMMPS. Open the \textit{dump.md.lammpstrj} u
 \label{fig:mixing}
 \end{figure}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \subsection{Tutorial 2: Pulling on a carbon nanotube}
 \label{carbon-nanotube-label}
 
@@ -531,7 +473,6 @@ $U_\theta = k_\theta ( \theta - \theta_0)^2$. The \textit{dihedral$\_$coeff} and
 \begin{verbatim}
 include parm.lammps
 \end{verbatim}
-
 
 \paragraph{Prepare initial state}
 Before starting the molecular dynamics simulation, let us make sure that we start from a clean initial state
@@ -701,7 +642,7 @@ As always, is it important to ensure that the simulation behaves as expected by 
 When using a classical force field, as we just did, the bonds between atoms are non-breakable. Let us perform a similar simulation, 
 but this time using a reactive force field instead, allowing for the bonds to break if the applied deformation is large enough.
 
-\subsection{Input file initialization}
+\paragraph{Input file initialization}
 \noindent Create a second folder named \textit{breakable-bonds/} next to \textit{unbreakable-bonds/}, and create a new input file in it called \textit{input.lammps}. Type into input.lammps:
 \begin{verbatim}
 # Initialisation
@@ -842,15 +783,296 @@ Looking at the evolution of energy again, one can see that the energy in increas
 \label{fig:CNT-breakable-energy}
 \end{figure}
 
+\subsection{Tutorial 3: Polymer in water}
+\label{all-atoms-label}
 
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{PEG}
+\caption{Snapshot of the PEG polymer molecule in water. Water molecules are represented as a transparent continuum field for clarity.}
+\label{fig:PEG}
+\end{figure}
 
+The goal of this tutorial is to use LAMMPS and solvate a small hydrophilic polymer (PEG - PolyEthylene Glycol) in a reservoir of water (Fig.\,\ref{fig:PEG}). An all-atom description is used for both PEG (GROMOS 54A7 force field \cite{schmid2011definition}) and water (SPC/Fw model \cite{wu2006flexible}) and the long range Coulomb interactions are solved using the PPPM solver \cite{luty1996calculating}. Once the water reservoir is properly equilibrated at the desired temperature and pressure, the polymer molecule is added and a constant stretching force is applied to both ends of the polymer. The evolution of the polymer length is measured as a function of time. This tutorial was inspired by a publication by Liese and coworkers, in which molecular dynamics simulations are compared with force spectroscopy experiments \cite{liese2017hydration}.
 
+\subsubsection{Preparing the water reservoir}
 
+In this tutorial, the water reservoir is first prepared in the absence of polymer. A rectangular box of water is created and
+equilibrated at ambient temperature and ambient pressure. The SPC/Fw water model is used \cite{wu2006flexible}, which is
+a flexible variant of the rigid SPC (simple point charge) model \cite{berendsen1981interaction}. Create a folder named \textit{pureH2O/}. Inside this folder, create an empty text file named \textit{input.lammps}. Copy the following lines in it:
+\begin{verbatim}
+units real
+atom_style full
+bond_style harmonic
+angle_style harmonic
+dihedral_style harmonic
+pair_style lj/cut/coul/long 12
+kspace_style pppm 1e-5
+special_bonds lj 0.0 0.0 0.5 &
+    coul 0.0 0.0 1.0 angle yes
+\end{verbatim}
+With the unit style \textit{real}, masses are in grams per mole, distances in Ångstroms, time in femtoseconds, energies
+in Kcal/mole. With the \textit{atom$\_$style full}, each atom is a dot with a mass and a charge that can be linked by bonds, angles, dihedrals and/or impropers. The \textit{bond$\_$style}, \textit{angle$\_$style}, and \textit{dihedral$\_$style} commands define the potentials for the bonds, angles, and dihedrals used in the simulation, here \textit{harmonic}. Finally, the \textit{special$\_$bonds} command cancels the Lennard-Jones interactions between the closest atoms of the same molecule.
+With the \textit{pair$\_$style} named \textit{lj/cut/coul/long}, atoms interact through both a Lennard-Jones (LJ) potential and Coulombic interactions. The value of $12\,\text{Å}$ is the cutoff. Finally, the \textit{kspace} command defines the long-range solver for the (long) Coulombic interactions. The \textit{pppm} style refers to particle-particle particle-mesh \cite{luty1996calculating}.
 
+Then, let us create a 3D simulation box of dimensions $9 \times 3 \times 3 \; \text{nm}^3$, and make space for 9 atom types (2 for the water molecule, and 7 for the polymer molecule), 7 bond types, 8 angle types, and 4 dihedral types. Copy the following lines into \textit{input.lammps}:
+\begin{verbatim}
+region box block -45 45 -15 15 -15 15
+create_box 9 box &
+bond/types 7 &
+angle/types 8 &
+dihedral/types 4 &
+extra/bond/per/atom 3 &
+extra/angle/per/atom 6 &
+extra/dihedral/per/atom 10 &
+extra/special/per/atom 14
+\end{verbatim}
+The \textit{extra/x/per/atom} commands are here for
+memory allocation. 
+Let us create a \textit{PARM.lammps} file containing all the parameters (masses, interaction energies, bond equilibrium
+distances, etc). In \textit{input.lammps}, add the following line:
+\begin{verbatim}
+include ../PARM.lammps
+\end{verbatim}
+Then, download and save the \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level2/polymer-in-water/PARM.lammps}{parameter} file next to the \textit{pureH2O/} folder. Within \textit{PARM.lammps}, the \textit{mass} and \textit{pair$\_$coeff} of atoms of types 8 and 9 are for water and the atoms of types 1 to 7 are for the polymer molecule. Similarly, the \textit{bond$\_$coeff 7} and \textit{angle$\_$coeff 8} are for water, while all the other parameters are for the polymer.
 
+Let us create water molecules. To do so, let us define what a water molecule is using a molecule \textit{template} called
+\textit{H2O-SPCFw.mol}, and then randomly create 1050 molecules. Add the following lines into \textit{input.lammps}:
+\begin{verbatim}
+molecule h2omol H2O-SPCFw.mol
+create_atoms 0 random 1050 87910 NULL mol &
+    h2omol 454756 overlap 1.0 maxtry 50
+\end{verbatim}
+The \textit{overlap 1} option of the \textit{create$\_$atoms} command ensures that no atoms are placed exactly in the same position, as this would cause the simulation to crash. The \textit{maxtry 50} asks LAMMPS to try at most 50 times to insert the molecules, which is useful in case some insertion attempts are rejected due to overlap. In some cases, depending on the system and the values of \textit{overlap} and \textit{maxtry}, LAMMPS may not create the desired number of molecules. Always check the number of created atoms in the \textit{log} file after starting the simulation:
+\begin{verbatim}
+Created 1050 atoms
+\end{verbatim}
+When LAMMPS fails to create the desired number of molecules, a WARNING appears in the \textit{log} file.
+The molecule template named \textit{H2O-SPCFw.mol} can be \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level2/polymer-in-water/pureH2O/H2O-SPCFw.mol}{downloaded} and saved in the \textit{pureH2O/} folder. This template contains the necessary structural information of a water molecule, such as the number of atoms, the id of the atoms that are connected by bonds, by angles, etc.
 
+Then, let us organize the atoms of types 8 and 9 of the water molecules in a group named \textit{H2O} and perform a small energy minimization. The energy minimization is mandatory here given the small \textit{overlap} value of 1 Ångstrom chosen in the \textit{create$\_$atoms} command. Add the following lines to \textit{input.lammps}:
+\begin{verbatim}
+group H2O type 8 9
+minimize 1.0e-4 1.0e-6 100 1000
+reset_timestep 0
+\end{verbatim}
+The \textit{reset$\_$timestep} command is optional. It is used here because the \textit{minimize} command is usually performed over an arbitrary number of steps. Let us use the \textit{fix npt} to control the temperature of the molecules with a Nosé-Hoover thermostat and the pressure of the system with a Nosé-Hoover barostat \cite{nose1984unified, hoover1985canonical, martyna1994constant}, by adding the following line to \textit{input.lammps}:
+\begin{verbatim}
+fix mynpt all npt temp 300 300 100 iso 1 1 1000
+\end{verbatim}
+The \textit{fix npt} allows us to impose both a temperature of $300\,\text{K}$ (with a damping constant of $100\,\text{fs}$),
+and a pressure of 1 atmosphere (with a damping constant of $1000\,\text{fs}$). With the \textit{iso} keyword, the three dimensions of the box will be re-scaled simultaneously. Let us print the atom positions in a \textit{.lammpstrj} file every 1000 steps (i.e. 1 ps), print the temperature volume, and density every 100 steps in 3 separate data files, and print the information in the terminal every 1000 steps:
+\begin{verbatim}
+dump mydmp all atom 1000 dump.lammpstrj
+variable mytemp equal temp
+variable myvol equal vol
+fix myat1 all ave/time 10 10 100 v_mytemp &
+    file temperature.dat
+fix myat2 all ave/time 10 10 100 v_myvol &
+    file volume.dat
+variable myoxy equal count(H2O)/3
+variable mydensity equal ${myoxy}/v_myvol
+fix myat3 all ave/time 10 10 100 v_mydensity &
+    file density.dat
+thermo 1000
+\end{verbatim}
+The variable \textit{myoxy} corresponds to the number of atoms divided by 3, i.e. the number of molecules.
 
+Finally, let us set the timestep to 1.0 fs, and run the simulation for 20 ps by adding the
+following lines to \textit{input.lammps}:
+\begin{verbatim}
+timestep 1.0
+run 20000
 
+write_data H2O.data
+\end{verbatim}
+The final state is written into \textit{H2O.data}. If you open the \textit{dump.lammpstrj} file using VMD, you should
+see the system quickly reaching its equilibrium volume and density (Fig.\,\ref{fig:PEG-water}). You can also open the \textit{density.dat} file to ensure that the system converged toward an equilibrated liquid water system during the 20 ps of simulation (Fig.\,\ref{fig:PEG-density}).
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{PEG-water}
+\caption{Water reservoir after equilibration. Oxygen atoms are in red, and hydrogen atoms are in white.}
+\label{fig:PEG-water}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{PEG-density}
+\caption{Evolution of the density of water with time. The density $\rho$ reaches a plateau after $\approx 10\,\text{ps}$.}
+\label{fig:PEG-density}
+\end{figure}
+
+\subsubsection{Solvating the PEG in water}
+Once the water reservoir is equilibrated, we can safely include the PEG polymer in the water before performing the pull experiment on the polymer. The PEG molecule topology was downloaded from the ATB repository \cite{malde2011automated, oostenbrink2004biomolecular}. It has a formula $\text{C}_{28}\text{H}_{58}\text{O}_{15}$, and the parameters are taken from
+the GROMOS 54A7 force field \cite{schmid2011definition}.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{PEG-in-vacuum}
+\caption{The PEG molecule in vacuum. The carbon atoms are in gray, the oxygen atoms in red, and the hydrogen atoms in white..}
+\label{fig:PEG-in-vacuum}
+\end{figure}
+
+Create a second folder alongside \textit{pureH2O/} and call it \textit{mergePEGH2O/}. Create a new blank file in it,
+call it \textit{input.lammps}. Within \textit{input.lammps}, copy the same first lines as previously:
+\begin{verbatim}
+units real
+atom_style full
+bond_style harmonic
+angle_style harmonic
+dihedral_style harmonic
+pair_style lj/cut/coul/long 12
+kspace_style pppm 1e-5
+special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 &
+    angle yes dihedral yes
+\end{verbatim}
+Then, import the previously generated data file \textit{H2O.data} as well as the \textit{PARM.lammps} file:
+\begin{verbatim}
+read_data ../pureH2O/H2O.data &
+    extra/bond/per/atom 3 &
+    extra/angle/per/atom 6 &
+    extra/dihedral/per/atom 10 &
+    extra/special/per/atom 14
+include ../PARM.lammps
+\end{verbatim}
+Let us create a molecule called \textit{pegmol} from the molecule \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level2/polymer-in-water/mergePEGH2O/PEG-GROMOS.mol}{template} for the PEG molecule, and let us create a single molecule in the middle of the box:
+\begin{verbatim}
+molecule pegmol PEG-GROMOS.mol
+create_atoms 0 single 0 0 0 mol pegmol 454756
+\end{verbatim}
+Let us create 2 groups to differentiate the PEG from the H2O, by adding the following lines to \textit{input.lammps}:
+\begin{verbatim}
+group H2O type 8 9
+group PEG type 1 2 3 4 5 6 7
+\end{verbatim}
+Water molecules that are overlapping with the PEG must be deleted to avoid future crashing. Add the following line to \textit{input.lammps}:
+\begin{verbatim}
+delete_atoms overlap 2.0 H2O PEG mol yes
+\end{verbatim}
+Here, the value of 2 Ångstroms for the overlap cutoff was fixed arbitrarily and can be chosen through trial and error. If the cutoff is too small, the simulation will crash. If the cutoff is too large, too many water molecules will unnecessarily be deleted.
+Finally, let us use the \textit{fix npt} to control the temperature, as well as the pressure by allowing the box size to be rescaled along the \textit{x} axis:
+\begin{verbatim}
+fix mynpt all npt temp 300 300 100 x 1 1 1000
+timestep 1.0
+\end{verbatim}
+Once more, let us dump the atom positions as well as the system temperature and volume:
+\begin{verbatim}
+dump mydmp all atom 100 dump.lammpstrj
+thermo 100
+variable mytemp equal temp
+variable myvol equal vol
+fix myat1 all ave/time 10 10 100 &
+    v_mytemp file temperature.dat
+fix myat2 all ave/time 10 10 100 &
+    v_myvol file volume.dat
+\end{verbatim}
+Let us also print the total enthalpy:
+\begin{verbatim}
+variable myenthalpy equal enthalpy
+fix myat3 all ave/time 10 10 100 &
+    v_myenthalpy file enthalpy.dat
+\end{verbatim}
+Finally, let us perform a short equilibration and print the
+final state in a data file. Add the following lines to the data file:
+\begin{verbatim}
+run 30000
+write_data mix.data
+\end{verbatim}
+If you open the \textit{dump.lammpstrj} file using VMD, or have a look at the evolution of the volume in \textit{volume.dat},
+you should see that the box dimension slightly evolves along \textit{x} to accommodate the new configuration.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{PEG-solvated}
+\caption{A single PEG molecule in water. Water molecules are represented as a transparent continuum field for clarity.}
+\label{fig:PEG-solvated}
+\end{figure}
+
+\subsubsection{Stretching the PEG molecule}
+Here, a constant forcing is applied to the two ends of the PEG molecule until it stretches. Create a new folder next to the previously created folders, call it \textit{pullonPEG/}, and create a new input file in it called \textit{input.lammps}. First, let us create a variable \textit{f0} corresponding to the magnitude of the force we are going to apply. The force magnitude is chosen to be large enough to overcome the thermal agitation and the entropic contribution from both water
+and PEG molecules (it was chosen by trial and error). Copy in the \textit{input.lammps} file:
+\begin{verbatim}
+variable f0 equal 5
+\end{verbatim}
+Note that $1\,\text{kcal/mol/Å}$ corresponds to $67.2\,\text{pN}$. Then, copy the same lines as previously:
+\begin{verbatim}
+units real
+atom_style full
+bond_style harmonic
+angle_style harmonic
+dihedral_style harmonic
+pair_style lj/cut/coul/long 12
+kspace_style pppm 1e-5
+special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 &
+    angle yes dihedral yes
+\end{verbatim}
+Start the simulation from the equilibrated PEG-water system and include again the parameter file by adding the following lines to the \textit{input.lammps}:
+\begin{verbatim}
+read_data ../mergePEGH2O/mix.data
+include ../PARM.lammps
+\end{verbatim}
+Then, let us create 4 atom groups: H2O and PEG (as previously), as well as 2 groups containing only the 2 oxygen atoms of types 6 and 7, respectively. Atoms of types 6 and 7 correspond to the oxygen atoms located at the ends of the PEG molecule, which we are going to use to pull on the PEG molecule. Add the following lines to the \textit{input.lammps}:
+\begin{verbatim}
+group H2O type 8 9
+group PEG type 1 2 3 4 5 6 7
+group topull1 type 6
+group topull2 type 7
+\end{verbatim}
+Add the following \textit{dump} command to the input to print the atom positions every 1000 steps:
+\begin{verbatim}
+dump mydmp all atom 1000 dump.lammpstrj
+\end{verbatim}
+Let us use a single Nosé-Hoover thermostat applied to all the atoms by adding the following lines to \textit{input.lammps}:
+\begin{verbatim}
+timestep 1.0
+fix mynvt all nvt temp 300 300 100
+\end{verbatim}
+Let us also print the end-to-end distance of the PEG,
+here defined as the distance between the groups \textit{topull1}
+and \textit{topull2}, as well as the temperature of the system 
+by adding the following lines to \textit{input.lammps}:
+\begin{verbatim}
+variable mytemp equal temp
+fix myat1 all ave/time 10 10 100 &
+    v_mytemp file output-temperature.dat
+variable x1 equal xcm(topull1,x)
+variable x2 equal xcm(topull2,x)
+variable y1 equal xcm(topull1,y)
+variable y2 equal xcm(topull2,y)
+variable z1 equal xcm(topull1,z)
+variable z2 equal xcm(topull2,z)
+variable delta_r equal &
+    sqrt((v_x1-v_x2)^2+(v_y1-v_y2)^2+(v_z1-v_z2)^2)
+fix myat2 all ave/time 10 10 100 v_delta_r &
+    file output-end-to-end-distance.dat
+thermo 1000
+\end{verbatim}
+Finally, let us simulate 30 picoseconds without any external forcing:
+\begin{verbatim}
+run 30000
+\end{verbatim}
+This first run serves as a benchmark to quantify the changes induced by the forcing. Then, let us apply a forcing on the 2 oxygen atoms using two \textit{add$\_$force} commands, and run for an extra 30 ps:
+\begin{verbatim}
+fix myaf1 topull1 addforce ${f0} 0 0
+fix myaf2 topull2 addforce -${f0} 0 0
+run 30000
+\end{verbatim}
+If you open the \textit{dump.lammpstrj} file using \textit{VMD}, you should see that the PEG molecule eventually aligns in the direction of the force (Fig.\,\ref{fig:PEG-in-water}). The evolution of the end-to-end distance over time shows the PEG adjusting to the external forcing (Fig.\,\ref{fig:PEG-distance}).
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{PEG-in-water}
+\caption{PEG molecule stretched along the \textit{x} direction in water. Water molecules are represented as a transparent continuum field for clarity.}
+\label{fig:PEG-in-water}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{PEG-distance}
+\caption{Evolution of the end-to-end distance of the PEG molecule with time. The forcing starts at $t = 30$ ps.}
+\label{fig:PEG-distance}
+\end{figure}
 
 
 
