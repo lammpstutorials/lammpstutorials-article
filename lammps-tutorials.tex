@@ -12,12 +12,6 @@
 % Omit the bestpractices option to remove the marking as a LiveCoMS paper.
 % Please note that these options may affect formatting.
 
-
-
-
-
-
-
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
@@ -33,7 +27,7 @@
 \usepackage{float}
 \usepackage{listings}
 \usepackage{xcolor}
-%\usepackage{array}
+\usepackage{array}
 \usepackage{booktabs}
 \usepackage{times}
 \usepackage{subcaption}
@@ -41,7 +35,6 @@
 \usepackage{microtype}
 \usepackage{tcolorbox}
 \usepackage{newverbs}
-
 \usepackage{listings}
 
 \usepackage[
@@ -69,7 +62,7 @@
 %%% IMPORTANT USER CONFIGURATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\versionnumber}{0.1}  % you should update the minor version number in preprints and major version number of submissions.
+\newcommand{\versionnumber}{1.0}  % you should update the minor version number in preprints and major version number of submissions.
 % Do not add a newline in the next command, no matter how long the repository name is, as it will break the link in the PDF.
 \newcommand{\githubrepository}{\url{https://github.com/lammpstutorials/lammpstutorials-article}}  %this should be the main github repository for this article
 
@@ -585,7 +578,12 @@ group carbon_mid region rmid
 \end{verbatim}
 The atoms of the edges as selected within the \textit{carbon$\_$top} and \textit{carbon$\_$bot} groups can be represented with a different color.
 
-{\color{red}Figure: CNT with atoms from the \textit{carbon$\_$top} and the \textit{carbon$\_$bot} groups are represented with a different color.}
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{CNT-underformed}
+\caption{CNT with atoms from the \textit{carbon$\_$top} and the \textit{carbon$\_$bot} groups are represented with a different color.}
+\label{fig:CNT-underformed}
+\end{figure}
 
 When running a simulation, the number of atoms in each group is printed in the terminal (and in the \textit{log.lammps} file). Always make sure that the number of atoms in each group corresponds to what is expected, just like here:
 \begin{verbatim}
@@ -603,9 +601,14 @@ group rdel region rdel
 delete_atoms random fraction 0.02 no rdel &
     NULL 482793 bond yes
 \end{verbatim}
-The \textit{delete$\_$atoms} command randomly deletes $2\,\%$ of the atoms from the \textit{rdel} group (i.e. about 10 atoms).
+The \textit{delete$\_$atoms} command randomly deletes $2\,\%$ of the atoms from the \textit{rdel} group (i.e. about 10 atoms) (Fig.\,\ref{fig:CNT-underformed-deleted}).
 
-{\color{red}Figure: CNT with \textit{10} randomly deleted atoms. }
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{CNT-underformed-deleted}
+\caption{CNT with \textit{10} randomly deleted atoms.}
+\label{fig:CNT-underformed-deleted}
+\end{figure}
 
 \paragraph{The molecular dynamics}
 Let us specify the thermalization and the dynamics of the system. Add the following lines to \textit{input.lammps}:
