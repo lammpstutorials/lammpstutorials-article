@@ -2,15 +2,13 @@ This is BibTeX, Version 0.99d (TeX Live 2023/Debian)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: lammps-tutorials.aux
 The style file: vancouver-livecoms.bst
-A level-1 auxiliary file: chapters/lennard-jones-fluid.aux
-A level-1 auxiliary file: chapters/breaking-a-carbon-nanotube.aux
 Database file #1: journal-article.bib
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
 Warning--can't use both volume and number fields in hestenes1952methods
 Warning--empty author and editor in kohlmeyer2017topotools
 You've used 8 entries,
             3450 wiz_defined-function locations,
-            771 strings with 6991 characters,
+            769 strings with 6920 characters,
 and the built_in function-call counts, 16736 in all, are:
 = -- 2219
 > -- 96
