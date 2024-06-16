@@ -103,51 +103,60 @@
 \maketitle
 
 \begin{abstract}
-This particular document provides a skeleton illustrating key sections for a Tutorial document.
-Please see the sample \texttt{sample-document.tex} in \url{github.com/livecomsjournal/article_templates/templates} for additional information on and examples of using the LiveCoMS LaTeX class.
-Here we also assume familiarity with LaTeX and knowledge of how to include figures, tables, etc.; if you want examples, see the sample just referenced.
+%This particular document provides a skeleton illustrating key sections for a Tutorial document.
+%Please see the sample \texttt{sample-document.tex} in \url{github.com/livecomsjournal/article_templates/templates} for additional information on and examples of using the LiveCoMS LaTeX class.
+%Here we also assume familiarity with LaTeX and knowledge of how to include figures, tables, etc.; if you want examples, see the sample just referenced.
 
-In your work, in this particular slot, please provide an abstract of no more than 250 words.
-Your abstract should explain the main contributions of your article, and should not contain any material that is not included in the main text.
-Please note that your abstract, plus the authorship material following it, must not extend beyond the title page or modifications to the LaTeX class will likely be needed.
+%In your work, in this particular slot, please provide an abstract of no more than 250 words.
+%Your abstract should explain the main contributions of your article, and should not contain any material that is not included in the main text.
+%Please note that your abstract, plus the authorship material following it, must not extend beyond the title page or modifications to the LaTeX class will likely be needed.
 \end{abstract}
 
 \end{frontmatter}
 
-
-
-
 \section{Introduction}
 
-Here you would explain what problem you are tackling and briefly motivate your work.
+%Here you would explain what problem you are tackling and briefly motivate your work.
 
-In this particular template, we have removed most of the usage examples which occur in \texttt{sample-document.tex} to provide a minimal template you can modify; however, we retain a couple of examples illustrating more unusual features of our templates/article class, such as the checklists, and information on algorithms and pseudocode.
+%In this particular template, we have removed most of the usage examples which occur in \texttt{sample-document.tex} to provide a minimal template you can modify; however, we retain a couple of examples illustrating more unusual features of our templates/article class, such as the checklists, and information on algorithms and pseudocode.
 
-Keep in mind, as you prepare your manuscript, that you should plan for a representative image  which will be used to highlight your article on the journal website and publications. Usually, this would be one of your figures, but it must also be uploaded separately upon article submission. We give specific guidelines for this image on the journal website in the section on article submission (see \url{https://livecomsjournal.github.io/authors/policies/index.html#article-submission}).
+%Keep in mind, as you prepare your manuscript, that you should plan for a representative image  which will be used to highlight your article on the journal website and publications. Usually, this would be one of your figures, but it must also be uploaded separately upon article submission. We give specific guidelines for this image on the journal website in the section on article submission (see \url{https://livecomsjournal.github.io/authors/policies/index.html#article-submission}).
 
-Additionally, for well-formatted manuscripts, we recommend that you let LaTeX handle figure/table placement for you as much as possible, so please avoid specifying strenuous float instructions like `[h!]` and `[H]` as much as possible.
+%Additionally, for well-formatted manuscripts, we recommend that you let LaTeX handle figure/table placement for you as much as possible, so please avoid specifying strenuous float instructions like `[h!]` and `[H]` as much as possible.
 
 \subsection{Scope}
 
-Tutorials should endeavor to cover the specific task at hand, and also highlight how the steps might need to be modified (or additional care might need to be taken at particular points) to handle more general cases.
-
-The scope of the tutorial, as well as the expected proficiencies / outcomes for researchers who complete the tutorial, should be clearly defined.
-This will often happen in a specific section or subsection in the article itself.
+This suite of tutorials is made of seven tutorials that are ordered by increasing difficulty. The first tutorial, \hyperref[lennard-jones-label]{Lennard Jones fluid},
+is meant for LAMMPS absolute beginners. The complexity of the simulations is then progressively increased for \hyperref[carbon-nanotube-label]{Pulling on a carbon nanotube}, \hyperref[all-atoms-label]{Polymer in water}, \hyperref[sheared-confined-label]{Nanosheared electrolyte}, and \hyperref[reactive-silicon-dioxide-label]{Reactive silicon dioxide}.
+Finally, in \hyperref[gcmc-silica-label]{Water adsorption in silica} and
+\hyperref[umbrella-sampling-label]{Free energy calculation},
+some more advanced simulation methods are used, namely grand canonical Monte Carlo simulations and a free energy method named umbrella sampling.
 
 \section{Prerequisites}
 
-Here you would identify prerequisites/background knowledge that are assumed by your work, as well as any software/license requirements.
+% Here you would identify prerequisites/background knowledge that are assumed by your work, as well as any software/license requirements.
 
 \subsection{Background knowledge}
-Tutorials should clearly define what concepts or abilities researchers will need to complete the tutorial (e.g., some proficiency in Python; experience with Jupyter notebooks; knowledge of classical MD; etc).
+% Tutorials should clearly define what concepts or abilities researchers will need to complete the tutorial (e.g., some proficiency in Python; experience with Jupyter notebooks; knowledge of classical MD; etc).
 
 \subsection{Software/system requirements}
-Tutorials should clearly define what system and/or software requirements the researcher will need to complete the tutorial (e.g., VMD version 1.9 or newer, AMBER, etc.). Tutorials requiring specific software packages must provide instructions and files for the referenced version of the software.
+
+The 2Aug2023 version of LAMMPS is required to follow the tutorials \cite{thompson2022lammps}. Download and install the 2Aug2023 version of LAMMPS by following the instructions of the {\color{red}LAMMPS website}. Depending on your operative system (i.e. Linux, macOS, or Windows), the procedure may differ. LAMMPS must be compiled with the following packages:
+\begin{itemize}
+\item MANYBODY
+\item MOLECULE
+\item KSPACE
+\item RIGID
+\item REAXFF
+\item EXTRA-DUMP
+\end{itemize}
+In addition, to visualize the atoms trajectories, the version 1.9.3 of VMD will be used \cite{humphrey1996vmd}. {\color{red}If you prefer, feel free to use an alternative visualization software like Ovito.} Finally a graph plotting tool is required. To plot the results from the simulations, the version 3.5.2 of Matplotlib Pyplot is used
+together with the version 3.11.4 of Python \cite{van1995python, hunter2007Matplotlib}, but any plotting tool can be used. 
 
 \section{Content and links}
 
-A tutorial will normally draw on additional files and materials; clearly indicate where and how these are available, with links, and how they are being archived for the long-term and maintained so they stay current.
-You will likely want to reference your GitHub repository as a central point to access all of this information, and then the GitHub repository may link out to other content as needed.
+%A tutorial will normally draw on additional files and materials; clearly indicate where and how these are available, with links, and how they are being archived for the long-term and maintained so they stay current.
+%You will likely want to reference your GitHub repository as a central point to access all of this information, and then the GitHub repository may link out to other content as needed.
 
 \subsection{Tutorial 1: Lennard-Jones fluid}
 \label{lennard-jones-label}

@@ -1,7 +1,35 @@
-\begin{thebibliography}{25}
+\begin{thebibliography}{29}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\urlprefix}{}
 \providecommand{\doiprefix}{https://doi.org/}
+
+\bibitem[{Thompson et~al.(2022)Thompson, Aidan P and Aktulga, H Metin and
+  Berger, Richard and Bolintineanu, Dan S and Brown, W Michael and Crozier,
+  Paul S and in't Veld, Pieter J and Kohlmeyer, Axel and Moore, Stan G and
+  Nguyen, Trung Dac and others}]{thompson2022lammps}
+\textbf{\color{LiveCoMSMediumGrey} Thompson AP}, Aktulga HM, Berger R,
+  Bolintineanu DS, Brown WM, Crozier PS, in't Veld PJ, Kohlmeyer A, Moore SG,
+  Nguyen TD, et~al.
+\newblock {{LAMMPS}}-a flexible simulation tool for particle-based materials
+  modeling at the atomic, meso, and continuum scales.
+\newblock Computer Physics Communications.  2022; 271:108171.
+
+\bibitem[{Humphrey et~al.(1996)Humphrey, William and Dalke, Andrew and
+  Schulten, Klaus}]{humphrey1996vmd}
+\textbf{\color{LiveCoMSMediumGrey} Humphrey W}, Dalke A, Schulten K.
+\newblock {{VMD}}: visual molecular dynamics.
+\newblock Journal of molecular graphics.  1996; 14(1):33--38.
+
+\bibitem[{Van~Rossum and Drake~Jr(1995)Van Rossum, Guido and Drake Jr, Fred
+  L}]{van1995python}
+\textbf{\color{LiveCoMSMediumGrey} Van~Rossum G}, Drake~Jr FL.
+\newblock Python reference manual.
+\newblock Centrum voor Wiskunde en Informatica Amsterdam; 1995.
+
+\bibitem[{Hunter(2007)Hunter, J. D.}]{hunter2007Matplotlib}
+\textbf{\color{LiveCoMSMediumGrey} Hunter JD}.
+\newblock Matplotlib: A 2D graphics environment.
+\newblock Computing in Science \& Engineering.  2007; 9(3):90--95.
 
 \bibitem[{Schneider and Stoll(1978)Schneider, T and Stoll,
   E}]{schneider1978molecular}
