@@ -1,4 +1,4 @@
-\begin{thebibliography}{29}
+\begin{thebibliography}{32}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\urlprefix}{}
 \providecommand{\doiprefix}{https://doi.org/}
@@ -13,6 +13,30 @@
 \newblock {{LAMMPS}}-a flexible simulation tool for particle-based materials
   modeling at the atomic, meso, and continuum scales.
 \newblock Computer Physics Communications.  2022; 271:108171.
+
+\bibitem[{Frenkel and Smit(2023)Frenkel, Daan and Smit,
+  Berend}]{frenkel2023understanding}
+\textbf{\color{LiveCoMSMediumGrey} Frenkel D}, Smit B.
+\newblock Understanding molecular simulation: from algorithms to applications.
+\newblock Elsevier; 2023.
+
+\bibitem[{Allen and Tildesley(2017)Allen, Michael P and Tildesley, Dominic
+  J}]{allen2017computer}
+\textbf{\color{LiveCoMSMediumGrey} Allen MP}, Tildesley DJ.
+\newblock Computer simulation of liquids.
+\newblock Oxford university press; 2017.
+
+\bibitem[{Barrat and Hansen(2003)Barrat, Jean-Louis and Hansen,
+  Jean-Pierre}]{barrat2003basic}
+\textbf{\color{LiveCoMSMediumGrey} Barrat JL}, Hansen JP.
+\newblock Basic concepts for simple and complex liquids.
+\newblock Cambridge University Press; 2003.
+
+\bibitem[{Hansen and McDonald(2013)Hansen, Jean-Pierre and McDonald, Ian
+  Ranald}]{hansen2013theory}
+\textbf{\color{LiveCoMSMediumGrey} Hansen JP}, McDonald IR.
+\newblock Theory of simple liquids: with applications to soft matter.
+\newblock Academic press; 2013.
 
 \bibitem[{Humphrey et~al.(1996)Humphrey, William and Dalke, Andrew and
   Schulten, Klaus}]{humphrey1996vmd}
@@ -197,12 +221,6 @@
 \newblock Interaction potential for {{SiO2}}: A molecular-dynamics study of
   structural correlations.
 \newblock Physical Review B.  1990; 41(17):12197.
-
-\bibitem[{Frenkel and Smit(2023)Frenkel, Daan and Smit,
-  Berend}]{frenkel2023understanding}
-\textbf{\color{LiveCoMSMediumGrey} Frenkel D}, Smit B.
-\newblock Understanding molecular simulation: from algorithms to applications.
-\newblock Elsevier; 2023.
 
 \bibitem[{Grossfield(????)Grossfield, Alan}]{grossfieldimplementation}
 \textbf{\color{LiveCoMSMediumGrey} Grossfield A}, An implementation of
