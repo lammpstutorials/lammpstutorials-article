@@ -1,4 +1,4 @@
-\begin{thebibliography}{33}
+\begin{thebibliography}{34}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\urlprefix}{}
 \providecommand{\doiprefix}{https://doi.org/}
@@ -31,6 +31,14 @@
 \newblock {{LAMMPS}}-a flexible simulation tool for particle-based materials
   modeling at the atomic, meso, and continuum scales.
 \newblock Computer Physics Communications.  2022; 271:108171.
+
+\bibitem[{van Gunsteren et~al.(2018)van Gunsteren, Wilfred F and Daura, Xavier
+  and Hansen, Niels and Mark, Alan E and Oostenbrink, Chris and Riniker,
+  Sereina and Smith, Lorna J}]{van2018validation}
+\textbf{\color{LiveCoMSMediumGrey} van Gunsteren WF}, Daura X, Hansen N, Mark
+  AE, Oostenbrink C, Riniker S, Smith LJ.
+\newblock Validation of molecular simulation: an overview of issues.
+\newblock Angewandte Chemie International Edition.  2018; 57(4):884--902.
 
 \bibitem[{Barrat and Hansen(2003)Barrat, Jean-Louis and Hansen,
   Jean-Pierre}]{barrat2003basic}
