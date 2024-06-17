@@ -150,8 +150,7 @@ The 2Aug2023 version of LAMMPS is required to follow the tutorials \cite{thompso
 \item REAXFF
 \item EXTRA-DUMP
 \end{itemize}
-In addition, to visualize the atoms trajectories, the version 1.9.3 of VMD will be used \cite{humphrey1996vmd}. {\color{red}If you prefer, feel free to use an alternative visualization software like Ovito.} Finally a graph plotting tool is required. To plot the results from the simulations, the version 3.5.2 of Matplotlib Pyplot is used
-together with the version 3.11.4 of Python \cite{van1995python, hunter2007Matplotlib}, but any plotting tool can be used. 
+In addition, to visualize the atoms trajectories, the version 1.9.3 of VMD will be used \cite{humphrey1996vmd}. {\color{red}If you prefer, feel free to use an alternative visualization software like Ovito.} Finally a graph plotting tool is required. To plot the results from the simulations, the version 3.5.2 of Matplotlib Pyplot is used together with the version 3.11.4 of Python \cite{van1995python, hunter2007Matplotlib}, but any plotting tool can be used. 
 
 \section{Content and links}
 
@@ -164,7 +163,7 @@ together with the version 3.11.4 of Python \cite{van1995python, hunter2007Matplo
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{LJ}
-\caption{Snapshot of the Lennard-Jones fluid made using VMD, with both types of atoms represented as spheres.}
+\caption{The binary mixture simulated during \hyperref[lennard-jones-label]{Tutorial 1}. The atoms of type 1 are represented as small green spheres, and the atoms of type 2 as large blue spheres}
 \label{fig:binary_LJ_fluid}
 \end{figure}
 
@@ -429,7 +428,7 @@ Run \textit{input.md.lammps} using LAMMPS. Open the \textit{dump.md.lammpstrj} u
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{CNT}
-\caption{Snapshot of the carbon nanotube (CNT) made using VMD.}
+\caption{The carbon nanotube (CNT) simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.}
 \label{fig:CNT}
 \end{figure}
 
@@ -796,7 +795,7 @@ Looking at the evolution of energy again, one can see that the energy in increas
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{PEG}
-\caption{Snapshot of the PEG polymer molecule in water. Water molecules are represented as a transparent continuum field for clarity.}
+\caption{The polymer molecule (PEG - PolyEthylene Glycol) solvated in water as simulated during \hyperref[all-atoms-label]{Tutorial 3}. Water molecules are represented as a transparent continuum field for clarity.}
 \label{fig:PEG}
 \end{figure}
 
@@ -1085,9 +1084,9 @@ If you open the \textit{dump.lammpstrj} file using \textit{VMD}, you should see 
 \label{sheared-confined-label}
 
 \begin{figure}
-{\centering
+\centering
 \includegraphics[width=0.55\linewidth]{NANOSHEAR}
-\caption{Snapshot of the electrolyte nano-confined in a slit pore.}}
+\caption{The electrolyte confined in a nanometer slit pore as simulated during \hyperref[sheared-confined-label]{Tutorial 4}. $\text{Na}^+$ ions are represented as purple spheres, $\text{Cl}^-$ ions as cyan spheres, water molecules are colored in red and white, and the walls are colored in gray. The arrows indicate the imposed lateral motion of the walls.}
 \label{fig:NANOSHEAR}
 \end{figure}
 
@@ -1422,7 +1421,7 @@ measure its viscosity $\dot{\eta}$ according to: $\eta = \tau / \dot{\gamma}$ wh
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{SIO}
-\caption{Snapshot of the silicon dioxide structure with colored charges.}
+\caption{A portion of the silicon dioxide structure as simulated during \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}. Atoms are colored by their charges.}
 \label{fig:SIO}
 \end{figure}
 
@@ -1690,7 +1689,7 @@ At the end of  the simulation, hydroxyl groups can be seen at the interfaces (Fi
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{GCMC}
-\caption{Snapshot of the water molecules adsorbed in cracked silica SiO$_2$ material.}
+\caption{Water molecules adsorbed in cracked silica (SiO$_2$) material as simulated during \hyperref[gcmc-silica-label]{Tutorial 6}. Water molecules are colored in cyan and white, oxygen (O) atoms from SiO$_2$ in red, and silicon (Si) atoms in yellow.}
 \label{fig:GCMC}
 \end{figure}
 
@@ -2020,7 +2019,7 @@ duration was made possible by the use of a large pressure.
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{US}
-\caption{Snapshot of the atoms. The atom colored in pink feels the additional force used for the umbrella sampling method.}
+\caption{Atoms as simulated during \hyperref[umbrella-sampling-label]{Tutorial 7}. Only the atom colored in pink feels the additional force used for the umbrella sampling method.}
 \label{fig:US}
 \end{figure}
 
