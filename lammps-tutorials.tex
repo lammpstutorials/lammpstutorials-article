@@ -129,13 +129,25 @@ Molecular simulations (MS) can be used to model a large variety of atomic and co
 Molecular simulations allow for the measurement of a broad variety of properties including structural properties (e.g. bond length, inter-atomic distances), thermodynamic properties (e.g. temperature, pressure, volume), dynamic behaviors (e.g. diffusion coefficient, viscosity), or mechanical responses (e.g. elastic constant, Poisson ratio). Some of these quantities can be directly compared with experimental data, allowing for the direct validation of the simulated system, while the additional information that can be extracted from simulations is often useful to interpret experimental data \cite{van2008molecular}. 
 
 LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) is a highly flexible open-source molecular simulations tool \cite{thompson2022lammps}. Over the years, a broad variety of particle interaction models have been implemented in LAMMPS, enabling it to model atomic, polymeric, biological, metallic, granular, and coarse-grained systems. If LAMMPS can run on a single CPU core, it also shows high performance on parallel supercomputing systems and can handle complex and large-scale simulations efficiently.
-LAMMPS requires the users to provide detailed input files that can be complex to write, particularly considering the overwhelmingly large numbers of options offered by LAMMPS, all contained in an extensive documentation that can sometimes be difficult to navigate for new users. In addition to the intrinsic complexity of LAMMPS, performing accurate molecular simulations involves several complex and system-specific decisions that must be made by the users, such as the selection of the thermodynamics ensemble (e.g. micro-canonical, grand-canonical) or the choosing of the most appropriate set of parameters to describe the interaction between the atoms (the so-called force field) \cite{van2018validation}.
-
-The tutorials that are proposed in this article aim to reduce the learning curve and help the users perform accurate and reliable molecular simulations using LAMMPS.
+LAMMPS requires the users to provide detailed input files that can be complex to write, particularly considering the overwhelmingly large numbers of options offered by LAMMPS, all contained in an extensive documentation that can sometimes be difficult to navigate for new users. In addition to the intrinsic complexity of LAMMPS, performing accurate molecular simulations involves several complex and system-specific decisions that must be made by the users, such as the selection of the thermodynamics ensemble (e.g. micro-canonical, grand-canonical) or the choosing of the most appropriate set of parameters to describe the interaction between the atoms (the so-called force field) \cite{van2018validation}. The tutorials that are presented in this article aim to reduce the learning curve and help the users perform accurate and reliable molecular simulations using LAMMPS.
 
 \subsection{Scope}
 
-This suite of tutorials is made of seven tutorials that are ordered by increasing difficulty. The first tutorial, \hyperref[lennard-jones-label]{Lennard Jones fluid}, is meant for LAMMPS absolute beginners and requires no prior knowledge of LAMMPS. The complexity of the simulations is then progressively increased during the following tutorials, and not all commands will be re-described in depth.
+This suite of tutorials is made of seven tutorials that are ordered by increasing difficulty. 
+
+Tutorial 1, \hyperref[lennard-jones-label]{Lennard Jones fluid}, is meant for LAMMPS absolute beginners and requires no prior knowledge of LAMMPS. The structure of LAMMPS input files is presented. Basic LAMMPS commands are used to create a simple fluid, and perform energy minimization and molecular dynamics.
+
+In \hyperref[carbon-nanotube-label]{tutorial 2}, the case of atoms connected by bonds is illustrated through the study of a carbon nanotube. The . The tutorial illustrates the difference between classical force field and {\color{red}a reactive force field called AIREBO}.
+
+In \hyperref[all-atoms-label]{tutorial 3}, the solving of electrostatics interactions for dense systems will be illustrated through .
+
+In \hyperref[sheared-confined-label]{tutorial 4}, an interface system is simulated, and the specifics of simulating a system made of both fluid and solid parts are presented.
+
+In \hyperref[reactive-silicon-dioxide-label]{tutorial 5}, the reactive force field called \textit{ReaxFF} is used in conjunction with {\color{red}the charge equilibration method (QEq)}. 
+
+In \hyperref[gcmc-silica-label]{tutorial 6}, a Monte Carlo simulation in the Grand Canonical ensemble is implemented to illustrate the use of LAMMPS with open systems that can exchange particles with a reservoir.
+
+In \hyperref[umbrella-sampling-label]{tutorial 7}, an advanced free energy method named umbrella sampling is used. 
 
 \section{Prerequisites}
 
@@ -144,7 +156,7 @@ This suite of tutorials is made of seven tutorials that are ordered by increasin
 \subsection{Background knowledge}
 % Tutorials should clearly define what concepts or abilities researchers will need to complete the tutorial (e.g., some proficiency in Python; experience with Jupyter notebooks; knowledge of classical MD; etc).
 
-The tutorials presented here assume that the user is familiar with the use of a plain-text editor such as VIM or Emacs, as well as with the most basics Unix/Linux command-line interaction. In addition, prior knowledge on the basics of molecular simulations and statistical physics would be beneficial. The user may refers to \textit{Understanding molecular simulation} by Daan Frenkel and Berend Smit \cite{frenkel2023understanding}, as well as \textit{Computer simulation of liquids} by Michael Allen and Dominic Tildesley \cite{allen2017computer}. Additionally, to better understand the fundamental concepts behind some of the soft matter systems simulated in these tutorials, the user can refers to \textit{Basic concepts for simple and complex liquids} by Jean-Louis Barrat and Jean-Pierre Hansen \cite{barrat2003basic}, as well as \textit{Theory of simple liquids: with applications to soft matter} by Jean-Pierre Hansen and Ian Ranald McDonald \cite{hansen2013theory}.
+The tutorials presented here assume that the user is familiar with the use of a plain-text editor such as VIM or Emacs, as well as with the most basics Unix/Linux command-line interaction. In addition, prior knowledge on the basics of molecular simulations and statistical physics would be beneficial. The user may refer to \textit{Understanding molecular simulation} by Daan Frenkel and Berend Smit \cite{frenkel2023understanding}, as well as \textit{Computer simulation of liquids} by Michael Allen and Dominic Tildesley \cite{allen2017computer}. Additionally, to better understand the fundamental concepts behind some of the soft matter systems simulated in these tutorials, the user can refers to \textit{Basic concepts for simple and complex liquids} by Jean-Louis Barrat and Jean-Pierre Hansen \cite{barrat2003basic}, as well as \textit{Theory of simple liquids: with applications to soft matter} by Jean-Pierre Hansen and Ian Ranald McDonald \cite{hansen2013theory}.
 
 \subsection{Software/system requirements}
 
