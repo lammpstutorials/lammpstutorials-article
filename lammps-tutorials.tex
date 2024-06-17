@@ -179,11 +179,11 @@ To write and edit the LAMMPS input files, a text editor such as VIM or Emacs is 
 \label{fig:binary_LJ_fluid}
 \end{figure}
 
-\noindent The objective of this tutorial is to perform the simulation of a binary fluid using LAMMPS. The system is a Lennard-Jones fluid made of neutral particles with two different diameters in a cubic box with periodic boundary conditions (Fig.~\ref{fig:binary_LJ_fluid}). The temperature of the system is maintained using a Langevin thermostat \cite{schneider1978molecular}, and basic quantities are extracted from the system, including the potential and kinetic energies. 
+\noindent The objective of this tutorial is to perform a simple MD simulation using LAMMPS. The system is a Lennard-Jones fluid made of neutral particles with two different diameters in a cubic box with periodic boundary conditions (Fig.\,\ref{fig:binary_LJ_fluid}). In this tutorial, the temperature of the system is maintained using a Langevin thermostat \cite{schneider1978molecular}, and basic quantities are extracted from the system, including the potential and kinetic energies. 
 
 \subsubsection{My first input}
 
-\noindent To run a simulation using LAMMPS, one needs to write a series of commands in an input script. For clarity, this script will be divided into five categories which we are going to fill up one by one. Create a folder, call it \textit{my-first-input/}, and then create a blank text file in it called \textit{input.lammps}. Copy the following lines in \textit{input.lammps}, where a line starting with a brace ($\#$) is a comment that is ignored by LAMMPS:
+\noindent To run a simulation using LAMMPS, one needs to write a series of commands in an input script. For clarity, the input scripts written for this first tutorial will be divided into five categories which we are going to fill up one by one. Create a folder, call it \textit{my-first-input/}, and then create a blank text file in it called \textit{input.lammps}. Copy the following lines in \textit{input.lammps}, where a line starting with a brace ($\#$) is a comment that is ignored by LAMMPS:
 {\small \begin{verbatim}
 # PART A - ENERGY MINIMIZATION
 # 1) Initialization
