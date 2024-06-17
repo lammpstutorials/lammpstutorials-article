@@ -9,45 +9,45 @@ Warning--empty author and editor in kohlmeyer2017topotools
 Warning--empty author and editor in grossfieldimplementation
 Warning--missing publisher in grossfieldimplementation
 Warning--there's a month but no year in grossfieldimplementation
-You've used 32 entries,
+You've used 33 entries,
             3450 wiz_defined-function locations,
-            915 strings with 11611 characters,
-and the built_in function-call counts, 68081 in all, are:
-= -- 8972
-> -- 428
+            922 strings with 11794 characters,
+and the built_in function-call counts, 70450 in all, are:
+= -- 9293
+> -- 440
 < -- 17
-+ -- 218
-- -- 107
-* -- 5964
-:= -- 7073
-add.period$ -- 93
-call.type$ -- 32
++ -- 224
+- -- 110
+* -- 6172
+:= -- 7316
+add.period$ -- 96
+call.type$ -- 33
 change.case$ -- 2
-chr.to.int$ -- 32
-cite$ -- 37
-duplicate$ -- 6848
-empty$ -- 6364
-format.name$ -- 189
-if$ -- 15942
+chr.to.int$ -- 33
+cite$ -- 38
+duplicate$ -- 7099
+empty$ -- 6583
+format.name$ -- 194
+if$ -- 16498
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 309
-newline$ -- 163
-num.names$ -- 64
-pop$ -- 542
+missing$ -- 319
+newline$ -- 168
+num.names$ -- 66
+pop$ -- 557
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 443
+skip$ -- 456
 stack$ -- 0
-substring$ -- 12596
-swap$ -- 757
+substring$ -- 13036
+swap$ -- 782
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 180
+type$ -- 186
 warning$ -- 5
-while$ -- 288
+while$ -- 298
 width$ -- 0
-write$ -- 411
+write$ -- 424
 (There were 5 warnings)
