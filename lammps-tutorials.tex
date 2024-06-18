@@ -133,21 +133,21 @@ LAMMPS requires the users to provide detailed input files that can be complex to
 
 \subsection{Scope}
 
-This suite of tutorials is made of seven tutorials that are ordered by increasing difficulty. 
+This suite of tutorials is made of seven tutorials that are ordered by increasing difficulty. Here, the novelties associated with each tutorial is briefly described.
 
-Tutorial 1, \hyperref[lennard-jones-label]{Lennard Jones fluid}, is meant for LAMMPS absolute beginners and requires no prior knowledge of LAMMPS. The structure of LAMMPS input files is presented. Basic LAMMPS commands are used to create a simple fluid, and perform energy minimization and molecular dynamics.
+In \hyperref[lennard-jones-label]{tutorial 1}, the structure of LAMMPS input files is illustrated through the creation of a simple Lennard-Jones fluid system. Basic LAMMPS commands are used to set the interaction between the atoms and then perform energy minimization and MD in the canonical (NVT) ensemble.
 
-In \hyperref[carbon-nanotube-label]{tutorial 2}, the case of atoms connected by bonds is illustrated through the study of a carbon nanotube. The . The tutorial illustrates the difference between classical force field and {\color{red}a reactive force field called AIREBO}.
+In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system where atoms are connected by bonds is used: a small carbon nanotube. Force-biased MD is performed to measure the deformation and breaking of the nanotube, and the use of both classical and reactive force fields (here AIREBO) in LAMMPS is illustrated.
 
-In \hyperref[all-atoms-label]{tutorial 3}, the solving of electrostatics interactions for dense systems will be illustrated through .
+In \hyperref[all-atoms-label]{tutorial 3}, two components, namely liquid water and a large molecule, are merged together and equilibrated. A long-range solver is used to solve the electrostatics interactions, and equilibration of the system in the isothermal-isobaric (NPT) ensemble is performed.
 
-In \hyperref[sheared-confined-label]{tutorial 4}, an interface system is simulated, and the specifics of simulating a system made of both fluid and solid parts are presented.
+In \hyperref[sheared-confined-label]{tutorial 4}, a fluid confined by two walls is simulated, illustrating the specifics of simulating systems with fluid-solid interfaces. This tutorial involves a slightly more complex water model than \hyperref[all-atoms-label]{tutorial 3}: the four-points TIP4P. Within this tutorial, non-equilibrium molecular dynamics is performed through the imposed shearing of the fluid by the moving walls.
 
-In \hyperref[reactive-silicon-dioxide-label]{tutorial 5}, the reactive force field called \textit{ReaxFF} is used in conjunction with {\color{red}the charge equilibration method (QEq)}. 
+In \hyperref[reactive-silicon-dioxide-label]{tutorial 5}, the reactive force field called \textit{ReaxFF} is used in conjunction with the charge equilibration method QEq. This tutorial describes a situation where the partial charges of the atoms adapt to their local environment.
 
-In \hyperref[gcmc-silica-label]{tutorial 6}, a Monte Carlo simulation in the Grand Canonical ensemble is implemented to illustrate the use of LAMMPS with open systems that can exchange particles with a reservoir.
+In \hyperref[gcmc-silica-label]{tutorial 6}, a Monte Carlo simulation in the Grand Canonical ensemble is implemented to illustrate the use of LAMMPS with an open system that can exchange particles with a reservoir.
 
-In \hyperref[umbrella-sampling-label]{tutorial 7}, an advanced free energy method named umbrella sampling is used. 
+In \hyperref[umbrella-sampling-label]{tutorial 7}, an advanced free energy method named umbrella sampling is implemented. Through the calculation of an energy barrier, this tutorial describes a protocol that can be used to deal with energy landscapes that prevent their sampling through classical MD or MC methods.
 
 \section{Prerequisites}
 
@@ -156,7 +156,7 @@ In \hyperref[umbrella-sampling-label]{tutorial 7}, an advanced free energy metho
 \subsection{Background knowledge}
 % Tutorials should clearly define what concepts or abilities researchers will need to complete the tutorial (e.g., some proficiency in Python; experience with Jupyter notebooks; knowledge of classical MD; etc).
 
-The tutorials presented here assume that the user is familiar with the use of a plain-text editor such as VIM or Emacs, as well as with the most basics Unix/Linux command-line interaction. In addition, prior knowledge on the basics of molecular simulations and statistical physics would be beneficial. The user may refer to \textit{Understanding molecular simulation} by Daan Frenkel and Berend Smit \cite{frenkel2023understanding}, as well as \textit{Computer simulation of liquids} by Michael Allen and Dominic Tildesley \cite{allen2017computer}. Additionally, to better understand the fundamental concepts behind some of the soft matter systems simulated in these tutorials, the user can refers to \textit{Basic concepts for simple and complex liquids} by Jean-Louis Barrat and Jean-Pierre Hansen \cite{barrat2003basic}, as well as \textit{Theory of simple liquids: with applications to soft matter} by Jean-Pierre Hansen and Ian Ranald McDonald \cite{hansen2013theory}.
+This suite of tutorials requires no prior knowledge of LAMMPS. The tutorials assume that the user is familiar with the use of a plain-text editor such as VIM or Emacs, as well as with the most basics Unix/Linux command-line interaction. In addition, prior knowledge on the basics of molecular simulations and statistical physics would be beneficial. The user may refer to \textit{Understanding molecular simulation} by Daan Frenkel and Berend Smit \cite{frenkel2023understanding}, as well as \textit{Computer simulation of liquids} by Michael Allen and Dominic Tildesley \cite{allen2017computer}. Additionally, to better understand the fundamental concepts behind some of the soft matter systems simulated in these tutorials, the user can refers to \textit{Basic concepts for simple and complex liquids} by Jean-Louis Barrat and Jean-Pierre Hansen \cite{barrat2003basic}, as well as \textit{Theory of simple liquids: with applications to soft matter} by Jean-Pierre Hansen and Ian Ranald McDonald \cite{hansen2013theory}.
 
 \subsection{Software/system requirements}
 
