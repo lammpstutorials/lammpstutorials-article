@@ -426,8 +426,7 @@ run 300000
 write_data mixed.data
 \end{verbatim}}
 There are a few differences from the previous simulation. First, the \textit{velocity create} command attributes an initial velocity to every atom.
-The initial velocity is chosen so that the average initial temperature is equal to 1 (unitless). The additional keywords ensure that no linear momentum (\textit{mom yes}) and no angular momentum (\textit{rot yes}) are given to the system and that the generated velocities are distributed as a Gaussian. Another improvement is the \textit{zero yes} keyword in the Langevin thermostat, which ensures that the total random force is equal to zero.
-Run \textit{input.md.lammps} using LAMMPS. Open the \textit{dump.md.lammpstrj} file using VMD to observe the mixing of the two populations over time (Fig.\,\ref{fig:evolution-population}). From the generated \textit{.dat} file, one can plot
+The initial velocity is chosen so that the average initial temperature is equal to 1 (unitless). The additional keywords ensure that no linear momentum (\textit{mom yes}) and no angular momentum (\textit{rot yes}) are given to the system and that the generated velocities are distributed as a Gaussian. Another improvement is the \textit{zero yes} keyword in the Langevin thermostat, which ensures that the total random force applied to the atoms is equal to zero. Run \textit{input.md.lammps} using LAMMPS. Open the \textit{dump.md.lammpstrj} file using VMD to observe the mixing of the two populations over time (see also Fig.\,\ref{fig:evolution-population}). From the generated \textit{.dat} file, one can plot
 the number of atoms in each region as a function of time (Fig.\,\ref{fig:mixing}\,a). In addition, as the mixing progresses, the coordination number between atoms of types 1 and 2 increases from about $0.01$ to $0.35$ (Fig.\,\ref{fig:mixing}\,b). This indicates that, as the time progresses, more and more particles of type 1 get into contact with particles of type 2, as expected for the mixing.
 
 \begin{figure}
@@ -447,10 +446,10 @@ the number of atoms in each region as a function of time (Fig.\,\ref{fig:mixing}
 \label{fig:CNT}
 \end{figure}
 
-\noindent The objective of this tutorial is to impose the deformation of a carbon nanotube (CNT) using LAMMPS. In this tutorial, a small carbon nanotube (CNT) is simulated within an empty box using LAMMPS (Fig.\,\ref{fig:CNT}). An external forcing is imposed on the CNT, and its deformation is measured with time. The difference between classical and reactive force fields is illustrated in this tutorial. With a classical force field, the bonds between atoms are unbreakable. With the reactive force field (named AIREBO \cite{stuart2000reactive}), the breaking of the chemical bonds is possible when the imposed deformation is strong enough.
+\noindent In this tutorial, the system of interest is a small carbon nanotube (CNT) in an empty box (Fig.\,\ref{fig:CNT}). An external force is imposed on the CNT, and its deformation is measured over time. To illustrate the difference between classical and reactive force fields, this tutorial is divided into two parts. Within the first part, a classical force field is used and the bonds between the atoms of the CNT are unbreakable. Within the second part, a reactive force field (named AIREBO \cite{stuart2000reactive}) is used, allowing for the breaking of chemical bonds when the CNT undergoes strong deformation.
 
 \subsubsection{Unbreakable bonds}
-\noindent With most classical molecular dynamics force fields, the chemical bonds between the atoms are set at the start of the simulation. Regardless of the forces applied to the atoms during the simulations, the bonds remain intact. The bonds between neighbor atoms typically consist of springs with given equilibrium distances $r_0$ and a constant $k_b$: $U_b = k_b \left( r - r_0 \right)^2$.
+\noindent With most classical molecular dynamics force fields, the chemical bonds between the atoms are set at the start of the simulation. Regardless of the forces applied to the atoms, the bonds remain intact during the simulation. The bonds between neighbor atoms typically consist of springs with given equilibrium distances $r_0$ and a constant $k_b$: $U_b = k_b \left( r - r_0 \right)^2$.
 Additionally, angular and dihedral constraints are usually applied to maintain the relative orientations of neighbor atoms. 
 
 Download directly the CNT topology by clicking \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level1/breaking-a-carbon-nanotube/unbreakable-bonds/cnt_molecular.data}{here}. It was created using VMD and TopoTools \cite{kohlmeyer2017topotools}, and contains information about the positions of the carbon atoms, as well as the
@@ -479,7 +478,7 @@ read_data cnt_molecular.data
 \end{verbatim}}
 The chosen unit system is \textit{real} (therefore distances are in Ångstrom, time in femtosecond), the \textit{atom$\_$style} is molecular (therefore atoms are dots that can be bonded with each other), and the boundary conditions are fixed. The boundary conditions do not matter here, as the box boundaries were placed far from the CNT. 
 
-Just like in the previous tutorial, \hyperref[lennard-jones-label]{Lennard Jones fluid}, the pair style is \textit{lj/cut} (i.e. a Lennard-Jones potential with a short-range cutoff) with parameter 14, which means that only the atoms closer than 14 Ångstroms from each other interact through a Lennard-Jones potential. The \textit{bond$\_$style}, \textit{angle$\_$style}, \textit{dihedral$\_$style}, and \textit{improper$\_$style} commands specify the different potentials used to restrain the relative positions of the atoms. For more details about the potentials used here, you can have a look at the LAMMPS website. The \textit{special$\_$bonds} command sets the weighting factors for the Lennard-Jones interaction between atoms directly connected by a bond, separated by two bonds, and separated by three bonds, respectively. The last command, \textit{read$\_$data}, imports the \textit{cnt$\_$molecular.data} file previously generated with VMD, which contains the information about the box size, atom positions, etc.
+Just like in the previous tutorial, \hyperref[lennard-jones-label]{Lennard Jones fluid}, the pair style is \textit{lj/cut} (i.e. a Lennard-Jones potential with a short-range cutoff) with parameter 14, which means that only the atoms closer than 14 Ångstroms from each other interact through a Lennard-Jones potential. The \textit{bond$\_$style}, \textit{angle$\_$style}, \textit{dihedral$\_$style}, and \textit{improper$\_$style} commands specify the different potentials used to restrain the relative positions of the atoms. More details about the potentials used here are given in the LAMMPS documentation. The \textit{special$\_$bonds} command sets the weighting factors for the Lennard-Jones interaction between atoms directly connected by one bond, two bonds, and three bonds, respectively. The last command, \textit{read$\_$data}, imports the \textit{cnt$\_$molecular.data} file previously generated with VMD, which contains the information about the box size, atom positions, etc.
 
 We need to specify the parameters of both bonded and non-bonded potentials. Here, the parameters are taken from the OPLS-AA (Optimised Potentials for Liquid Simulations-All-Atom) force field \cite{jorgensenDevelopmentTestingOPLS1996}. Create a new text file in the \textit{unbreakable-bonds/} folder and name it \textit{parm.lammps}. Copy the following lines in it:
 {\normalsize \begin{verbatim}
@@ -496,7 +495,7 @@ $U_\theta = k_\theta ( \theta - \theta_0)^2$. The \textit{dihedral$\_$coeff} and
 include parm.lammps
 \end{verbatim}}
 
-\paragraph{Prepare initial state}
+\paragraph{Prepare the initial state}
 Before starting the molecular dynamics simulation, let us make sure that we start from a clean initial state
 by recentering the CNT at the origin (0, 0, 0). In addition, let us make sure that the box boundaries are symmetric with respect to (0, 0, 0), which is not initially the case, as seen in \textit{cnt$\_$molecular.data}:
 {\normalsize \begin{verbatim}
@@ -533,13 +532,13 @@ region rbot block INF INF INF INF INF ${zmin}
 region rmid block INF INF INF INF ${zmin} ${zmax}
 \end{verbatim}}
 
-\noindent The variable $z_\mathrm{max}$ corresponds to the coordinate of the last atoms along $z$ minus 0.5 Ångstroms, and $z_\mathrm{min}$ to the coordinate of the first atoms along $z$ plus 0.5 Ångstroms. Then, 3 regions are defined, and correspond respectively to: $z < z_\mathrm{min}$, (bottom) $z_\mathrm{min} > z > z_\mathrm{max}$ (middle), and $z > z_\mathrm{max}$ (top). Finally, let us define 3 groups of atoms corresponding to the atoms located in each of the 3 regions, respectively, by adding to \textit{input.lammps}:
+\noindent The variable $z_\mathrm{max}$ corresponds to the coordinate of the last atoms along $z$ minus 0.5 Ångstroms, and $z_\mathrm{min}$ to the coordinate of the first atoms along $z$ plus 0.5 Ångstroms. Then, three regions are defined, and correspond respectively to: $z < z_\mathrm{min}$, (\textit{rbot}, for region bottom) $z_\mathrm{min} > z > z_\mathrm{max}$ (\textit{rmid}, for region middle), and $z > z_\mathrm{max}$ (\textit{rtop}, for region top). Finally, let us define 3 groups of atoms corresponding to the atoms located in each of the 3 regions, respectively, by adding to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 group carbon_top region rtop
 group carbon_bot region rbot
 group carbon_mid region rmid
 \end{verbatim}}
-The atoms of the edges as selected within the \textit{carbon$\_$top} and \textit{carbon$\_$bot} groups can be represented with a different color.
+The atoms of the edges as selected within the \textit{carbon$\_$top} and \textit{carbon$\_$bot} groups can be represented with a different color, see Fig.\,\ref{fig:CNT-underformed}
 
 \begin{figure}
 \centering
@@ -554,7 +553,8 @@ When running a simulation, the number of atoms in each group is printed in the t
 10 atoms in group carbon_bot
 680 atoms in group carbon_mid
 \end{verbatim}}
-Finally, let us randomly delete some of the carbon atoms. In order to avoid deleting atoms that are too close to the edges, let us define a new region name \textit{rdel} that starts $2\,Å$ from the CNT edges.
+Finally, to start from a less ideal state and create a system with some defects, 
+let us randomly delete some of the carbon atoms. In order to avoid deleting atoms that are too close to the edges, let us define a new region name \textit{rdel} that starts $2\,Å$ from the CNT edges.
 {\normalsize \begin{verbatim}
 variable zmax_del equal ${zmax}-2
 variable zmin_del equal ${zmin}+2
@@ -585,8 +585,7 @@ fix myber carbon_mid temp/berendsen ${T} ${T} 100
 fix_modify myber temp Tmid
 \end{verbatim}}
 Re-setting the atom ids is necessary before using the \textit{velocity} command, this is done by the \textit{reset$\_$atoms} command.
-The \textit{velocity} command gives initial velocities to the atoms of the middle group \textit{carbon$\_$mid}, ensuring an initial temperature of 300 K for these atoms with no overall translational momentum, \textit{mom yes}, nor rotational momentum, \textit{rot yes}.
-The \textit{fix nve} is applied to all atoms so that all atom positions are recalculated at every step, and a \textit{Berendsen} thermostat is applied to the atoms of the group \textit{carbon$\_$mid} only \cite{berendsen1984molecular}. The \textit{fix$\_$modify myber} ensures that the \textit{fix Berendsen} uses the temperature of the group \textit{carbon$\_$mid} as an input, instead of the temperature of the whole system. This is necessary to make sure that the frozen edges won't bias the temperature. Note that the atoms
+The \textit{velocity} command gives initial velocities to the atoms of the middle group \textit{carbon$\_$mid}, ensuring an initial temperature of 300 K for these atoms. The \textit{fix nve} is applied to all atoms so that all atom positions are recalculated at every step, and a \textit{Berendsen} thermostat is applied to the atoms of the group \textit{carbon$\_$mid} only \cite{berendsen1984molecular}. The \textit{fix$\_$modify myber} ensures that the \textit{fix Berendsen} uses the temperature of the group \textit{carbon$\_$mid} as an input, instead of the temperature of the whole system. This is necessary to make sure that the frozen edges won't bias the temperature. Note that the atoms
 of the edges do not need a thermostat because their motion will be restrained, see below.
 
 To restrain the motion of the atoms at the edges, let us add the following commands to \textit{input.lammps}:
@@ -639,11 +638,12 @@ run 10000
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-lenght-unbreakable}
-\caption{Evolution of the length of the CNT with time. The CNT starts deforming at $t = 5\,\text{ps}$.}
+\caption{Evolution of the length $L$ of the CNT with time. The CNT starts
+deforming at $t = 5\,\text{ps}$.}
 \label{fig:CNT-unbreakable-lenght}
 \end{figure}
 
-The energy, which can be accessed from the log file, shows a non-linear increase with time once the deformation starts, which is expected from the typical dependency of bond energy with bond distance $U_b = k_b \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-energy}).
+The length $L$ of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.\,\ref{fig:CNT-unbreakable-lenght}), as expected from the imposed constant velocity. The energy, which can be accessed from the log file, shows a non-linear increase with $t$ once the deformation starts, which is expected from the typical dependency of bond energy with bond distance $U_b = k_b \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-energy}).
 As always, is it important to ensure that the simulation behaves as expected by opening the \textit{dump.lammpstrj} file with VMD (Fig.\,\ref{fig:CNT-deformed-unbreakable}).
 
 \begin{figure}
@@ -661,8 +661,7 @@ As always, is it important to ensure that the simulation behaves as expected by 
 \end{figure}
 
 \subsubsection{Breakable bonds}
-When using a classical force field, as we just did, the bonds between atoms are non-breakable. Let us perform a similar simulation, 
-but this time using a reactive force field instead, allowing for the bonds to break if the applied deformation is large enough.
+When using a classical force field, as we just did, the bonds between the atoms are non-breakable. Let us perform a similar simulation and deform a small CNT again, but this time using a reactive force field that allows for the bonds to break if the applied deformation is large enough.
 
 \paragraph{Input file initialization}
 \noindent Create a second folder named \textit{breakable-bonds/} next to \textit{unbreakable-bonds/}, and create a new input file in it called \textit{input.lammps}. Type into input.lammps:
