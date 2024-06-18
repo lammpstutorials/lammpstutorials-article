@@ -154,11 +154,11 @@ In \hyperref[umbrella-sampling-label]{tutorial 7}, an advanced free energy metho
 \subsection{Background knowledge}
 % Tutorials should clearly define what concepts or abilities researchers will need to complete the tutorial (e.g., some proficiency in Python; experience with Jupyter notebooks; knowledge of classical MD; etc).
 
-This suite of tutorials requires no prior knowledge of LAMMPS. The tutorials assume that the user is familiar with the use of a plain-text editor such as VIM or Emacs, as well as with the most basics Unix/Linux command-line interaction. In addition, prior knowledge on the basics of molecular simulations and statistical physics would be beneficial. The user may refer to \textit{Understanding molecular simulation} by Daan Frenkel and Berend Smit \cite{frenkel2023understanding}, as well as \textit{Computer simulation of liquids} by Michael Allen and Dominic Tildesley \cite{allen2017computer}. Additionally, to better understand the fundamental concepts behind some of the soft matter systems simulated in these tutorials, the user can refers to \textit{Basic concepts for simple and complex liquids} by Jean-Louis Barrat and Jean-Pierre Hansen \cite{barrat2003basic}, as well as \textit{Theory of simple liquids: with applications to soft matter} by Jean-Pierre Hansen and Ian Ranald McDonald \cite{hansen2013theory}.
+This suite of tutorials requires no prior knowledge of LAMMPS. The tutorials assume that the user is familiar with the use of a plain-text editor such as VIM or Emacs, as well as with the most basic Unix/Linux command-line interactions. In addition, prior knowledge of the basics of molecular simulations and statistical physics would be beneficial. The user may refer to \textit{Understanding molecular simulation} by Daan Frenkel and Berend Smit \cite{frenkel2023understanding}, as well as \textit{Computer simulation of liquids} by Michael Allen and Dominic Tildesley \cite{allen2017computer}. Additionally, to better understand the fundamental concepts behind some of the soft matter systems simulated in these tutorials, the user can refer to \textit{Basic concepts for simple and complex liquids} by Jean-Louis Barrat and Jean-Pierre Hansen \cite{barrat2003basic}, as well as \textit{Theory of simple liquids: with applications to soft matter} by Jean-Pierre Hansen and Ian Ranald McDonald \cite{hansen2013theory}.
 
 \subsection{Software/system requirements}
 
-The 2Aug2023 version of LAMMPS is required to follow the tutorials \cite{thompson2022lammps}. Download and install the 2Aug2023 version of LAMMPS by following the instructions of the LAMMPS website (\href{https://docs.lammps.org}{docs.lammps.org}). Depending on your operative system (i.e. Linux, macOS, or Windows), the procedure may differ. LAMMPS must be compiled with the following packages:
+The LAMMPS version 2Aug2023 is required to follow the tutorials \cite{thompson2022lammps}. Download and install it by following the instructions of the LAMMPS website (\href{https://docs.lammps.org}{docs.lammps.org}). Depending on your operating system (i.e. Linux, macOS, or Windows), the procedure may differ. LAMMPS must be compiled with the following packages:
 \begin{itemize}
 \item MANYBODY
 \item MOLECULE
@@ -167,14 +167,14 @@ The 2Aug2023 version of LAMMPS is required to follow the tutorials \cite{thompso
 \item REAXFF
 \item EXTRA-DUMP
 \end{itemize}
-To write and edit the LAMMPS input files, a text editor such as VIM or Emacs is required. In addition, to visualize the trajectories of the atoms, VMD version 1.9.3 will be used \cite{humphrey1996vmd}. If you prefer, feel free to use an alternative visualization software like Ovito. Finally, a graph plotting tool is required. To plot the results from the simulations, Matplotlib Pyplot version 3.5.2 is used together with Python version 3.11.4 \cite{van1995python, hunter2007Matplotlib}, but any plotting tool can be used, such as XmGrace or Gnuplot. 
+To write and edit the LAMMPS input files, a text editor such as VIM or Emacs is required. Additionally, to visualize the trajectories of the atoms, VMD version 1.9.3 will be used \cite{humphrey1996vmd}. Feel free to use an alternative visualization software like Ovito. Finally, a graph plotting tool is required. To plot the results from the simulations, Matplotlib Pyplot version 3.5.2 is used together with Python version 3.11.4 \cite{van1995python, hunter2007Matplotlib}, but any plotting tool can be used, such as XmGrace or Gnuplot. 
 
 \section{Content and links}
 
 %A tutorial will normally draw on additional files and materials; clearly indicate where and how these are available, with links, and how they are being archived for the long-term and maintained so they stay current.
 %You will likely want to reference your GitHub repository as a central point to access all of this information, and then the GitHub repository may link out to other content as needed.
 
-The commands that must be copy pasted in LAMMPS input files or in the terminal are written in a {\small \verb+verbatim+} environment. File and folder names are written in \textit{italic}.
+The commands that must be copied and pasted into LAMMPS input files or the terminal are written in a {\small \verb+verbatim+} environment. File and folder names are written in \textit{italic}.
 
 \subsection{Tutorial 1: Lennard-Jones fluid}
 \label{lennard-jones-label}
