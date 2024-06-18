@@ -131,15 +131,15 @@ However, LAMMPS requires users to provide detailed input files that can be compl
 
 \subsection{Scope}
 
-This suite of tutorials is made of seven tutorials that are ordered by increasing difficulty. Here, the novelties associated with each tutorial is briefly described.
+This suite of tutorials consists of seven tutorials arranged in order of increasing difficulty. The novelties associated with each tutorial are briefly described below.
 
-In \hyperref[lennard-jones-label]{tutorial 1}, the structure of LAMMPS input files is illustrated through the creation of a simple Lennard-Jones fluid system. Basic LAMMPS commands are used to set the interaction between the atoms and then perform energy minimization and MD in the canonical (NVT) ensemble.
+In \hyperref[lennard-jones-label]{tutorial 1}, the structure of LAMMPS input files is illustrated through the creation of a simple Lennard-Jones fluid system. Basic LAMMPS commands are used to set the interaction between the atoms and then perform an energy minimization, and finally a simple MD simulation in the canonical (NVT) ensemble.
 
-In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system where atoms are connected by bonds is used: a small carbon nanotube. Force-biased MD is performed to measure the deformation and breaking of the nanotube, and the use of both classical and reactive force fields (here AIREBO) in LAMMPS is illustrated.
+In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system where atoms are connected by bonds is used: a small carbon nanotube. Force-biased MD is performed to measure the deformation and breaking of the nanotube, illustrating the use of both classical and reactive force fields (here AIREBO) in LAMMPS.
 
-In \hyperref[all-atoms-label]{tutorial 3}, two components, namely liquid water and a large molecule, are merged together and equilibrated. A long-range solver is used to solve the electrostatics interactions, and equilibration of the system in the isothermal-isobaric (NPT) ensemble is performed.
+In \hyperref[all-atoms-label]{tutorial 3}, two components, liquid water and a polymer molecule, are merged and equilibrated. A long-range solver is used to handle the electrostatic interactions, and the system is equilibrated in the isothermal-isobaric (NPT) ensemble. A stretching force is then applied to the polymer.
 
-In \hyperref[sheared-confined-label]{tutorial 4}, a fluid confined by two walls is simulated, illustrating the specifics of simulating systems with fluid-solid interfaces. This tutorial involves a slightly more complex water model than \hyperref[all-atoms-label]{tutorial 3}: the four-points TIP4P. Within this tutorial, non-equilibrium molecular dynamics is performed through the imposed shearing of the fluid by the moving walls.
+In \hyperref[sheared-confined-label]{tutorial 4}, a fluid confined by two walls is simulated, illustrating the specifics of simulating systems with fluid-solid interfaces. This tutorial involves a slightly more complex water model than \hyperref[all-atoms-label]{tutorial 3}: the four-point TIP4P model. In this tutorial, non-equilibrium molecular dynamics is performed through the imposed shearing of the fluid by the moving walls.
 
 In \hyperref[reactive-silicon-dioxide-label]{tutorial 5}, the reactive force field called \textit{ReaxFF} is used in conjunction with the charge equilibration method QEq. This tutorial describes a situation where the partial charges of the atoms adapt to their local environment.
 
