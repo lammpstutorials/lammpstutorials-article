@@ -126,8 +126,7 @@
 
 Molecular simulations (MS) can be used to model a large variety of atomic and coarse-grained systems, including solids, fluids, polymers, and biomolecules, as well as complex interfaces and multicomponent systems. Various MS methods exist, molecular dynamics (MD) and Monte Carlo (MC) being among the most commonly used. MD is the preferred method for obtaining the accurate dynamics of a system, as it relies on solving Newton's equations of motion. For systems with many degrees of freedom or complex energy landscapes, the MC method can be a better choice than MD because it allows for efficiently exploring a configuration space. MC involves performing random changes to the system configuration that are either accepted or rejected based on energy criteria \cite{frenkel2023understanding, allen2017computer}. MS allow for measuring a broad variety of properties, including structural properties (e.g. bond length, inter-atomic distances), thermodynamic properties (e.g. temperature, pressure, volume), dynamic behaviors (e.g. diffusion coefficient, viscosity), and mechanical responses (e.g. elastic constant, Poisson ratio). Some of these quantities can be directly compared with experimental data, enabling the validation of the simulated system, while others, available only through simulations, are often useful for interpreting experimental data  \cite{van2008molecular}. 
 
-LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) is a highly flexible open-source MS tool \cite{thompson2022lammps}. Over the years, a broad variety of particle interaction models have been implemented in LAMMPS, enabling it to model, among others, atomic, polymeric, biological, metallic, granular, and coarse-grained systems. LAMMPS can be used on a single CPU core or a supercomputing system, and it can handle complex and large-scale simulations efficiently.
-However, LAMMPS requires users to provide detailed input files that can be complex to write, particularly given the overwhelming number of options offered by LAMMPS, all contained in an extensive documentation that can sometimes be difficult for new users to navigate. In addition to the intrinsic complexity of LAMMPS, performing accurate MS involves making several complex and system-specific decisions, such as selecting the thermodynamic ensemble (e.g. micro-canonical, grand-canonical), determining the simulation duration, and choosing the sets of parameters describing the interactions between the atoms (the so-called force field) \cite{van2018validation}. The tutorials presented in this article aim to shorten the learning curve and help users perform accurate and reliable MS using LAMMPS.
+LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) is a highly flexible open-source MS tool \cite{thompson2022lammps}. Over the years, a broad variety of particle interaction models have been implemented in LAMMPS, enabling it to model, among others, atomic, polymeric, biological, metallic, granular, and coarse-grained systems. LAMMPS can be used on a single CPU core or a supercomputing system, and it can handle complex and large-scale simulations efficiently. However, LAMMPS requires users to provide detailed input files that can be complex to write, particularly given the overwhelming number of options offered by LAMMPS, all contained in an extensive documentation that can sometimes be difficult for new users to navigate. In addition to the intrinsic complexity of LAMMPS, performing accurate MS involves making several complex and system-specific decisions, such as selecting the thermodynamic ensemble (e.g. micro-canonical, grand-canonical), determining the simulation duration, and choosing the sets of parameters describing the interactions between the atoms (the so-called force field) \cite{van2018validation}. The tutorials presented in this article aim to shorten the learning curve and help users perform accurate and reliable MS using LAMMPS.
 
 \subsection{Scope}
 
@@ -343,10 +342,8 @@ write_data minimized_coordinate.data
 \end{verbatim}}
 The main novelty, compared to the previous input script, is the \textit{write$\_$data} command. This command is used to print the final state of the simulation in a file named \textit{minimized$\_$coordinate.data}. Note that the \textit{write$\_$data} command is placed after the \textit{minimize} command. This \textit{.data} file will be used later to restart the simulation from the final state of the energy minimization step.
 
-Run the \textit{input.min.lammps} script using LAMMPS. A new dump file named \textit{dump.min.lammpstrj} will appear in the folder, allowing you to visualize
-the atom's trajectories during minimization. In addition, a file named \textit{minimized$\_$coordinate.data} will be created. If you open \textit{minimized$\_$coordinate.data} with a text editor, you can see that it contains all the information necessary to restart the simulation, such as the number of atoms and the box size, the \textit{masses}, the \textit{pair$\_$coeffs}.
-The \textit{minimized$\_$coordinate.data} file also contains the final positions of the atoms within the \textit{Atoms} section.
-The first five columns of the \textit{Atoms} section correspond (from left to right) to the atom indexes (from 1 to the total number of atoms, 1150), the atom types (1 or 2 here), and the atoms positions $x$, $y$, $z$. The last three columns are image flags that keep track of which atoms crossed the periodic boundary.
+Run the \textit{input.min.lammps} script using LAMMPS. As soon as the simulation starts, a new dump file named \textit{dump.min.lammpstrj} must appear in the folder. This \textit{.lammpstrj} can be used to visualize the atom's trajectories during minimization using VMD. At the end of the simulation, a file named \textit{minimized$\_$coordinate.data} is created by LAMMPS. If you open \textit{minimized$\_$coordinate.data} with a text editor, you can see that it contains all the information necessary to restart the simulation, such as the number of atoms, the box size, the \textit{masses}, and the \textit{pair$\_$coeffs}.
+The \textit{minimized$\_$coordinate.data} file also contains the final positions of the atoms within the \textit{Atoms} section. The first five columns of the \textit{Atoms} section correspond (from left to right) to the atom indexes (from 1 to the total number of atoms, 1150), the atom types (1 or 2 here), and the atoms positions $x$, $y$, $z$. The last three columns are image flags that keep track of which atoms crossed the periodic boundary.
 
 \paragraph{Restarting from a saved configuration}
 Let us create a new input file and start a molecular dynamics simulation directly from the previously saved configuration. Within \textit{improved-input/}, create a new file named \textit{input.md.lammps} and copy the same lines as previously:
@@ -366,7 +363,6 @@ read_data minimized_coordinate.data
 By visualizing the previously generated \textit{dump.min.lammpstrj} file, you may have noticed that some atoms have moved from one region to the other during minimization. To start the simulation from a clean slate, with only atoms of type 2 within the cylinder and atoms of type
 1 outside the cylinder, let us delete the misplaced atoms by adding the following commands to \textit{input.md.lammps}:
 {\normalsize \begin{verbatim}
-read_data minimized_coordinate.data
 region cylinder_in cylinder z 0 0 10 INF INF &
     side in
 region cylinder_out cylinder z 0 0 10 INF INF &
@@ -382,9 +378,9 @@ group group_type_2_out &
 delete_atoms group group_type_1_in
 delete_atoms group group_type_2_out
 \end{verbatim}}
-The two first \textit{region} commands recreate the previously defined regions, which is necessary since regions are not saved by the \textit{write$\_$data} command. The first two \textit{group} commands create atom groups based on their types. The next two \textit{group} commands create atom groups based on their
-positions at the beginning of the simulation, i.e. when the commands are being read by LAMMPS. The last two \textit{group} commands create atom groups based on the intersection between the previously defined groups. Finally, the two \textit{delete$\_$atoms} commands delete the atoms of type 1 that are located within the cylinder, as well as the atoms of type 2 that are located outside the cylinder, respectively. 
-Add the following lines to \textit{input.md.lammps}. Note the absence of \textit{Simulation settings} section, because the settings are taken from the \textit{.data} file.
+The two first \textit{region} commands recreate the previously defined regions, which is necessary since regions are not saved by the \textit{write$\_$data} command. The first two \textit{group} commands are used to create groups containing all the atoms of type 1 and all the atoms of type 2, respectively.
+The next two \textit{group} commands create atom groups based on their
+positions at the beginning of the simulation, i.e. when the commands are being read by LAMMPS. The last two \textit{group} commands create atom groups based on the intersection between the previously defined groups. Finally, the two \textit{delete$\_$atoms} commands delete the atoms of type 1 that are located within the cylinder and the atoms of type 2 that are located outside the cylinder, respectively. Add the following lines to \textit{input.md.lammps}. Note the absence of \textit{Simulation settings} section, because the settings are taken from the \textit{.data} file.
 {\normalsize \begin{verbatim}
 # 4) Visualization
 thermo 1000
@@ -397,22 +393,20 @@ variable number_type1_in &
 variable number_type2_in & 
     equal count(group_type_2,cylinder_in)
 fix myat1 all ave/time 10 200 2000 &
-    v_number_type1_in &
-    file output-population1vstime.dat
+    v_number_type1_in file population1vstime.dat
 fix myat2 all ave/time 10 200 2000 &
-    v_number_type2_in &
-    file output-population2vstime.dat
+    v_number_type2_in file population2vstime.dat
 \end{verbatim}}
 The two \textit{variables} are used to count the number of atoms of a specific group in the \textit{cylinder$\_$in} region. The two \textit{fix ave/time} are calling the previously defined variables and are printing their values into text files. By using \textit{10 200 2000}, variables are evaluated every 10 steps, averaged 200 times, and printed in the \textit{.dat} files every 2000 steps.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{LJ-evolution}
-\caption{Evolution of the system during mixing.}
+\caption{Evolution of the system during mixing. The three snapshots show respectively the system at $t=0$ (left panel), $t=75$ (middle panel), and $t=1500$ (right panel).}
 \label{fig:evolution-population}
 \end{figure}
 
-Let us also extract the coordination number per atom between atoms of type 1 and 2, i.e. the average number of atoms of type 2 in the vicinity of the atoms of type 1. This coordination number will be used as an indicator of the degree of mixing of our binary mixture. Add the following lines into \textit{input.md.lammps}:
+In addition to counting the atoms in each region, let us also extract the coordination number per atom between atoms of types 1 and 2. The coordination number is a measure of the average number of type 2 atoms in the vicinity of type 1 atoms, serving as a good indicator of the degree of mixing in a binary mixture. Add the following lines into \textit{input.md.lammps}:
 {\normalsize \begin{verbatim}
 compute coor12 group_type_1 coord/atom &
     cutoff 2.0 group group_type_2
@@ -433,12 +427,13 @@ write_data mixed.data
 \end{verbatim}}
 There are a few differences from the previous simulation. First, the \textit{velocity create} command attributes an initial velocity to every atom.
 The initial velocity is chosen so that the average initial temperature is equal to 1 (unitless). The additional keywords ensure that no linear momentum (\textit{mom yes}) and no angular momentum (\textit{rot yes}) are given to the system and that the generated velocities are distributed as a Gaussian. Another improvement is the \textit{zero yes} keyword in the Langevin thermostat, which ensures that the total random force is equal to zero.
-Run \textit{input.md.lammps} using LAMMPS. Open the \textit{dump.md.lammpstrj} file using VMD to observe the mixing of the two populations over time (Fig.\,\ref{fig:evolution-population}). The generated \textit{.dat} files indicate the number of atoms in each region as a function of time (Fig.\,\ref{fig:mixing}\,a). In addition, as the mixing progresses, the calculated coordination number increases from about $0.01$ to $0.35$ (Fig.\,\ref{fig:mixing}\,b).
+Run \textit{input.md.lammps} using LAMMPS. Open the \textit{dump.md.lammpstrj} file using VMD to observe the mixing of the two populations over time (Fig.\,\ref{fig:evolution-population}). From the generated \textit{.dat} file, one can plot
+the number of atoms in each region as a function of time (Fig.\,\ref{fig:mixing}\,a). In addition, as the mixing progresses, the coordination number between atoms of types 1 and 2 increases from about $0.01$ to $0.35$ (Fig.\,\ref{fig:mixing}\,b). This indicates that, as the time progresses, more and more particles of type 1 get into contact with particles of type 2, as expected for the mixing.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{LJ-mixing}
-\caption{a) Evolution of the number $N$ of atoms within the \textit{cylinder$\_$in} region as a function of the time $t$. b) Evolution of the coordination number.}
+\caption{a) Evolution of the number $N$ of atoms within the \textit{cylinder$\_$in} region as a function of the time $t$. b) Evolution of the coordination number between atoms of types 1 and 2.}
 \label{fig:mixing}
 \end{figure}
 
