@@ -427,7 +427,7 @@ write_data mixed.data
 \end{verbatim}}
 There are a few differences from the previous simulation. First, the \textit{velocity create} command attributes an initial velocity to every atom.
 The initial velocity is chosen so that the average initial temperature is equal to 1 (unitless). The additional keywords ensure that no linear momentum (\textit{mom yes}) and no angular momentum (\textit{rot yes}) are given to the system and that the generated velocities are distributed as a Gaussian. Another improvement is the \textit{zero yes} keyword in the Langevin thermostat, which ensures that the total random force applied to the atoms is equal to zero. Run \textit{input.md.lammps} using LAMMPS. Open the \textit{dump.md.lammpstrj} file using VMD to observe the mixing of the two populations over time (see also Fig.\,\ref{fig:evolution-population}). From the generated \textit{.dat} file, one can plot
-the number of atoms in each region as a function of time (Fig.\,\ref{fig:mixing}\,a). In addition, as the mixing progresses, the coordination number between atoms of types 1 and 2 increases from about $0.01$ to $0.35$ (Fig.\,\ref{fig:mixing}\,b). This indicates that, as the time progresses, more and more particles of type 1 get into contact with particles of type 2, as expected for the mixing.
+the number of atoms in each region as a function of time (Fig.\,\ref{fig:mixing}\,a). In addition, as the mixing progresses, the coordination number between atoms of types 1 and 2 increases from about $0.01$ to $0.35$ (Fig.\,\ref{fig:mixing}\,b). This indicates that, as time progresses, more and more particles of type 1 get into contact with particles of type 2, as expected during mixing.
 
 \begin{figure}
 \centering
@@ -458,7 +458,7 @@ and \textit{impropers} constraints. Save the \textit{cnt$\_$molecular.data} file
 in a folder named \textit{unbreakable-bonds/}.
 
 \paragraph{The LAMMPS input}
-Create a new text file within \textit{unbreakable-bonds/} and name it \textit{input.lammps}. Copy the following lines in it:
+Create a new text file within \textit{unbreakable-bonds/} and name it \textit{input.lammps}. Copy the following lines into it:
 {\normalsize \begin{verbatim}
 variable T equal 300
 
@@ -476,11 +476,9 @@ special_bonds lj 0.0 0.0 0.5
 
 read_data cnt_molecular.data
 \end{verbatim}}
-The chosen unit system is \textit{real} (therefore distances are in Ångstrom, time in femtosecond), the \textit{atom$\_$style} is molecular (therefore atoms are dots that can be bonded with each other), and the boundary conditions are fixed. The boundary conditions do not matter here, as the box boundaries were placed far from the CNT. 
+The chosen unit system is \textit{real} (therefore distances are in Ångstrom and time in femtosecond), the \textit{atom$\_$style} is molecular (therefore atoms are dots that can be bonded with each other), and the boundary conditions are fixed. The boundary conditions do not matter here, as the box boundaries were placed far from the CNT. Just like in the previous tutorial, \hyperref[lennard-jones-label]{Lennard Jones fluid}, the pair style is \textit{lj/cut} (i.e. a Lennard-Jones potential with a short-range cutoff) with parameter 14, which means that only the atoms closer than 14 Ångstroms from each other interact through a Lennard-Jones potential. The \textit{bond$\_$style}, \textit{angle$\_$style}, \textit{dihedral$\_$style}, and \textit{improper$\_$style} commands specify the different potentials used to restrain the relative positions of the atoms. More details about the potentials used here are given in the LAMMPS documentation. The \textit{special$\_$bonds} command sets the weighting factors for the Lennard-Jones interaction between atoms directly connected by one bond, two bonds, and three bonds, respectively. The last command, \textit{read$\_$data}, imports the \textit{cnt$\_$molecular.data} file previously generated with VMD, which contains information about the box size, atom positions, etc.
 
-Just like in the previous tutorial, \hyperref[lennard-jones-label]{Lennard Jones fluid}, the pair style is \textit{lj/cut} (i.e. a Lennard-Jones potential with a short-range cutoff) with parameter 14, which means that only the atoms closer than 14 Ångstroms from each other interact through a Lennard-Jones potential. The \textit{bond$\_$style}, \textit{angle$\_$style}, \textit{dihedral$\_$style}, and \textit{improper$\_$style} commands specify the different potentials used to restrain the relative positions of the atoms. More details about the potentials used here are given in the LAMMPS documentation. The \textit{special$\_$bonds} command sets the weighting factors for the Lennard-Jones interaction between atoms directly connected by one bond, two bonds, and three bonds, respectively. The last command, \textit{read$\_$data}, imports the \textit{cnt$\_$molecular.data} file previously generated with VMD, which contains the information about the box size, atom positions, etc.
-
-We need to specify the parameters of both bonded and non-bonded potentials. Here, the parameters are taken from the OPLS-AA (Optimised Potentials for Liquid Simulations-All-Atom) force field \cite{jorgensenDevelopmentTestingOPLS1996}. Create a new text file in the \textit{unbreakable-bonds/} folder and name it \textit{parm.lammps}. Copy the following lines in it:
+We need to specify the parameters of both bonded and non-bonded potentials. Here, the parameters are taken from the OPLS-AA (Optimised Potentials for Liquid Simulations-All-Atom) force field \cite{jorgensenDevelopmentTestingOPLS1996}. Create a new text file in the \textit{unbreakable-bonds/} folder and name it \textit{parm.lammps}. Copy the following lines into it:
 {\normalsize \begin{verbatim}
 pair_coeff 1 1 0.066 3.4
 bond_coeff 1 469 1.4
@@ -514,8 +512,7 @@ displace_atoms carbon_atoms &
 \end{verbatim}}
 The first command includes all the atoms of type 1 (i.e. all the atoms here) in a group named \textit{carbon$\_$atoms}. 
 The 3 variables, \textit{carbon$\_$xcm}, \textit{carbon$\_$ycm}, and \textit{carbon$\_$zcm} are used to measure
-the current position of the group \textit{carbon$\_$atoms} along all 3 directions, respectively. Then, the \textit{displace$\_$atoms} 
-command move the group \textit{carbon$\_$atoms}, ensuring that its center of mass is located at the origin (0, 0, 0).
+the current position of the group \textit{carbon$\_$atoms} along all 3 directions, respectively. Then, the \textit{displace$\_$atoms} command moves the group \textit{carbon$\_$atoms}, ensuring that its center of mass is located at the origin (0, 0, 0).
 Let us also change the box boundaries by adding the following line to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 change_box all x final -40 40 y final -40 40 &
@@ -554,7 +551,7 @@ When running a simulation, the number of atoms in each group is printed in the t
 680 atoms in group carbon_mid
 \end{verbatim}}
 Finally, to start from a less ideal state and create a system with some defects, 
-let us randomly delete some of the carbon atoms. In order to avoid deleting atoms that are too close to the edges, let us define a new region name \textit{rdel} that starts $2\,Å$ from the CNT edges.
+let us randomly delete some of the carbon atoms. To avoid deleting atoms that are too close to the edges, let us define a new region name \textit{rdel} that starts $2\,Å$ from the CNT edges.
 {\normalsize \begin{verbatim}
 variable zmax_del equal ${zmax}-2
 variable zmin_del equal ${zmin}+2
@@ -819,7 +816,7 @@ Looking at the evolution of energy again, one can see that the energy in increas
 
 In this tutorial, the water reservoir is first prepared in the absence of polymer. A rectangular box of water is created and
 equilibrated at ambient temperature and ambient pressure. The SPC/Fw water model is used \cite{wu2006flexible}, which is
-a flexible variant of the rigid SPC (simple point charge) model \cite{berendsen1981interaction}. Create a folder named \textit{pureH2O/}. Inside this folder, create an empty text file named \textit{input.lammps}. Copy the following lines in it:
+a flexible variant of the rigid SPC (simple point charge) model \cite{berendsen1981interaction}. Create a folder named \textit{pureH2O/}. Inside this folder, create an empty text file named \textit{input.lammps}. Copy the following lines into it:
 {\normalsize \begin{verbatim}
 units real
 atom_style full
@@ -1192,7 +1189,7 @@ angle_coeff 1 0 104.52
 \end{verbatim}}
 Each \textit{mass} command assigns a mass in grams/mole to an atom type. Each \textit{pair$\_$coeff} assigns respectively the depth of the LJ potential (in Kcal/mole), and the distance (in Ångstrom) at which the particle-particle potential energy is 0.
 
-As already seen in previous tutorials, and with the important exception of \textit{pair$\_$coeff 1 5}, only pairwise interaction between atoms of identical types were assigned. By default, LAMMPS calculates the pair coefficients for the interactions between atoms of different types (i and j) by using geometrical average: $\epsilon_{ij} = (\epsilon_{ii} + \epsilon_{jj})/2$,  $\sigma_{ij} = (\sigma_{ii} + \sigma_{jj})/2.$ Other rules for cross coefficients can be set with the \textit{pair$\_$modify} command, but for the sake of simplicity, the default option is kept here. By default, the value of $\epsilon_\text{1-5} = 5.941\,\text{kcal/mol}$ would be extremely high (compared to the water-water energy $\epsilon_\text{1-1} = 0.185199\,\text{kcal/mol}$), which would make the surface extremely hydrophilic. The walls were made less hydrophilic by reducing the  LJ energy of interaction $\epsilon_\text{1-5}$. The \textit{bond$\_$coeff}, which is here used for the O-H bond of the water molecule, sets both the energy of the harmonic potential and the equilibrium distance in Ångstrom. The value is \textit{0} for the energy because we are going to use a rigid model for the water molecule. The shape of the molecule will be preserved later by the \textit{shake} algorithm. Similarly, the angle coefficient here for the H-O-H angle of the water molecule sets the energy of the harmonic potential (also 0) and the equilibrium angle is in degree.
+As already seen in previous tutorials, and with the important exception of \textit{pair$\_$coeff 1 5}, only pairwise interaction between atoms of identical types was assigned. By default, LAMMPS calculates the pair coefficients for the interactions between atoms of different types (i and j) by using geometrical average: $\epsilon_{ij} = (\epsilon_{ii} + \epsilon_{jj})/2$,  $\sigma_{ij} = (\sigma_{ii} + \sigma_{jj})/2.$ Other rules for cross coefficients can be set with the \textit{pair$\_$modify} command, but for the sake of simplicity, the default option is kept here. By default, the value of $\epsilon_\text{1-5} = 5.941\,\text{kcal/mol}$ would be extremely high (compared to the water-water energy $\epsilon_\text{1-1} = 0.185199\,\text{kcal/mol}$), which would make the surface extremely hydrophilic. The walls were made less hydrophilic by reducing the  LJ energy of interaction $\epsilon_\text{1-5}$. The \textit{bond$\_$coeff}, which is here used for the O-H bond of the water molecule, sets both the energy of the harmonic potential and the equilibrium distance in Ångstrom. The value is \textit{0} for the energy because we are going to use a rigid model for the water molecule. The shape of the molecule will be preserved later by the \textit{shake} algorithm. Similarly, the angle coefficient here for the H-O-H angle of the water molecule sets the energy of the harmonic potential (also 0) and the equilibrium angle is in degree.
 
 Let us also create another file called \textit{GROUP.lammps} next to \textit{PARM.lammps}, and copy the following lines into it:
 {\normalsize \begin{verbatim}
@@ -1446,7 +1443,7 @@ measure its viscosity $\dot{\eta}$ according to: $\eta = \tau / \dot{\gamma}$ wh
 Create a folder, name it \textit{RelaxSilica/}, and \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level3/reactive-silicon-dioxide/RelaxSilica/silica.data}{download} the initial topology of a small amorphous silica structure. If you open the \textit{silica.data} file, you can see by looking at the Atoms section that all silicon atoms have the same charge $q = 1.1\,\text{e}$, and all oxygen atoms the charge $q = -0.55\,\text{e}$. This is common with classical force fields and will change once ReaxFF is used. Let us keep that in mind for now. The first step we need to perform here is to relax
 the structure with ReaxFF, which we are gonna do using molecular dynamics. To make sure that the system equilibrates
 nicely, let us track some changes over time. Create an input file called \textit{input.lammps} in \textit{RelaxSilica/},
-and copy the following lines in it: 
+and copy the following lines into it: 
 {\normalsize \begin{verbatim}
 units real
 atom_style full
@@ -1718,7 +1715,7 @@ LAMMPS, and apply an annealing procedure to obtain a block of amorphous silica.
 
 \paragraph{Vashishta potential}
 Create a new input file named \textit{input.lammps} in the \textit{SilicaBlock/} folder, and copy
-the following lines in it:
+the following lines into it:
 {\normalsize \begin{verbatim}
 units metal
 boundary p p p
