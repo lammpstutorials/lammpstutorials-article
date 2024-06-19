@@ -152,7 +152,7 @@ set type 4 charge -1
 \end{lcverbatim}
 
 \noindent Each \textit{create$\_$atoms} command will add 15 ions at random positions
-within the 'rliquid' region, ensuring that there is no \textit{overlap} with existing
+within the \textit{rliquid} region, ensuring that there is no \textit{overlap} with existing
 molecules. Feel free to increase or decrease the salt
 concentration by changing the number of desired ions. To keep the system charge neutral,
 always insert the same number of 
@@ -414,7 +414,7 @@ write_data system.data
 \textit{nve/limit}, which will allow for a better relaxation of the 
 atom positions.
 
-\vspace{0.25cm} \noindent When running the \textit{input.lammps} file with LAMMPS, you should see that the
+\vspace{0.25cm} \noindent When running the \textit{input.lammps} file with LAMMPS, you should see that
 the total energy of the system decreases during the first 
 of the 3 steps, before re-increasing a little after the 
 temperature is increased from 1 to $300\,\text{K}$.
@@ -625,7 +625,7 @@ here) \cite{gravelle2021violations}. Here the shear rate
 is approximatively $\dot{\gamma} = 16 \cdot 10^9\,\text{s}^{-1}$,
 and using a surface area of $A = 6 \cdot 10^{-18}\,\text{m}^2$, one
 gets an estimate for the shear viscosity for the confined
-fluid of $\eta = 6.6\,\text{mPa.s}$
+fluid of $\eta = 6.6\,\text{mPa.s}$.
 
 \vspace{0.25cm} \noindent The viscosity calculated at such a high shear rate may
 differ from the expected \textit{bulk} value. In general, it is recommended to use a lower

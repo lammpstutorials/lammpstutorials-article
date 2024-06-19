@@ -12,8 +12,8 @@ and umbrella sampling \cite{frenkel2023understanding}.
 barrier potential will be imposed artificially on the atoms.
 The procedure is valid for more complex
 systems, and can be adapted to many other situations, for instance 
-for measuring the adsorption barrier near a wall, or for calculating translocation
-barrier through a membrane.
+for measuring the adsorption barrier near an interface, or for calculating
+translocation barrier through a membrane.
 
 \vspace{0.25cm} \noindent If you are completely new to LAMMPS, I recommend that
 you follow this tutorial on a simple \hyperref[lennard-jones-label]{Lennard Jones fluid} first.
@@ -74,8 +74,8 @@ create a WCA, purely repulsive, potential. It was calculated
 as $2^{1/6} \times 3.405$ where
 $3.405 = \sigma$.
 
-\vspace{0.25cm} \noindent The system of unit '\textit{real}, for which energy is in kcal/mol, distance in Ångstrom,
-time in femtosecond has been chosen for practical reasons:
+\vspace{0.25cm} \noindent The system of unit \textit{real}, for which energy is in kcal/mol, distance in Ångstrom,
+or time in femtosecond, has been chosen for practical reasons:
 the WHAM algorithm used in the second
 part of the tutorial automatically assumes the energy to
 be in kcal/mol. Atoms will interact through a
@@ -98,10 +98,9 @@ pair_coeff * * ${epsilon} ${sigma}
 neigh_modify every 1 delay 4 check yes
 \end{lcverbatim}
 
-\noindent Here, I am using the argon's values of the
-Lennard-Jones parameters $\sigma$ and
-$\epsilon$, as well as
-the mass $m = 39.95$ grams/mole. 
+\noindent Here, the values for Lennard-Jones parameters $\sigma$ and
+$\epsilon$ as well as the mass $m = 39.95$ grams/mole were
+taken from argon.
 
 \vspace{0.25cm} \noindent In the previous subsection, the
 variables $U_0$,
@@ -188,7 +187,7 @@ run 4000000
 minutes to complete. Feel free to increase the 
 duration of the last run for smoother results.
 
-\vspace{0.25cm} \noindent [legend-to-add]Figure: Notice that the density of atoms is lower in the central
+\vspace{0.25cm} \noindent [legend-to-add]Figure: Snapshot of the system. Notice that the density of atoms is lower in the central
 [legend-to-add]part of the box, due to the additional force $F (x)$.
 
 \subsection{Data analysis}

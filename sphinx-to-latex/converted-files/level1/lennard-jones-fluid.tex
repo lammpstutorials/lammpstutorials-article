@@ -6,12 +6,12 @@
 \vspace{0.25cm} \noindent The objective of this tutorial is to perform
 the simulation of a binary fluid using LAMMPS.
 
-\vspace{0.25cm} \noindent The system is a Lennard-Jones fluid made of neutral
-particles with two different diameters in a cubic box with periodic
-boundary conditions. The temperature of the system is maintained
-using a Langevin thermostat \cite{schneider1978molecular}, and
-basic quantities are extracted
-from the system, including the potential and kinetic energies. 
+\vspace{0.25cm} \noindent The system is a Lennard-Jones fluid composed of neutral particles with two
+different diameters, contained within a cubic box with periodic boundary conditions 
+In this tutorial, the temperature of the system is
+maintained using a Langevin thermostat \cite{schneider1978molecular}, and
+basic quantities are extracted from the system, including the potential and
+kinetic energies. 
 
 \vspace{0.25cm} \noindent This tutorial illustrates several key ingredients of
 molecular dynamics simulations, such as system initialization,
@@ -19,15 +19,15 @@ energy minimization, integration of the equations of motion,
 and trajectory visualization.
 
 \section{My first input}
-\noindent To run a simulation using LAMMPS, one needs to
-write a series of commands in an input script. For clarity,
-this script will be divided into five categories which we are going to
-fill up one by one. 
+\noindent To run a simulation using LAMMPS, one needs to write a series of commands
+in an input script. For clarity, the input scripts written for this first
+tutorial will be divided into five categories which we are going to fill up
+one by one. 
 
 \vspace{0.25cm} \noindent Create a folder, call it \textit{my-first-input/}, and then create a blank
 text file in it called \textit{input.lammps}. Copy the following lines
-in \textit{input.lammps}, where a line starting with a brace ($\#$)
-is a comment that is ignored by LAMMPS:
+in \textit{input.lammps}, where a line starting with a hash symbol ($\#$)
+is a comment ignored by LAMMPS:
 
 \begin{lcverbatim}
 # PART A - ENERGY MINIMIZATION
@@ -68,7 +68,7 @@ boundary p p p
 \end{lcverbatim}
 
 \noindent The first line, \textit{units lj}, indicates that we want to
-use the system of unit called \textit{LJ}, for Lennard-Jones, for
+use the unit system called \textit{LJ} (Lennard-Jones), in
 which all quantities are unitless. 
 
 \begin{tcolorbox}[colback=mylightblue!5!white,colframe=mylightblue!75!black,title=About Lennard-Jones (LJ) units]
@@ -109,9 +109,9 @@ a cut-off equal to $r_c = 2.5$ (unitless)
 \cite{wang2020lennard,fischer2023history}:
 
 $$E_{ij} (r) = 4 \epsilon_{ij} \left[ \left( \dfrac{\sigma_{ij}}{r} \right)^{12} - \left( \dfrac{\sigma_{ij}}{r} \right)^{6} \right], ~ \text{for} ~ r < r_c,$$
-where $r$ is the inter-particles distance,
-$\epsilon_{ij}$ the depth of potential well that sets the interaction strength, and
-$\sigma_{ij}$ the distance parameter, or particle effective size.
+where $r$ is the inter-particle distance,
+$\epsilon_{ij}$ is the depth of potential well that sets the interaction strength, and
+$\sigma_{ij}$ is the distance parameter or particle effective size.
 Here, the indexes \textit{ij} refer to the particle types \textit{i} and \textit{j}.
 
 \begin{tcolorbox}[colback=mylightblue!5!white,colframe=mylightblue!75!black,title=About Lennard-Jones potential]
@@ -135,7 +135,7 @@ respectively).
 \vspace{0.25cm} \noindent At this point, the \textit{input.lammps} is a 
 LAMMPS input script that does nothing.
 You can run it using LAMMPS to verify that the \textit{input} contains
-no mistake by running the following command in the terminal
+no mistake by typing the following command in the terminal
 from the \textit{my-first-input/}  folder:
 
 \begin{lcverbatim}
@@ -287,8 +287,8 @@ terminal every given number of steps, here 10 steps.
 The \textit{thermo$\_$style custom} requires LAMMPS to print 
 the system temperature (\textit{temp}), potential energy (\textit{pe}),
 kinetic energy (\textit{ke}), total energy (\textit{etotal}),
-and pressure (\textit{press}). Finally, the \textit{minimize} line
-asks LAMMPS to perform an energy minimization of the system.
+and pressure (\textit{press}). Finally, the \textit{minimize} command
+instructs LAMMPS to perform an energy minimization of the system.
 
 \begin{tcolorbox}[colback=mylightblue!5!white,colframe=mylightblue!75!black,title=About energy minimization]
 
@@ -354,10 +354,8 @@ Stopping criterion = energy tolerance
 \end{lcverbatim}
 
 \subsection{Molecular dynamics}
-The system is now ready. Let us continue filling up the
-input script and adding commands to perform a molecular dynamics
-simulation that will start from the final state of the previous energy
-minimization step.
+The system is now ready. Let us continue by completing the input script and adding commands to perform a molecular
+dynamics simulation, starting from the final state of the previous energy minimization step.
 
 \begin{tcolorbox}[colback=mylightblue!5!white,colframe=mylightblue!75!black,title=Background Information -- What is molecular dynamics?]
 
@@ -403,8 +401,9 @@ A \textit{damping} parameter of 0.1 is used. The \textit{damping}
 parameter determines how rapidly the temperature is relaxed to its desired value.
 The number \textit{1530917} is a seed, you can
 change it to perform statistically independent simulations.
-Finally, we choose the value of the \textit{timestep} and we ask LAMMPS to
-run for 10000 steps, corresponding to a total duration of 50 (unitless).
+Finally, the last two lines set the value of the \textit{timestep} and the
+number of steps for the \textit{run}, respectively, corresponding to a total duration
+of 50 (unitless).
 
 \begin{tcolorbox}[colback=mylightblue!5!white,colframe=mylightblue!75!black,title=What is a fix?]
 
@@ -434,13 +433,16 @@ requested value and stabilize itself near $T=1$.
 \vspace{0.25cm} \noindent From what has been printed in the \textit{log} file, one can
 plot the potential energy ($p_\text{e}$)
 and the kinetic energy ($k_\text{e}$) of
-the system over time (see the figure below).
+the system over time. The potential energy, $p_\text{e}$, rapidly
+decreases during energy minimization. Then, after the molecular dynamics
+simulation starts, $p_\text{e}$ increases until it reaches a plateau
+value of about -0.25. The kinetic energy, $k_\text{e}$, is equal to
+zero during energy minimization and then increases during molecular
+dynamics until it reaches a plateau value of about 1.5.
 
-\vspace{0.25cm} \noindent [legend-to-add]Figure: a) The potential energy ($p_\text{e}$) rapidly decreases during
-[legend-to-add]energy minimization (orange). Then, after the molecular dynamics simulation starts,
-[legend-to-add]$p_\text{e}$ increases until it reaches a plateau value of about -0.25 (blue). 
-[legend-to-add]b) The kinetic energy ($k_\text{e}$) is equal to zero during energy minimization,
-[legend-to-add]then increases during molecular dynamics until it reaches a plateau value of about 1.5.
+\vspace{0.25cm} \noindent [legend-to-add]Figure: a) Potential energy ($p_\text{e}$) of the binary mixture as a function
+[legend-to-add]of the time $t$.
+[legend-to-add]b) Kinetic energy ($k_\text{e}$) as a function of $t$.
 
 \subsection{Trajectory visualization}
 \noindent The simulation is running well, but we would like to
@@ -537,15 +539,19 @@ a file named \textit{minimized$\_$coordinate.data}. Note that the \textit{write$
 is placed after the \textit{minimize} command. This \textit{.data} file will be used later
 to restart the simulation from the final state of the energy minimization step.
 
-\vspace{0.25cm} \noindent Run the \textit{input.min.lammps} script using LAMMPS. A new dump file named
-\textit{dump.min.lammpstrj} will appear in the folder, allowing you to visualize
-the atom's trajectories during minimization. In
-addition, a file named \textit{minimized$\_$coordinate.data} will be created. 
+\vspace{0.25cm} \noindent Run the \textit{input.min.lammps} script using LAMMPS.
 
-\vspace{0.25cm} \noindent If you open \textit{minimized$\_$coordinate.data} with a text editor, you can see
-that it contains all the information necessary to restart the
-simulation, such as the number of atoms and the box size, the
-\textit{masses}, the \textit{pair$\_$coeffs}:
+\vspace{0.25cm} \noindent As soon as the simulation starts, a new dump file named
+\textit{dump.min.lammpstrj} must appear in the folder.
+This \textit{.lammpstrj} can be used to visualize the
+atom's trajectories during minimization using VMD.
+At the end of the simulation, a file named
+\textit{minimized$\_$coordinate.data} is created by LAMMPS.
+
+\vspace{0.25cm} \noindent If you open \textit{minimized$\_$coordinate.data} with a text editor,
+you can see that it contains all the information necessary to
+restart the simulation, such as the number of atoms, the box
+size, the \textit{masses}, and the \textit{pair$\_$coeffs}:
 
 \begin{lcverbatim}
 1150 atoms
@@ -605,8 +611,9 @@ pair_style lj/cut 2.5
 boundary p p p
 \end{lcverbatim}
 
-\noindent Now, instead of creating a new region and adding atoms to it, we
-can simply add the following command:
+\noindent Here, instead of creating a new region and adding atoms to it, we can simply
+import the previously saved configuration by adding the following command
+to input.md.lammps:
 
 \begin{lcverbatim}
 # 2) System definition
@@ -639,7 +646,8 @@ delete_atoms group group_type_2_out
 the previously defined regions, which is necessary since
 regions are not saved by the \textit{write$\_$data} command.
 
-\vspace{0.25cm} \noindent The first two \textit{group} commands create atom groups based on their types.
+\vspace{0.25cm} \noindent The first two \textit{group} commands are used to create groups containing
+all the atoms of type 1 and all the atoms of type 2, respectively.
 The next two \textit{group} commands create atom groups based on their
 positions at the beginning of the simulation, i.e. when the commands
 are being read by LAMMPS.
@@ -647,9 +655,8 @@ The last two \textit{group} commands create atom groups based on the intersectio
 between the previously defined groups.
 
 \vspace{0.25cm} \noindent Finally, the two \textit{delete$\_$atoms} commands delete the
-atoms of type 1 that are located within the cylinder, as
-well as the atoms of type 2 that are located outside the
-cylinder, respectively. 
+atoms of type 1 that are located within the cylinder and the atoms of
+type 2 that are located outside the cylinder, respectively. 
 
 \vspace{0.25cm} \noindent When you run the \textit{input.md.lammps} input using LAMMPS, you
 can see in the \textit{log} file how many atoms are in each group,
@@ -689,7 +696,7 @@ fix myat2 all ave/time 10 200 2000 v_number_type2_in &
     file output-population2vstime.dat
 \end{lcverbatim}
 
-\noindent The 2 \textit{variables} are used to count
+\noindent The two \textit{variables} are used to count
 the number of atoms of a specific group in the \textit{region$\_$cylinder$\_$in} region. 
 
 \vspace{0.25cm} \noindent The two \textit{fix ave/time}
@@ -698,11 +705,12 @@ their values into text files.
 By using \textit{10 200 2000}, variables are evaluated every 10 steps, 
 averaged 200 times, and printed in the \textit{.dat} files every 2000 steps.
 
-\vspace{0.25cm} \noindent Let us also extract the coordination number per atom between atoms 
-of type 1 and 2, i.e. the average number of atoms of type 2 in the vicinity 
-of the atoms of type 1. This coordination number will be used as
-an indicator of the degree of mixing of our binary mixture. 
-Add the following lines into \textit{input.md.lammps}:
+\vspace{0.25cm} \noindent In addition to counting the atoms in each region, let us also extract the
+coordination number per atom between atoms of types 1 and 2. The
+coordination number is a measure of the average number of type 2 atoms
+in the vicinity of type 1 atoms, serving as a good indicator of
+the degree of mixing in a binary mixture. Add the following lines into
+\textit{input.md.lammps}:
 
 \begin{lcverbatim}
 compute coor12 group_type_1 coord/atom cutoff 2.0 group group_type_2
@@ -737,19 +745,23 @@ keywords ensure that no linear momentum (\textit{mom yes}) and no angular
 momentum (\textit{rot yes}) are given to the system and that the generated
 velocities are distributed as a Gaussian. Another improvement
 is the \textit{zero yes} keyword in the Langevin thermostat, which
-ensures that the total random force is equal to zero.
+ensures that the total random force applied to the atoms is equal to zero.
 
 \vspace{0.25cm} \noindent Run \textit{input.md.lammps} using LAMMPS and visualize the trajectory
-using VMD:
+using VMD.
 
-\vspace{0.25cm} \noindent [legend-to-add]Figure: Evolution of the atom populations during mixing.
+\vspace{0.25cm} \noindent [legend-to-add]Figure: Evolution of the system during mixing. The three snapshots show
+[legend-to-add]respectively the system at $t=0$ (left panel),
+[legend-to-add]$t=75$ (middle panel),
+[legend-to-add]and $t=1500$ (right panel).
 
 \vspace{0.25cm} \noindent After running \textit{input.md.lammps} using LAMMPS, you can observe the number
 of atoms in each region from the generated data files, as
 well as the evolution of the coordination number due to mixing:
 
 \vspace{0.25cm} \noindent [legend-to-add]Figure: Evolution of the number of atoms within the \textit{region$\_$cylinder$\_$in} region
-[legend-to-add]as a function of time (a), and evolution of the coordination number (b). 
+[legend-to-add]as a function of time (a), and evolution of the coordination number
+[legend-to-add]between atoms of types 1 and 2 (b). 
 
 \vspace{0.25cm} \noindent You can access the input scripts and data files that
 are used in these tutorials from \href{https://github.com/lammpstutorials/lammpstutorials-inputs/}{this Github repository}.

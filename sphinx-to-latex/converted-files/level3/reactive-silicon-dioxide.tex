@@ -4,7 +4,7 @@
 \noindent \vspace{-1cm} \noindent \textcolor{graytitle}{\textit{{\Large Simulating a chemically reactive structure}}\vspace{0.5cm} }
 
 \vspace{0.25cm} \noindent The objective of this tutorial is to use a 
-reactive force field (\textit{ReaxFF} \cite{van2001reaxff, zou2012investigation}),
+reactive force field (ReaxFF \cite{van2001reaxff, zou2012investigation}),
 and calculate the partial charges of a system undergoing
 deformation, as well as chemical bond formation and breaking.  
 
@@ -35,11 +35,11 @@ used for creating the initial topology is available
 by looking at the Atoms section that
 all silicon atoms have the same charge $q = 1.1\,\text{e}$,
 and all oxygen atoms the charge $q = -0.55\,\text{e}$.
-This is common with classical force field and will change once
-\textit{ReaxFF} is used. Let us keep that in mind for now.
+This is common with classical force fields and will change once
+ReaxFF is used. Let us keep that in mind for now.
 
 \vspace{0.25cm} \noindent The first step we need to perform here is to relax
-the structure with \textit{ReaxFF}, which we are gonna do using molecular
+the structure with ReaxFF, which we are gonna do using molecular
 dynamics. To make sure that the system equilibrates
 nicely, let us track some changes over time.
 
@@ -422,9 +422,9 @@ time.
 
 \subsection{A slightly acidic bulk solution}
 \noindent Create a bulk water system with a few hydronium ions ($H_3O^+$
-or $H^+$) using \textit{ReaxFF}. The addition of hydronium ions will make the
+or $H^+$) using ReaxFF. The addition of hydronium ions will make the
 system acidic.
 
-\vspace{0.25cm} \noindent [legend-to-add]Figure: Slightly acidic bulk water simulated with \textit{ReaxFF}. The atoms are
+\vspace{0.25cm} \noindent [legend-to-add]Figure: Slightly acidic bulk water simulated with ReaxFF. The atoms are
 [legend-to-add]colored by their charges.
 

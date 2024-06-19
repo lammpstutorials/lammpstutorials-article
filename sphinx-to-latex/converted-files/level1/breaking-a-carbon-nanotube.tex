@@ -8,15 +8,14 @@ of a carbon nanotube (CNT) using LAMMPS.
 
 \vspace{0.25cm} \noindent In this tutorial, a small carbon nanotube (CNT) is simulated
 within an empty box using LAMMPS. An external 
-forcing is imposed on the CNT, and its deformation is measured with time.
+force is imposed on the CNT, and its deformation is measured over time.
 
-\vspace{0.25cm} \noindent The difference between classical and reactive force fields
-is illustrated through this tutorial.
-With a classical force field, the bonds between atoms
-are unbreakable. With the reactive
-force field (named AIREBO \cite{stuart2000reactive}),
-the breaking of the chemical bonds is possible when
-the imposed deformation is strong enough.
+\vspace{0.25cm} \noindent To illustrate the difference between classical and reactive force fields,
+this tutorial is divided into two parts. Within the first part, a classical
+force field is used and the bonds between the atoms of the CNT are
+unbreakable. Within the second part, a reactive force field
+(named AIREBO \cite{stuart2000reactive}) is used, allowing for the breaking
+of chemical bonds when the CNT undergoes strong deformation.
 
 \vspace{0.25cm} \noindent If you are completely new to LAMMPS, I recommend that
 you follow this tutorial on a simple \hyperref[lennard-jones-label]{Lennard Jones fluid} first.
@@ -199,7 +198,7 @@ simulation by adding the following line to the \textit{input.lammps} file:
 include parm.lammps
 \end{lcverbatim}
 
-\subsection{Prepare initial state}
+\subsection{Prepare the initial state}
 Before starting the molecular dynamics simulation,
 let us make sure that we start from a clean initial state
 by recentering the CNT at the origin (0, 0, 0). In addition, 
@@ -234,8 +233,7 @@ along all 3 directions, respectively. Then, the \textit{displace$\_$atoms}
 command move the group \textit{carbon$\_$atoms}, ensuring that its center of mass 
 is located at the origin (0, 0, 0).
 
-\vspace{0.25cm} \noindent Let us also change the box boundaries by adding the 
-the following line to \textit{input.lammps}:
+\vspace{0.25cm} \noindent Let us also change the box boundaries by adding the following line to \textit{input.lammps}:
 
 \begin{lcverbatim}
 change_box all x final -40 40 y final -40 40 z final -40 40
@@ -264,13 +262,16 @@ region rmid block INF INF INF INF ${zmin} ${zmax}
 \noindent The variable $z_\mathrm{max}$ corresponds to
 the coordinate of the last atoms along $z$ minus 0.5
 Ångstroms, and $z_\mathrm{min}$ to the coordinate of
-the first atoms along $z$ plus 0.5 Ångstroms. Then, 3
-regions are defined, and correspond respectively to: $z < z_\mathrm{min}$, (bottom)
-$z_\mathrm{min} > z > z_\mathrm{max}$ (middle), and  
-$z > z_\mathrm{max}$ (top).
+the first atoms along $z$ plus 0.5 Ångstroms. Then, three
+regions are defined, and correspond respectively to: $z < z_\mathrm{min}$,
+(\textit{rbot}, for region bottom)
+$z_\mathrm{min} > z > z_\mathrm{max}$
+(\textit{rmid}, for region middle), and  
+$z > z_\mathrm{max}$
+(\textit{rtop}, for region top).
 
 \vspace{0.25cm} \noindent Finally, let us define 3 groups of atoms
-corresponding to the atoms located in each of the 3 regions,
+corresponding to the atoms located in each of the three regions,
 respectively, by adding to \textit{input.lammps}:
 
 \begin{lcverbatim}
@@ -295,7 +296,8 @@ of atoms in each group corresponds to what is expected, just like here:
 680 atoms in group carbon_mid
 \end{lcverbatim}
 
-\noindent Finally, let us randomly delete some of the carbon atoms.
+\noindent Finally, to start from a less ideal state and create a system with some defects, 
+let us randomly delete some of the carbon atoms.
 In order to avoid deleting atoms that are too close to the edges,
 let us define a new region name \textit{rdel} that
 starts $2\,Å$
@@ -454,8 +456,10 @@ run 10000
 \end{lcverbatim}
 
 \noindent The chosen velocity for the deformation is $100\,\text{m/s}$.
+The length $L$ of the CNT increase linearly over
+time for $t > 5\,\text{ps}$, as expected from the imposed constant velocity.
 
-\vspace{0.25cm} \noindent [legend-to-add]Figure: Evolution of the length of the CNT with time.
+\vspace{0.25cm} \noindent [legend-to-add]Figure: Evolution of the length $L$ of the CNT with time.
 [legend-to-add]The CNT starts deforming at $t = 5\,\text{ps}$.
 
 \vspace{0.25cm} \noindent The energy, which can be accessed from the log file, shows a non-linear
@@ -472,9 +476,9 @@ behaves as expected by opening the \textit{dump.lammpstrj} file with VMD.
 \vspace{0.25cm} \noindent [legend-to-add]Figure: CNT before (top) and after (bottom) deformation. See the corresponding \href{https://youtu.be/S05nzreQR18}{video}.
 
 \section{Breakable bonds}
-\noindent When using a classical force field, as we just did, the bonds between atoms 
-are non-breakable. Let us perform a similar simulation, 
-but this time using a reactive force field instead, allowing for the bonds to break
+\noindent When using a classical force field, as we just did, the bonds between the atoms 
+are non-breakable. Let us perform a similar simulation and deform a small CNT again,
+but this time using a reactive force field that allows for the bonds to break
 if the applied deformation is large enough.
 
 \subsection{Input file initialization}
@@ -679,7 +683,7 @@ run 280000
 use a longer run. 
 
 \vspace{0.25cm} \noindent When looking at the \textit{lammpstrj} file using VMD, you will see
-the bonds breaking. Use the \textit{DynamicBonds}
+the bonds breaking. From VMD, use the \textit{DynamicBonds}
 representation to properly visualize the bond breaking.
 
 \vspace{0.25cm} \noindent [legend-to-add]Figure: CNT with broken bonds. See the corresponding \href{https://youtu.be/H2_cjoTcVAM}{video}.
@@ -692,7 +696,7 @@ bonds between atoms in the LAMMPS simulation. Therefore the bonds seen
 in VMD when using the \textit{DynamicBonds} representation can be misleading.
 \end{tcolorbox}
 
-\noindent Looking at the evolution of energy again, one can see that energy increasing 
+\noindent Looking at the evolution of energy again, one can see that the energy is increasing 
 with the deformation, before completely relaxing when the CNT finally breaks.
 
 \vspace{0.25cm} \noindent [legend-to-add]Figure: Evolution of the total energy of the system with time.

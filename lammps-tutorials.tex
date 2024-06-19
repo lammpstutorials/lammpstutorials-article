@@ -674,10 +674,10 @@ atom_style atomic
 boundary p p p
 pair_style airebo 2.5 1 1
 \end{verbatim}}
-The first difference with the previous part is the unit system, here \textit{metal} instead of \textit{real}, a choice that is imposed by the AIREBO force field. A second difference is the use of the \textit{atom$\_$style atomic} instead of \textit{molecular}, single no explicit bond information is required with AIREBO.
+The first difference with the previous part is the unit system, here \textit{metal} instead of \textit{real}, a choice that is imposed by the AIREBO force field. A second difference is the use of the \textit{atom$\_$style atomic} instead of \textit{molecular}, since no explicit bond information is required with AIREBO.
 
 \paragraph{Adapt the topology file}
-Since \textit{bond}, \textit{angle}, and \textit{dihedral} do not need to be explicitly set when using AIREBO, some small changes need to be made to the previously generated \textit{.data} file. Duplicate the previous file \textit{cnt$\_$molecular.data}, name the copy \textit{cnt$\_$atom.data}, place it within \textit{breakable-bonds/}. Then, remove all bond, angle, and dihedral information from \textit{cnt$\_$atom.data}. Also, remove the second column of the \textit{Atoms} table, so that the \textit{cnt$\_$atom.data} looks like the following: 
+Since \textit{bond}, \textit{angle}, and \textit{dihedral} do not need to be explicitly set when using AIREBO, some small changes need to be made to the previously generated \textit{.data} file. Duplicate the previous file \textit{cnt$\_$molecular.data}, name the copy \textit{cnt$\_$atom.data}, and place it within \textit{breakable-bonds/}. Then, remove all bond, angle, and dihedral information from \textit{cnt$\_$atom.data}. Also, remove the second column of the \textit{Atoms} table, so that the \textit{cnt$\_$atom.data} looks like the following: 
 {\normalsize \begin{verbatim}
 700 atoms
 1 atom types
