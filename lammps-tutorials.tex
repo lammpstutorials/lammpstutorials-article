@@ -529,18 +529,18 @@ region rbot block INF INF INF INF INF ${zmin}
 region rmid block INF INF INF INF ${zmin} ${zmax}
 \end{verbatim}}
 
-\noindent The variable $z_\mathrm{max}$ corresponds to the coordinate of the last atoms along $z$ minus 0.5 Ångstroms, and $z_\mathrm{min}$ to the coordinate of the first atoms along $z$ plus 0.5 Ångstroms. Then, three regions are defined, and correspond respectively to: $z < z_\mathrm{min}$, (\textit{rbot}, for region bottom) $z_\mathrm{min} > z > z_\mathrm{max}$ (\textit{rmid}, for region middle), and $z > z_\mathrm{max}$ (\textit{rtop}, for region top). Finally, let us define 3 groups of atoms corresponding to the atoms located in each of the 3 regions, respectively, by adding to \textit{input.lammps}:
+\noindent The variable $z_\mathrm{max}$ corresponds to the coordinate of the last atoms along $z$ minus 0.5 Ångstroms, and $z_\mathrm{min}$ to the coordinate of the first atoms along $z$ plus 0.5 Ångstroms. Then, three regions are defined and correspond respectively to: $z < z_\mathrm{min}$, (\textit{rbot}, for region bottom) $z_\mathrm{min} > z > z_\mathrm{max}$ (\textit{rmid}, for region middle), and $z > z_\mathrm{max}$ (\textit{rtop}, for region top). Finally, let us define 3 groups of atoms corresponding to the atoms located in each of the 3 regions, respectively, by adding to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 group carbon_top region rtop
 group carbon_bot region rbot
 group carbon_mid region rmid
 \end{verbatim}}
-The atoms of the edges as selected within the \textit{carbon$\_$top} and \textit{carbon$\_$bot} groups can be represented with a different color, see Fig.\,\ref{fig:CNT-underformed}
+The atoms from the \textit{carbon$\_$top} and \textit{carbon$\_$bot} groups are represented in white in Fig.\,\ref{fig:CNT-underformed}, and the atoms from the \textit{carbon$\_$mid} group in pink.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-underformed}
-\caption{CNT with atoms from the \textit{carbon$\_$top} and the \textit{carbon$\_$bot} groups are represented with a different color.}
+\caption{CNT with the atoms from the \textit{carbon$\_$mid} group in pink, and the atoms from the \textit{carbon$\_$top} and the \textit{carbon$\_$bot} groups in white.}
 \label{fig:CNT-underformed}
 \end{figure}
 
@@ -566,7 +566,7 @@ The \textit{delete$\_$atoms} command randomly deletes $2\,\%$ of the atoms from 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-underformed-deleted}
-\caption{CNT with \textit{10} randomly deleted atoms.}
+\caption{Same CNT as in Fig.\,\ref{fig:CNT-underformed}, but with 10 deleted atoms. The 10 deleted atoms were chosen randomly from the central part of the CNT.}
 \label{fig:CNT-underformed-deleted}
 \end{figure}
 
