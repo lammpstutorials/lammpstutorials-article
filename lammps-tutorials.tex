@@ -103,7 +103,7 @@
 \maketitle
 
 \begin{abstract}
-The continuous development of highly powerful and user-friendly open-source codes makes it possible for any researcher, student, or curious-minded person, to launch a successful molecular simulations without implementing himself the inter-particle interaction or  integrate Newton's equations of motion. If the possibility of quick results is appealing, the access of these open-source codes remain hindered by their numerous options and possibilities, and the many pitfalls that comes with it. LAMMPS is a highly versatile molecular simulation code designed for modeling particles in a broad range of materials science and computational chemistry applications. It is widely used for its ability to run simulations on large-scale parallel computing environments, making it suitable for complex and large-scale simulations of atomic and molecular systems. This article introduces seven tutorials designed to make learning LAMMPS more accessible to new users. These tutorials of increasing difficulty cover the basics of running molecular simulations in LAMMPS with systems of varying complexities, including a simple fluid, a carbon nanotube, and a polymer solvated in water. Each tutorial has its own goal, such as imposing a deformation on the system or measuring a free energy barrier. Some more advanced topics are addressed by the last three tutorials, namely the use of reactive force fields, an illustration of the umbrella sampling method, and an example of grand canonical Monte Carlo simulation.
+The continuous development of highly powerful and user-friendly open-source codes makes it possible for any researcher, student, or curious-minded person, to launch a successful molecular simulation without implementing himself the inter-particle interaction or integrate Newton's equations of motion. If the possibility of quick results is appealing, the access of these open-source codes remain hindered by their numerous options and possibilities, and the many pitfalls that comes with it. LAMMPS is a highly versatile molecular simulation code designed for modeling particles in a broad range of materials science and computational chemistry applications. It is widely used for its ability to run simulations on large-scale parallel computing environments, making it suitable for complex and large-scale simulations of atomic and molecular systems. This article introduces seven tutorials designed to make learning LAMMPS more accessible to new users. These tutorials of increasing difficulty cover the basics of running molecular simulations in LAMMPS with systems of varying complexities, including a simple fluid, a carbon nanotube, and a polymer solvated in water. Each tutorial has its own goal, such as imposing a deformation on the system or measuring a free energy barrier. Some more advanced topics are addressed by the last three tutorials, namely the use of reactive force fields, an illustration of the umbrella sampling method, and an example of grand canonical Monte Carlo simulation.
 \end{abstract}
 
 \end{frontmatter}
@@ -147,7 +147,7 @@ In \hyperref[umbrella-sampling-label]{tutorial 7}, an advanced free energy metho
 \subsection{Background knowledge}
 % Tutorials should clearly define what concepts or abilities researchers will need to complete the tutorial (e.g., some proficiency in Python; experience with Jupyter notebooks; knowledge of classical MD; etc).
 
-This set of tutorials requires no prior knowledge of LAMMPS. The tutorials assume that the user is familiar with the use of a plain-text editor such as VIM or Emacs, as well as with the most basic Unix/Linux command-line interactions. In addition, prior knowledge of the basics of molecular simulations and statistical physics would be beneficial. The user may refer to \textit{Understanding molecular simulation} by Daan Frenkel and Berend Smit \cite{frenkel2023understanding}, as well as \textit{Computer simulation of liquids} by Michael Allen and Dominic Tildesley \cite{allen2017computer}. Additionally, to better understand the fundamental concepts behind some of the soft matter systems simulated in these tutorials, the user can refer to \textit{Basic concepts for simple and complex liquids} by Jean-Louis Barrat and Jean-Pierre Hansen \cite{barrat2003basic}, as well as \textit{Theory of simple liquids: with applications to soft matter} by Jean-Pierre Hansen and Ian Ranald McDonald \cite{hansen2013theory}.
+This set of tutorials requires no prior knowledge of LAMMPS. The tutorials assume that the user is familiar with the use of a plain-text editor such as VIM or Emacs, as well as with the most basic Unix/Linux command-line interactions. In addition, prior knowledge of the basics of molecular simulations and statistical physics would be beneficial. The user may refer to \textit{Understanding molecular simulation} by Daan Frenkel and Berend Smit \cite{frenkel2023understanding}, as well as \textit{Computer simulation of liquids} by Michael Allen and Dominic Tildesley \cite{allen2017computer}. Additionally, to better understand the fundamental concepts behind the soft matter systems simulated in these tutorials, the user can refer to \textit{Basic concepts for simple and complex liquids} by Jean-Louis Barrat and Jean-Pierre Hansen \cite{barrat2003basic}, as well as \textit{Theory of simple liquids: with applications to soft matter} by Jean-Pierre Hansen and Ian Ranald McDonald \cite{hansen2013theory}.
 
 \subsection{Software/system requirements}
 
@@ -558,7 +558,7 @@ When running a simulation, the number of atoms in each group is printed in the t
 680 atoms in group carbon_mid
 \end{verbatim}}
 Finally, to start from a less ideal state and create a system with some defects, 
-let us randomly delete some of the carbon atoms. To avoid deleting atoms that are too close to the edges, let us define a new region name \textit{rdel} that starts $2\,Å$ from the CNT edges.
+let us randomly delete a small fraction of the carbon atoms. To avoid deleting atoms that are too close to the edges, let us define a new region name \textit{rdel} that starts $2\,Å$ from the CNT edges.
 {\normalsize \begin{verbatim}
 variable zmax_del equal ${zmax}-2
 variable zmin_del equal ${zmin}+2
@@ -1300,8 +1300,7 @@ run 4000
 
 write_data system.data
 \end{verbatim}}
-For the last of the 3 steps, fix \textit{nve} is used instead of \textit{nve/limit}, which will allow for a better relaxation of the atom positions. When running the \textit{input.lammps} file with LAMMPS, you should see that the total energy of the system decreases during the first of the 3 steps, before re-increasing a little after the temperature is increased from 1 to $300\,\text{K}$ (Fig.\,\ref{fig:NANOSHEAR-minimization}). If you look at the trajectory using VMD, you will see some of the atoms, in particular, the ones that were
-initially in problematic positions. 
+For the last of the 3 steps, fix \textit{nve} is used instead of \textit{nve/limit}, which will allow for a better relaxation of the atom positions. When running the \textit{input.lammps} file with LAMMPS, you should see that the total energy of the system decreases during the first of the 3 steps, before re-increasing a little after the temperature is increased from 1 to $300\,\text{K}$ (Fig.\,\ref{fig:NANOSHEAR-minimization}). If you look at the trajectory using VMD, you will see that some of the atoms are moving, particularly those that were initially in problematic positions. 
 
 \begin{figure}
 \centering
@@ -1460,10 +1459,7 @@ measure its viscosity $\dot{\eta}$ according to: $\eta = \tau / \dot{\gamma}$ wh
 \noindent The objective of this tutorial is to use a reactive force field (ReaxFF \cite{van2001reaxff, zou2012investigation}), and calculate the partial charges of a system undergoing deformation, as well as chemical bond formation and breaking. The system simulated here is a block of silicon dioxide (SiO2), that is deformed until rupture (Fig.\,\ref{fig:SIO}). Particular attention is given to the evolution of the charges of the atoms during the deformation of the structure, and the chemical reactions occurring due to the deformation are tracked.
 
 \subsubsection{Prepare and relax}
-Create a folder, name it \textit{RelaxSilica/}, and download the initial topology of a small amorphous silica structure named \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/silica.data}{\textit{silica.data}}. If you open the \textit{silica.data} file, you can see by looking at the Atoms section that all silicon atoms have the same charge $q = 1.1\,\text{e}$, and all oxygen atoms the charge $q = -0.55\,\text{e}$. This is common with classical force fields and will change once ReaxFF is used. Let us keep that in mind for now. The first step we need to perform here is to relax
-the structure with ReaxFF, which we are gonna do using molecular dynamics. To make sure that the system equilibrates
-nicely, let us track some changes over time. Create an input file called \textit{input.lammps} in \textit{RelaxSilica/},
-and copy the following lines into it: 
+Create a folder, name it \textit{RelaxSilica/}, and download the initial topology of a small amorphous silica structure named \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/silica.data}{\textit{silica.data}}. If you open the \textit{silica.data} file, you can see by looking at the Atoms section that all silicon atoms have the same charge $q = 1.1\,\text{e}$, and all oxygen atoms the charge $q = -0.55\,\text{e}$. This is common with classical force fields and will change once ReaxFF is used. Let us keep that in mind for now. The first step we need to perform here is to relax the structure with ReaxFF, which we are gonna do using molecular dynamics. To make sure that the system equilibrates nicely, let us track some changes over time. Create an input file called \textit{input.lammps} in \textit{RelaxSilica/}, and copy the following lines into it: 
 {\normalsize \begin{verbatim}
 units real
 atom_style full
@@ -2077,9 +2073,7 @@ pair_style lj/cut 3.822
 pair_modify shift yes
 boundary p p p
 \end{verbatim}}
-Here, we start by defining variables for the Lennard-Jones interaction $\sigma$ and $\epsilon$ and for the repulsive potential $U (x)$: $U_0$, $\delta$, and $x_0$, see the analytical expression below. The value of 3.822 for the cut-off was chosen to 
-create a WCA, purely repulsive, potential. It was calculated as $2^{1/6} \times 3.405$ where $3.405 = \sigma$. The system of unit \textit{real}, for which energy is in kcal/mol, distance in Ångstrom, or time in femtosecond, has been chosen for practical reasons: the WHAM algorithm used in the second part of the tutorial automatically assumes the energy to
-be in kcal/mol. Atoms will interact through a Lennard-Jones potential with a cut-off equal to $\sigma \times 2 ^ {1/6}$ (i.e. a WCA repulsive potential). The potential is shifted to be equal to 0 at the cut-off using the \textit{pair$\_$modify}.
+Here, we start by defining variables for the Lennard-Jones interaction $\sigma$ and $\epsilon$ and for the repulsive potential $U (x)$: $U_0$, $\delta$, and $x_0$, see the analytical expression below. The value of 3.822 for the cut-off was chosen to create a WCA, purely repulsive, potential. It was calculated as $2^{1/6} \times 3.405$ where $3.405 = \sigma$. The system of unit \textit{real}, for which energy is in kcal/mol, distance in Ångstrom, or time in femtosecond, has been chosen for practical reasons: the WHAM algorithm used in the second part of the tutorial automatically assumes the energy to be in kcal/mol. Atoms will interact through a Lennard-Jones potential with a cut-off equal to $\sigma \times 2 ^ {1/6}$ (i.e. a WCA repulsive potential). The potential is shifted to be equal to 0 at the cut-off using the \textit{pair$\_$modify}.
 
 \paragraph{System creation and settings}
 \noindent Let us define the simulation block and randomly add atoms by adding the following lines into \textit{input.lammps}:
@@ -2093,8 +2087,7 @@ mass * 39.95
 pair_coeff * * ${epsilon} ${sigma}
 neigh_modify every 1 delay 4 check yes
 \end{verbatim}}
-Here, the values for Lennard-Jones parameters $\sigma$ and $\epsilon$ as well as the mass $m = 39.95$ grams/mole were taken from argon. In the previous subsection, the variables $U_0$, $\delta$, and $x_0$ were defined. They are used to create
-the repulsive potential restricting the atoms to explore the center of the box: 
+Here, the values for Lennard-Jones parameters $\sigma$ and $\epsilon$ as well as the mass $m = 39.95$ grams/mole were taken from argon. In the previous subsection, the variables $U_0$, $\delta$, and $x_0$ were defined. They are used to create the repulsive potential restricting the atoms to explore the center of the box: 
 $$U(x) = U_0 \left[ \arctan \left( \dfrac{x+x_0}{\delta} \right) - \arctan \left(\dfrac{x-x_0}{\delta} \right) \right]. $$
 From the derivative of the potential with respect to $x$, we obtain the expression
 for the force that will be imposed to the atoms:
@@ -2119,8 +2112,7 @@ variable F atom ${U0}/((x-${x0})^2/${dlt}^2+1)/${dlt} &
     -${U0}/((x+${x0})^2/${dlt}^2+1)/${dlt}
 fix myadf all addforce v_F 0.0 0.0 energy v_U
 \end{verbatim}}
-Finally, let us combine the \textit{fix nve} with a \textit{Langevin} thermostat and run a molecular dynamics simulation. With
-these two commands, the MD simulation is effectively in the NVT ensemble: constant number of atoms $N$, constant volume $V$, and constant temperature $T$. Let us perform an equilibration of 500000 steps in total, using a timestep of $2\,\text{fs}$ (i.e. a total duration of $1\,\text{ns}$). To make sure that $1\,\text{ns}$ is long enough, let us record the evolution of the number of atoms in the central (energetically unfavorable) region called \textit{mymes}:
+Finally, let us combine the \textit{fix nve} with a \textit{Langevin} thermostat and run a molecular dynamics simulation. With these two commands, the MD simulation is effectively in the NVT ensemble: constant number of atoms $N$, constant volume $V$, and constant temperature $T$. Let us perform an equilibration of 500000 steps in total, using a timestep of $2\,\text{fs}$ (i.e. a total duration of $1\,\text{ns}$). To make sure that $1\,\text{ns}$ is long enough, let us record the evolution of the number of atoms in the central (energetically unfavorable) region called \textit{mymes}:
 {\normalsize \begin{verbatim}
 fix mynve all nve
 fix mylgv all langevin 119.8 119.8 50 1530917
@@ -2159,8 +2151,7 @@ This simulation with a total duration of $9\,\text{ns}$ needs a few minutes to c
 \end{figure}
 
 \paragraph{Data analysis}
-First, let us make sure that the initial equilibration of $1\,\text{ns}$ is long enough by looking at the \textit{density$\_$evolution.dat} file. Here, we can see that the number of atoms in the central region, $n_\mathrm{central}$, evolves near its equilibrium value (which is close to 0) after about $0.1\,\text{ns}$ (Fig.\,\ref{fig:US-density-evolution}). One can also have a look at the density profile, which shows that the density in the center of the box is about two orders of magnitude lower than inside the reservoir (Fig.\,\ref{fig:US-density}). Then, let us plot $-R T \ln(\rho/\rho_\mathrm{bulk})$ and compare it with the imposed (reference) potential $U$. The agreement with the expected energy profile is reasonable,
-despite some noise in the central part (Fig.\,\ref{fig:US-FreeSampling}). 
+First, let us make sure that the initial equilibration of $1\,\text{ns}$ is long enough by looking at the \textit{density$\_$evolution.dat} file. Here, we can see that the number of atoms in the central region, $n_\mathrm{central}$, evolves near its equilibrium value (which is close to 0) after about $0.1\,\text{ns}$ (Fig.\,\ref{fig:US-density-evolution}). One can also have a look at the density profile, which shows that the density in the center of the box is about two orders of magnitude lower than inside the reservoir (Fig.\,\ref{fig:US-density}). Then, let us plot $-R T \ln(\rho/\rho_\mathrm{bulk})$ and compare it with the imposed (reference) potential $U$. The agreement with the expected energy profile is reasonable, despite some noise in the central part (Fig.\,\ref{fig:US-FreeSampling}). 
 
 \begin{figure}
 \centering
@@ -2232,8 +2223,7 @@ reset_timestep 0
 
 dump mydmp all atom 1000000 dump.lammpstrj
 \end{verbatim}}
-So far, this code resembles the one of Method 1, except for the additional particle of type 2. This particle is identical to the particles of type 1 (same mass and Lennard-Jones parameters) but will be exposed to the biasing potential.
-Let us create a loop with 50 steps, and move progressively the center of the bias potential by an increment of 0.1 nm. Add the following lines into \textit{input.lammps}:
+So far, this code resembles the one of Method 1, except for the additional particle of type 2. This particle is identical to the particles of type 1 (same mass and Lennard-Jones parameters) but will be exposed to the biasing potential. Let us create a loop with 50 steps, and move progressively the center of the bias potential by an increment of 0.1 nm. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 variable a loop 50
 label loop
@@ -2249,10 +2239,7 @@ unfix myat1
 next a
 jump SELF loop
 \end{verbatim}}
-A folder named \textit{data-k1.5/} needs to be created within \textit{BiasedSampling/}. The spring command serves to impose the
-additional harmonic potential with the spring constant $k$. Note that the value of $k$ should be chosen with care,
-if $k$ is too small, the particle won't follow the biasing potential center, if $k$ is too large, there will be no overlapping between the different windows. See the side note named \textit{on the choice of k} below. The center of the harmonic potential $x_\text{des}$ successively takes values from -25 to 25. For each value of $x_\text{des}$, an equilibration step of 0.4 ns is
-performed, followed by a step of 2 ns during which the position along $x$ of the particle is saved in data files (one data file per value of $x_\text{des}$). You can always increase the duration of the runs for better samplings.
+A folder named \textit{data-k1.5/} needs to be created within \textit{BiasedSampling/}. The spring command serves to impose the additional harmonic potential with the spring constant $k$. Note that the value of $k$ should be chosen with care, if $k$ is too small, the particle won't follow the biasing potential center, if $k$ is too large, there will be no overlapping between the different windows. See the side note named \textit{on the choice of k} below. The center of the harmonic potential $x_\text{des}$ successively takes values from -25 to 25. For each value of $x_\text{des}$, an equilibration step of 0.4 ns is performed, followed by a step of 2 ns during which the position along $x$ of the particle is saved in data files (one data file per value of $x_\text{des}$). You can always increase the duration of the runs for better samplings.
 
 \paragraph{WHAM algorithm}
 \noindent In order to generate the free energy profile from the density distribution,
@@ -2284,8 +2271,7 @@ PMF.dat has been created and contains the free energy profile in Kcal/mol. Again
 
 \section*{Author Contributions}
 
-SG conceived and wrote all the online tutorials and underlying Sphinx
-documentation for \href{https://lammpstutorials.github.io}{lammpstutorials.github.io}.
+SG conceived and wrote all the online tutorials and underlying Sphinx documentation for \href{https://lammpstutorials.github.io}{lammpstutorials.github.io}.
 
 \section*{Potentially Conflicting Interests}
 
@@ -2293,8 +2279,7 @@ There are no conflicting interests to declare.
 
 \section*{Funding Information}
 
-S.G. acknowledges funding from the European Union's Horizon 2020 research and
-innovation programme under the Marie Skłodowska-Curie grant agreement N$^\circ\;101065060$.
+S.G. acknowledges funding from the European Union's Horizon 2020 research and innovation programme under the Marie Skłodowska-Curie grant agreement N$^\circ\;101065060$.
 
 \section*{Author Information}
 \makeorcid
