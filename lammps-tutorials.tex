@@ -1074,7 +1074,7 @@ by adding the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 variable mytemp equal temp
 fix myat1 all ave/time 10 10 100 &
-    v_mytemp file output-temperature.dat
+    v_mytemp file temperature.dat
 variable x1 equal xcm(topull1,x)
 variable x2 equal xcm(topull2,x)
 variable y1 equal xcm(topull1,y)
@@ -1085,7 +1085,7 @@ variable delta_r equal &
     sqrt((v_x1-v_x2)^2+(v_y1-v_y2)^2 &
     +(v_z1-v_z2)^2)
 fix myat2 all ave/time 10 10 100 v_delta_r &
-    file output-end-to-end-distance.dat
+    file end-to-end-distance.dat
 compute rgyr PEG gyration
 fix myat3 all ave/time 10 10 100 c_rgyr &
     file gyration-radius.dat
@@ -1101,7 +1101,7 @@ fix myaf1 topull1 addforce ${f0} 0 0
 fix myaf2 topull2 addforce -${f0} 0 0
 run 30000
 \end{verbatim}}
-Run the \textit{input.lammps} file using LAMMPS. If you open the \textit{dump.lammpstrj} file using \textit{VMD}, you should see that the PEG molecule eventually aligns in the direction of the force (as seen in Fig.\,\ref{fig:PEG-in-water}). The evolution of the end-to-end distance over time shows the PEG adjusting to the external forcing (Fig.\,\ref{fig:PEG-distance}).
+Run the \textit{input.lammps} file using LAMMPS. If you open the \textit{dump.lammpstrj} file using \textit{VMD}, you should see that the PEG molecule eventually aligns in the direction of the force (as seen in Fig.\,\ref{fig:PEG-in-water}). The evolutions of the end-to-end distance and of the gyration radius over time show that the PEG is adjusting to the external forcing in less than $10~\text{ps}$ (Fig.\,\ref{fig:PEG-distance}).
 
 \begin{figure}
 \centering
@@ -1113,7 +1113,7 @@ Run the \textit{input.lammps} file using LAMMPS. If you open the \textit{dump.la
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-distance}
-\caption{a) Evolution of the length $L$ of the CNT with time. The CNT starts deforming at $t = 5\,\text{ps}$. b) Evolution of the gyration radius $R_\text{gyr}$ of the PEG molecule.}
+\caption{a) Evolution of the end-to-end distance of the PEG with time. The CNT starts deforming at $t = 5\,\text{ps}$. b) Evolution of the gyration radius $R_\text{gyr}$ of the PEG molecule.}
 \label{fig:PEG-distance}
 \end{figure}
 
