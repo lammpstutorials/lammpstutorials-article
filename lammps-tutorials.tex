@@ -209,7 +209,7 @@ atom_style atomic
 pair_style lj/cut 2.5
 boundary p p p
 \end{verbatim}}
-The first line, \textit{units lj}, indicates that we want to use the unit system called \textit{LJ} Lennard-Jones), in which all quantities are unitless. The second line, \textit{dimension 3}, indicates that the simulation is 3D. The third line, \textit{atom$\_$style atomic}, that the \textit{atomic} style
+The first line, \textit{units lj}, indicates that we want to use the unit system called \textit{LJ} Lennard-Jones, in which all quantities are unitless. The second line, \textit{dimension 3}, indicates that the simulation is 3D. The third line, \textit{atom$\_$style atomic}, that the \textit{atomic} style
 will be used, therefore each atom is just a dot with a mass. The fourth line, \textit{pair$\_$style lj/cut 2.5}, indicates that atoms will be interacting through a Lennard-Jones potential with a cut-off equal to $r_c = 2.5$ (unitless) \cite{wang2020lennard,fischer2023history}:
 $$E_{ij} (r) = 4 \epsilon_{ij} \left[ \left( \dfrac{\sigma_{ij}}{r} \right)^{12} - \left( \dfrac{\sigma_{ij}}{r} \right)^{6} \right], ~ \text{for} ~ r < r_c,$$
 where $r$ is the inter-particle distance, $\epsilon_{ij}$ is the depth of potential well that sets the interaction strength, and $\sigma_{ij}$ is the distance parameter or particle effective size. Here, the indexes \textit{ij} refer to the particle types \textit{i} and \textit{j}. The last line, \textit{boundary p p p}, indicates that the periodic boundary conditions will be used along all three directions of space (the 3 \textit{p} stand for \textit{x}, \textit{y}, and \textit{z}, respectively).
@@ -218,10 +218,13 @@ where $r$ is the inter-particle distance, $\epsilon_{ij}$ is the depth of potent
 Let us fill the \textit{System definition} category of the input script:
 {\normalsize \begin{verbatim}
 # 2) System definition
-region simulation_box block -20 20 -20 20 -20 20
+region simulation_box block &
+    -20 20 -20 20 -20 20
 create_box 2 simulation_box
-create_atoms 1 random 1500 341341 simulation_box
-create_atoms 2 random 100 127569 simulation_box
+create_atoms 1 random 1500 &
+    341341 simulation_box
+create_atoms 2 random 100 &
+    127569 simulation_box
 \end{verbatim}}
 \noindent The first line, \textit{region simulation$\_$box (...)}, creates a region named \textit{simulation$\_$box} that is a block (i.e. a rectangular cuboid) that extends from -20 to 20 (no unit) along all 3 directions of space. The second line, \textit{create$\_$box 2 simulation$\_$box}, creates a simulation box based on the region \textit{simulation$\_$box} with \textit{2} types of atoms. The third line, \textit{create$\_$atoms (...)} creates 1500 atoms of type 1 randomly within the region \textit{simulation$\_$box}. The integer \textit{341341} is a seed that can be changed in order to create different
 initial conditions for the simulation. The fourth line creates 100 atoms of type 2.
@@ -238,11 +241,12 @@ pair_coeff 2 2 0.5 3.0
 The two first commands, \textit{mass (...)}, attribute a mass equal to 1 (unitless) to both atoms of type 1 and 2. The third line, \textit{pair$\_$coeff 1 1 1.0 1.0}, sets the Lennard-Jones coefficients for the interactions between atoms of type 1, respectively the energy parameter $\epsilon_{11} = 1.0$ and the distance parameter $\sigma_{11} = 1.0$. Similarly, the last line sets the Lennard-Jones coefficients for the interactions between atoms of type 2, $\epsilon_{22} = 0.5$, and $\sigma_{22} = 3.0$. By default, LAMMPS calculates the cross coefficients between the different atom types using geometric average: $\epsilon_{ij} = \sqrt{\epsilon_{ii} \epsilon_{jj}}$, $\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$. 
 
 \paragraph{Energy minimization}
-The system is now fully parametrized. Let us fill the two last remaining sections by adding the following lines to \textit{input.lammps}:
+The system is now fully parametrized. Let us fill the two last remaining sections by adding the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 # 4) Visualization
 thermo 10
-thermo_style custom step temp pe ke etotal press
+thermo_style custom step temp pe ke &
+    etotal press
 
 # 5) Run
 minimize 1.0e-4 1.0e-6 1000 10000
@@ -310,10 +314,13 @@ boundary p p p
 To create the atoms of types 1 and 2 in two separate regions, let us create three separate regions: A cubic region for the simulation box and two additional regions for placing the atoms:
 {\normalsize \begin{verbatim}
 # 2) System definition
-region simulation_box block -20 20 -20 20 -20 20
+region simulation_box block &
+    -20 20 -20 20 -20 20
 create_box 2 simulation_box
-region cylinder_in cylinder z 0 0 10 INF INF side in
-region cylinder_out cylinder z 0 0 10 INF INF side out
+region cylinder_in cylinder z 0 0 10 &
+    INF INF side in
+region cylinder_out cylinder z 0 0 10 &
+    INF INF side out
 create_atoms 1 random 1000 341341 cylinder_out
 create_atoms 2 random 150 127569 cylinder_in
 \end{verbatim}}
@@ -327,7 +334,8 @@ pair_coeff 2 2 0.5 3.0
 
 # 4) Visualization
 thermo 10
-thermo_style custom step temp pe ke etotal press
+thermo_style custom step temp pe ke &
+    etotal press
 dump mydmp all atom 10 dump.min.lammpstrj
 
 # 5) Run
@@ -357,10 +365,10 @@ read_data minimized_coordinate.data
 By visualizing the previously generated \textit{dump.min.lammpstrj} file, you may have noticed that some atoms have moved from one region to the other during minimization. To start the simulation from a clean slate, with only atoms of type 2 within the cylinder and atoms of type
 1 outside the cylinder, let us delete the misplaced atoms by adding the following commands to \textit{input.md.lammps}:
 {\normalsize \begin{verbatim}
-region cylinder_in cylinder z 0 0 10 INF INF &
-    side in
-region cylinder_out cylinder z 0 0 10 INF INF &
-    side out
+region cylinder_in cylinder z 0 0 10 &
+    INF INF side in
+region cylinder_out cylinder z 0 0 10 &
+    INF INF side out
 group group_type_1 type 1
 group group_type_2 type 2
 group group_region_in region cylinder_in
@@ -374,7 +382,7 @@ delete_atoms group group_type_2_out
 \end{verbatim}}
 The two first \textit{region} commands recreate the previously defined regions, which is necessary since regions are not saved by the \textit{write$\_$data} command. The first two \textit{group} commands are used to create groups containing all the atoms of type 1 and all the atoms of type 2, respectively.
 The next two \textit{group} commands create atom groups based on their
-positions at the beginning of the simulation, i.e. when the commands are being read by LAMMPS. The last two \textit{group} commands create atom groups based on the intersection between the previously defined groups. Finally, the two \textit{delete$\_$atoms} commands delete the atoms of type 1 that are located within the cylinder and the atoms of type 2 that are located outside the cylinder, respectively. Add the following lines to \textit{input.md.lammps}. Note the absence of \textit{Simulation settings} section, because the settings are taken from the \textit{.data} file.
+positions at the beginning of the simulation, i.e. when the commands are being read by LAMMPS. The last two \textit{group} commands create atom groups based on the intersection between the previously defined groups. Finally, the two \textit{delete$\_$atoms} commands delete the atoms of type 1 that are located within the cylinder and the atoms of type 2 that are located outside the cylinder, respectively. Add the following lines into \textit{input.md.lammps}. Note the absence of \textit{Simulation settings} section, because the settings are taken from the \textit{.data} file.
 {\normalsize \begin{verbatim}
 # 4) Visualization
 thermo 1000
@@ -382,14 +390,14 @@ dump mydmp all atom 1000 dump.md.lammpstrj
 \end{verbatim}}
 Let us extract the number of atoms of each type inside the cylinder as a function of time, by adding the following commands to \textit{input.md.lammps}:
 {\normalsize \begin{verbatim}
-variable number_type1_in &
+variable n_type1_in &
     equal count(group_type_1,cylinder_in)
-variable number_type2_in & 
+variable n_type2_in & 
     equal count(group_type_2,cylinder_in)
 fix myat1 all ave/time 10 200 2000 &
-    v_number_type1_in file population1vstime.dat
+    v_n_type1_in file population1vstime.dat
 fix myat2 all ave/time 10 200 2000 &
-    v_number_type2_in file population2vstime.dat
+    v_n_type2_in file population2vstime.dat
 \end{verbatim}}
 The two \textit{variables} are used to count the number of atoms of a specific group in the \textit{cylinder$\_$in} region. The two \textit{fix ave/time} are calling the previously defined variables and are printing their values into text files. By using \textit{10 200 2000}, variables are evaluated every 10 steps, averaged 200 times, and printed in the \textit{.dat} files every 2000 steps.
 
@@ -408,13 +416,14 @@ compute sumcoor12 all reduce ave c_coor12
 fix myat3 all ave/time 10 200 2000 &
     c_sumcoor12 file coordinationnumber12.dat
 \end{verbatim}}
-The \textit{compute ave} is used to average the per atom coordination number that is calculated by the \textit{coord/atom} compute. This averaging is necessary as \textit{coord/atom} returns an array where each value corresponds to a certain couple of atoms i-j. Such an array can't be printed by \textit{fix ave/time}. Finally, let us complete the script by adding the following lines to \textit{input.md.lammps}:
+The \textit{compute ave} is used to average the per atom coordination number that is calculated by the \textit{coord/atom} compute. This averaging is necessary as \textit{coord/atom} returns an array where each value corresponds to a certain couple of atoms i-j. Such an array can't be printed by \textit{fix ave/time}. Finally, let us complete the script by adding the following lines into \textit{input.md.lammps}:
 {\normalsize \begin{verbatim}
 # 5) Run
-velocity all create 1.0 4928459 mom yes rot yes &
-    dist gaussian
+velocity all create 1.0 4928459 &
+    mom yes rot yes dist gaussian
 fix mynve all nve
-fix mylgv all langevin 1.0 1.0 0.1 1530917 zero yes
+fix mylgv all langevin 1.0 1.0 0.1 &
+    1530917 zero yes
 timestep 0.005
 run 300000
 write_data mixed.data
@@ -482,7 +491,7 @@ improper_coeff 1 5 180
 \end{verbatim}}
 The \textit{pair$\_$coeff} command sets the parameters for the non-bonded Lennard-Jones interaction $\epsilon_{11} = 0.066 \, \text{kcal/mol}$ and $\sigma_{11} = 3.4 \, \text{Å}$ for the only type of atom of the simulation; the carbon atom of type 1.  The \textit{bond$\_$coeff} provides the equilibrium distance $r_0= 1.4 \, \text{Å}$ as well as the spring constant $k_b = 469 \, \text{kcal/mol/Å}^2$ for the harmonic potential imposed between two neighboring carbon atoms, where the potential is $U_b = k_b ( r - r_0)^2$. The
 \textit{angle$\_$coeff} gives the equilibrium angle $\theta_0$ and constant for the potential between three neighbor atoms :
-$U_\theta = k_\theta ( \theta - \theta_0)^2$. The \textit{dihedral$\_$coeff} and \textit{improper$\_$coeff} gives the potential for the constraints between 4 atoms. The file \textit{parm.lammps} is included in the simulation by adding the following line to the \textit{input.lammps} file:
+$U_\theta = k_\theta ( \theta - \theta_0)^2$. The \textit{dihedral$\_$coeff} and \textit{improper$\_$coeff} give the potential for the constraints between 4 atoms. The file \textit{parm.lammps} is included in the simulation by adding the following line into the \textit{input.lammps} file:
 {\normalsize \begin{verbatim}
 include parm.lammps
 \end{verbatim}}
@@ -495,32 +504,40 @@ by recentering the CNT at the origin (0, 0, 0). In addition, let us make sure th
 -40.000000 40.000000  ylo yhi
 -12.130411 67.869589  zlo zhi
 \end{verbatim}}
-Let us recenter the CNT by adding the following lines to \textit{input.lammps}:
+Let us recenter the CNT by adding the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 group carbon_atoms type 1
-variable carbon_xcm equal -1*xcm(carbon_atoms,x)
-variable carbon_ycm equal -1*xcm(carbon_atoms,y)
-variable carbon_zcm equal -1*xcm(carbon_atoms,z)
-displace_atoms carbon_atoms &
-    move ${carbon_xcm} ${carbon_ycm} ${carbon_zcm}
+variable carbon_xcm equal &
+    -1*xcm(carbon_atoms,x)
+variable carbon_ycm equal &
+    -1*xcm(carbon_atoms,y)
+variable carbon_zcm equal &
+    -1*xcm(carbon_atoms,z)
+displace_atoms carbon_atoms move &
+    ${carbon_xcm} ${carbon_ycm} ${carbon_zcm}
 \end{verbatim}}
 The first command includes all the atoms of type 1 (i.e. all the atoms here) in a group named \textit{carbon$\_$atoms}. 
 The 3 variables, \textit{carbon$\_$xcm}, \textit{carbon$\_$ycm}, and \textit{carbon$\_$zcm} are used to measure
 the current position of the group \textit{carbon$\_$atoms} along all 3 directions, respectively. Then, the \textit{displace$\_$atoms} command moves the group \textit{carbon$\_$atoms}, ensuring that its center of mass is located at the origin (0, 0, 0).
-Let us also change the box boundaries by adding the following line to \textit{input.lammps}:
+Let us also change the box boundaries by adding the following line into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
-change_box all x final -40 40 y final -40 40 &
-    z final -40 40
+change_box all x final -40 40 &
+    y final -40 40 z final -40 40
 \end{verbatim}}
 Such a cleaner and more symmetrical initial state can simplify future data analysis, but won't make any difference to the molecular dynamics.
 
-A displacement will be imposed on the edges of the CNT. To do so, let us isolate the atoms from the two edges and place them into groups named \textit{rtop} and \textit{rbot}, respectively. Add the following lines to \textit{input.lammps}:
+A displacement will be imposed on the edges of the CNT. To do so, let us isolate the atoms from the two edges and place them into groups named \textit{rtop} and \textit{rbot}, respectively. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
-variable zmax equal bound(carbon_atoms,zmax)-0.5
-variable zmin equal bound(carbon_atoms,zmin)+0.5
-region rtop block INF INF INF INF ${zmax} INF
-region rbot block INF INF INF INF INF ${zmin}
-region rmid block INF INF INF INF ${zmin} ${zmax}
+variable zmax equal &
+    bound(carbon_atoms,zmax)-0.5
+variable zmin equal &
+    bound(carbon_atoms,zmin)+0.5
+region rtop block &
+    INF INF INF INF ${zmax} INF
+region rbot block &
+    INF INF INF INF INF ${zmin}
+region rmid block &
+    INF INF INF INF ${zmin} ${zmax}
 \end{verbatim}}
 
 \noindent The variable $z_\mathrm{max}$ corresponds to the coordinate of the last atoms along $z$ minus 0.5 Ångstroms, and $z_\mathrm{min}$ to the coordinate of the first atoms along $z$ plus 0.5 Ångstroms. Then, three regions are defined and correspond respectively to: $z < z_\mathrm{min}$, (\textit{rbot}, for region bottom) $z_\mathrm{min} > z > z_\mathrm{max}$ (\textit{rmid}, for region middle), and $z > z_\mathrm{max}$ (\textit{rtop}, for region top). Finally, let us define 3 groups of atoms corresponding to the atoms located in each of the 3 regions, respectively, by adding to \textit{input.lammps}:
@@ -565,17 +582,18 @@ The \textit{delete$\_$atoms} command randomly deletes $2\,\%$ of the atoms from 
 \end{figure}
 
 \paragraph{The molecular dynamics}
-Let us specify the thermalization and the dynamics of the system. Add the following lines to \textit{input.lammps}:
+Let us specify the thermalization and the dynamics of the system. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 reset_atoms id sort yes
-velocity carbon_mid create ${T} 48455 mom yes &
-    rot yes
+velocity carbon_mid create ${T} 48455 & 
+    mom yes rot yes
 fix mynve all nve
 compute Tmid carbon_mid temp
-fix myber carbon_mid temp/berendsen ${T} ${T} 100
+fix myber carbon_mid temp/berendsen &
+    ${T} ${T} 100
 fix_modify myber temp Tmid
 \end{verbatim}}
-Re-setting the atom ids is necessary before using the \textit{velocity} command, this is done by the \textit{reset$\_$atoms} command.
+Re-setting the atom IDs is necessary before using the \textit{velocity} command, this is done by the \textit{reset$\_$atoms} command.
 The \textit{velocity} command gives initial velocities to the atoms of the middle group \textit{carbon$\_$mid}, ensuring an initial temperature of 300 K for these atoms. The \textit{fix nve} is applied to all atoms so that all atom positions are recalculated at every step, and a \textit{Berendsen} thermostat is applied to the atoms of the group \textit{carbon$\_$mid} only \cite{berendsen1984molecular}. The \textit{fix$\_$modify myber} ensures that the \textit{fix Berendsen} uses the temperature of the group \textit{carbon$\_$mid} as an input, instead of the temperature of the whole system. This is necessary to make sure that the frozen edges won't bias the temperature. Note that the atoms
 of the edges do not need a thermostat because their motion will be restrained, see below.
 
@@ -587,12 +605,13 @@ velocity carbon_top set 0 0 0
 velocity carbon_bot set 0 0 0
 \end{verbatim}}
 The two \textit{setforce} commands cancel the forces applied on the atoms of the two edges, respectively. The cancellation of the forces
-is done at every step, and along all 3 directions of space, $x$, $y$, and $z$, due to the use of \textit{0 0 0}. The two \textit{velocity} commands set the initial velocities along $x$, $y$, and $z$ to 0 for the atoms of \textit{carbon$\_$top} and \textit{carbon$\_$bot}, respectively. As a consequence of these last four commands, the atoms of the edges will remain immobile during the simulation (or at least they would if no other command was applied to them). The \textit{velocity set} commands impose the velocity of a group of atoms at the start of a run, but does not enforce the velocity during the entire simulation. When \textit{velocity set} is used in combination with \textit{setforce 0 0 0}, as is the case here, the atoms won't feel any force during the entire simulation. According to the Newton equation, no force means no acceleration, meaning that the initial velocity will persist during the entire simulation, thus producing a constant velocity motion.
+is done at every step, and along all 3 directions of space, $x$, $y$, and $z$, due to the use of \textit{0 0 0}. The two \textit{velocity} commands set the initial velocities along $x$, $y$, and $z$ to 0 for the atoms of \textit{carbon$\_$top} and \textit{carbon$\_$bot}, respectively. As a consequence of these last four commands, the atoms of the edges will remain immobile during the simulation (or at least they would if no other command was applied to them). The \textit{velocity set} commands impose the velocity of a group of atoms at the start of a run but do not enforce the velocity during the entire simulation. When \textit{velocity set} is used in combination with \textit{setforce 0 0 0}, as is the case here, the atoms won't feel any force during the entire simulation. According to the Newton equation, no force means no acceleration, meaning that the initial velocity will persist during the entire simulation, thus producing a constant velocity motion.
 
 \paragraph{Data extraction}
 Next, in order to measure the strain and stress suffered by the CNT, let us extract the distance $L$ between the two edges as well as the force applied on the edges.
 {\normalsize \begin{verbatim}
-variable L equal xcm(carbon_top,z)-xcm(carbon_bot,z)
+variable L equal &
+    xcm(carbon_top,z)-xcm(carbon_bot,z)
 fix at1 all ave/time 10 10 100 v_L &
     file cnt_length.dat
 fix at2 all ave/time 10 10 100 f_mysf1[1] &
@@ -629,8 +648,7 @@ run 10000
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-lenght-unbreakable}
-\caption{Evolution of the length $L$ of the CNT with time. The CNT starts
-deforming at $t = 5\,\text{ps}$.}
+\caption{Evolution of the length $L$ of the CNT with time. The CNT starts deforming at $t = 5\,\text{ps}$.}
 \label{fig:CNT-unbreakable-lenght}
 \end{figure}
 
@@ -696,7 +714,7 @@ In addition, remove the \textit{Bonds} table that is placed right after the \tex
 \end{verbatim}}
 
 \paragraph{Use of AIREBO potential}
-Then, let us import the LAMMPS data file, and set the pair coefficients by adding the following lines to \textit{input.lammps}
+Then, let us import the LAMMPS data file, and set the pair coefficients by adding the following lines into \textit{input.lammps}
 {\normalsize \begin{verbatim}
 # System definition
 read_data cnt_atom.data
@@ -706,21 +724,27 @@ Here, there is one single atom type. We impose this type to be carbon by using t
 downloaded by clicking \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level1/breaking-a-carbon-nanotube/breakable-bonds/CH.airebo}{here}, and must be placed within the \textit{breakable-bonds/} folder. The rest of the \textit{input.lammps} is very similar to the previous one:
 
 {\normalsize \begin{verbatim}
-change_box all x final -40 40 y final -40 40 &
-    z final -60 60
+change_box all x final -40 40 y &
+    final -40 40 z final -60 60
 
 group carbon_atoms type 1
-variable carbon_xcm equal -1*xcm(carbon_atoms,x)
-variable carbon_ycm equal -1*xcm(carbon_atoms,y)
-variable carbon_zcm equal -1*xcm(carbon_atoms,z)
-displace_atoms carbon_atoms move ${carbon_xcm} &
-    ${carbon_ycm} ${carbon_zcm}
+variable carbon_xcm &
+    equal -1*xcm(carbon_atoms,x)
+variable carbon_ycm &
+    equal -1*xcm(carbon_atoms,y)
+variable carbon_zcm &
+    equal -1*xcm(carbon_atoms,z)
+displace_atoms carbon_atoms move &
+    ${carbon_xcm} ${carbon_ycm} ${carbon_zcm}
 
-variable zmax equal bound(carbon_atoms,zmax)-0.5
-variable zmin equal bound(carbon_atoms,zmin)+0.5
+variable zmax equal &
+    bound(carbon_atoms,zmax)-0.5
+variable zmin equal &
+    bound(carbon_atoms,zmin)+0.5
 region rtop block INF INF INF INF ${zmax} INF
 region rbot block INF INF INF INF INF ${zmin}
-region rmid block INF INF INF INF ${zmin} ${zmax}
+region rmid block &
+    INF INF INF INF ${zmin} ${zmax}
 
 group carbon_top region rtop
 group carbon_bot region rbot
@@ -735,17 +759,18 @@ delete_atoms random fraction 0.02 no rdel &
     NULL 482793
 
 reset_atoms id sort yes
-velocity carbon_mid create ${T} 48455 mom yes &
-    rot yes
+velocity carbon_mid create ${T} 48455 &
+    mom yes rot yes
 fix mynve all nve
 compute Tmid carbon_mid temp
-fix myber carbon_mid temp/berendsen ${T} ${T} 0.1
+fix myber carbon_mid temp/berendsen &
+    ${T} ${T} 0.1
 fix_modify myber temp Tmid
 \end{verbatim}}
 Note that a large distance of 120 Ångstroms was used for the box size along the \textit{z} axis, to allow for larger deformation. In addition, the \textit{change$\_$box} command was placed before the \textit{displace$\_$atoms} to avoid having the CNT crossing the edge of the box.
 
 \paragraph{Start the simulation}
-Here, let us impose a constant velocity deformation using the atoms of one edge while maintaining the other edge fixed (note that for the unbreakable CNT, the motion was imposed on the 2 edges). As an equilibration step, let us set the velocity to 0 for the atoms of both edges. Add the following lines to the \textit{input.lammps} file:
+Here, let us impose a constant velocity deformation using the atoms of one edge while maintaining the other edge fixed (note that for the unbreakable CNT, the motion was imposed on the 2 edges). As an equilibration step, let us set the velocity to 0 for the atoms of both edges. Add the following lines into the \textit{input.lammps} file:
 {\normalsize \begin{verbatim}
 fix mysf1 carbon_bot setforce 0 0 0
 fix mysf2 carbon_top setforce 0 0 0
@@ -803,11 +828,11 @@ Looking at the evolution of energy again, one can see that the energy is increas
 \label{fig:PEG}
 \end{figure}
 
-\noindent The goal of this tutorial is to use LAMMPS and solvate a small hydrophilic polymer (PEG - PolyEthylene Glycol) in a reservoir of water (Fig.\,\ref{fig:PEG}). An all-atom description is used for both PEG (GROMOS 54A7 force field \cite{schmid2011definition}) and water (SPC/Fw model \cite{wu2006flexible}) and the long range Coulomb interactions are solved using the PPPM solver \cite{luty1996calculating}. Once the water reservoir is properly equilibrated at the desired temperature and pressure, the polymer molecule is added and a constant stretching force is applied to both ends of the polymer. The evolution of the polymer length is measured as a function of time. This tutorial was inspired by a publication by Liese and coworkers, in which molecular dynamics simulations are compared with force spectroscopy experiments \cite{liese2017hydration}.
+\noindent The goal of this tutorial is to use LAMMPS to solvate a small hydrophilic polymer (PEG - PolyEthylene Glycol) in a reservoir of water (Fig.\,\ref{fig:PEG}). Once the water reservoir is properly equilibrated at the desired temperature and pressure, the polymer molecule is added and a constant stretching force is applied to both ends of the polymer. The evolution of the polymer length is measured as a function of time. The GROMOS 54A7 force field \cite{schmid2011definition} is used for the PEG, the SPC/Fw model \cite{wu2006flexible} is used for the water, and the long-range Coulomb interactions are solved using the PPPM solver \cite{luty1996calculating}. This tutorial was inspired by a publication by Liese and coworkers, in which molecular dynamics simulations are compared with force spectroscopy experiments \cite{liese2017hydration}.
 
 \subsubsection{Preparing the water reservoir}
 
-In this tutorial, the water reservoir is first prepared in the absence of polymer. A rectangular box of water is created and
+In this tutorial, the water reservoir is first prepared in the absence of the polymer. A rectangular box of water is created and
 equilibrated at ambient temperature and ambient pressure. The SPC/Fw water model is used \cite{wu2006flexible}, which is
 a flexible variant of the rigid SPC (simple point charge) model \cite{berendsen1981interaction}. Create a folder named \textit{pureH2O/}. Inside this folder, create an empty text file named \textit{input.lammps}. Copy the following lines into it:
 {\normalsize \begin{verbatim}
@@ -821,11 +846,10 @@ kspace_style pppm 1e-5
 special_bonds lj 0.0 0.0 0.5 &
     coul 0.0 0.0 1.0 angle yes
 \end{verbatim}}
-With the unit style \textit{real}, masses are in grams per mole, distances in Ångstroms, time in femtoseconds, energies
-in Kcal/mole. With the \textit{atom$\_$style full}, each atom is a dot with a mass and a charge that can be linked by bonds, angles, dihedrals and/or impropers. The \textit{bond$\_$style}, \textit{angle$\_$style}, and \textit{dihedral$\_$style} commands define the potentials for the bonds, angles, and dihedrals used in the simulation, here \textit{harmonic}. Finally, the \textit{special$\_$bonds} command cancels the Lennard-Jones interactions between the closest atoms of the same molecule.
-With the \textit{pair$\_$style} named \textit{lj/cut/coul/long}, atoms interact through both a Lennard-Jones (LJ) potential and Coulombic interactions. The value of $12\,\text{Å}$ is the cutoff. Finally, the \textit{kspace} command defines the long-range solver for the (long) Coulombic interactions. The \textit{pppm} style refers to particle-particle particle-mesh \cite{luty1996calculating}.
+With the unit style \textit{real}, masses are in grams per mole, distances in Ångstroms, time in femtoseconds, and energies
+in Kcal/mole. With the \textit{atom$\_$style full}, each atom is a dot with a mass and a charge that can be linked by bonds, angles, dihedrals, and/or impropers. The \textit{bond$\_$style}, \textit{angle$\_$style}, and \textit{dihedral$\_$style} commands define the potentials for the bonds, angles, and dihedrals used in the simulation, here \textit{harmonic}. Finally, the \textit{special$\_$bonds} command, which was already seen in \hyperref[carbon-nanotube-label]{tutorial 2}, sets the LJ and Coulomb weighting factors for the interaction between neighboring atoms. With the \textit{pair$\_$style} named \textit{lj/cut/coul/long}, atoms interact through both a Lennard-Jones (LJ) potential and Coulomb interactions. The value of $12\,\text{Å}$ is the cutoff. Finally, the \textit{kspace} command defines the long-range solver for the Coulomb interactions. The \textit{pppm} style refers to particle-particle particle-mesh \cite{luty1996calculating}.
 
-Then, let us create a 3D simulation box of dimensions $9 \times 3 \times 3 \; \text{nm}^3$, and make space for 9 atom types (2 for the water molecule, and 7 for the polymer molecule), 7 bond types, 8 angle types, and 4 dihedral types. Copy the following lines into \textit{input.lammps}:
+Then, let us create a 3D simulation box of dimensions $9 \times 3 \times 3 \; \text{nm}^3$, and make space for 9 atom types (2 for the water, 7 for the polymer), 7 bond types (1 for the water, 6 for the polymer), 8 angle types (1 for the water, 7 for the polymer), and 4 dihedral types (only for the polymer). Copy the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 region box block -45 45 -15 15 -15 15
 create_box 9 box &
@@ -846,8 +870,8 @@ include ../PARM.lammps
 \end{verbatim}}
 Then, download and save the \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level2/polymer-in-water/PARM.lammps}{parameter} file next to the \textit{pureH2O/} folder. Within \textit{PARM.lammps}, the \textit{mass} and \textit{pair$\_$coeff} of atoms of types 8 and 9 are for water and the atoms of types 1 to 7 are for the polymer molecule. Similarly, the \textit{bond$\_$coeff 7} and \textit{angle$\_$coeff 8} are for water, while all the other parameters are for the polymer.
 
-Let us create water molecules. To do so, let us define what a water molecule is using a molecule \textit{template} called
-\textit{H2O-SPCFw.mol}, and then randomly create 1050 molecules. Add the following lines into \textit{input.lammps}:
+Let us create water molecules. To do so, let us import a molecule template called
+\textit{H2O-SPCFw.mol} and then randomly create 1050 molecules. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 molecule h2omol H2O-SPCFw.mol
 create_atoms 0 random 1050 87910 NULL mol &
@@ -855,23 +879,27 @@ create_atoms 0 random 1050 87910 NULL mol &
 \end{verbatim}}
 The \textit{overlap 1} option of the \textit{create$\_$atoms} command ensures that no atoms are placed exactly in the same position, as this would cause the simulation to crash. The \textit{maxtry 50} asks LAMMPS to try at most 50 times to insert the molecules, which is useful in case some insertion attempts are rejected due to overlap. In some cases, depending on the system and the values of \textit{overlap} and \textit{maxtry}, LAMMPS may not create the desired number of molecules. Always check the number of created atoms in the \textit{log} file after starting the simulation:
 {\normalsize \begin{verbatim}
-Created 1050 atoms
+Created 3150 atoms
 \end{verbatim}}
 When LAMMPS fails to create the desired number of molecules, a WARNING appears in the \textit{log} file.
-The molecule template named \textit{H2O-SPCFw.mol} can be \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level2/polymer-in-water/pureH2O/H2O-SPCFw.mol}{downloaded} and saved in the \textit{pureH2O/} folder. This template contains the necessary structural information of a water molecule, such as the number of atoms, the id of the atoms that are connected by bonds, by angles, etc.
+The molecule template named \textit{H2O-SPCFw.mol} can be \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level2/polymer-in-water/pureH2O/H2O-SPCFw.mol}{downloaded} and saved in the \textit{pureH2O/} folder. This template contains the necessary structural information of a water molecule, such as the number of atoms, or the IDs of the atoms that are connected by bonds, angles, etc.
 
-Then, let us organize the atoms of types 8 and 9 of the water molecules in a group named \textit{H2O} and perform a small energy minimization. The energy minimization is mandatory here given the small \textit{overlap} value of 1 Ångstrom chosen in the \textit{create$\_$atoms} command. Add the following lines to \textit{input.lammps}:
+Then, let us organize the atoms of types 8 and 9 of the water molecules in a group named \textit{H2O} and perform a small energy minimization. The energy minimization is mandatory here given the small \textit{overlap} value of 1 Ångstrom chosen in the \textit{create$\_$atoms} command. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 group H2O type 8 9
 minimize 1.0e-4 1.0e-6 100 1000
 reset_timestep 0
 \end{verbatim}}
-The \textit{reset$\_$timestep} command is optional. It is used here because the \textit{minimize} command is usually performed over an arbitrary number of steps. Let us use the \textit{fix npt} to control the temperature of the molecules with a Nosé-Hoover thermostat and the pressure of the system with a Nosé-Hoover barostat \cite{nose1984unified, hoover1985canonical, martyna1994constant}, by adding the following line to \textit{input.lammps}:
+In general, resetting the step of the simulation to 0 using the \textit{reset$\_$timestep} command is optional.
+It is used here because the number of iterations performed by the \textit{minimize} command is usually not a round number (since the minimization stops when one of four criteria is reached). Let us use the \textit{fix npt} to control the temperature of the molecules with a Nosé-Hoover thermostat and the pressure of the system with a Nosé-Hoover barostat \cite{nose1984unified, hoover1985canonical, martyna1994constant}, by adding the following line into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
-fix mynpt all npt temp 300 300 100 iso 1 1 1000
+fix mynpt all npt temp 300 300 100 &
+    iso 1 1 1000
 \end{verbatim}}
 The \textit{fix npt} allows us to impose both a temperature of $300\,\text{K}$ (with a damping constant of $100\,\text{fs}$),
-and a pressure of 1 atmosphere (with a damping constant of $1000\,\text{fs}$). With the \textit{iso} keyword, the three dimensions of the box will be re-scaled simultaneously. Let us print the atom positions in a \textit{.lammpstrj} file every 1000 steps (i.e. 1 ps), print the temperature volume, and density every 100 steps in 3 separate data files, and print the information in the terminal every 1000 steps:
+and a pressure of 1 atmosphere (with a damping constant of $1000\,\text{fs}$). With the \textit{iso} keyword, the three dimensions of the box will be re-scaled simultaneously.
+
+Let us print the atom positions in a \textit{.lammpstrj} file every 1000 steps (i.e. 1 ps), print the temperature volume, and density every 100 steps in 3 separate data files, and print the information in the terminal every 1000 steps:
 {\normalsize \begin{verbatim}
 dump mydmp all atom 1000 dump.lammpstrj
 variable mytemp equal temp
@@ -889,7 +917,7 @@ thermo 1000
 The variable \textit{myoxy} corresponds to the number of atoms divided by 3, i.e. the number of molecules.
 
 Finally, let us set the timestep to 1.0 fs, and run the simulation for 20 ps by adding the
-following lines to \textit{input.lammps}:
+following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 timestep 1.0
 run 20000
@@ -897,7 +925,7 @@ run 20000
 write_data H2O.data
 \end{verbatim}}
 The final state is written into \textit{H2O.data}. If you open the \textit{dump.lammpstrj} file using VMD, you should
-see the system quickly reaching its equilibrium volume and density (Fig.\,\ref{fig:PEG-water}). You can also open the \textit{density.dat} file to ensure that the system converged toward an equilibrated liquid water system during the 20 ps of simulation (Fig.\,\ref{fig:PEG-density}).
+see the system quickly reaching its equilibrium volume and density (see a snapshot of the equilibrated system in Fig.\,\ref{fig:PEG-water}). You can also open the \textit{density.dat} file to ensure that the system converged toward the density of liquid water during the 20 ps of simulation (Fig.\,\ref{fig:PEG-density}).
 
 \begin{figure}
 \centering
@@ -914,7 +942,7 @@ see the system quickly reaching its equilibrium volume and density (Fig.\,\ref{f
 \end{figure}
 
 \subsubsection{Solvating the PEG in water}
-Once the water reservoir is equilibrated, we can safely include the PEG polymer in the water before performing the pull experiment on the polymer. The PEG molecule topology was downloaded from the ATB repository \cite{malde2011automated, oostenbrink2004biomolecular}. It has a formula $\text{C}_{28}\text{H}_{58}\text{O}_{15}$, and the parameters are taken from
+Now that the water reservoir is equilibrated, we can safely include the PEG polymer in the water. The PEG molecule topology was downloaded from the ATB repository \cite{malde2011automated, oostenbrink2004biomolecular}. It has a formula $\text{C}_{28}\text{H}_{58}\text{O}_{15}$, and the parameters are taken from
 the GROMOS 54A7 force field \cite{schmid2011definition}.
 
 \begin{figure}
@@ -946,17 +974,17 @@ read_data ../pureH2O/H2O.data &
     extra/special/per/atom 14
 include ../PARM.lammps
 \end{verbatim}}
-Let us create a molecule called \textit{pegmol} from the molecule \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level2/polymer-in-water/mergePEGH2O/PEG-GROMOS.mol}{template} for the PEG molecule, and let us create a single molecule in the middle of the box:
+Download the \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level2/polymer-in-water/mergePEGH2O/PEG-GROMOS.mol}{template} for the PEG molecule, and then create a single molecule in the middle of the box:
 {\normalsize \begin{verbatim}
 molecule pegmol PEG-GROMOS.mol
 create_atoms 0 single 0 0 0 mol pegmol 454756
 \end{verbatim}}
-Let us create 2 groups to differentiate the PEG from the H2O, by adding the following lines to \textit{input.lammps}:
+Let us create 2 groups to differentiate the PEG from the H2O, by adding the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 group H2O type 8 9
 group PEG type 1 2 3 4 5 6 7
 \end{verbatim}}
-Water molecules that are overlapping with the PEG must be deleted to avoid future crashing. Add the following line to \textit{input.lammps}:
+Water molecules that are overlapping with the PEG must be deleted to avoid future crashing. Add the following line into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 delete_atoms overlap 2.0 H2O PEG mol yes
 \end{verbatim}}
@@ -984,13 +1012,13 @@ fix myat3 all ave/time 10 10 100 &
     v_myenthalpy file enthalpy.dat
 \end{verbatim}}
 Finally, let us perform a short equilibration and print the
-final state in a data file. Add the following lines to the data file:
+final state in a data file. Add the following lines into the data file:
 {\normalsize \begin{verbatim}
 run 30000
 write_data mix.data
 \end{verbatim}}
-If you open the \textit{dump.lammpstrj} file using VMD, or have a look at the evolution of the volume in \textit{volume.dat},
-you should see that the box dimension slightly evolves along \textit{x} to accommodate the new configuration.
+If you open the \textit{dump.lammpstrj} file using VMD or have a look at the evolution of the volume in \textit{volume.dat},
+you should see that the box dimensions slightly evolve along \textit{x} to accommodate the new configuration. In addition, the temperature remains close to the target value of $300~\text{K}$ throughout the entire simulation, and the enthalpy is almost constant, suggesting that the system was close to equilibrium from the start.
 
 \begin{figure}
 \centering
@@ -1000,12 +1028,11 @@ you should see that the box dimension slightly evolves along \textit{x} to accom
 \end{figure}
 
 \subsubsection{Stretching the PEG molecule}
-Here, a constant forcing is applied to the two ends of the PEG molecule until it stretches. Create a new folder next to the previously created folders, call it \textit{pullonPEG/}, and create a new input file in it called \textit{input.lammps}. First, let us create a variable \textit{f0} corresponding to the magnitude of the force we are going to apply. The force magnitude is chosen to be large enough to overcome the thermal agitation and the entropic contribution from both water
-and PEG molecules (it was chosen by trial and error). Copy in the \textit{input.lammps} file:
+Here, a constant forcing is applied to the two ends of the PEG molecule until it stretches. Create a new folder next to the previously created folders, call it \textit{pullonPEG/}, and create a new input file in it called \textit{input.lammps}. First, let us create a variable \textit{f0} corresponding to the magnitude of the force we are going to apply. Copy the following line into the \textit{input.lammps} file:
 {\normalsize \begin{verbatim}
 variable f0 equal 5
 \end{verbatim}}
-Note that $1\,\text{kcal/mol/Å}$ corresponds to $67.2\,\text{pN}$. Then, copy the same lines as previously:
+The force magnitude of $1\,\text{kcal/mol/Å}$ corresponds to $67.2\,\text{pN}$ and was chosen to be large enough to overcome the thermal agitation and the entropic contribution from both water and PEG molecules (it was chosen by trial and error). Then, copy the same lines as previously:
 {\normalsize \begin{verbatim}
 units real
 atom_style full
@@ -1014,15 +1041,16 @@ angle_style harmonic
 dihedral_style harmonic
 pair_style lj/cut/coul/long 12
 kspace_style pppm 1e-5
-special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 &
+special_bonds lj 0.0 0.0 0.5 &
+    coul 0.0 0.0 1.0 &
     angle yes dihedral yes
 \end{verbatim}}
-Start the simulation from the equilibrated PEG-water system and include again the parameter file by adding the following lines to the \textit{input.lammps}:
+Start the simulation from the equilibrated PEG-water system and include again the parameter file by adding the following lines into the \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 read_data ../mergePEGH2O/mix.data
 include ../PARM.lammps
 \end{verbatim}}
-Then, let us create 4 atom groups: H2O and PEG (as previously), as well as 2 groups containing only the 2 oxygen atoms of types 6 and 7, respectively. Atoms of types 6 and 7 correspond to the oxygen atoms located at the ends of the PEG molecule, which we are going to use to pull on the PEG molecule. Add the following lines to the \textit{input.lammps}:
+Then, let us create 4 atom groups: H2O and PEG (as previously), as well as 2 groups containing only the 2 oxygen atoms of types 6 and 7, respectively. Atoms of types 6 and 7 correspond to the oxygen atoms located at the ends of the PEG molecule, which we are going to use to pull on the PEG molecule. Add the following lines into the \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 group H2O type 8 9
 group PEG type 1 2 3 4 5 6 7
@@ -1033,15 +1061,16 @@ Add the following \textit{dump} command to the input to print the atom positions
 {\normalsize \begin{verbatim}
 dump mydmp all atom 1000 dump.lammpstrj
 \end{verbatim}}
-Let us use a single Nosé-Hoover thermostat applied to all the atoms by adding the following lines to \textit{input.lammps}:
+Let us use a single Nosé-Hoover thermostat applied to all the atoms by adding the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 timestep 1.0
 fix mynvt all nvt temp 300 300 100
 \end{verbatim}}
 Let us also print the end-to-end distance of the PEG,
 here defined as the distance between the groups \textit{topull1}
-and \textit{topull2}, as well as the temperature of the system 
-by adding the following lines to \textit{input.lammps}:
+and \textit{topull2}, as well as the temperature of the system and the gyration
+radius of the molecule \cite{fixmanRadiusGyrationPolymer1962a}
+by adding the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 variable mytemp equal temp
 fix myat1 all ave/time 10 10 100 &
@@ -1053,22 +1082,26 @@ variable y2 equal xcm(topull2,y)
 variable z1 equal xcm(topull1,z)
 variable z2 equal xcm(topull2,z)
 variable delta_r equal &
-    sqrt((v_x1-v_x2)^2+(v_y1-v_y2)^2+(v_z1-v_z2)^2)
+    sqrt((v_x1-v_x2)^2+(v_y1-v_y2)^2 &
+    +(v_z1-v_z2)^2)
 fix myat2 all ave/time 10 10 100 v_delta_r &
     file output-end-to-end-distance.dat
+compute rgyr PEG gyration
+fix myat3 all ave/time 10 10 100 c_rgyr &
+    file gyration-radius.dat
 thermo 1000
 \end{verbatim}}
 Finally, let us simulate 30 picoseconds without any external forcing:
 {\normalsize \begin{verbatim}
 run 30000
 \end{verbatim}}
-This first run serves as a benchmark to quantify the changes induced by the forcing. Then, let us apply a forcing on the 2 oxygen atoms using two \textit{add$\_$force} commands, and run for an extra 30 ps:
+This first run will serve as a benchmark to quantify later the changes induced by the forcing. Then, let us apply a forcing on the 2 oxygen atoms using two \textit{add$\_$force} commands, and run for an extra 30 ps:
 {\normalsize \begin{verbatim}
 fix myaf1 topull1 addforce ${f0} 0 0
 fix myaf2 topull2 addforce -${f0} 0 0
 run 30000
 \end{verbatim}}
-If you open the \textit{dump.lammpstrj} file using \textit{VMD}, you should see that the PEG molecule eventually aligns in the direction of the force (Fig.\,\ref{fig:PEG-in-water}). The evolution of the end-to-end distance over time shows the PEG adjusting to the external forcing (Fig.\,\ref{fig:PEG-distance}).
+Run the \textit{input.lammps} file using LAMMPS. If you open the \textit{dump.lammpstrj} file using \textit{VMD}, you should see that the PEG molecule eventually aligns in the direction of the force (as seen in Fig.\,\ref{fig:PEG-in-water}). The evolution of the end-to-end distance over time shows the PEG adjusting to the external forcing (Fig.\,\ref{fig:PEG-distance}).
 
 \begin{figure}
 \centering
@@ -1080,7 +1113,7 @@ If you open the \textit{dump.lammpstrj} file using \textit{VMD}, you should see 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-distance}
-\caption{Evolution of the end-to-end distance of the PEG molecule with time. The forcing starts at $t = 30$ ps.}
+\caption{a) Evolution of the length $L$ of the CNT with time. The CNT starts deforming at $t = 5\,\text{ps}$. b) Evolution of the gyration radius $R_\text{gyr}$ of the PEG molecule.}
 \label{fig:PEG-distance}
 \end{figure}
 
@@ -1114,7 +1147,7 @@ These lines are used to define the most basic parameters, including the \textit{
 previous tutorial (\hyperref[all-atoms-label]{Polymer in water}), with two major differences; the use of \textit{lj/cut/tip4p/long} and \textit{pppm/tip4p}, instead of \textit{lj/cut/coul/long} and pppm. These two tip4p-specific commands allow us to model a four-point water molecule without explicitly defining the fourth massless atom \textit{M}. The value of 
 $0.1546\,\text{$\text{\AA{}}$}$ corresponds to the \textit{O-M} distance and is given by the water model. Here, TIP4P-2005 is used \cite{abascal2005general}.
 
-Let us create the box by adding the following lines to \textit{input.lammps}:
+Let us create the box by adding the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 lattice fcc 4.04
 region box block -3 3 -3 3 -7 7
@@ -1130,7 +1163,7 @@ The \textit{lattice} command defines the unit cell. Here, the face-centered cubi
 region of space. By choosing \textit{xlo=-3} and \textit{xhi=3}, and because we have previously chosen a lattice with a scale
 factor of 4.04, the region box extends from -12.12 Å to 12.12 Å along the $x$ direction. The \textit{create$\_$box} command creates a simulation box with 5 types of atoms: the oxygen and hydrogen of the water molecules, the two ions ($\text{Na}^+$,
 $\text{Cl}^-$), and the atom of the walls. The \textit{create$\_$box} command extends over 6 lines thanks to the $\&$ character. The second and third lines are used to indicate that the simulation contains 1 type of bond and 1 type of angle (both required by the water molecule). The parameters for these bond and angle constraints will be given later. The
-three last lines are for memory allocation. Now, we can add atoms to the system. First, let us create two sub-regions corresponding respectively to the two solid walls, and create a larger region from the union of the two regions. Then, let us create atoms of type 5 (the wall) within the two regions. Add the following lines to \textit{input.lammps}:
+three last lines are for memory allocation. Now, we can add atoms to the system. First, let us create two sub-regions corresponding respectively to the two solid walls, and create a larger region from the union of the two regions. Then, let us create atoms of type 5 (the wall) within the two regions. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 region rbotwall block -3 3 -3 3 -4 -3
 region rtopwall block -3 3 -3 3 3 4
@@ -1138,7 +1171,7 @@ region rwall union 2 rbotwall rtopwall
 create_atoms 5 region rwall
 \end{verbatim}}
 Atoms will be placed in the positions of the previously defined lattice, thus forming fcc solids. In order to add the water molecules, first download the \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level2/nanosheared-electrolyte/systemcreation/RigidH2O.txt}{molecule template} and place it within \textit{systemcreation/}. The template contains all the
-necessary information concerning the water molecule, such as atom positions, bonds, and angles. Add the following lines to \textit{input.lammps}:
+necessary information concerning the water molecule, such as atom positions, bonds, and angles. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 region rliquid block INF INF INF INF -2 2
 molecule h2omol RigidH2O.txt
@@ -1200,12 +1233,12 @@ group bot region rbot
 group walltop intersect wall top
 group wallbot intersect wall bot
 \end{verbatim}}
-To avoid high density and pressure, let us add the following lines to \textit{input.lammps} to delete a few of the water molecules:
+To avoid high density and pressure, let us add the following lines into \textit{input.lammps} to delete a few of the water molecules:
 {\normalsize \begin{verbatim}
 delete_atoms random fraction 0.15 yes &
     H2O NULL 482793 mol yes
 \end{verbatim}}
-Finally, add the following lines to \textit{input.lammps}:
+Finally, add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 run 0
 
@@ -1249,7 +1282,7 @@ fix myber fluid temp/berendsen 1 1 100
 fix myshk H2O shake 1.0e-4 200 0 b 1 a 1
 timestep 0.5
 \end{verbatim}}
-Just like \textit{fix nve}, the fix \textit{nve/limit} performs constant NVE integration to update positions and velocities of the atoms at each timestep, but also limits the maximum distance atoms can travel at each timestep. Here, only the fluid molecules and ions will move. The \textit{fix temp/berendsen} rescales the velocities of the atoms to force the temperature of the system to reach the desired value of 1 K, and the shake algorithm is used in order to maintain the shape of the water molecules. Let us also print the atom positions in a \textit{.lammpstrj} file by adding the following line to \textit{input.lammps}:
+Just like \textit{fix nve}, the fix \textit{nve/limit} performs constant NVE integration to update positions and velocities of the atoms at each timestep, but also limits the maximum distance atoms can travel at each timestep. Here, only the fluid molecules and ions will move. The \textit{fix temp/berendsen} rescales the velocities of the atoms to force the temperature of the system to reach the desired value of 1 K, and the shake algorithm is used in order to maintain the shape of the water molecules. Let us also print the atom positions in a \textit{.lammpstrj} file by adding the following line into \textit{input.lammps}:
 {
 ormal \begin{verbatim}
 dump mydmp all atom 1000 dump.lammpstrj
@@ -1308,7 +1341,7 @@ fix myrct all recenter NULL NULL 0
 timestep 1.0
 \end{verbatim}}
 The fix \textit{recenter} has no influence on the dynamics, but will keep the system in the center of the box, which makes the
-visualization easier. Then, add the following lines to \textit{input.lammps} for the trajectory visualization and output:
+visualization easier. Then, add the following lines into \textit{input.lammps} for the trajectory visualization and output:
 {\normalsize \begin{verbatim}
 dump mydmp all atom 1000 dump.lammpstrj
 thermo 500
@@ -1377,7 +1410,7 @@ velocity walltop set 2e-4 NULL NULL
 The \textit{setforce} commands cancel the forces on \textit{walltop} and \textit{wallbot}, respectively. Therefore the atoms of the two groups do not experience any force from the rest of the system. In the absence of force acting on those atoms, they will conserve their initial velocity. The \textit{velocity} commands act only once and impose the velocity of the atoms of the groups \textit{wallbot} and \textit{walltop}, respectively.
 
 Finally, let us dump the atom positions, extract the velocity profiles using several \textit{ave/chunk} commands, extract the
-force applied on the walls, and then run for $200\,\text{ps}$ Add the following lines to \textit{input.lammps}:
+force applied on the walls, and then run for $200\,\text{ps}$ Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 dump mydmp all atom 5000 dump.lammpstrj
 thermo 500
@@ -1462,7 +1495,7 @@ group grpO type 2
 variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
 \end{verbatim}}
-Let us also print the charge in the \textit{.log} file by using \textit{thermo$\_$style}, and create a \textit{.lammpstrj} file for visualization. Add the following lines to the \textit{input.lammps}:
+Let us also print the charge in the \textit{.log} file by using \textit{thermo$\_$style}, and create a \textit{.lammpstrj} file for visualization. Add the following lines into the \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 thermo 5
 thermo_style custom step temp etotal press &
@@ -1562,7 +1595,7 @@ Here, no barostat is used because the box volume will be imposed by the \textit{
 \label{fig:SIO-deformed-charge}
 \end{figure}
 
-Let us run for 5000 steps without deformation, then apply the \textit{fix deform} for elongating progressively the box along \textit{x} during 25000 steps. Add the following line to \textit{input.lammps}:
+Let us run for 5000 steps without deformation, then apply the \textit{fix deform} for elongating progressively the box along \textit{x} during 25000 steps. Add the following line into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 run 5000
 
@@ -1718,7 +1751,7 @@ neighbor 1.0 bin
 neigh_modify delay 1
 \end{verbatim}}
 The main difference with some of the previous tutorials is the use of the \textit{Vashishta} pair style. Download the \textit{Vashishta} potential by clicking \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level3/water-adsorption-in-silica/Potential/SiO.1990.vashishta}{here}, and copy it within the \textit{Potential/} folder. The Vashishta potential is a bond-angle energy-based potential, it deduces the bonds between atoms from their relative positions \cite{vashishta1990interaction}. Let us then import the system made of 9 atoms, and replicate it four times in all three
-directions of space, thus creating a system with 576 atoms. Add the following lines to \textit{input.lammps}:
+directions of space, thus creating a system with 576 atoms. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 read_data SiO.data
 replicate 4 4 4
@@ -1814,7 +1847,7 @@ pair_style vashishta
 pair_coeff * * ../Potential/SiO.1990.vashishta Si O
 dump dmp all atom 1000 dump.lammpstrj
 \end{verbatim}}
-Let us progressively increase the size of the box in the x direction, thus forcing the silica to deform and eventually crack. To do so, a loop based on the jump command is used. At every step of the loop, the box dimension over x will be multiplied by a scaling factor 1.005. Add the following lines to the \textit{input.lammps}:
+Let us progressively increase the size of the box in the x direction, thus forcing the silica to deform and eventually crack. To do so, a loop based on the jump command is used. At every step of the loop, the box dimension over x will be multiplied by a scaling factor 1.005. Add the following lines into the \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 fix nvt1 all nvt temp 300 300 0.1
 timestep 0.001
@@ -1947,14 +1980,14 @@ fix shak H2O shake 1.0e-4 200 0 b 1 a 1 &
 \end{verbatim}}
 The force field Vashishta applies only to Si (type 1) and O of SiO2 (type 2), and not to the O and H of H2O, thanks to the NULL parameters used for atoms of types 3 and 4. Pair coefficients for lj/cut/tip4p/long are defined between O atoms, as well as between O(SiO)-O(H2O) and Si(SiO)-O(H2O). Therefore, the fluid-solid  interactions will be set by Lennard-Jones and Coulomb potentials. The number of oxygen atoms from water molecules (i.e. the number of molecules) will be printed in the file \textit{numbermolecule.dat}. The shake algorithm is used to maintain the shape of the water molecules over time. Some of
 these features have been seen in previous tutorials. Let us delete the overlapping water molecules, and print the
-positions of the remaining atoms in a \textit{.lammpstrj} file by adding the following lines to \textit{input.lammps}:
+positions of the remaining atoms in a \textit{.lammpstrj} file by adding the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 delete_atoms overlap 2 H2O SiO mol yes
 dump dmp all atom 1000 dump.init.lammpstrj
 \end{verbatim}}
 
 \paragraph{GCMC simulation}
-To prepare for the GCMC simulation, let us make the first equilibration step by adding the following lines to \textit{input.lammps}:
+To prepare for the GCMC simulation, let us make the first equilibration step by adding the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 compute_modify thermo_temp dynamic yes
 compute ctH2O H2O temp
@@ -2057,7 +2090,7 @@ create a WCA, purely repulsive, potential. It was calculated as $2^{1/6} \times 
 be in kcal/mol. Atoms will interact through a Lennard-Jones potential with a cut-off equal to $\sigma \times 2 ^ {1/6}$ (i.e. a WCA repulsive potential). The potential is shifted to be equal to 0 at the cut-off using the \textit{pair$\_$modify}.
 
 \paragraph{System creation and settings}
-\noindent Let us define the simulation block and randomly add atoms by adding the following lines to \textit{input.lammps}:
+\noindent Let us define the simulation block and randomly add atoms by adding the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 region myreg block -25 25 -5 5 -25 25
 create_box 1 myreg
@@ -2083,7 +2116,7 @@ Fig.\,\ref{fig:potential} shows the potential and force along the $x$ axis.
 \label{fig:potential}
 \end{figure}
 
-Let us apply energy minimization to the system, and then impose the force $F(x)$ to all of the atoms in the simulation using the \textit{addforce} command. Add the following lines to \textit{input.lammps}:
+Let us apply energy minimization to the system, and then impose the force $F(x)$ to all of the atoms in the simulation using the \textit{addforce} command. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 minimize 1e-4 1e-6 100 1000
 reset_timestep 0
@@ -2207,7 +2240,7 @@ reset_timestep 0
 
 dump mydmp all atom 1000000 dump.lammpstrj
 \end{verbatim}}
-So far, this code resembles the one of Method 1, except for the additional particle of type 2. This particle is identical to the particles of type 1 (same mass and Lennard-Jones parameters), but will be exposed to the biasing potential.
+So far, this code resembles the one of Method 1, except for the additional particle of type 2. This particle is identical to the particles of type 1 (same mass and Lennard-Jones parameters) but will be exposed to the biasing potential.
 Let us create a loop with 50 steps, and move progressively the center of the bias potential by an increment of 0.1 nm. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 variable a loop 50
