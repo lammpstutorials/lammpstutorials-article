@@ -1137,8 +1137,8 @@ angle_style harmonic
 pair_style lj/cut/tip4p/long 1 2 1 1 0.1546 12.0
 kspace_style pppm/tip4p 1.0e-4
 \end{verbatim}}
-These lines are used to define the most basic parameters, including the \textit{atom}, \textit{bond}, and \textit{angle} styles, as well as interaction potential. Here \textit{lj/cut/tip4p/long} imposes a Lennard Jones potential with a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential. So far, the commands are relatively similar to the 
-previous tutorial (\hyperref[all-atoms-label]{Polymer in water}), with two major differences; the use of \textit{lj/cut/tip4p/long} and \textit{pppm/tip4p}, instead of \textit{lj/cut/coul/long} and pppm. These two tip4p-specific commands allow us to model a four-point water molecule without explicitly defining the fourth massless atom \textit{M}. The value of 
+These lines are used to define the most basic parameters, including the \textit{atom}, \textit{bond}, and \textit{angle} styles, as well as interaction potential. Here, \textit{lj/cut/tip4p/long} imposes a Lennard-Jones potential with a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential. So far, the commands are relatively similar to the 
+previous tutorial (\hyperref[all-atoms-label]{Polymer in water}), with two major differences; the use of \textit{lj/cut/tip4p/long} and \textit{pppm/tip4p}, instead of \textit{lj/cut/coul/long} and \textit{pppm}. These two tip4p-specific commands allow us to model a four-point water molecule without explicitly defining the fourth massless atom \textit{M}. The value of 
 $0.1546\,\text{$\text{\AA{}}$}$ corresponds to the \textit{O-M} distance and is given by the water model. Here, TIP4P-2005 is used \cite{abascal2005general}.
 
 Let us create the box by adding the following lines into \textit{input.lammps}:
