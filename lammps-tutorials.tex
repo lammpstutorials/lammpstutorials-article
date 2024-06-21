@@ -631,9 +631,7 @@ thermo_modify temp Tmid
 timestep 1.0
 run 5000
 \end{verbatim}}
-With the \textit{thermo$\_$modify} command, we specify to LAMMPS that we want the temperature $T_\mathrm{mid}$ to be printed in
-the terminal, not the temperature of the entire system (because of the frozen edges, the temperature of the entire system is not relevant).
-Let us impose a constant velocity deformation on the CNT by combining the \textit{velocity set} command with previously defined \textit{fix setforce}. Add the following lines in the \textit{input.lammps} file, right after the last \textit{run 5000} command:
+With the \textit{thermo$\_$modify} command, we specify to LAMMPS that we want the temperature $T_\mathrm{mid}$ to be printed in the terminal, not the temperature of the entire system (because of the frozen edges, the temperature of the entire system is not relevant). Let us impose a constant velocity deformation on the CNT by combining the \textit{velocity set} command with previously defined \textit{fix setforce}. Add the following lines in the \textit{input.lammps} file, right after the last \textit{run 5000} command:
 {\normalsize \begin{verbatim}
 velocity carbon_top set 0 0 0.0005
 velocity carbon_bot set 0 0 -0.0005
@@ -648,8 +646,7 @@ run 10000
 \label{fig:CNT-unbreakable-lenght}
 \end{figure}
 
-The length $L$ of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.\,\ref{fig:CNT-unbreakable-lenght}), as expected from the imposed constant velocity. The energy, which can be accessed from the log file, shows a non-linear increase with $t$ once the deformation starts, which is expected from the typical dependency of bond energy with bond distance $U_b = k_b \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-energy}).
-As always, is it important to ensure that the simulation behaves as expected by opening the \textit{dump.lammpstrj} file with VMD (Fig.\,\ref{fig:CNT-deformed-unbreakable}).
+The length $L$ of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.\,\ref{fig:CNT-unbreakable-lenght}), as expected from the imposed constant velocity. The energy, which can be accessed from the log file, shows a non-linear increase with $t$ once the deformation starts, which is expected from the typical dependency of bond energy with bond distance $U_b = k_b \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-energy}). As always, is it important to ensure that the simulation behaves as expected by opening the \textit{dump.lammpstrj} file with VMD (Fig.\,\ref{fig:CNT-deformed-unbreakable}).
 
 \begin{figure}
 \centering
@@ -827,8 +824,7 @@ Looking at the evolution of energy again, one can see that the energy is increas
 
 \subsubsection{Preparing the water reservoir}
 
-In this tutorial, the water reservoir is first prepared in the absence of the polymer. A rectangular box of water is created and
-equilibrated at ambient temperature and ambient pressure. The SPC/Fw water model is used \cite{wu2006flexible}, which is
+In this tutorial, the water reservoir is first prepared in the absence of the polymer. A rectangular box of water is created and equilibrated at ambient temperature and ambient pressure. The SPC/Fw water model is used \cite{wu2006flexible}, which is
 a flexible variant of the rigid SPC (simple point charge) model \cite{berendsen1981interaction}. Create a folder named \textit{pureH2O/}. Inside this folder, create an empty text file named \textit{input.lammps}. Copy the following lines into it:
 {\normalsize \begin{verbatim}
 units real
