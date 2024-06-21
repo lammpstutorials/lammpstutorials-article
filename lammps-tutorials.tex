@@ -453,7 +453,7 @@ The initial velocity is chosen so that the average initial temperature is equal 
 \subsubsection{Unbreakable bonds}
 \noindent With most classical molecular dynamics force fields, the chemical bonds between the atoms are set at the start of the simulation. Regardless of the forces applied to the atoms, the bonds remain intact during the simulation. The bonds between neighbor atoms typically consist of springs with given equilibrium distances $r_0$ and a constant $k_b$: $U_b = k_b \left( r - r_0 \right)^2$. Additionally, angular and dihedral constraints are usually applied to maintain the relative orientations of neighbor atoms. 
 
-Download directly the CNT topology by clicking \href{https://lammpstutorials.github.io/article/files/tutorial2/cnt_molecular.data}{here}. It was created using VMD and TopoTools \cite{kohlmeyer2017topotools}, and contains information about the positions of the carbon atoms, as well as the
+Download directly the CNT topology by clicking \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial2/cnt_molecular.data}{here}. It was created using VMD and TopoTools \cite{kohlmeyer2017topotools}, and contains information about the positions of the carbon atoms, as well as the
 identity of the atoms that are linked by \textit{bonds}, \textit{angles}, \textit{dihedrals},
 and \textit{impropers} constraints. Save the \textit{cnt$\_$molecular.data} file
 in a folder named \textit{unbreakable-bonds/}.
@@ -719,7 +719,7 @@ read_data cnt_atom.data
 pair_coeff * * CH.airebo C
 \end{verbatim}}
 Here, there is one single atom type. We impose this type to be carbon by using the letter \textit{C}. The \textit{CH.airebo} file can be
-downloaded by clicking \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level1/breaking-a-carbon-nanotube/breakable-bonds/CH.airebo}{here}, and must be placed within the \textit{breakable-bonds/} folder. The rest of the \textit{input.lammps} is very similar to the previous one:
+downloaded by clicking \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial2/CH.airebo}{here}, and must be placed within the \textit{breakable-bonds/} folder. The rest of the \textit{input.lammps} is very similar to the previous one:
 
 {\normalsize \begin{verbatim}
 change_box all x final -40 40 y &
@@ -866,7 +866,7 @@ distances, etc). In \textit{input.lammps}, add the following line:
 {\normalsize \begin{verbatim}
 include ../PARM.lammps
 \end{verbatim}}
-Then, download and save the \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level2/polymer-in-water/PARM.lammps}{parameter} file next to the \textit{pureH2O/} folder. Within \textit{PARM.lammps}, the \textit{mass} and \textit{pair$\_$coeff} of atoms of types 8 and 9 are for water and the atoms of types 1 to 7 are for the polymer molecule. Similarly, the \textit{bond$\_$coeff 7} and \textit{angle$\_$coeff 8} are for water, while all the other parameters are for the polymer.
+Then, download and save the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial3/PARM.lammps}{parameter} file next to the \textit{pureH2O/} folder. Within \textit{PARM.lammps}, the \textit{mass} and \textit{pair$\_$coeff} of atoms of types 8 and 9 are for water and the atoms of types 1 to 7 are for the polymer molecule. Similarly, the \textit{bond$\_$coeff 7} and \textit{angle$\_$coeff 8} are for water, while all the other parameters are for the polymer.
 
 Let us create water molecules. To do so, let us import a molecule template called
 \textit{H2O-SPCFw.mol} and then randomly create 1050 molecules. Add the following lines into \textit{input.lammps}:
@@ -880,7 +880,7 @@ The \textit{overlap 1} option of the \textit{create$\_$atoms} command ensures th
 Created 3150 atoms
 \end{verbatim}}
 When LAMMPS fails to create the desired number of molecules, a WARNING appears in the \textit{log} file.
-The molecule template named \textit{H2O-SPCFw.mol} can be \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level2/polymer-in-water/pureH2O/H2O-SPCFw.mol}{downloaded} and saved in the \textit{pureH2O/} folder. This template contains the necessary structural information of a water molecule, such as the number of atoms, or the IDs of the atoms that are connected by bonds, angles, etc.
+The molecule template named \textit{H2O-SPCFw.mol} can be \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial3/H2O-SPCFw.mol}{downloaded} and saved in the \textit{pureH2O/} folder. This template contains the necessary structural information of a water molecule, such as the number of atoms, or the IDs of the atoms that are connected by bonds, angles, etc.
 
 Then, let us organize the atoms of types 8 and 9 of the water molecules in a group named \textit{H2O} and perform a small energy minimization. The energy minimization is mandatory here given the small \textit{overlap} value of 1 Ångstrom chosen in the \textit{create$\_$atoms} command. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
@@ -972,7 +972,7 @@ read_data ../pureH2O/H2O.data &
     extra/special/per/atom 14
 include ../PARM.lammps
 \end{verbatim}}
-Download the \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level2/polymer-in-water/mergePEGH2O/PEG-GROMOS.mol}{template} for the PEG molecule, and then create a single molecule in the middle of the box:
+Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial3/PEG-GROMOS.mol}{template} for the PEG molecule, and then create a single molecule in the middle of the box:
 {\normalsize \begin{verbatim}
 molecule pegmol PEG-GROMOS.mol
 create_atoms 0 single 0 0 0 mol pegmol 454756
@@ -1168,7 +1168,7 @@ region rtopwall block -3 3 -3 3 3 4
 region rwall union 2 rbotwall rtopwall
 create_atoms 5 region rwall
 \end{verbatim}}
-Atoms will be placed in the positions of the previously defined lattice, thus forming fcc solids. In order to add the water molecules, first download the \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level2/nanosheared-electrolyte/systemcreation/RigidH2O.txt}{molecule template} and place it within \textit{systemcreation/}. The template contains all the
+Atoms will be placed in the positions of the previously defined lattice, thus forming fcc solids. In order to add the water molecules, first download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial4/RigidH2O.txt}{molecule template} and place it within \textit{systemcreation/}. The template contains all the
 necessary information concerning the water molecule, such as atom positions, bonds, and angles. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 region rliquid block INF INF INF INF -2 2
@@ -1464,7 +1464,7 @@ measure its viscosity $\dot{\eta}$ according to: $\eta = \tau / \dot{\gamma}$ wh
 \noindent The objective of this tutorial is to use a reactive force field (ReaxFF \cite{van2001reaxff, zou2012investigation}), and calculate the partial charges of a system undergoing deformation, as well as chemical bond formation and breaking. The system simulated here is a block of silicon dioxide (SiO2), that is deformed until rupture (Fig.\,\ref{fig:SIO}). Particular attention is given to the evolution of the charges of the atoms during the deformation of the structure, and the chemical reactions occurring due to the deformation are tracked.
 
 \subsubsection{Prepare and relax}
-Create a folder, name it \textit{RelaxSilica/}, and \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level3/reactive-silicon-dioxide/RelaxSilica/silica.data}{download} the initial topology of a small amorphous silica structure. If you open the \textit{silica.data} file, you can see by looking at the Atoms section that all silicon atoms have the same charge $q = 1.1\,\text{e}$, and all oxygen atoms the charge $q = -0.55\,\text{e}$. This is common with classical force fields and will change once ReaxFF is used. Let us keep that in mind for now. The first step we need to perform here is to relax
+Create a folder, name it \textit{RelaxSilica/}, and \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/silica.data}{download} the initial topology of a small amorphous silica structure. If you open the \textit{silica.data} file, you can see by looking at the Atoms section that all silicon atoms have the same charge $q = 1.1\,\text{e}$, and all oxygen atoms the charge $q = -0.55\,\text{e}$. This is common with classical force fields and will change once ReaxFF is used. Let us keep that in mind for now. The first step we need to perform here is to relax
 the structure with ReaxFF, which we are gonna do using molecular dynamics. To make sure that the system equilibrates
 nicely, let us track some changes over time. Create an input file called \textit{input.lammps} in \textit{RelaxSilica/},
 and copy the following lines into it: 
@@ -1484,7 +1484,7 @@ pair_coeff * * reaxCHOFe.ff Si O
 fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 &
     reaxff maxiter 400
 \end{verbatim}}
-Here, the \textit{ReaxFF pair$\_$style} is used with no control file. The \textit{safezone} and \textit{mincap} keywords have been added to avoid memory allocation issues, which sometimes can trigger the segmentation faults and \textit{bondchk} failed errors. The \textit{pair$\_$coeff} uses the \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level3/reactive-silicon-dioxide/RelaxSilica/reaxCHOFe.ff}{reaxCHOFe.ff} file which is assumed to be saved within \textit{RelaxSilica/}. For consistency, the atoms of type 1 are set as silicon (Si), and the atoms of type 2 as oxygen (O). Finally, the \textit{fix qeq/reaxff} is used to perform charge equilibration. The charge equilibration occurs at every step. The values 0.0 and 10.0 are the low and the high cutoffs, respectively, and $1.0 \text{e} -6$ is a tolerance. Finally, \textit{maxiter} sets an upper limit to the number of attempts to equilibrate the charge. 
+Here, the \textit{ReaxFF pair$\_$style} is used with no control file. The \textit{safezone} and \textit{mincap} keywords have been added to avoid memory allocation issues, which sometimes can trigger the segmentation faults and \textit{bondchk} failed errors. The \textit{pair$\_$coeff} uses the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/reaxCHOFe.ff}{reaxCHOFe.ff} file which is assumed to be saved within \textit{RelaxSilica/}. For consistency, the atoms of type 1 are set as silicon (Si), and the atoms of type 2 as oxygen (O). Finally, the \textit{fix qeq/reaxff} is used to perform charge equilibration. The charge equilibration occurs at every step. The values 0.0 and 10.0 are the low and the high cutoffs, respectively, and $1.0 \text{e} -6$ is a tolerance. Finally, \textit{maxiter} sets an upper limit to the number of attempts to equilibrate the charge. 
 
 Then, let us add some commands to the \textit{input.lammps} file  to measure the evolution of the charges during the simulation:
 {\normalsize \begin{verbatim}
@@ -1733,7 +1733,7 @@ At the end of  the simulation, hydroxyl groups can be seen at the interfaces (Fi
 
 \subsubsection{Generation of the silica block}
 \noindent Let us first generate a block of amorphous silica (SiO2). To do so, we are going to replicate a building block containing 3 Si and 6 O atoms. Create two folders side by side, and name them respectively \textit{Potential/}
-and \textit{SilicaBlock/}. An initial data file for the SiO atoms can be downloaded by clicking \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level3/water-adsorption-in-silica/SilicaBlock/SiO.data}{here}.
+and \textit{SilicaBlock/}. An initial data file for the SiO atoms can be downloaded by clicking \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/SiO.data}{here}.
 Save it in \textit{SilicaBlock/}. This data file contains the coordinates of the 9 atoms, their masses, and their charges. The \textit{.data} file can be directly read by LAMMPS using the \textit{read$\_$data} command. Let us replicate these atoms using
 LAMMPS, and apply an annealing procedure to obtain a block of amorphous silica.
 
@@ -1748,7 +1748,7 @@ pair_style vashishta
 neighbor 1.0 bin
 neigh_modify delay 1
 \end{verbatim}}
-The main difference with some of the previous tutorials is the use of the \textit{Vashishta} pair style. Download the \textit{Vashishta} potential by clicking \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level3/water-adsorption-in-silica/Potential/SiO.1990.vashishta}{here}, and copy it within the \textit{Potential/} folder. The Vashishta potential is a bond-angle energy-based potential, it deduces the bonds between atoms from their relative positions \cite{vashishta1990interaction}. Let us then import the system made of 9 atoms, and replicate it four times in all three
+The main difference with some of the previous tutorials is the use of the \textit{Vashishta} pair style. Download the \textit{Vashishta} potential by clicking \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/SiO.1990.vashishta}{here}, and copy it within the \textit{Potential/} folder. The Vashishta potential is a bond-angle energy-based potential, it deduces the bonds between atoms from their relative positions \cite{vashishta1990interaction}. Let us then import the system made of 9 atoms, and replicate it four times in all three
 directions of space, thus creating a system with 576 atoms. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 read_data SiO.data
@@ -1875,7 +1875,7 @@ ensemble (GCMC). In short, the system is put into contact with a virtual reservo
 $\mu$, and multiple attempts to insert water molecules at random positions are made. Each attempt is either accepted or rejected based on energy considerations. Find more details in classical textbooks \cite{frenkel2023understanding}.
 
 \paragraph{Using hydrid potentials}
-\noindent Create a new folder called \textit{Addingwater/}. Download and save the \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level3/water-adsorption-in-silica/AddingWater/H2O.mol}{template} file for the water molecule within \textit{Addingwater/}. Create a new input file called \textit{input.lammps} within \textit{Addingwater/}, and copy the
+\noindent Create a new folder called \textit{Addingwater/}. Download and save the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/H2O.mol}{template} file for the water molecule within \textit{Addingwater/}. Create a new input file called \textit{input.lammps} within \textit{Addingwater/}, and copy the
 following lines into it:
 {\normalsize \begin{verbatim}
 units metal
@@ -2268,13 +2268,13 @@ cd wham
 make clean
 make
 \end{verbatim}}
-\noindent The compilation creates an executable called \textit{wham} that you can copy in the \textit{BiasedSampling/} folder. Alternatively, use the \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level3/free-energy-calculation/BiasedSampling/wham-release-2.0.11.tgz}{version 2.0.11} I have downloaded. In order to apply the WHAM algorithm to our simulation, we first need to create a metadata file. This file simply contains 
+\noindent The compilation creates an executable called \textit{wham} that you can copy in the \textit{BiasedSampling/} folder. Alternatively, use the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial7/wham-release-2.0.11.tgz}{version 2.0.11} I have downloaded. In order to apply the WHAM algorithm to our simulation, we first need to create a metadata file. This file simply contains 
 \begin{itemize}
 \item the paths to all the data files,
 \item the value of $x_\text{des}$,
 \item and the values of $k$.
 \end{itemize}
-Download the \href{https://lammpstutorials.github.io/lammpstutorials-inputs/level3/free-energy-calculation/BiasedSampling/metadata.dat}{metadata.dat} file I have written. Then, simply run the following command in the terminal:
+Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial7/metadata.dat}{metadata.dat} file I have written. Then, simply run the following command in the terminal:
 {\normalsize \begin{verbatim}
 ./wham -25 25 50 1e-8 119.8 0 metadata.dat PMF.dat
 \end{verbatim}}
