@@ -594,9 +594,9 @@ Next, in order to measure the strain and stress suffered by the CNT, let us extr
 {\normalsize \begin{verbatim}
 variable L equal xcm(carbon_top,z)-xcm(carbon_bot,z)
 fix at1 all ave/time 10 10 100 v_L &
-    file output_cnt_length.dat
+    file cnt_length.dat
 fix at2 all ave/time 10 10 100 f_mysf1[1] &
-    f_mysf2[1] file output_edge_force.dat
+    f_mysf2[1] file edge_force.dat
 \end{verbatim}}
 \noindent Let us also add a command to print the atom coordinates in a \textit{lammpstrj} file every 1000 steps.
 {\normalsize \begin{verbatim}
@@ -605,7 +605,7 @@ dump mydmp all atom 1000 dump.lammpstrj
 \noindent Finally, let us check the temperature of the non-frozen group over time by printing it using a \textit{fix ave/time} command:
 {\normalsize \begin{verbatim}
 fix at3 all ave/time 10 10 100 c_Tmid &
-    file output_temperature_middle_group.dat
+    file temperature_middle_group.dat
 \end{verbatim}}
 
 Let us run a small equilibration step to bring the system to the required temperature before applying any deformation:
@@ -640,7 +640,7 @@ As always, is it important to ensure that the simulation behaves as expected by 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-energy-unbreakable}
-\caption{Evolution of the total energy of the system with time. The CNT starts deforming at $t = 5\,\text{ps}$.}
+\caption{Evolution of the total energy $E_\text{tot}$ of the system with time $t$. The CNT starts deforming at $t = 5\,\text{ps}$. Here, the force field is OPLS-AA (i.e. the bonds are unbreakable).}
 \label{fig:CNT-unbreakable-energy}
 \end{figure}
 
@@ -742,11 +742,10 @@ compute Tmid carbon_mid temp
 fix myber carbon_mid temp/berendsen ${T} ${T} 0.1
 fix_modify myber temp Tmid
 \end{verbatim}}
-Note that a large distance of 120 Ångstroms was used for the box size along the \textit{z} axis, to allow for larger deformation. In addition, the \textit{change$\_$box} command was placed before the \textit{displace$\_$atoms} to avoid issue with the CNT crossing the edge of the box.
+Note that a large distance of 120 Ångstroms was used for the box size along the \textit{z} axis, to allow for larger deformation. In addition, the \textit{change$\_$box} command was placed before the \textit{displace$\_$atoms} to avoid having the CNT crossing the edge of the box.
 
 \paragraph{Start the simulation}
-Here, let us impose a constant velocity deformation using the atoms of one edge, while maintaining the other edge fix. Do to so,
-one needs to cancel the forces (thus the acceleration) on the atoms of the edges using the \textit{setforce} command and set the value of the velocity along the \textit{z} direction. First, as an equilibration step, let us set the velocity to 0 for the atoms of both edges. Let us fully constrain the edges. Add the following lines to LAMMPS:
+Here, let us impose a constant velocity deformation using the atoms of one edge while maintaining the other edge fixed (note that for the unbreakable CNT, the motion was imposed on the 2 edges). As an equilibration step, let us set the velocity to 0 for the atoms of both edges. Add the following lines to the \textit{input.lammps} file:
 {\normalsize \begin{verbatim}
 fix mysf1 carbon_bot setforce 0 0 0
 fix mysf2 carbon_top setforce 0 0 0
@@ -756,9 +755,9 @@ velocity carbon_top set 0 0 0
 variable L equal &
     xcm(carbon_top,z)-xcm(carbon_bot,z)
 fix at1 all ave/time 10 10 100 v_L file &
-    output_cnt_length.dat
+    cnt_length.dat
 fix at2 all ave/time 10 10 100 f_mysf1[1] &
-    f_mysf2[1] file output_edge_force.dat
+    f_mysf2[1] file edge_force.dat
 
 dump mydmp all atom 1000 dump.lammpstrj
 
@@ -771,26 +770,26 @@ run 5000
 Note the relatively small timestep of $0.0005\,\text{ps}$ used. A reactive force field usually requires a smaller timestep than a classical one. When running \textit{input.lammps} with LAMMPS, you can see that the temperature deviates from the target temperature of $300\,\text{K}$ at the start of the equilibration, but that after a few steps, it reaches the target value.
 
 \paragraph{Launch the deformation}
-After equilibration, let us set the velocity to 15 m/s and run for a longer duration than previously. Add the following lines into \textit{input.lammps}:
+After equilibration, let us set the velocity of one of the edges equal to $15~\text{m/s}$ and run for a longer duration than previously. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 velocity carbon_top set 0 0 0.15
 run 280000
 \end{verbatim}}
-The CNT should break around step 250000. If not, use a longer run. When looking at the \textit{lammpstrj} file using VMD, you will see the bonds breaking (Fig.\,\ref{fig:CNT-breakable-energy}). From VMD, use the \textit{DynamicBonds} representation to properly visualize the bond breaking.
+By opening the \textit{lammpstrj} file using VMD, it is possible to observe the bonds breaking at approximately two-thirds of the simulation (Fig.\,\ref{fig:CNT-deformed-breakable}). If the bonds do not break, use a longer run. 
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-deformed-breakable}
-\caption{CNT with broken bonds.}
+\caption{CNT with broken bonds. Here, the \textit{DynamicBonds} representation of VMD is used to properly visualize the bond breaking.}
 \label{fig:CNT-deformed-breakable}
 \end{figure}
 
-Looking at the evolution of energy again, one can see that the energy in increasing with the deformation, before completely relaxing when the CNT finally breaks (Fig.\,\ref{fig:CNT-breakable-energy}).
+Looking at the evolution of energy again, one can see that the energy is increasing with the deformation. When bonds break, the energy relaxes abruptly, as can be seen near $t=110~\text{ps}$ and again near $t=130~\text{ps}$ in Fig.\,\ref{fig:CNT-breakable-energy}.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-energy-breakable}
-\caption{Evolution of the total energy of the system with time.}
+\caption{Evolution of the total energy $E_\text{tot}$ of the CNT with time $t$. Here, the potential is AIREBO (i.e. the bonds are breakable).}
 \label{fig:CNT-breakable-energy}
 \end{figure}
 
