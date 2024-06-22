@@ -475,7 +475,7 @@ special_bonds lj 0.0 0.0 0.5
 
 read_data cnt_molecular.data
 \end{verbatim}}
-The chosen unit system is \textit{real} (therefore distances are in Ångstrom and time in femtosecond), the \textit{atom$\_$style} is molecular (therefore atoms are dots that can be bonded with each other), and the boundary conditions are fixed. The boundary conditions do not matter here, as the box boundaries were placed far from the CNT. Just like in the previous tutorial, \hyperref[lennard-jones-label]{Lennard Jones fluid}, the pair style is \textit{lj/cut} (i.e. a Lennard-Jones potential with a short-range cutoff) with parameter 14, which means that only the atoms closer than 14 Ångstroms from each other interact through a Lennard-Jones potential. The \textit{bond$\_$style}, \textit{angle$\_$style}, \textit{dihedral$\_$style}, and \textit{improper$\_$style} commands specify the different potentials used to restrain the relative positions of the atoms. More details about the potentials used here are given in the LAMMPS documentation. The \textit{special$\_$bonds} command sets the weighting factors for the Lennard-Jones interaction between atoms directly connected by one bond, two bonds, and three bonds, respectively. The last command, \textit{read$\_$data}, imports the \textit{cnt$\_$molecular.data} file previously generated with VMD, which contains information about the box size, atom positions, etc.
+The chosen unit system is \textit{real} (therefore distances are in Ångstrom and time in femtosecond), the \textit{atom$\_$style} is molecular (therefore atoms are dots that can be bonded with each other), and the boundary conditions are fixed. The boundary conditions do not matter here, as the box boundaries were placed far from the CNT. Just like in the previous tutorial, \hyperref[lennard-jones-label]{Lennard-Jones fluid}, the pair style is \textit{lj/cut} (i.e. a Lennard-Jones potential with a short-range cutoff) with parameter 14, which means that only the atoms closer than 14 Ångstroms from each other interact through a Lennard-Jones potential. The \textit{bond$\_$style}, \textit{angle$\_$style}, \textit{dihedral$\_$style}, and \textit{improper$\_$style} commands specify the different potentials used to restrain the relative positions of the atoms. More details about the potentials used here are given in the LAMMPS documentation. The \textit{special$\_$bonds} command sets the weighting factors for the Lennard-Jones interaction between atoms directly connected by one bond, two bonds, and three bonds, respectively. The last command, \textit{read$\_$data}, imports the \textit{cnt$\_$molecular.data} file previously generated with VMD, which contains information about the box size, atom positions, etc.
 
 We need to specify the parameters of both bonded and non-bonded potentials. Here, the parameters are taken from the OPLS-AA (Optimised Potentials for Liquid Simulations-All-Atom) force field \cite{jorgensenDevelopmentTestingOPLS1996}. Create a new text file in the \textit{unbreakable-bonds/} folder and name it \textit{parm.lammps}. Copy the following lines into it:
 {\normalsize \begin{verbatim}
@@ -1003,7 +1003,7 @@ fix myat3 all ave/time 10 10 100 &
     v_myenthalpy file enthalpy.dat
 \end{verbatim}}
 Finally, let us perform a short equilibration and print the
-final state in a data file. Add the following lines into the data file:
+final state in a data file. Add the following lines to the data file:
 {\normalsize \begin{verbatim}
 run 30000
 write_data mix.data
@@ -1036,12 +1036,12 @@ special_bonds lj 0.0 0.0 0.5 &
     coul 0.0 0.0 1.0 &
     angle yes dihedral yes
 \end{verbatim}}
-Start the simulation from the equilibrated PEG-water system and include again the parameter file by adding the following lines into the \textit{input.lammps}:
+Start the simulation from the equilibrated PEG-water system and include again the parameter file by adding the following lines to the \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 read_data ../mergePEGH2O/mix.data
 include ../PARM.lammps
 \end{verbatim}}
-Then, let us create 4 atom groups: H2O and PEG (as previously), as well as 2 groups containing only the 2 oxygen atoms of types 6 and 7, respectively. Atoms of types 6 and 7 correspond to the oxygen atoms located at the ends of the PEG molecule, which we are going to use to pull on the PEG molecule. Add the following lines into the \textit{input.lammps}:
+Then, let us create 4 atom groups: H2O and PEG (as previously), as well as 2 groups containing only the 2 oxygen atoms of types 6 and 7, respectively. Atoms of types 6 and 7 correspond to the oxygen atoms located at the ends of the PEG molecule, which we are going to use to pull on the PEG molecule. Add the following lines to the \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 group H2O type 8 9
 group PEG type 1 2 3 4 5 6 7
@@ -1052,7 +1052,7 @@ Add the following \textit{dump} command to the input to print the atom positions
 {\normalsize \begin{verbatim}
 dump mydmp all atom 1000 dump.lammpstrj
 \end{verbatim}}
-Let us use a single Nosé-Hoover thermostat applied to all the atoms by adding the following lines into \textit{input.lammps}:
+Let us use a single Nosé-Hoover thermostat applied to all the atoms by adding the following lines to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 timestep 1.0
 fix mynvt all nvt temp 300 300 100
@@ -1061,7 +1061,7 @@ Let us also print the end-to-end distance of the PEG,
 here defined as the distance between the groups \textit{topull1}
 and \textit{topull2}, as well as the temperature of the system and the gyration
 radius of the molecule \cite{fixmanRadiusGyrationPolymer1962a}
-by adding the following lines into \textit{input.lammps}:
+by adding the following lines to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 variable mytemp equal temp
 fix myat1 all ave/time 10 10 100 &
@@ -1133,11 +1133,9 @@ angle_style harmonic
 pair_style lj/cut/tip4p/long 1 2 1 1 0.1546 12.0
 kspace_style pppm/tip4p 1.0e-4
 \end{verbatim}}
-These lines are used to define the most basic parameters, including the \textit{atom}, \textit{bond}, and \textit{angle} styles, as well as interaction potential. Here, \textit{lj/cut/tip4p/long} imposes a Lennard-Jones potential with a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential. So far, the commands are relatively similar to the 
-previous tutorial (\hyperref[all-atoms-label]{Polymer in water}), with two major differences; the use of \textit{lj/cut/tip4p/long} and \textit{pppm/tip4p}, instead of \textit{lj/cut/coul/long} and \textit{pppm}. These two tip4p-specific commands allow us to model a four-point water molecule without explicitly defining the fourth massless atom \textit{M}. The value of 
-$0.1546\,\text{$\text{\AA{}}$}$ corresponds to the \textit{O-M} distance and is given by the water model. Here, TIP4P-2005 is used \cite{abascal2005general}.
+These lines are used to define the most basic parameters, including the \textit{atom}, \textit{bond}, and \textit{angle} styles, as well as interaction potential. Here, \textit{lj/cut/tip4p/long} imposes a Lennard-Jones potential with a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential. So far, the commands are relatively similar to those in the previous tutorial, \hyperref[all-atoms-label]{Polymer in water}, with two major differences: the use of \textit{lj/cut/tip4p/long} instead of \textit{lj/cut/coul/long}, and \textit{pppm/tip4p} instead of \textit{pppm}. When using \textit{lj/cut/tip4p/long} and \textit{pppm/tip4p}, the interactions resemble the conventional Lennard-Jones and Coulomb interactions, except that they are specifically designed for four-point water model. Therefore, LAMMPS automatically creates a four-point water molecule using atoms of type 1 as oxygen (\textit{O}) and atoms of type 2 as hydrogen (\textit{H}). The fourth massless atom (\textit{M}) of the TIP4P water molecule does not have to be defining explicitly, and the value of $0.1546\,\text{$\text{\AA{}}$}$ corresponds to the \textit{O-M} distance of the TIP4P-2005 water model \cite{abascal2005general}. All the other atoms in the simulation are treated normally with long-range Coulomb interactions.
 
-Let us create the box by adding the following lines into \textit{input.lammps}:
+Let us create the box by adding the following lines to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 lattice fcc 4.04
 region box block -3 3 -3 3 -7 7
@@ -1152,8 +1150,9 @@ The \textit{lattice} command defines the unit cell. Here, the face-centered cubi
 4.04 has been chosen for the future positioning of the atoms of the walls. The \textit{region} command defines a geometric
 region of space. By choosing \textit{xlo=-3} and \textit{xhi=3}, and because we have previously chosen a lattice with a scale
 factor of 4.04, the region box extends from -12.12 Å to 12.12 Å along the $x$ direction. The \textit{create$\_$box} command creates a simulation box with 5 types of atoms: the oxygen and hydrogen of the water molecules, the two ions ($\text{Na}^+$,
-$\text{Cl}^-$), and the atom of the walls. The \textit{create$\_$box} command extends over 6 lines thanks to the $\&$ character. The second and third lines are used to indicate that the simulation contains 1 type of bond and 1 type of angle (both required by the water molecule). The parameters for these bond and angle constraints will be given later. The
-three last lines are for memory allocation. Now, we can add atoms to the system. First, let us create two sub-regions corresponding respectively to the two solid walls, and create a larger region from the union of the two regions. Then, let us create atoms of type 5 (the wall) within the two regions. Add the following lines into \textit{input.lammps}:
+$\text{Cl}^-$), and the atom of the walls. The \textit{create$\_$box} command extends over 6 lines thanks to the $\&$ character. The second and third lines are used to indicate that the simulation contains 1 type of bond and 1 type of angle (both required by the water molecule). The parameters for these bond and angle constraints will be given later. The three last lines are for memory allocation.
+
+Now, we can add atoms to the system. First, let us create two sub-regions corresponding respectively to the two solid walls, and create a larger region from the union of the two regions. Then, let us create atoms of type 5 (the wall) within the two regions. Add the following lines to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 region rbotwall block -3 3 -3 3 -4 -3
 region rtopwall block -3 3 -3 3 3 4
@@ -1161,13 +1160,13 @@ region rwall union 2 rbotwall rtopwall
 create_atoms 5 region rwall
 \end{verbatim}}
 Atoms will be placed in the positions of the previously defined lattice, thus forming fcc solids. In order to add the water molecules, first download the molecule template named \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial4/RigidH2O.txt}{\textit{RigidH2O.txt}} and place it within \textit{systemcreation/}. The template contains all the
-necessary information concerning the water molecule, such as atom positions, bonds, and angles. Add the following lines into \textit{input.lammps}:
+necessary information concerning the water molecule, such as atom positions, bonds, and angles. Add the following lines to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 region rliquid block INF INF INF INF -2 2
 molecule h2omol RigidH2O.txt
 create_atoms 0 region rliquid mol h2omol 482793
 \end{verbatim}}
-Within the last four lines, a \textit{region} named \textit{rliquid} for depositing the water molecules are created based on the last defined lattice, which is \textit{fcc 4.04}. The \textit{molecule} command opens up the molecule template named
+Within the last three lines, a \textit{region} named \textit{rliquid} for depositing the water molecules are created based on the last defined lattice, which is \textit{fcc 4.04}. The \textit{molecule} command opens up the molecule template named
 \textit{RigidH2O.txt}, and names the associated molecule \textit{h2omol}. Molecules are created on the \textit{fcc 4.04} lattice by the \textit{create$\_$atoms} command. The first parameter is '0', meaning that the atom ids from the \textit{RigidH2O.txt} file will be used. The number \textit{482793} is a seed that is required by LAMMPS, it can be any positive integer. Finally, let us create 30 ions (15 $\text{Na}^+$ and 15 $\text{Cl}^-$) in between the water molecules, by adding the following commands to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 create_atoms 3 random 15 52802 rliquid &
@@ -1248,7 +1247,7 @@ positions of the atoms, and can be opened with VMD to visualize the system. Run 
 
 \paragraph{Energy minimization}
 Let us move the atoms and place them in more energetically favorable positions before starting the simulation. Let us call this step \textit{energy minimization}, although it is not a conventional \textit{minimization} as done for instance
-in the first tutorial; \hyperref[lennard-jones-label]{Lennard Jones fluid}. To perform this energy minimization, let us
+in the first tutorial; \hyperref[lennard-jones-label]{Lennard-Jones fluid}. To perform this energy minimization, let us
 create a new folder named \textit{minimization/} next to \textit{systemcreation/}, and create a new input file named \textit{input.lammps} in it. Copy the following lines in \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 boundary p p p
