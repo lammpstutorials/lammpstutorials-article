@@ -7,7 +7,10 @@ git pull
 # update lammps tutorials in case changes were made
 git submodule update --remote
 
-rm *.aux *.bbl *.blg *.out
+rm -f *.aux
+rm -f *.bbl
+rm -f *.blg
+rm -f *.out
 
 pdflatex lammps-tutorials.tex
 bibtex lammps-tutorials

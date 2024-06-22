@@ -1166,8 +1166,10 @@ region rliquid block INF INF INF INF -2 2
 molecule h2omol RigidH2O.txt
 create_atoms 0 region rliquid mol h2omol 482793
 \end{verbatim}}
-Within the last three lines, a \textit{region} named \textit{rliquid} for depositing the water molecules are created based on the last defined lattice, which is \textit{fcc 4.04}. The \textit{molecule} command opens up the molecule template named
-\textit{RigidH2O.txt}, and names the associated molecule \textit{h2omol}. Molecules are created on the \textit{fcc 4.04} lattice by the \textit{create$\_$atoms} command. The first parameter is '0', meaning that the atom ids from the \textit{RigidH2O.txt} file will be used. The number \textit{482793} is a seed that is required by LAMMPS, it can be any positive integer. Finally, let us create 30 ions (15 $\text{Na}^+$ and 15 $\text{Cl}^-$) in between the water molecules, by adding the following commands to \textit{input.lammps}:
+Within the last three lines, a \textit{region} named \textit{rliquid} is created based on the last defined lattice, \textit{fcc 4.04}. \textit{rliquid} will be used for depositing the water molecules. The \textit{molecule} command opens up the molecule template named
+\textit{RigidH2O.txt}, and names the associated molecule \textit{h2omol}. The new molecules are placed on the \textit{fcc 4.04} lattice by the \textit{create$\_$atoms} command. The first parameter is 0, meaning that the atom IDs from the \textit{RigidH2O.txt} file will be used. The number \textit{482793} is a seed that is required by LAMMPS, it can be any positive integer.
+
+Finally, let us create 30 ions (15 $\text{Na}^+$ and 15 $\text{Cl}^-$) in between the water molecules, by adding the following commands to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 create_atoms 3 random 15 52802 rliquid &
     overlap 0.3 maxtry 500
@@ -1183,7 +1185,7 @@ Before starting the simulation, we still need to define the parameters of the si
 include ../PARM.lammps
 include ../GROUP.lammps
 \end{verbatim}}
-Create a new text file, call it \textit{PARM.lammps}, and copy it next to the \textit{systemcreation/} folder. Copy the following lines into PARM.lammps:
+Create a new text file called \textit{PARM.lammps} next to the \textit{systemcreation/} folder. Copy the following lines into PARM.lammps:
 {\normalsize \begin{verbatim}
 mass 1 15.9994 # water
 mass 2 1.008 # water
@@ -1197,14 +1199,15 @@ pair_coeff 3 3 0.04690 2.4299
 pair_coeff 4 4 0.1500 4.04470
 pair_coeff 5 5 11.697 2.574
 pair_coeff 1 5 0.4 2.86645
-
-bond_coeff 1 0 0.9572
-
-angle_coeff 1 0 104.52
 \end{verbatim}}
 Each \textit{mass} command assigns a mass in grams/mole to an atom type. Each \textit{pair$\_$coeff} assigns respectively the depth of the LJ potential (in Kcal/mole), and the distance (in Ångstrom) at which the particle-particle potential energy is 0.
 
-As already seen in previous tutorials, and with the important exception of \textit{pair$\_$coeff 1 5}, only pairwise interaction between atoms of identical types was assigned. By default, LAMMPS calculates the pair coefficients for the interactions between atoms of different types (i and j) by using geometrical average: $\epsilon_{ij} = (\epsilon_{ii} + \epsilon_{jj})/2$,  $\sigma_{ij} = (\sigma_{ii} + \sigma_{jj})/2.$ Other rules for cross coefficients can be set with the \textit{pair$\_$modify} command, but for the sake of simplicity, the default option is kept here. By default, the value of $\epsilon_\text{1-5} = 5.941\,\text{kcal/mol}$ would be extremely high (compared to the water-water energy $\epsilon_\text{1-1} = 0.185199\,\text{kcal/mol}$), which would make the surface extremely hydrophilic. The walls were made less hydrophilic by reducing the  LJ energy of interaction $\epsilon_\text{1-5}$. The \textit{bond$\_$coeff}, which is here used for the O-H bond of the water molecule, sets both the energy of the harmonic potential and the equilibrium distance in Ångstrom. The value is \textit{0} for the energy because we are going to use a rigid model for the water molecule. The shape of the molecule will be preserved later by the \textit{shake} algorithm. Similarly, the angle coefficient here for the H-O-H angle of the water molecule sets the energy of the harmonic potential (also 0) and the equilibrium angle is in degree.
+As already seen in previous tutorials and with the important exception of \textit{pair$\_$coeff 1 5}, only pairwise interactions between atoms of identical types was assigned. By default, LAMMPS calculates the pair coefficients for the interactions between atoms of different types (i and j) by using geometrical average: $\epsilon_{ij} = (\epsilon_{ii} + \epsilon_{jj})/2$,  $\sigma_{ij} = (\sigma_{ii} + \sigma_{jj})/2$. If the default value of $5.941\,\text{kcal/mol}$ was kept for $\epsilon_\text{1-5}$, the solid walls would be extremely hydrophilic, causing the water molecule to form dense layers. As a comparison, the water-water energy $\epsilon_\text{1-1}$ is only $0.185199\,\text{kcal/mol}$. Therefore, the walls were made less hydrophilic by reducing the value of $\epsilon_\text{1-5}$. Copy the following lines into PARM.lammps as well:
+{\normalsize \begin{verbatim}   
+bond_coeff 1 0 0.9572
+angle_coeff 1 0 104.52
+\end{verbatim}}
+The \textit{bond$\_$coeff} command, used here for the O-H bond of the water molecule, sets both the spring constant of the harmonic potential and the equilibrium distance of $0.9572~\text{Å}$. The constant can be 0 for a rigid water molecule, because the shape of the molecule will be preserved by the SHAKE algorithm (see below) \cite{ryckaert1977numerical, andersen1983rattle}. Similarly, the angle coefficient for the H-O-H angle of the water molecule sets the force constant of the angular harmonic potential to 0 and the equilibrium angle to $104.52^\circ$.
 
 Let us also create another file called \textit{GROUP.lammps} next to \textit{PARM.lammps}, and copy the following lines into it:
 {\normalsize \begin{verbatim}
@@ -1271,7 +1274,7 @@ fix myber fluid temp/berendsen 1 1 100
 fix myshk H2O shake 1.0e-4 200 0 b 1 a 1
 timestep 0.5
 \end{verbatim}}
-Just like \textit{fix nve}, the fix \textit{nve/limit} performs constant NVE integration to update positions and velocities of the atoms at each timestep, but also limits the maximum distance atoms can travel at each timestep. Here, only the fluid molecules and ions will move. The \textit{fix temp/berendsen} rescales the velocities of the atoms to force the temperature of the system to reach the desired value of 1 K, and the shake algorithm is used in order to maintain the shape of the water molecules. Let us also print the atom positions in a \textit{.lammpstrj} file by adding the following line into \textit{input.lammps}:
+Just like \textit{fix nve}, the fix \textit{nve/limit} performs constant NVE integration to update positions and velocities of the atoms at each timestep, but also limits the maximum distance atoms can travel at each timestep. Here, only the fluid molecules and ions will move. The \textit{fix temp/berendsen} rescales the velocities of the atoms to force the temperature of the system to reach the desired value of 1 K, and the SHAKE algorithm is used in order to maintain the shape of the water molecules. Let us also print the atom positions in a \textit{.lammpstrj} file by adding the following line into \textit{input.lammps}:
 {
 ormal \begin{verbatim}
 dump mydmp all atom 1000 dump.lammpstrj
@@ -1961,7 +1964,7 @@ fix myat1 all ave/time 100 10 1000 v_nO &
 fix shak H2O shake 1.0e-4 200 0 b 1 a 1 &
     mol h2omol
 \end{verbatim}}
-The force field Vashishta applies only to Si (type 1) and O of SiO2 (type 2), and not to the O and H of H2O, thanks to the NULL parameters used for atoms of types 3 and 4. Pair coefficients for lj/cut/tip4p/long are defined between O atoms, as well as between O(SiO)-O(H2O) and Si(SiO)-O(H2O). Therefore, the fluid-solid  interactions will be set by Lennard-Jones and Coulomb potentials. The number of oxygen atoms from water molecules (i.e. the number of molecules) will be printed in the file \textit{numbermolecule.dat}. The shake algorithm is used to maintain the shape of the water molecules over time. Some of
+The force field Vashishta applies only to Si (type 1) and O of SiO2 (type 2), and not to the O and H of H2O, thanks to the NULL parameters used for atoms of types 3 and 4. Pair coefficients for lj/cut/tip4p/long are defined between O atoms, as well as between O(SiO)-O(H2O) and Si(SiO)-O(H2O). Therefore, the fluid-solid  interactions will be set by Lennard-Jones and Coulomb potentials. The number of oxygen atoms from water molecules (i.e. the number of molecules) will be printed in the file \textit{numbermolecule.dat}. The SHAKE algorithm is used to maintain the shape of the water molecules over time. Some of
 these features have been seen in previous tutorials. Let us delete the overlapping water molecules, and print the
 positions of the remaining atoms in a \textit{.lammpstrj} file by adding the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
