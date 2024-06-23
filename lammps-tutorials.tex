@@ -1839,7 +1839,7 @@ pair_coeff * * &
     ../Potential/SiO.1990.vashishta Si O
 dump dmp all atom 1000 dump.lammpstrj
 \end{verbatim}}
-Let us progressively increase the size of the box in the x direction, thus forcing the silica to deform and eventually crack. To do so, a loop based on the jump command is used. At every step of the loop, the box dimension over x will be multiplied by a scaling factor 1.005. Add the following lines into the \textit{input.lammps}:
+Let us progressively increase the size of the box in the $x$ direction, thus forcing the silica to deform and eventually crack. To do so, a loop based on the jump command is used. At every step of the loop, the box dimension over $x$ will be multiplied by a scaling factor 1.005. Add the following lines into the \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 fix nvt1 all nvt temp 300 300 0.1
 timestep 0.001
@@ -1854,19 +1854,17 @@ run 20000
 write_data dilatedSiO.data
 \end{verbatim}}
 \noindent The \textit{fix nvt} is used to control the temperature of the system, while the \textit{change$\_$box} command
-imposes incremental deformations of the box. Different scaling factors or/and different numbers of steps can be used to generate different defects in the silica. After the dilatation, a final equilibration step of duration 20 picoseconds is performed. If you look at the \textit{dump.lammpstrj} file using VMD, you can see the dilatation occurring step-by-step, and the atoms progressively adjusting to the box dimensions. At first, the deformations are reversible (elastic regime). At some point, bonds start breaking and dislocations appear (plastic regime) (Fig.\,\ref{fig:GCMC-cracked}). 
+imposes incremental deformations of the box. Different scaling factors or/and different numbers of steps can be used to generate different defects in the silica. After the expansion, a final equilibration step of duration 20 picoseconds is performed. If you look at the \textit{dump.lammpstrj} file using VMD, you can see the expansion occurring step-by-step, and the atoms progressively adjusting to the box dimensions. At first, the deformations are reversible (elastic regime). At some point, bonds start breaking and dislocations appear (plastic regime). The final system is shown in Fig.\,\ref{fig:GCMC-cracked}. 
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GCMC-cracked}
-\caption{Block of silica after deformation, with some visible holes.}
+\caption{Block of silica after deformation with Si atom in yellow and O atoms in red. Some holes are visible.}
 \label{fig:GCMC-cracked}
 \end{figure}
 
 \subsubsection{Adding water}
-\noindent In order to add the water molecules to the silica, we are going to use the Monte Carlo method in the grand canonical
-ensemble (GCMC). In short, the system is put into contact with a virtual reservoir of a given chemical potential
-$\mu$, and multiple attempts to insert water molecules at random positions are made. Each attempt is either accepted or rejected based on energy considerations. Find more details in classical textbooks \cite{frenkel2023understanding}.
+\noindent In order to add the water molecules to the silica, we are going to use the Monte Carlo method in the grand canonical ensemble (GCMC). In short, the system is put into contact with a virtual reservoir of a given chemical potential $\mu$, and multiple attempts to insert water molecules at random positions are made. Each attempt is either accepted or rejected based on energy considerations. Find more details in classical textbooks \cite{frenkel2023understanding}.
 
 \paragraph{Using hydrid potentials}
 \noindent Create a new folder called \textit{Addingwater/}. Download and save the water molecule template named \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/H2O.mol}{\textit{H2O.mol}} within the \textit{Addingwater/} folder. Create a new input file called \textit{input.lammps} within \textit{Addingwater/}, and copy the following lines into it:
@@ -1943,10 +1941,7 @@ lattice none 1
 group SiO type 1 2
 group H2O type 3 4
 \end{verbatim}}
-After reading the data file and defining the h2omol molecule from the txt file, the \textit{create$\_$atoms} command is used to
-include some water molecules in the system on a simple cubic lattice. Not adding a molecule before starting the
-GCMC steps usually lead to failure. Note that here, most water molecules overlap with the silica. These 
-overlapping water molecules will be deleted before starting the simulation. Then, add the following settings to \textit{input.lammps}:
+After reading the data file and defining the h2omol molecule from the \textit{.txt} file, the \textit{create$\_$atoms} command is used to include some water molecules in the system on a simple cubic lattice. Not adding a molecule before starting the GCMC steps usually lead to failure. Note that here, most water molecules overlap with the silica. These overlapping water molecules will be deleted before starting the simulation. Then, add the following settings to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 pair_coeff * * vashishta & 
     ../Potential/SiO.1990.vashishta &
@@ -2033,7 +2028,7 @@ duration was made possible by the use of a large pressure.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GCMC-number}
-\caption{Number of molecules as a function of time. The dashed vertical line marks the beginning of the GCMC step.}
+\caption{Number of molecules in the system as a function of the time $t$. The dashed vertical line marks the beginning of the GCMC step.}
 \label{fig:GCMC-number}
 \end{figure}
 
@@ -2054,8 +2049,7 @@ duration was made possible by the use of a large pressure.
 \label{fig:US}
 \end{figure}
 
-\noindent The objective of this tutorial is to measure a free energy profile of particles across a barrier potential
-using two methods; free sampling and umbrella sampling \cite{frenkel2023understanding} (Fig.\,\ref{fig:US}). For the sake of simplicity and to reduce the computation time, the barrier potential will be imposed artificially on the atoms. The procedure is valid for more complex systems, and can be adapted to many other situations, for instance for measuring the adsorption barrier near an interface, or for calculating translocation barrier through a membrane.
+\noindent The objective of this tutorial is to measure a free energy profile of particles across a barrier potential using two methods; free sampling and umbrella sampling \cite{frenkel2023understanding} (Fig.\,\ref{fig:US}). For the sake of simplicity and to reduce the computation time, the barrier potential will be imposed artificially on the atoms. The procedure is valid for more complex systems, and can be adapted to many other situations, for instance for measuring the adsorption barrier near an interface, or for calculating translocation barrier through a membrane.
 
 \subsubsection{Method 1: Free sampling}
 The most direct way to calculate a free energy profile is to extract the partition function from a classic (unbiased) molecular
