@@ -2176,7 +2176,7 @@ First, let us ensure that the initial equilibration of $1\,\text{ns}$ is long en
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-FreeSampling}
-\caption{Calculated potential $-R T \ln(\rho/\rho_\mathrm{bulk})$ [Eq.\,\eqref{eq:G}] (blue line) compared to the imposed potential [Eq.\,\eqref{eq:U}] (dark line).}
+\caption{Calculated potential $-R T \ln(\rho/\rho_\mathrm{bulk})$ [Eq.\,\eqref{eq:G}] (blue line) compared to the imposed potential Eq.\,\eqref{eq:U} with $U_0 = 1.5 \epsilon$ (dark line).}
 \label{fig:US-FreeSampling}
 \end{figure}
 
@@ -2184,7 +2184,7 @@ First, let us ensure that the initial equilibration of $1\,\text{ns}$ is long en
 If we increase the value of $U_0$, the average number of atoms in the central region will decrease, making it difficult to obtain a good resolution for the free energy profile. For instance, when running the same simulation using $U_0 = 10 \epsilon$, not a single atom explores the central part of the simulation box during the 8 ns of simulation. In that case, using an enhanced sampling method is preferred; see the next section.
 
 \subsubsection{Method 2: Umbrella sampling}
-Umbrella sampling is a biased molecular dynamics method in which additional forces are added to a chosen atom to force it to explore the entire space, including the more unfavorable areas of the system \cite{frenkel2023understanding}. To encourage one of the atoms to explore the central region of the box, we apply a potential $V$ and force it to move along the $x$-axis. The chosen path is called the axis of reaction. Several simulations (or windows) will be conducted with varying parameters for the applied biasing. The results will be analyzed using the weighted histogram analysis method (WHAM) \cite{kumar1992weighted}, which allows for the removal of the biasing effect and ultimately deduces the unbiased free energy profile.
+Umbrella sampling is a biased molecular dynamics method in which additional forces are added to a chosen atom to force it to explore the entire space, including the more unfavorable areas of the system \cite{kastner2011umbrella, allen2017computer, frenkel2023understanding}. To encourage one of the atoms to explore the central region of the box, we apply a potential $V$ and force it to move along the $x$-axis. The chosen path is called the axis of reaction. Several simulations (or windows) will be conducted with varying parameters for the applied biasing. The results will be analyzed using the weighted histogram analysis method (WHAM) \cite{kumar1992weighted}, which allows for the removal of the biasing effect and ultimately deduces the unbiased free energy profile.
 
 \paragraph{LAMMPS input script}
 Create a new folder called \textit{BiasedSampling/}, and create a new input file named \textit{input.lammps} in it, and copy the following lines:
@@ -2229,7 +2229,10 @@ reset_timestep 0
 
 dump mydmp all atom 1000000 dump.lammpstrj
 \end{verbatim}}
-So far, this code resembles the one of Method 1, except for the additional particle of type 2. This particle is identical to the particles of type 1 (same mass and Lennard-Jones parameters) but will be exposed to the biasing potential. Let us create a loop with 50 steps, and move progressively the center of the bias potential by an increment of 0.1 nm. Add the following lines into \textit{input.lammps}:
+So far, this code resembles that of Method 1, except for the additional particle of type 2. Particles of type 1 and 2 
+are identical, having the same mass and Lennard-Jones parameters. However, the particle of type 2 will additionally be exposed to the biasing potential $V$.
+
+Let us create a loop with 50 steps, and move progressively the center of the bias potential by an increment of 0.1 nm. Add the following lines to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 variable a loop 50
 label loop
@@ -2245,33 +2248,33 @@ unfix myat1
 next a
 jump SELF loop
 \end{verbatim}}
-A folder named \textit{data-k1.5/} needs to be created within \textit{BiasedSampling/}. The spring command serves to impose the additional harmonic potential with the spring constant $k$. Note that the value of $k$ should be chosen with care, if $k$ is too small, the particle won't follow the biasing potential center, if $k$ is too large, there will be no overlapping between the different windows. See the side note named \textit{on the choice of k} below. The center of the harmonic potential $x_\text{des}$ successively takes values from -25 to 25. For each value of $x_\text{des}$, an equilibration step of 0.4 ns is performed, followed by a step of 2 ns during which the position along $x$ of the particle is saved in data files (one data file per value of $x_\text{des}$). You can always increase the duration of the runs for better samplings.
+A folder named \textit{data-k1.5/} needs to be created within \textit{BiasedSampling/}. The spring command serves to impose the additional harmonic potential with the spring constant $k$. Note that the value of $k$ should be chosen with care, if $k$ is too small, the particle won't follow the biasing potential center, and if $k$ is too large, there will be no overlapping between the different windows. The center of the harmonic potential $x_\text{des}$ successively takes values from -25 to 25. For each value of $x_\text{des}$, an equilibration step of 0.4 ns is performed, followed by a step of 2 ns during which the position along $x$ of the particle is saved in data files (one data file per value of $x_\text{des}$). You can always increase the duration of the runs for better samplings.
 
 \paragraph{WHAM algorithm}
-\noindent In order to generate the free energy profile from the density distribution,
-let us use the WHAM algorithm \cite{grossfieldimplementation}. You can download it from \href{http://membrane.urmc.rochester.edu/?page_id=126}{Alan Grossfield} website, and compile it using: 
+\noindent To generate the free energy profile from the density distribution, let us use the WHAM algorithm as implemented by Marc Grossfield \cite{grossfieldimplementation}. You can download it from \href{http://membrane.urmc.rochester.edu/?page_id=126}{Alan Grossfield} website, and compile it by typing in the terminal: 
 {\normalsize \begin{verbatim}
 cd wham
 make clean
 make
 \end{verbatim}}
-\noindent The compilation creates an executable called \textit{wham} that you can copy in the \textit{BiasedSampling/} folder. In order to apply the WHAM algorithm to our simulation, we first need to create a metadata file. This file simply contains 
+\noindent The compilation creates an executable called \textit{wham} that you can copy in the \textit{BiasedSampling/} folder. To apply the WHAM algorithm to our simulation, we first need to create a metadata file. This file simply contains 
 \begin{itemize}
 \item the paths to all the data files,
 \item the value of $x_\text{des}$,
 \item and the values of $k$.
 \end{itemize}
-Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial7/metadata.dat}{\textit{metadata.dat}} file I have written. Then, simply run the following command in the terminal:
+Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial7/metadata.dat}{\textit{metadata.dat}} file I have written and save it in \textit{BiasedSampling/}. Then, simply run the following command in the terminal:
 {\normalsize \begin{verbatim}
-./wham -25 25 50 1e-8 119.8 0 metadata.dat PMF.dat
+./wham -25 25 50 1e-8 119.8 0 \
+    metadata.dat PMF.dat
 \end{verbatim}}
-where -25 and 25 are the boundaries, 50 is the number of bins, 1e-8 the tolerance, and 119.8 the temperature. A file named
-PMF.dat has been created and contains the free energy profile in Kcal/mol. Again, one can compare the result of the PMF with the imposed potential $U$, which shows that the agreement is excellent (Fig.\,\ref{fig:US-freenergy}). We can see that the agreement is quite good despite the very short calculation time and the very high value for the energy barrier. Obtaining the same results with Free Sampling would require performing extremely long and costly simulations.
+where -25 and 25 are the boundaries, 50 is the number of bins, 1e-8 is the tolerance, and 119.8 is the temperature. A file named
+\textit{PMF.dat} has been created, containing the free energy profile in Kcal/mol. Again, one can compare the result of the PMF with the imposed potential $U$, demonstrating excellent agreement (Fig.\,\ref{fig:US-freenergy}). We can see that the agreement is quite good despite the very short calculation time and the very high value for the energy barrier. Obtaining the same results with Free Sampling would require performing extremely long and costly simulations.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-freenergy}
-\caption{Calculated potential using umbrella sampling compared to the imposed potential. The calculated potential is in blue.}
+\caption{Calculated potential using umbrella sampling (blue line) compared to the imposed potential Eq.\,\eqref{eq:U} with $U_0 = 10 \epsilon$ (dark line).}
 \label{fig:US-freenergy}
 \end{figure}
 
