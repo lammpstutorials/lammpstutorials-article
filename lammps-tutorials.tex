@@ -557,7 +557,7 @@ When running a simulation, the number of atoms in each group is printed in the t
 680 atoms in group carbon_mid
 \end{verbatim}}
 Finally, to start from a less ideal state and create a system with some defects, 
-let us randomly delete a small fraction of the carbon atoms. To avoid deleting atoms that are too close to the edges, let us define a new region name \textit{rdel} that starts $2\,Å$ from the CNT edges.
+let us randomly delete a small fraction of the carbon atoms. To avoid deleting atoms that are too close to the edges, let us define a new region name \textit{rdel} that starts $2\,\text{Å}$ from the CNT edges.
 {\normalsize \begin{verbatim}
 variable zmax_del equal ${zmax}-2
 variable zmin_del equal ${zmin}+2
@@ -1148,7 +1148,7 @@ extra/special/per/atom 2
 The \textit{lattice} command defines the unit cell. Here, the face-centered cubic (fcc) lattice with a scale factor of
 4.04 has been chosen for the future positioning of the atoms of the walls. The \textit{region} command defines a geometric
 region of space. By choosing \textit{xlo=-3} and \textit{xhi=3}, and because we have previously chosen a lattice with a scale
-factor of 4.04, the region box extends from -12.12 Å to 12.12 Å along the $x$ direction. The \textit{create$\_$box} command creates a simulation box with 5 types of atoms: the oxygen and hydrogen of the water molecules, the two ions ($\text{Na}^+$,
+factor of 4.04, the region box extends from $-12.12~\text{Å}$ to $12.12~\text{Å}$ along the $x$ direction. The \textit{create$\_$box} command creates a simulation box with 5 types of atoms: the oxygen and hydrogen of the water molecules, the two ions ($\text{Na}^+$,
 $\text{Cl}^-$), and the atom of the walls. The \textit{create$\_$box} command extends over 6 lines thanks to the $\&$ character. The second and third lines are used to indicate that the simulation contains 1 type of bond and 1 type of angle (both required by the water molecule). The parameters for these bond and angle constraints will be given later. The three last lines are for memory allocation.
 
 Now, we can add atoms to the system. First, let us create two sub-regions corresponding respectively to the two solid walls, and create a larger region from the union of the two regions. Then, let us create atoms of type 5 (the wall) within the two regions. Add the following lines to \textit{input.lammps}:
@@ -2064,8 +2064,8 @@ where $\Delta G$ is the free energy difference, $R$ is the gas constant, $T$ is 
 variable sigma equal 3.405 # Angstrom
 variable epsilon equal 0.238 # Kcal/mol
 variable U0 equal 1.5*${epsilon} # Kcal/mol
-variable dlt equal 1.0 # Angstrom
-variable x0 equal 10.0  # Angstrom
+variable dlt equal 0.5 # Angstrom
+variable x0 equal 5.0 # Angstrom
 
 units real
 atom_style atomic
@@ -2098,12 +2098,12 @@ for the force that will be imposed on the atoms:
 F(x)= \dfrac{U_0}{\delta} \left[ \dfrac{1}{(x-x_0)^2/\delta^2+1} - \dfrac{1}{(x+x_0)^2/\delta^2+1} \right].
 \label{eq:F}
 \end{equation}
-Fig.\,\ref{fig:potential} shows the potential and force along the $x$ axis.
+Fig.\,\ref{fig:potential} shows the potential and force along the $x$ axis. With $U_0 = 1.5 \epsilon = 0.36\,\text{kcal/mol}$, $U_0$ is of the same order as the thermal energy $k_\text{B} T = 0.24,\text{kcal/mol}$, where $k_\text{B} = 2\,\text{kcal/mol/K}$ is the Boltzmann constant and $T = 119.8\,\text{K}$ (see below). In this case, particles are expected to regulary overcome the energy barrier thanks to the thermal agitation.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-potential}
-\caption{Potential $U (x)$ [Eq.\,\eqref{eq:U}] (a) and force $F (x)$ [Eq.\,\eqref{eq:F}] (b) imposed to the atoms as a function of the coordinate $x$.}
+\caption{Potential $U$ given in Eq.\,\eqref{eq:U} (a) and force $F$ given in Eq.\,\eqref{eq:F} (b) as a function of the coordinate $x$. Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
 \label{fig:potential}
 \end{figure}
 
@@ -2114,7 +2114,8 @@ reset_timestep 0
 
 variable U atom ${U0}*atan((x+${x0})/${dlt}) &
     -${U0}*atan((x-${x0})/${dlt})
-variable F atom ${U0}/((x-${x0})^2/${dlt}^2+1)/${dlt} &
+variable F atom &
+    ${U0}/((x-${x0})^2/${dlt}^2+1)/${dlt} &
     -${U0}/((x+${x0})^2/${dlt}^2+1)/${dlt}
 fix myadf all addforce v_F 0.0 0.0 energy v_U
 \end{verbatim}}
@@ -2141,7 +2142,7 @@ reset_timestep 0
 
 compute cc1 all chunk/atom bin/1d x 0.0 1.0
 fix myac all ave/chunk 10 400000 4000000 &
-    cc1 density/number file density_profile_8ns.dat
+    cc1 density/number file density_profile.dat
 dump mydmp all atom 200000 dump.lammpstrj
 
 thermo 100000
@@ -2152,36 +2153,36 @@ This simulation with a total duration of $9\,\text{ns}$ needs a few minutes to c
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-system}
-\caption{Snapshot of the system. Notice that the density of atoms is lower in the central part of the box, due to the additional force $F (x)$.}
+\caption{Snapshot of the system. The density of atoms is lowest in the central part of the box, \textit{mymes}, due to the additional force $F (x)$. Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
 \label{fig:US-system}
 \end{figure}
 
 \paragraph{Data analysis}
-First, let us ensure that the initial equilibration of $1\,\text{ns}$ is long enough by examining the \textit{density$\_$evolution.dat} file. Here, we can see that the number of atoms in the central region, $n_\mathrm{central}$, evolves near its equilibrium value (which is close to 0) after about $0.1\,\text{ns}$ (Fig.\,\ref{fig:US-density-evolution}). One can also look at the density profile, which shows that the density in the center of the box is about two orders of magnitude lower than inside the reservoir (Fig.\,\ref{fig:US-density}). Then, let us plot $-R T \ln(\rho/\rho_\mathrm{bulk})$ (i.e. Eq.\,\eqref{eq:G} where the pressure ratio $p/p_\mathrm{bulk}$ is replaced by the density ratio $\rho/\rho_\mathrm{bulk}$) and compare it with the imposed potential $U$ from Eq.\,\eqref{eq:U} (Fig.\,\ref{fig:US-FreeSampling}). The value for the reference density $\rho_\text{bulk} = 0.0033$ was estimated from the raw density profiles in Fig.\,\ref{fig:US-density}. The agreement between the MD results and the imposed energy profile is reasonable, despite some noise in the central part (where fewer data points are available due to the repulsive potential).
+First, let us ensure that the initial equilibration of $1\,\text{ns}$ is long enough by examining the \textit{density$\_$evolution.dat} file. Here, we can see that the number of atoms in the central region, $n_\mathrm{central}$, evolves near its equilibrium value (which is close to 0) after about $0.1\,\text{ns}$ (Fig.\,\ref{fig:US-density-evolution}). One can also look at the density profile, which shows that the density in the center of the box is about two orders of magnitude lower than inside the reservoir (Fig.\,\ref{fig:US-density}). Then, let us plot $-R T \ln(\rho/\rho_\mathrm{bulk})$ (i.e. Eq.\,\eqref{eq:G} where the pressure ratio $p/p_\mathrm{bulk}$ is replaced by the density ratio $\rho/\rho_\mathrm{bulk}$) and compare it with the imposed potential $U$ from Eq.\,\eqref{eq:U} (Fig.\,\ref{fig:US-FreeSampling}). The value for the reference density $\rho_\text{bulk} = 0.0033~\text{Å}^{-3}$ was estimated from the raw density profiles. The agreement between the MD results and the imposed energy profile is reasonable, despite some noise in the central part (where fewer data points are available due to the repulsive potential).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-density-evolution}
-\caption{Evolution of the number of atoms in the central region during equilibration.}
+\caption{Evolution of the number of atoms $n_\text{center}$ in the central region \textit{mymes} as a function of time $t$ during equilibration. Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
 \label{fig:US-density-evolution}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-density}
-\caption{Averaged density profiles for the $8\,\text{ns}$ run.}
+\caption{Fluid density $\rho$ along the $x$ direction. Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, $x_0 = 5~\mathrm{\AA{}}$, and reference density $\rho_\text{bulk} = 0.0033~\text{Å}^{-3}$.}
 \label{fig:US-density}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-FreeSampling}
-\caption{Calculated potential $-R T \ln(\rho/\rho_\mathrm{bulk})$ [Eq.\,\eqref{eq:G}] (blue line) compared to the imposed potential Eq.\,\eqref{eq:U} with $U_0 = 1.5 \epsilon$ (dark line).}
+\caption{Potential $U$ as a function of $x$ measured using free sampling (blue disks) compared to the imposed potential given in Eq.\,\eqref{eq:U} (dark line). Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
 \label{fig:US-FreeSampling}
 \end{figure}
 
 \paragraph{The limits of free sampling}
-If we increase the value of $U_0$, the average number of atoms in the central region will decrease, making it difficult to obtain a good resolution for the free energy profile. For instance, when running the same simulation using $U_0 = 10 \epsilon$, not a single atom explores the central part of the simulation box during the 8 ns of simulation. In that case, using an enhanced sampling method is preferred; see the next section.
+If we increase the value of $U_0$, the average number of atoms in the central region will decrease, making it difficult to obtain a good resolution for the free energy profile. For instance, when we run the same simulation using $U_0 = 10 \epsilon$, which corresponds to a situation where $U_0 \approx 10 k_\text{B} T$, not a single atom explores the central part of the simulation box during the 8 ns of simulation. In this case, using an enhanced sampling method is preferred; see the next section.
 
 \subsubsection{Method 2: Umbrella sampling}
 Umbrella sampling is a biased molecular dynamics method in which additional forces are added to a chosen atom to force it to explore the entire space, including the more unfavorable areas of the system \cite{kastner2011umbrella, allen2017computer, frenkel2023understanding}. To encourage one of the atoms to explore the central region of the box, we apply a potential $V$ and force it to move along the $x$-axis. The chosen path is called the axis of reaction. Several simulations (or windows) will be conducted with varying parameters for the applied biasing. The results will be analyzed using the weighted histogram analysis method (WHAM) \cite{kumar1992weighted}, which allows for the removal of the biasing effect and ultimately deduces the unbiased free energy profile.
@@ -2216,7 +2217,8 @@ group topull type 2
 
 variable U atom ${U0}*atan((x+${x0})/${dlt}) &
     -${U0}*atan((x-${x0})/${dlt})
-variable F atom ${U0}/((x-${x0})^2/${dlt}^2+1)/${dlt} &
+variable F atom &
+    ${U0}/((x-${x0})^2/${dlt}^2+1)/${dlt} &
     -${U0}/((x+${x0})^2/${dlt}^2+1)/${dlt}
 fix pot all addforce v_F 0.0 0.0 energy v_U
 
@@ -2274,7 +2276,7 @@ where -25 and 25 are the boundaries, 50 is the number of bins, 1e-8 is the toler
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-freenergy}
-\caption{Calculated potential using umbrella sampling (blue line) compared to the imposed potential Eq.\,\eqref{eq:U} with $U_0 = 10 \epsilon$ (dark line).}
+\caption{Potential $U$ as a function of $x$ measured using umbrella sampling (blue disks) compared to the imposed potential given in Eq.\,\eqref{eq:U} (dark line). Here, $U_0 = 2.38~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
 \label{fig:US-freenergy}
 \end{figure}
 
