@@ -120,7 +120,7 @@ The rise of extensive open-source molecular simulation codes allows users to lau
 
 Molecular simulations (MS) can be used to model a large variety of atomic and coarse-grained systems, including solids, fluids, polymers, and biomolecules, as well as complex interfaces and multicomponent systems. Various MS methods exist, molecular dynamics (MD) and Monte Carlo (MC) being among the most commonly used. MD is the preferred method for obtaining the accurate dynamics of a system, as it relies on solving Newton's equations of motion. For systems with many degrees of freedom or complex energy landscapes, the MC method can be a better choice than MD because it allows for efficiently exploring a configuration space. MC involves performing random changes to the system configuration that are either accepted or rejected based on energy criteria \cite{frenkel2023understanding, allen2017computer}. MS allow for measuring a broad variety of properties, including structural properties (e.g. bond length, inter-atomic distances), thermodynamic properties (e.g. temperature, pressure, volume), dynamic behaviors (e.g. diffusion coefficient, viscosity), and mechanical responses (e.g. elastic constant, Poisson ratio). Some of these quantities can be directly compared with experimental data, enabling the validation of the simulated system, while others, available only through simulations, are often useful for interpreting experimental data  \cite{van2008molecular}. 
 
-LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) is a highly flexible open-source MS tool \cite{thompson2022lammps}. Over the years, a broad variety of particle interaction models have been implemented in LAMMPS, enabling it to model, among others, atomic, polymeric, biological, metallic, granular, and coarse-grained systems. LAMMPS can be used on a single CPU core or a supercomputing system, and it can handle complex and large-scale simulations efficiently. However, LAMMPS requires users to provide detailed input files that can be complex to write, particularly given the overwhelming number of options offered by LAMMPS, all contained in an extensive documentation that can sometimes be difficult for new users to navigate. In addition to the intrinsic complexity of LAMMPS, performing accurate MS involves making several complex and system-specific decisions, such as selecting the thermodynamic ensemble (e.g. micro-canonical, grand-canonical), determining the simulation duration, and choosing the sets of parameters describing the interactions between the atoms (the so-called force field) \cite{van2018validation}. The tutorials presented in this article aim to shorten the learning curve and help users perform accurate and reliable MS using LAMMPS.
+LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) is a highly flexible open-source MS tool \cite{thompson2022lammps}. Over the years, a broad variety of particle interaction models have been implemented in LAMMPS, enabling it to model, among others, atomic, polymeric, biological, metallic, granular, and coarse-grained systems. LAMMPS can be used on a single CPU core or a supercomputing system, and it can handle complex and large-scale simulations efficiently. However, LAMMPS requires users to provide detailed input files that can be complex to write, particularly given the overwhelming number of options offered by LAMMPS, all contained in extensive documentation that can sometimes be difficult for new users to navigate. In addition to the intrinsic complexity of LAMMPS, performing accurate MS involves making several complex and system-specific decisions, such as selecting the thermodynamic ensemble (e.g. micro-canonical, grand-canonical), determining the simulation duration, and choosing the sets of parameters describing the interactions between the atoms (the so-called force field) \cite{van2018validation}. The tutorials presented in this article aim to shorten the learning curve and help users perform accurate and reliable MS using LAMMPS.
 
 \subsection{Scope}
 
@@ -226,8 +226,7 @@ create_atoms 1 random 1500 &
 create_atoms 2 random 100 &
     127569 simulation_box
 \end{verbatim}}
-\noindent The first line, \textit{region simulation$\_$box (...)}, creates a region named \textit{simulation$\_$box} that is a block (i.e. a rectangular cuboid) that extends from -20 to 20 (no unit) along all 3 directions of space. The second line, \textit{create$\_$box 2 simulation$\_$box}, creates a simulation box based on the region \textit{simulation$\_$box} with \textit{2} types of atoms. The third line, \textit{create$\_$atoms (...)} creates 1500 atoms of type 1 randomly within the region \textit{simulation$\_$box}. The integer \textit{341341} is a seed that can be changed in order to create different
-initial conditions for the simulation. The fourth line creates 100 atoms of type 2.
+\noindent The first line, \textit{region simulation$\_$box (...)}, creates a region named \textit{simulation$\_$box} that is a block (i.e. a rectangular cuboid) that extends from -20 to 20 (no unit) along all 3 directions of space. The second line, \textit{create$\_$box 2 simulation$\_$box}, creates a simulation box based on the region \textit{simulation$\_$box} with \textit{2} types of atoms. The third line, \textit{create$\_$atoms (...)} creates 1500 atoms of type 1 randomly within the region \textit{simulation$\_$box}. The integer \textit{341341} is a seed that can be changed to create different initial conditions for the simulation. The fourth line creates 100 atoms of type 2.
 
 \paragraph{Simulation Settings}
 Let us fill the \textit{Simulation Settings} category section of the \textit{input} script:
@@ -279,7 +278,7 @@ run 10000
 \end{verbatim}}
 The \textit{fix nve} is used to update the positions and the velocities of the atoms in the group \textit{all} at every step. The group \textit{all} is a default group that contains every atom. The second fix applies a Langevin thermostat to the atoms of the group \textit{all}, with a desired initial temperature of 1.0 (unitless), and a final temperature of 1.0 as well \cite{schneider1978molecular}. A \textit{damping} parameter of 0.1 is used. The \textit{damping} parameter determines how rapidly the temperature is relaxed to its desired value. The number \textit{1530917} is a seed, you can change it to perform statistically independent simulations. Finally, the last two lines set the value of the \textit{timestep} and the number of steps for the \textit{run}, respectively, corresponding to a total duration of 50 (unitless).
 
-Run the simulation again using LAMMPS. From the information printed in the terminal, one can see that the temperature \textit{Temp} starts from 0, but rapidly reaches the requested value and stabilize itself near $T=1$ (unitless). From what has been printed in the \textit{log} file, one can plot the energy of the system over time. The potential energy, $p_\text{e}$, rapidly decreases during energy minimization (Fig.\,\ref{fig:evolution-energy}\,a). Then, after the molecular dynamics simulation starts, $p_\text{e}$ increases until it reaches a plateau value of about -0.25. The kinetic energy, $k_\text{e}$, is equal to zero during energy minimization and then increases during molecular dynamics until it reaches a plateau value of about 1.5 (Fig.\,\ref{fig:evolution-energy}\,b).
+Run the simulation again using LAMMPS. From the information printed in the terminal, one can see that the temperature \textit{Temp} starts from 0, but rapidly reaches the requested value and stabilizes itself near $T=1$ (unitless). From what has been printed in the \textit{log} file, one can plot the energy of the system over time. The potential energy, $p_\text{e}$, rapidly decreases during energy minimization (Fig.\,\ref{fig:evolution-energy}\,a). Then, after the molecular dynamics simulation starts, $p_\text{e}$ increases until it reaches a plateau value of about -0.25. The kinetic energy, $k_\text{e}$, is equal to zero during energy minimization and then increases during molecular dynamics until it reaches a plateau value of about 1.5 (Fig.\,\ref{fig:evolution-energy}\,b).
 
 \begin{figure}
 \centering
@@ -345,7 +344,7 @@ write_data minimized_coordinate.data
 The main novelty, compared to the previous input script, is the \textit{write$\_$data} command. This command is used to print the final state of the simulation in a file named \textit{minimized$\_$coordinate.data}. Note that the \textit{write$\_$data} command is placed after the \textit{minimize} command. This \textit{.data} file will be used later to restart the simulation from the final state of the energy minimization step.
 
 Run the \textit{input.min.lammps} script using LAMMPS. As soon as the simulation starts, a new dump file named \textit{dump.min.lammpstrj} must appear in the folder. This \textit{.lammpstrj} can be used to visualize the atom's trajectories during minimization using VMD. At the end of the simulation, a file named \textit{minimized$\_$coordinate.data} is created by LAMMPS. If you open \textit{minimized$\_$coordinate.data} with a text editor, you can see that it contains all the information necessary to restart the simulation, such as the number of atoms, the box size, the \textit{masses}, and the \textit{pair$\_$coeffs}.
-The \textit{minimized$\_$coordinate.data} file also contains the final positions of the atoms within the \textit{Atoms} section. The first five columns of the \textit{Atoms} section correspond (from left to right) to the atom indexes (from 1 to the total number of atoms, 1150), the atom types (1 or 2 here), and the atoms positions $x$, $y$, $z$. The last three columns are image flags that keep track of which atoms crossed the periodic boundary.
+The \textit{minimized$\_$coordinate.data} file also contains the final positions of the atoms within the \textit{Atoms} section. The first five columns of the \textit{Atoms} section correspond (from left to right) to the atom indexes (from 1 to the total number of atoms, 1150), the atom types (1 or 2 here), and the positions of the atoms $x$, $y$, $z$. The last three columns are image flags that keep track of which atoms crossed the periodic boundary.
 
 \paragraph{Restarting from a saved configuration}
 Let us create a new input file and start a molecular dynamics simulation directly from the previously saved configuration. Within \textit{improved-input/}, create a new file named \textit{input.md.lammps} and copy the same lines as previously:
@@ -1118,7 +1117,7 @@ Run the \textit{input.lammps} file using LAMMPS. If you open the \textit{dump.la
 \label{fig:NANOSHEAR}
 \end{figure}
 
-\noindent The objective of this tutorial is to simulate an electrolyte nanoconfined and sheared by two walls (Fig.\,\ref{fig:NANOSHEAR}). The density and velocity profiles of the fluid in the direction normal to the walls are extracted to highlight the effect of confining a fluid on its local properties. This tutorial illustrates some key aspects of combining a fluid and a solid in the same simulation. A major difference from the previous tutorial, \hyperref[all-atoms-label]{Polymer in water}, is that here a rigid four-points water model named TIP4P is used \cite{abascal2005general}. TIP4P is one of the most common water models due to its high accuracy.
+\noindent The objective of this tutorial is to simulate an electrolyte nanoconfined and sheared by two walls (Fig.\,\ref{fig:NANOSHEAR}). The density and velocity profiles of the fluid in the direction normal to the walls are extracted to highlight the effect of confining a fluid on its local properties. This tutorial illustrates some key aspects of combining a fluid and a solid in the same simulation. A major difference from the previous tutorial, \hyperref[all-atoms-label]{Polymer in water}, is that here a rigid four-point water model named TIP4P is used \cite{abascal2005general}. TIP4P is one of the most common water models due to its high accuracy.
 
 \subsubsection{System preparation}
 The fluid and walls must first be generated and then equilibrated at a reasonable temperature and pressure.
@@ -1133,7 +1132,7 @@ angle_style harmonic
 pair_style lj/cut/tip4p/long 1 2 1 1 0.1546 12.0
 kspace_style pppm/tip4p 1.0e-4
 \end{verbatim}}
-These lines are used to define the most basic parameters, including the \textit{atom}, \textit{bond}, and \textit{angle} styles, as well as interaction potential. Here, \textit{lj/cut/tip4p/long} imposes a Lennard-Jones potential with a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential. So far, the commands are relatively similar to those in the previous tutorial, \hyperref[all-atoms-label]{Polymer in water}, with two major differences: the use of \textit{lj/cut/tip4p/long} instead of \textit{lj/cut/coul/long}, and \textit{pppm/tip4p} instead of \textit{pppm}. When using \textit{lj/cut/tip4p/long} and \textit{pppm/tip4p}, the interactions resemble the conventional Lennard-Jones and Coulomb interactions, except that they are specifically designed for four-point water model. Therefore, LAMMPS automatically creates a four-point water molecule using atoms of type 1 as oxygen (\textit{O}) and atoms of type 2 as hydrogen (\textit{H}). The fourth massless atom (\textit{M}) of the TIP4P water molecule does not have to be defining explicitly, and the value of $0.1546\,\text{$\text{\AA{}}$}$ corresponds to the \textit{O-M} distance of the TIP4P-2005 water model \cite{abascal2005general}. All the other atoms in the simulation are treated normally with long-range Coulomb interactions.
+These lines are used to define the most basic parameters, including the \textit{atom}, \textit{bond}, and \textit{angle} styles, as well as interaction potential. Here, \textit{lj/cut/tip4p/long} imposes a Lennard-Jones potential with a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential. So far, the commands are relatively similar to those in the previous tutorial, \hyperref[all-atoms-label]{Polymer in water}, with two major differences: the use of \textit{lj/cut/tip4p/long} instead of \textit{lj/cut/coul/long}, and \textit{pppm/tip4p} instead of \textit{pppm}. When using \textit{lj/cut/tip4p/long} and \textit{pppm/tip4p}, the interactions resemble the conventional Lennard-Jones and Coulomb interactions, except that they are specifically designed for the four-point water model. Therefore, LAMMPS automatically creates a four-point water molecule using atoms of type 1 as oxygen (\textit{O}) and atoms of type 2 as hydrogen (\textit{H}). The fourth massless atom (\textit{M}) of the TIP4P water molecule does not have to be defining explicitly, and the value of $0.1546\,\text{$\text{\AA{}}$}$ corresponds to the \textit{O-M} distance of the TIP4P-2005 water model \cite{abascal2005general}. All the other atoms in the simulation are treated normally with long-range Coulomb interactions.
 
 Let us create the box by adding the following lines to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
@@ -1159,7 +1158,7 @@ region rtopwall block -3 3 -3 3 3 4
 region rwall union 2 rbotwall rtopwall
 create_atoms 5 region rwall
 \end{verbatim}}
-Atoms will be placed in the positions of the previously defined lattice, thus forming fcc solids. In order to add the water molecules, first download the molecule template named \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial4/RigidH2O.txt}{\textit{RigidH2O.txt}} and place it within \textit{systemcreation/}. The template contains all the
+Atoms will be placed in the positions of the previously defined lattice, thus forming fcc solids. To add the water molecules, first download the molecule template named \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial4/RigidH2O.txt}{\textit{RigidH2O.txt}} and place it within \textit{systemcreation/}. The template contains all the
 necessary information concerning the water molecule, such as atom positions, bonds, and angles. Add the following lines to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 region rliquid block INF INF INF INF -2 2
@@ -1207,7 +1206,7 @@ As already seen in previous tutorials and with the important exception of \texti
 bond_coeff 1 0 0.9572
 angle_coeff 1 0 104.52
 \end{verbatim}}
-The \textit{bond$\_$coeff} command, used here for the O-H bond of the water molecule, sets both the spring constant of the harmonic potential and the equilibrium distance of $0.9572~\text{Å}$. The constant can be 0 for a rigid water molecule, because the shape of the molecule will be preserved by the SHAKE algorithm (see below) \cite{ryckaert1977numerical, andersen1983rattle}. Similarly, the angle coefficient for the H-O-H angle of the water molecule sets the force constant of the angular harmonic potential to 0 and the equilibrium angle to $104.52^\circ$.
+The \textit{bond$\_$coeff} command, used here for the O-H bond of the water molecule, sets both the spring constant of the harmonic potential and the equilibrium distance of $0.9572~\text{Å}$. The constant can be 0 for a rigid water molecule because the shape of the molecule will be preserved by the SHAKE algorithm (see below) \cite{ryckaert1977numerical, andersen1983rattle}. Similarly, the angle coefficient for the H-O-H angle of the water molecule sets the force constant of the angular harmonic potential to 0 and the equilibrium angle to $104.52^\circ$.
 
 Let us also create another file called \textit{GROUP.lammps} next to \textit{PARM.lammps}, and copy the following lines into it:
 {\normalsize \begin{verbatim}
@@ -1284,7 +1283,7 @@ ormal \begin{verbatim}
 dump mydmp all atom 1000 dump.lammpstrj
 thermo 200
 \end{verbatim}}
-Finally, let us run for 4000 steps. Add the  following lines into \textit{input.lammps}:
+Finally, let us run for 4000 steps. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 run 4000
 \end{verbatim}}
@@ -1335,7 +1334,7 @@ fix myshk H2O shake 1.0e-4 200 0 b 1 a 1
 fix myrct all recenter NULL NULL 0
 timestep 1.0
 \end{verbatim}}
-The fix \textit{recenter} has no influence on the dynamics, but will keep the system in the center of the box, which makes the
+The fix \textit{recenter} does not influence the dynamics but will keep the system in the center of the box, which makes the
 visualization easier. Then, add the following lines into \textit{input.lammps} for the trajectory visualization and output:
 {\normalsize \begin{verbatim}
 dump mydmp all atom 1000 dump.lammpstrj
@@ -1367,7 +1366,7 @@ the ions need to diffuse over the size of the pore ($\approx 1.2\,\text{nm}$), i
 
 \subsubsection{Imposed shearing}
 
-From the equilibrated configuration, let us impose a lateral motion to the two walls and shear the electrolyte.
+From the equilibrated configuration, let us impose a lateral motion on the two walls and shear the electrolyte.
 In a new folder called \textit{shearing/}, create a new \textit{input.lammps} file that starts like the previous ones:
 {\normalsize \begin{verbatim}
 boundary p p p
@@ -1431,7 +1430,7 @@ timestep 1.0
 run 200000
 write_data system.data
 \end{verbatim}}
-Here, a binning of $1\,\text{Å}$ is used for the density profiles generated by the \textit{ave/chunk} commands. For smoother profiles, you can reduce its value. The averaged velocity and density profiles of the fluid are plotted in Figs.\ref{fig:NANOSHEAR-velocity}-\ref{fig:NANOSHEAR-density}. As expected for such Couette flow geometry, the velocity of the fluid is found to increase linearly along $z$.
+Here, a binning of $1\,\text{Å}$ is used for the density profiles generated by the \textit{ave/chunk} commands. For smoother profiles, you can reduce the value of the bins. The averaged velocity and density profiles of the fluid are plotted in Figs.\ref{fig:NANOSHEAR-velocity}-\ref{fig:NANOSHEAR-density}. As expected for such Couette flow geometry, the velocity of the fluid is found to increase linearly along $z$.
 
 \begin{figure}
 \centering
@@ -1447,7 +1446,7 @@ Here, a binning of $1\,\text{Å}$ is used for the density profiles generated by 
 \label{fig:NANOSHEAR-density}
 \end{figure}
 
-From the force applied by the fluid on the solid, one can extract the stress within the fluid, which allows for the measurement of its viscosity $\dot{\eta}$ according to: $\eta = \tau / \dot{\gamma}$ where $\tau$ is the stress applied by the fluid on the shearing wall, and $\dot{\gamma}$ the shear rate (which is imposed here) \cite{gravelle2021violations}. Here, the shear rate is approximatively $\dot{\gamma} = 16 \cdot 10^9\,\text{s}^{-1}$, and using a surface area of $A = 6 \cdot 10^{-18}\,\text{m}^2$, one gets an estimate for the shear viscosity for the confined fluid of $\eta = 6.6\,\text{mPa.s}$. The viscosity calculated at such a high shear rate may differ from the expected \textit{bulk} value. In general, it is recommended to use a lower value for the shear rate. Note that for lower shear rates, the ratio of noise-to-signal is larger, and longer simulations are needed. Another important point to keep in mind is that the viscosity of a fluid next to a solid surface is typically larger than in bulk due to interaction with the walls \cite{wolde-kidanInterplayInterfacialViscosity2021}. Therefore, one expects the present simulation to return a viscosity that is slightly larger than what would be measured in the absence of a wall.
+From the force applied by the fluid on the solid, one can extract the stress within the fluid, which allows for the measurement of its viscosity $\dot{\eta}$ according to $\eta = \tau / \dot{\gamma}$ where $\tau$ is the stress applied by the fluid on the shearing wall, and $\dot{\gamma}$ the shear rate (which is imposed here) \cite{gravelle2021violations}. Here, the shear rate is approximatively $\dot{\gamma} = 16 \cdot 10^9\,\text{s}^{-1}$, and using a surface area of $A = 6 \cdot 10^{-18}\,\text{m}^2$, one gets an estimate for the shear viscosity for the confined fluid of $\eta = 6.6\,\text{mPa.s}$. The viscosity calculated at such a high shear rate may differ from the expected \textit{bulk} value. In general, it is recommended to use a lower value for the shear rate. Note that for lower shear rates, the ratio of noise-to-signal is larger, and longer simulations are needed. Another important point to keep in mind is that the viscosity of a fluid next to a solid surface is typically larger than in bulk due to interaction with the walls \cite{wolde-kidanInterplayInterfacialViscosity2021}. Therefore, one expects the present simulation to return a viscosity that is slightly larger than what would be measured in the absence of a wall.
 
 \subsection{Tutorial 5: Reactive silicon dioxide}
 \label{reactive-silicon-dioxide-label}
@@ -1462,7 +1461,7 @@ From the force applied by the fluid on the solid, one can extract the stress wit
 \noindent The objective of this tutorial is to use a reactive force field (ReaxFF \cite{van2001reaxff, zou2012investigation}) to calculate the partial charges of a system undergoing deformation, as well as the formation and breaking of chemical bonds. The system simulated here is a block of silicon dioxide ($\text{SiO}_2$) that is deformed until rupture (Fig.\,\ref{fig:SIO}). Particular attention is given to the evolution of the atomic charges during the deformation of the structure, and the chemical reactions occurring due to the deformation are tracked over time.
 
 \subsubsection{Prepare and relax}
-Create a folder, name it \textit{RelaxSilica/}, and download the initial topology of a small amorphous silica structure named \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/silica.data}{\textit{silica.data}}. This structure was created using a classical force field called Vashishta \cite{vashishta1990interaction}. If you open the \textit{silica.data} file, you will see in the Atoms section that all silicon atoms have the same charge $q = 1.1\,\text{e}$, and all oxygen atoms the charge $q = -0.55\,\text{e}$. This is common with classical force fields and will change once ReaxFF is used. 
+Create a folder, name it \textit{RelaxSilica/}, and download the initial topology of a small amorphous silica structure named \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/silica.data}{\textit{silica.data}}. This structure was created using a classical force field called Vashishta \cite{vashishta1990interaction}. If you open the \textit{silica.data} file, you will see in the Atoms section that all silicon atoms have the same charge $q = 1.1\,\text{e}$, and all oxygen atoms have the charge $q = -0.55\,\text{e}$. This is common with classical force fields and will change once ReaxFF is used. 
 
 The first action we need to perform here is to relax the structure with ReaxFF, which we are gonna do using molecular dynamics. To make sure that the system equilibrates nicely, let us track some parameters over time. Create an input file called \textit{input.lammps} in \textit{RelaxSilica/}, and copy the following lines into it: 
 {\normalsize \begin{verbatim}
@@ -1631,7 +1630,7 @@ Sometimes, $\text{O}_2$ molecules are formed during the deformation. If this is 
 
 \subsubsection{Decorate the surface}
 In ambient conditions, some of the surface $\text{SiO}_2$ atoms are chemically
-passivated by forming covalent bonds with hydrogen (H) atom \cite{sulpizi2012silica}. Let us add hydrogen atoms randomly to the cracked silica and observe how the system evolves over time.  Next to \textit{RelaxSilica/} and \textit{Deform/}, create a folder, and call it \textit{Decorate/}.Then, let us modify the previously generated data file \textit{silica-deformed.data} and make space for a third atom type. Copy \textit{silica-deformed.data} from the \textit{Deform/} folder, and modify the first lines as follow:
+passivated by forming covalent bonds with hydrogen (H) atom \cite{sulpizi2012silica}. Let us add hydrogen atoms randomly to the cracked silica and observe how the system evolves.  Next to \textit{RelaxSilica/} and \textit{Deform/}, create a folder, and call it \textit{Decorate/}. Then, let us modify the previously generated data file \textit{silica-deformed.data} and make space for a third atom type. Copy \textit{silica-deformed.data} from the \textit{Deform/} folder, and modify the first lines as follow:
 {\normalsize \begin{verbatim}
 576 atoms
 3 atom types
@@ -1679,7 +1678,7 @@ thermo_style custom step temp etotal press vol &
 fix myspec all reaxff/species 5 1 5 species.log &
     element Si O H
 \end{verbatim}}
-Here, the $+1\text{e}-10$ was added to the denominator of the \textit{variable qH} in order to avoid dividing by 0 at the beginning of the simulation. Finally, let us create a loop with 10 steps, and create two hydrogen atoms at random locations at every step: 
+Here, the $+1\text{e}-10$ was added to the denominator of the \textit{variable qH} to avoid dividing by 0 at the beginning of the simulation. Finally, let us create a loop with 10 steps, and create two hydrogen atoms at random locations at every step: 
 {\normalsize \begin{verbatim}
 fix mynvt all nvt temp 300.0 300.0 100
 timestep 0.5 
@@ -1709,7 +1708,7 @@ all the created hydrogen atoms reacted with the $\text{SiO}_{2}$ structure to fo
 # Timestep   No_Moles No_Specs Si192O384H20
   20000      1        1        1
 \end{verbatim}}
-At the end of  the simulation, hydroxyl groups can be seen at the interfaces (Fig.\,\ref{fig:SIO-decorated}).
+At the end of the simulation, hydroxyl groups can be seen at the interfaces (Fig.\,\ref{fig:SIO-decorated}).
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-decorated}
@@ -1854,7 +1853,7 @@ run 20000
 write_data dilatedSiO.data
 \end{verbatim}}
 \noindent The \textit{fix nvt} is used to control the temperature of the system, while the \textit{change$\_$box} command
-imposes incremental deformations of the box. Different scaling factors or/and different numbers of steps can be used to generate different defects in the silica. After the expansion, a final equilibration step of duration 20 picoseconds is performed. If you look at the \textit{dump.lammpstrj} file using VMD, you can see the expansion occurring step-by-step, and the atoms progressively adjusting to the box dimensions. At first, the deformations are reversible (elastic regime). At some point, bonds start breaking and dislocations appear (plastic regime). The final system is shown in Fig.\,\ref{fig:GCMC-cracked}. 
+imposes incremental deformations of the box. Different scaling factors or different numbers of steps can be used to generate different defects in the silica. After the expansion, a final equilibration step of a duration of 20 picoseconds is performed. If you look at the \textit{dump.lammpstrj} file using VMD, you can see the expansion occurring step-by-step, and the atoms progressively adjusting to the box dimensions. At first, the deformations are reversible (elastic regime). At some point, bonds start breaking and dislocations appear (plastic regime). The final system is shown in Fig.\,\ref{fig:GCMC-cracked}. 
 
 \begin{figure}
 \centering
@@ -1965,7 +1964,7 @@ fix myat1 all ave/time 100 10 1000 v_nO &
 fix shak H2O shake 1.0e-4 200 0 b 1 a 1 &
     mol h2omol
 \end{verbatim}}
-The force field Vashishta applies only to Si (type 1) and O of SiO2 (type 2), and not to the O and H of H2O, thanks to the NULL parameters used for atoms of types 3 and 4. Pair coefficients for lj/cut/tip4p/long are defined between O atoms, as well as between O(SiO)-O(H2O) and Si(SiO)-O(H2O). Therefore, the fluid-solid  interactions will be set by Lennard-Jones and Coulomb potentials. The number of oxygen atoms from water molecules (i.e. the number of molecules) will be printed in the file \textit{numbermolecule.dat}. The SHAKE algorithm is used to maintain the shape of the water molecules over time. Some of
+The force field Vashishta applies only to Si (type 1) and O of SiO2 (type 2), and not to the O and H of H2O, thanks to the NULL parameters used for atoms of types 3 and 4. Pair coefficients for lj/cut/tip4p/long are defined between O atoms, as well as between O(SiO)-O(H2O) and Si(SiO)-O(H2O). Therefore, the fluid-solid interactions will be set by Lennard-Jones and Coulomb potentials. The number of oxygen atoms from water molecules (i.e. the number of molecules) will be printed in the file \textit{numbermolecule.dat}. The SHAKE algorithm is used to maintain the shape of the water molecules over time. Some of
 these features have been seen in previous tutorials. Let us delete the overlapping water molecules, and print the
 positions of the remaining atoms in a \textit{.lammpstrj} file by adding the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
@@ -1988,7 +1987,7 @@ timestep 0.001
 thermo 1000
 run 5000
 \end{verbatim}}
-Two different thermostats are used for SiO and for H2O, respectively. Using  separate thermostats are usually better when the system contains two separate species, such as a solid and a liquid. It is particularly important to use two thermostats
+Two different thermostats are used for SiO and H2O, respectively. Using separate thermostats is usually better when the system contains two separate species, such as a solid and a liquid. It is particularly important to use two thermostats
 here because the number of water molecules will fluctuate with time. The \textit{compute$\_$modify} with 
 \textit{dynamic yes} for water is used to specify that the number of molecules is not constant. Finally, let us use the \textit{fix gcmc} and perform the grand canonical Monte Carlo steps. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
@@ -2021,7 +2020,7 @@ Deleted 774 atoms, new total = 642
 Deleted 516 bonds, new total = 44
 Deleted 258 angles, new total = 22
 \end{verbatim}}
-After just a few GCMC steps, the number of molecules starts increasing. Once the crack is filled with water molecules, the number of molecules reaches a plateau (Figs.\,\ref{fig:GCMC-number}-\ref{fig:GCMC-solvated}). The final number of molecules depends on the imposed pressure, temperature, and on the interaction between water and silica (i.e. its hydrophilicity). Note that GCMC simulations of such dense phases are usually slow to converge due to the
+After just a few GCMC steps, the number of molecules starts increasing. Once the crack is filled with water molecules, the number of molecules reaches a plateau (Figs.\,\ref{fig:GCMC-number}-\ref{fig:GCMC-solvated}). The final number of molecules depends on the imposed pressure, temperature, and the interaction between water and silica (i.e. its hydrophilicity). Note that GCMC simulations of such dense phases are usually slow to converge due to the
 very low probability of successfully inserting a molecule. Here, the short simulation 
 duration was made possible by the use of a large pressure.
 
@@ -2049,12 +2048,15 @@ duration was made possible by the use of a large pressure.
 \label{fig:US}
 \end{figure}
 
-\noindent The objective of this tutorial is to measure the free energy profile of particles across a barrier potential using two methods: free sampling and umbrella sampling \cite{frenkel2023understanding} (Fig.\,\ref{fig:US}). For simplicity and to reduce computation time, the barrier potential will be imposed on the atoms with an additional force, mimicking the presence of a repulsive area in the middle of the simulation box without the need to simulate extra atoms. The procedure is valid for more complex systems and can be adapted to many other situations, such as measuring the adsorption barrier near an interface, or for calculating translocation barrier through a membrane.
+\noindent The objective of this tutorial is to measure the free energy profile of particles across a barrier potential using two methods: free sampling and umbrella sampling \cite{kastner2011umbrella, allen2017computer, frenkel2023understanding} (Fig.\,\ref{fig:US}). For simplicity and to reduce computation time, the barrier potential will be imposed on the atoms with an additional force, mimicking the presence of a repulsive area in the middle of the simulation box without the need to simulate extra atoms. The procedure is valid for more complex systems and can be adapted to many other situations, such as measuring the adsorption barrier near an interface, or for calculating a translocation barrier through a membrane \cite{wilson1997adsorption, makarov2009computer, gravelle2021adsorption}.
 
 \subsubsection{Method 1: Free sampling}
-The most direct way to calculate a free energy profile is to extract the partition function from a classical (i.e. unbiased) molecular dynamics simulation, and then to estimate the Gibbs free energy using 
-$$\Delta G = -RT \ln(p/p_0),$$
-where $\Delta G$ is the free energy difference, $R$ the gas constant, $T$ the temperature, $p$ the pressure, and $p_0$ the reference pressure. As an illustration, let us apply this method to an extremely simple configuration that consists of a few particles diffusing in a box in the presence of a position-dependent repelling force that makes the center of the box a relatively unfavorable area to explore.
+The most direct way to calculate a free energy profile is to extract the partition function from a classical (i.e. unbiased) molecular dynamics simulation, and then estimate the Gibbs free energy using 
+\begin{equation}
+\Delta G = -RT \ln(p/p_0),
+\label{eq:G}
+\end{equation}
+where $\Delta G$ is the free energy difference, $R$ is the gas constant, $T$ is the temperature, $p$ is the pressure, and $p_0$ is a reference pressure. As an illustration, let us apply this method to an extremely simple configuration that consists of a few particles diffusing in a box in the presence of a position-dependent repelling force that makes the center of the box a relatively unfavorable area to explore.
 
 \paragraph{Basic LAMMPS parameters}
 \noindent Create a folder named \textit{FreeSampling/}, and create an input script named \textit{input.lammps} in it. Copy the following lines into it:
@@ -2074,7 +2076,7 @@ boundary p p p
 Here, we start by defining variables for the Lennard-Jones interaction $\sigma$ and $\epsilon$ and for the repulsive potential $U (x)$: $U_0$, $\delta$, and $x_0$, see the analytical expression below. The value of 3.822 for the cut-off was chosen to create a WCA, purely repulsive, potential. It was calculated as $2^{1/6} \times 3.405$ where $3.405 = \sigma$. The system of unit \textit{real}, for which energy is in kcal/mol, distance in Ångstrom, or time in femtosecond, has been chosen for practical reasons: the WHAM algorithm used in the second part of the tutorial automatically assumes the energy to be in kcal/mol. Atoms will interact through a Lennard-Jones potential with a cut-off equal to $\sigma \times 2 ^ {1/6}$ (i.e. a WCA repulsive potential). The potential is shifted to be equal to 0 at the cut-off using the \textit{pair$\_$modify}.
 
 \paragraph{System creation and settings}
-\noindent Let us define the simulation block and randomly add atoms by adding the following lines into \textit{input.lammps}:
+\noindent Let us define the simulation box and randomly add atoms by adding the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 region myreg block -25 25 -5 5 -25 25
 create_box 1 myreg
@@ -2085,21 +2087,27 @@ mass * 39.95
 pair_coeff * * ${epsilon} ${sigma}
 neigh_modify every 1 delay 4 check yes
 \end{verbatim}}
-Here, the values for Lennard-Jones parameters $\sigma$ and $\epsilon$ as well as the mass $m = 39.95$ grams/mole were taken from argon. In the previous subsection, the variables $U_0$, $\delta$, and $x_0$ were defined. They are used to create the repulsive potential restricting the atoms to explore the center of the box: 
-$$U(x) = U_0 \left[ \arctan \left( \dfrac{x+x_0}{\delta} \right) - \arctan \left(\dfrac{x-x_0}{\delta} \right) \right]. $$
+The values for the Lennard-Jones parameters ($\sigma$ and $\epsilon$) and the mass ($m$) are typical of argon. The variables $U_0$, $\delta$, and $x_0$ defined in the previous subsection are used here to create the repulsive potential, restricting the atoms from exploring the center of the box: 
+\begin{equation}
+U(x) = U_0 \left[ \arctan \left( \dfrac{x+x_0}{\delta} \right) - \arctan \left(\dfrac{x-x_0}{\delta} \right) \right].
+\label{eq:U}
+\end{equation}
 From the derivative of the potential with respect to $x$, we obtain the expression
-for the force that will be imposed to the atoms:
-$$F(x)= \dfrac{U_0}{\delta} \left[ \dfrac{1}{(x-x_0)^2/\delta^2+1} - \dfrac{1}{(x+x_0)^2/\delta^2+1} \right].$$
+for the force that will be imposed on the atoms:
+\begin{equation}
+F(x)= \dfrac{U_0}{\delta} \left[ \dfrac{1}{(x-x_0)^2/\delta^2+1} - \dfrac{1}{(x+x_0)^2/\delta^2+1} \right].
+\label{eq:F}
+\end{equation}
 Fig.\,\ref{fig:potential} shows the potential and force along the $x$ axis.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-potential}
-\caption{Potential $U (x)$ (a) and force $F (x)$ (b) imposed to the atoms.}
+\caption{Potential $U (x)$ [Eq.\,\eqref{eq:U}] (a) and force $F (x)$ [Eq.\,\eqref{eq:F}] (b) imposed to the atoms as a function of the coordinate $x$.}
 \label{fig:potential}
 \end{figure}
 
-Let us apply energy minimization to the system, and then impose the force $F(x)$ to all of the atoms in the simulation using the \textit{addforce} command. Add the following lines into \textit{input.lammps}:
+Let us apply energy minimization to the system, and then impose the force $F(x)$ to all of the atoms in the simulation using the \textit{addforce} command. Add the following lines to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 minimize 1e-4 1e-6 100 1000
 reset_timestep 0
@@ -2110,7 +2118,7 @@ variable F atom ${U0}/((x-${x0})^2/${dlt}^2+1)/${dlt} &
     -${U0}/((x+${x0})^2/${dlt}^2+1)/${dlt}
 fix myadf all addforce v_F 0.0 0.0 energy v_U
 \end{verbatim}}
-Finally, let us combine the \textit{fix nve} with a \textit{Langevin} thermostat and run a molecular dynamics simulation. With these two commands, the MD simulation is effectively in the NVT ensemble: constant number of atoms $N$, constant volume $V$, and constant temperature $T$. Let us perform an equilibration of 500000 steps in total, using a timestep of $2\,\text{fs}$ (i.e. a total duration of $1\,\text{ns}$). To make sure that $1\,\text{ns}$ is long enough, let us record the evolution of the number of atoms in the central (energetically unfavorable) region called \textit{mymes}:
+Finally, let us combine the \textit{fix nve} with a \textit{Langevin} thermostat and run a molecular dynamics simulation. With these two commands, the MD simulation is effectively in the NVT ensemble: constant number of atoms $N$, constant volume $V$, and constant temperature $T$. Let us perform an equilibration of 500000 steps in total, using a timestep of $2\,\text{fs}$ (i.e. a total duration of $1\,\text{ns}$). To make sure that $1\,\text{ns}$ is long enough, we will record the evolution of the number of atoms in the central (energetically unfavorable) region called \textit{mymes}:
 {\normalsize \begin{verbatim}
 fix mynve all nve
 fix mylgv all langevin 119.8 119.8 50 1530917
@@ -2149,7 +2157,7 @@ This simulation with a total duration of $9\,\text{ns}$ needs a few minutes to c
 \end{figure}
 
 \paragraph{Data analysis}
-First, let us make sure that the initial equilibration of $1\,\text{ns}$ is long enough by looking at the \textit{density$\_$evolution.dat} file. Here, we can see that the number of atoms in the central region, $n_\mathrm{central}$, evolves near its equilibrium value (which is close to 0) after about $0.1\,\text{ns}$ (Fig.\,\ref{fig:US-density-evolution}). One can also have a look at the density profile, which shows that the density in the center of the box is about two orders of magnitude lower than inside the reservoir (Fig.\,\ref{fig:US-density}). Then, let us plot $-R T \ln(\rho/\rho_\mathrm{bulk})$ and compare it with the imposed (reference) potential $U$. The agreement with the expected energy profile is reasonable, despite some noise in the central part (Fig.\,\ref{fig:US-FreeSampling}). 
+First, let us ensure that the initial equilibration of $1\,\text{ns}$ is long enough by examining the \textit{density$\_$evolution.dat} file. Here, we can see that the number of atoms in the central region, $n_\mathrm{central}$, evolves near its equilibrium value (which is close to 0) after about $0.1\,\text{ns}$ (Fig.\,\ref{fig:US-density-evolution}). One can also look at the density profile, which shows that the density in the center of the box is about two orders of magnitude lower than inside the reservoir (Fig.\,\ref{fig:US-density}). Then, let us plot $-R T \ln(\rho/\rho_\mathrm{bulk})$ (i.e. Eq.\,\eqref{eq:G} where the pressure ratio $p/p_\mathrm{bulk}$ is replaced by the density ratio $\rho/\rho_\mathrm{bulk}$) and compare it with the imposed potential $U$ from Eq.\,\eqref{eq:U} (Fig.\,\ref{fig:US-FreeSampling}). The value for the reference density $\rho_\text{bulk} = 0.0033$ was estimated from the raw density profiles in Fig.\,\ref{fig:US-density}. The agreement between the MD results and the imposed energy profile is reasonable, despite some noise in the central part (where fewer data points are available due to the repulsive potential).
 
 \begin{figure}
 \centering
@@ -2161,22 +2169,22 @@ First, let us make sure that the initial equilibration of $1\,\text{ns}$ is long
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-density}
-\caption{Averaged density profiles for the $8\,\text{ns}$ run. The value for the reference density $\rho_\text{bulk} = 0.0033$ was estimated from the raw density profiles.}
+\caption{Averaged density profiles for the $8\,\text{ns}$ run.}
 \label{fig:US-density}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-FreeSampling}
-\caption{Calculated potential $-R T \ln(\rho/\rho_\mathrm{bulk})$ compared to the imposed potential. The calculated potential is in blue.}
+\caption{Calculated potential $-R T \ln(\rho/\rho_\mathrm{bulk})$ [Eq.\,\eqref{eq:G}] (blue line) compared to the imposed potential [Eq.\,\eqref{eq:U}] (dark line).}
 \label{fig:US-FreeSampling}
 \end{figure}
 
 \paragraph{The limits of free sampling}
-If we increase the value of $U_0$, the average number of atoms in the central region will decrease, making it difficult to obtain a good resolution for the free energy profile. For instance, using $U_0 = 10 \epsilon$, not a single atom crosses the central part of the simulation, despite the 8 ns of simulation. In that case, it is better to use the umbrella sampling method to extract free energy profiles, see the next section.
+If we increase the value of $U_0$, the average number of atoms in the central region will decrease, making it difficult to obtain a good resolution for the free energy profile. For instance, when running the same simulation using $U_0 = 10 \epsilon$, not a single atom explores the central part of the simulation box during the 8 ns of simulation. In that case, using an enhanced sampling method is preferred; see the next section.
 
 \subsubsection{Method 2: Umbrella sampling}
-Umbrella sampling is a biased molecular dynamics method, i.e. a method in which additional forces are added to the atoms in order to make the unfavorable states more likely to occur \cite{frenkel2023understanding}. Several simulations (or windows) will be performed with different parameters for the imposed biasing. Here, let us force one of the atoms to explore the central region of the box. To do so, let us add a potential $V$ to one of the particle, and force it to move along the axis $x$. The chosen path is called the axis of reaction. The results will be analyzed using the weighted histogram analysis method (WHAM), which allows to remove the effect of the bias and eventually deduce the unbiased free energy profile.
+Umbrella sampling is a biased molecular dynamics method in which additional forces are added to a chosen atom to force it to explore the entire space, including the more unfavorable areas of the system \cite{frenkel2023understanding}. To encourage one of the atoms to explore the central region of the box, we apply a potential $V$ and force it to move along the $x$-axis. The chosen path is called the axis of reaction. Several simulations (or windows) will be conducted with varying parameters for the applied biasing. The results will be analyzed using the weighted histogram analysis method (WHAM) \cite{kumar1992weighted}, which allows for the removal of the biasing effect and ultimately deduces the unbiased free energy profile.
 
 \paragraph{LAMMPS input script}
 Create a new folder called \textit{BiasedSampling/}, and create a new input file named \textit{input.lammps} in it, and copy the following lines:
