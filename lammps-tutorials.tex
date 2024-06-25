@@ -1742,19 +1742,21 @@ pair_style vashishta
 neighbor 1.0 bin
 neigh_modify delay 1
 \end{verbatim}}
-The main difference with some of the previous tutorials is the use of the \textit{Vashishta} pair style. Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/SiO.1990.vashishta}{SiO.1990.vashishta}, and copy it within the \textit{Potential/} folder. The Vashishta potential is a bond-angle energy-based potential, it deduces the bonds between atoms from their relative positions \cite{vashishta1990interaction}. Let us then import the system made of 9 atoms, and replicate it four times in all three
-directions of space, thus creating a system with 576 atoms. Add the following lines into \textit{input.lammps}:
+The main difference from some of the previous tutorials is the use of the \textit{Vashishta} pair style. The Vashishta potential is a bond-angle energy-based potential, it deduces the bonds between atoms from their relative positions \cite{vashishta1990interaction}. 
+
+Let us then import the system consisting of 9 atoms, and replicate it four times in all three directions of space, thus creating a system with 576 atoms. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 read_data SiO.data
 replicate 4 4 4
 \end{verbatim}}
-Then, let us specify the pair coefficients by indicating that the first atom type is \textit{Si}, and
-the second is \textit{O}. Let us also add a dump command for printing out the positions of the atoms every 5000 steps:
+Then, let us specify the pair coefficients by indicating that the first atom type is \textit{Si} and the second is \textit{O}. Let us also add a dump command to print out the positions of the atoms every 5000 steps:
 {\normalsize \begin{verbatim}
 pair_coeff * * &
     ../Potential/SiO.1990.vashishta Si O
 \end{verbatim}}
-\noindent Let us add some commands to \textit{input.lammps} to help us follow the evolution of the system, such as its temperature, volume, and potential energy:
+Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/SiO.1990.vashishta}{SiO.1990.vashishta}, and copy it within the \textit{Potential/} folder.
+
+Let us add some commands to \textit{input.lammps} to help us follow the evolution of the system, such as its temperature, volume, and potential energy:
 {\normalsize \begin{verbatim}
 dump dmp all atom 5000 dump.lammpstrj
 variable myvol equal vol
@@ -1786,7 +1788,7 @@ fix npt1 all npt temp 6000 4000 0.1 &
     aniso 100 100 1
 run 50000
 \end{verbatim}}
-Then, let us cool down the system further while also reducing the pressure, then perform a small equilibration step at the final desired condition, $T = 300\,\text{K}$ and $p = 1\,\text{atm}$.
+Then, let us cool down the system further while also reducing the pressure, and then perform a small equilibration step at the final desired condition, $T = 300\,\text{K}$ and $p = 1\,\text{atm}$.
 {\normalsize \begin{verbatim}
 fix npt1 all npt temp 4000 300 0.1 &
     aniso 100 1 1
@@ -1796,10 +1798,9 @@ fix npt1 all npt temp 300 300 0.1 &
 run 50000
 write_data amorphousSiO.data
 \end{verbatim}}
-Here, an isotropic barostat is used for the melted phase at $T = 6000\,\text{K}$, and then an anisotropic barostat is used for all following phases. With the anisotropic barostat, all three directions of space are adjusted independently from one another. Such anisotropic barostat is usually a better choice for a solid phase. For a liquid or a gas, the isotropic barostat is usually the best choice.
+Here, an isotropic barostat is used for the melted phase at $T = 6000\,\text{K}$, and an anisotropic barostat is used for all following phases. With the anisotropic barostat, all three directions of space are adjusted independently from one another. An anisotropic barostat is usually a better choice for a solid phase. For a liquid or a gas, an isotropic barostat is usually the best choice.
 
-The simulation takes about 15-20 minutes on 4 CPU cores. Let us check the evolution of the temperature from the \textit{temperature.dat} file. Apart from an initial spike (which may be due to an initial bad configuration, probably harmless here),
-the temperature follows well the desired annealing procedure  (Fig.\,\ref{fig:GCMC-temperature}). Let us also make sure that the box was indeed deformed isotropically during the first stage of the simulation, and then anisotropically by plotting the evolution of the box dimensions over time (Fig.\,\ref{fig:GCMC-dimension}). After running the simulation, the final LAMMPS topology file named \textit{amorphousSiO.data} will be located in \textit{SilicaBlock/} (Fig.\,\ref{fig:GCMC-snapshot}).
+The simulation takes about 15-20 minutes on 4 CPU cores. Let us check the evolution of the temperature from the \textit{temperature.dat} file. Apart from an initial spike (which may be due to an initial bad configuration, probably harmless here), the temperature follows well the desired annealing procedure  (Fig.\,\ref{fig:GCMC-temperature}). Let us also make sure that the box was indeed deformed isotropically during the first stage of the simulation, and then anisotropically by plotting the evolution of the box dimensions over time (Fig.\,\ref{fig:GCMC-dimension}). After running the simulation, the final LAMMPS topology file named \textit{amorphousSiO.data} will be located in \textit{SilicaBlock/} (Fig.\,\ref{fig:GCMC-snapshot}).
 
 \begin{figure}
 \centering
@@ -1863,7 +1864,7 @@ imposes incremental deformations of the box. Different scaling factors or differ
 \end{figure}
 
 \subsubsection{Adding water}
-\noindent In order to add the water molecules to the silica, we are going to use the Monte Carlo method in the grand canonical ensemble (GCMC). In short, the system is put into contact with a virtual reservoir of a given chemical potential $\mu$, and multiple attempts to insert water molecules at random positions are made. Each attempt is either accepted or rejected based on energy considerations. Find more details in classical textbooks \cite{frenkel2023understanding}.
+\noindent In order to add the water molecules to the silica, we are going to use the Monte Carlo method in the grand canonical ensemble (GCMC). In short, the system is put into contact with a virtual reservoir of a given chemical potential $\mu$, and multiple attempts to insert water molecules at random positions are made. Each attempt is either accepted or rejected based on energy considerations. Find more details in classical textbooks like Ref.~\citenum{frenkel2023understanding}.
 
 \paragraph{Using hydrid potentials}
 \noindent Create a new folder called \textit{Addingwater/}. Download and save the water molecule template named \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/H2O.mol}{\textit{H2O.mol}} within the \textit{Addingwater/} folder. Create a new input file called \textit{input.lammps} within \textit{Addingwater/}, and copy the following lines into it:
@@ -1879,8 +1880,8 @@ kspace_style pppm/tip4p 1.0e-4
 bond_style harmonic
 angle_style harmonic
 \end{verbatim}}
-There are several differences with the previous input files used in this tutorial. From now on, the system will combine water and silica, and therefore two force fields are combined: Vashishta for SiO, and lj/cut/tip4p/long for TIP4P water model (here 
-the TIP4P/2005 model is used \cite{abascal2005general}). Combining the two force fields is done using the \textit{hybrid/overlay} pair style. The \textit{kspace} solver is used to calculate the long-range Coulomb interactions associated with \textit{tip4p/long}. Finally, the style for the bonds and angles of the water molecules are defined, although they are not important since it is a rigid water model.
+There are several differences with the previous input files used in this tutorial. From now on, the system will combine water and silica, and therefore two force fields are combined: Vashishta for $\text{SiO}_2$, and lj/cut/tip4p/long for TIP4P water model (here 
+the TIP4P/2005 model is used \cite{abascal2005general}). Combining the two force fields is done using the \textit{hybrid/overlay} pair style. The \textit{kspace} solver is used to calculate the long-range Coulomb interactions associated with \textit{tip4p/long}. Finally, the style for the bonds and angles of the water molecules are defined, although they are not important since a rigid water model is used here.
 
 Before going further, we also need to make a few changes to our data file. Currently, \textit{dilatedSiO.data} only includes two atom types, but we need four. Copy the previously generated \textit{dilatedSiO.data} file within \textit{Addingwater/}. Currently, \textit{dilatedSiO.data} starts with:
 {\normalsize \begin{verbatim}
@@ -1927,7 +1928,7 @@ Atoms # full
 
 (...)
 \end{verbatim}}
-Doing so, we anticipate that there will be 4 atom types in the simulations, with O and H of H2O having indexes 3 and 4,
+Doing so, we anticipate that there will be 4 atom types in the simulations, with O and H of $\text{H}_2\text{O}$ having indexes 3 and 4,
 respectively. There will also be 1 bond type and 1 angle type. The extra bond, extra angle, and extra special lines
 are here for memory allocation. We can continue to fill in the \textit{input.lammps} file, by adding the system definition:
 {\normalsize \begin{verbatim}
@@ -1940,7 +1941,7 @@ lattice none 1
 group SiO type 1 2
 group H2O type 3 4
 \end{verbatim}}
-After reading the data file and defining the h2omol molecule from the \textit{.txt} file, the \textit{create$\_$atoms} command is used to include some water molecules in the system on a simple cubic lattice. Not adding a molecule before starting the GCMC steps usually lead to failure. Note that here, most water molecules overlap with the silica. These overlapping water molecules will be deleted before starting the simulation. Then, add the following settings to \textit{input.lammps}:
+After reading the data file and defining the h2omol molecule from the \textit{H2O.txt} file, the \textit{create$\_$atoms} command is used to include some water molecules in the system on a simple cubic lattice. Not adding a molecule before starting the GCMC steps usually leads to failure. Note that here, most water molecules overlap with the silica. These overlapping water molecules will have to be deleted before starting the simulation (see below). Then, add the following settings to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 pair_coeff * * vashishta & 
     ../Potential/SiO.1990.vashishta &
@@ -1962,8 +1963,10 @@ fix myat1 all ave/time 100 10 1000 v_nO &
 fix shak H2O shake 1.0e-4 200 0 b 1 a 1 &
     mol h2omol
 \end{verbatim}}
-The force field Vashishta applies only to Si (type 1) and O of SiO2 (type 2), and not to the O and H of H2O, thanks to the NULL parameters used for atoms of types 3 and 4. Pair coefficients for lj/cut/tip4p/long are defined between O atoms, as well as between O(SiO)-O(H2O) and Si(SiO)-O(H2O). Therefore, the fluid-solid interactions will be set by Lennard-Jones and Coulomb potentials. The number of oxygen atoms from water molecules (i.e. the number of molecules) will be printed in the file \textit{numbermolecule.dat}. The SHAKE algorithm is used to maintain the shape of the water molecules over time. Some of
-these features have been seen in previous tutorials. Let us delete the overlapping water molecules, and print the
+The force field Vashishta applies only to Si (type 1) and O of $\text{SiO}_2$ (type 2), and not to the O and H of $\text{H}_2\text{O}$, thanks to the NULL parameters used for atoms of types 3 and 4. Pair coefficients for the lj/cut/tip4p/long potential are defined between O($\text{H}_2\text{O}$) and between H($\text{H}_2\text{O}$) atoms, as well as between O($\text{SiO}_2$)-O($\text{H}_2\text{O}$) and Si($\text{SiO}_2$)-O($\text{H}_2\text{O}$). Therefore, the fluid-fluid and the fluid-solid interactions will be dealt with by the lj/cut/tip4p/long potential. The number of oxygen atoms from water molecules (i.e. the number of molecules) will be printed in the file \textit{numbermolecule.dat}. The SHAKE algorithm is used to maintain the shape of the water molecules over time. Some of
+these features have been seen in previous tutorials. 
+
+Finally, let us delete the overlapping water molecules, and print the
 positions of the remaining atoms in a \textit{.lammpstrj} file by adding the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 delete_atoms overlap 2 H2O SiO mol yes
@@ -1985,9 +1988,11 @@ timestep 0.001
 thermo 1000
 run 5000
 \end{verbatim}}
-Two different thermostats are used for SiO and H2O, respectively. Using separate thermostats is usually better when the system contains two separate species, such as a solid and a liquid. It is particularly important to use two thermostats
+Two different thermostats are used for $\text{SiO}_2$ and $\text{H}_2\text{O}$, respectively. Using separate thermostats is usually better when the system contains two separate species, such as a solid and a liquid. It is particularly important to use two thermostats
 here because the number of water molecules will fluctuate with time. The \textit{compute$\_$modify} with 
-\textit{dynamic yes} for water is used to specify that the number of molecules is not constant. Finally, let us use the \textit{fix gcmc} and perform the grand canonical Monte Carlo steps. Add the following lines into \textit{input.lammps}:
+\textit{dynamic yes} for water is used to specify that the number of molecules is not constant. 
+
+Finally, let us use the \textit{fix gcmc} and perform the grand canonical Monte Carlo steps. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 variable tfac equal 5.0/3.0
 variable xlo equal xlo+0.1
@@ -2006,21 +2011,20 @@ run 45000
 write_data SiOwithwater.data
 write_dump all atom dump.lammpstrj
 \end{verbatim}}
-The \textit{tfac$\_$insert} option ensures that the correct estimate is made for the temperature of the inserted water molecules by taking into account the internal degrees of freedom. Running this simulation, you should see the number of molecules increasing progressively. When using the pressure argument, LAMMPS ignores the value of the chemical potential [here $\mu = -0.5\,\text{eV}$ which corresponds roughly to ambient conditions (i.e. $\text{RH} \approx 50\,\%$).] The large pressure value of 10000 bars was chosen to ensure that some successful insertions of molecules would occur during the 
-extremely short duration of this simulation. When you run the simulation, make sure that some water molecules remain in the system after the \textit{delete$\_$atoms} command. You can control that either using the log file or using the \textit{numbermolecule.dat} data file. You can see, by looking at the log file, that 280 molecules
-were added by the \textit{create$\_$atoms} command (the exact number you get may differ):
+The \textit{tfac$\_$insert} option ensures the correct estimate for the temperature of the inserted water molecules by taking into account the internal degrees of freedom. Running this simulation, you should see the number of molecules increasing progressively. When using the pressure argument, LAMMPS ignores the value of the chemical potential (here $\mu = -0.5\,\text{eV}$, which corresponds roughly to ambient conditions, i.e. to a relative humidity $\text{RH} \approx 50\,\%$ \cite{gravelle2020multi}.) The large pressure value of 10000 bars was chosen to ensure that some successful insertions of molecules would occur during the extremely short duration of this simulation. 
+
+When you run the simulation, the log file indicates that 840 atoms (i.e. 280 molecules) were added by the \textit{create$\_$atoms} command (the exact number you get may differ):
 {\normalsize \begin{verbatim}
 Created 840 atoms
 \end{verbatim}}
-You can also see that 258 molecules were immediately deleted, leaving 24 water molecules (the exact number you get may differ):
+You can also see that 258 molecules were immediately deleted, leaving 24 water molecules (again, the exact number you get may differ):
 {\normalsize \begin{verbatim}
 Deleted 774 atoms, new total = 642
 Deleted 516 bonds, new total = 44
 Deleted 258 angles, new total = 22
 \end{verbatim}}
 After just a few GCMC steps, the number of molecules starts increasing. Once the crack is filled with water molecules, the number of molecules reaches a plateau (Figs.\,\ref{fig:GCMC-number}-\ref{fig:GCMC-solvated}). The final number of molecules depends on the imposed pressure, temperature, and the interaction between water and silica (i.e. its hydrophilicity). Note that GCMC simulations of such dense phases are usually slow to converge due to the
-very low probability of successfully inserting a molecule. Here, the short simulation 
-duration was made possible by the use of a large pressure.
+very low probability of successfully inserting a molecule. Here, the short simulation duration was made possible by the use of a large pressure.
 
 \begin{figure}
 \centering
