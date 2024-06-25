@@ -837,7 +837,7 @@ special_bonds lj 0.0 0.0 0.5 &
     coul 0.0 0.0 1.0 angle yes
 \end{verbatim}}
 With the unit style \textit{real}, masses are in grams per mole, distances in Ångstroms, time in femtoseconds, and energies
-in Kcal/mole. With the \textit{atom$\_$style full}, each atom is a dot with a mass and a charge that can be linked by bonds, angles, dihedrals, and/or impropers. The \textit{bond$\_$style}, \textit{angle$\_$style}, and \textit{dihedral$\_$style} commands define the potentials for the bonds, angles, and dihedrals used in the simulation, here \textit{harmonic}. Finally, the \textit{special$\_$bonds} command, which was already seen in \hyperref[carbon-nanotube-label]{tutorial 2}, sets the LJ and Coulomb weighting factors for the interaction between neighboring atoms. With the \textit{pair$\_$style} named \textit{lj/cut/coul/long}, atoms interact through both a Lennard-Jones (LJ) potential and Coulomb interactions. The value of $12\,\text{\AA{}}$ is the cutoff. Finally, the \textit{kspace} command defines the long-range solver for the Coulomb interactions. The \textit{pppm} style refers to particle-particle particle-mesh \cite{luty1996calculating}.
+in kcal/mole. With the \textit{atom$\_$style full}, each atom is a dot with a mass and a charge that can be linked by bonds, angles, dihedrals, and/or impropers. The \textit{bond$\_$style}, \textit{angle$\_$style}, and \textit{dihedral$\_$style} commands define the potentials for the bonds, angles, and dihedrals used in the simulation, here \textit{harmonic}. Finally, the \textit{special$\_$bonds} command, which was already seen in \hyperref[carbon-nanotube-label]{tutorial 2}, sets the LJ and Coulomb weighting factors for the interaction between neighboring atoms. With the \textit{pair$\_$style} named \textit{lj/cut/coul/long}, atoms interact through both a Lennard-Jones (LJ) potential and Coulomb interactions. The value of $12\,\text{\AA{}}$ is the cutoff. Finally, the \textit{kspace} command defines the long-range solver for the Coulomb interactions. The \textit{pppm} style refers to particle-particle particle-mesh \cite{luty1996calculating}.
 
 Then, let us create a 3D simulation box of dimensions $9 \times 3 \times 3 \; \text{nm}^3$, and make space for 9 atom types (2 for the water, 7 for the polymer), 7 bond types (1 for the water, 6 for the polymer), 8 angle types (1 for the water, 7 for the polymer), and 4 dihedral types (only for the polymer). Copy the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
@@ -1199,7 +1199,7 @@ pair_coeff 4 4 0.1500 4.04470
 pair_coeff 5 5 11.697 2.574
 pair_coeff 1 5 0.4 2.86645
 \end{verbatim}}
-Each \textit{mass} command assigns a mass in grams/mole to an atom type. Each \textit{pair$\_$coeff} assigns respectively the depth of the LJ potential (in Kcal/mole), and the distance (in Ångstrom) at which the particle-particle potential energy is 0.
+Each \textit{mass} command assigns a mass in grams/mole to an atom type. Each \textit{pair$\_$coeff} assigns respectively the depth of the LJ potential (in kcal/mole), and the distance (in Ångstrom) at which the particle-particle potential energy is 0.
 
 As already seen in previous tutorials and with the important exception of \textit{pair$\_$coeff 1 5}, only pairwise interactions between atoms of identical types was assigned. By default, LAMMPS calculates the pair coefficients for the interactions between atoms of different types (i and j) by using geometrical average: $\epsilon_{ij} = (\epsilon_{ii} + \epsilon_{jj})/2$,  $\sigma_{ij} = (\sigma_{ii} + \sigma_{jj})/2$. If the default value of $5.941\,\text{kcal/mol}$ was kept for $\epsilon_\text{1-5}$, the solid walls would be extremely hydrophilic, causing the water molecule to form dense layers. As a comparison, the water-water energy $\epsilon_\text{1-1}$ is only $0.185199\,\text{kcal/mol}$. Therefore, the walls were made less hydrophilic by reducing the value of $\epsilon_\text{1-5}$. Copy the following lines into PARM.lammps as well:
 {\normalsize \begin{verbatim}   
@@ -2071,21 +2071,21 @@ pair_style lj/cut 3.822
 pair_modify shift yes
 boundary p p p
 \end{verbatim}}
-Here, we start by defining variables for the Lennard-Jones interaction $\sigma$ and $\epsilon$ and for the repulsive potential $U (x)$: $U_0$, $\delta$, and $x_0$, see the analytical expression below. The value of 3.822 for the cut-off was chosen to create a WCA, purely repulsive, potential. It was calculated as $2^{1/6} \times 3.405$ where $3.405 = \sigma$. The system of unit \textit{real}, for which energy is in kcal/mol, distance in Ångstrom, or time in femtosecond, has been chosen for practical reasons: the WHAM algorithm used in the second part of the tutorial automatically assumes the energy to be in kcal/mol. Atoms will interact through a Lennard-Jones potential with a cut-off equal to $\sigma \times 2 ^ {1/6}$ (i.e. a WCA repulsive potential). The potential is shifted to be equal to 0 at the cut-off using the \textit{pair$\_$modify}.
+Here, we start by defining variables for the Lennard-Jones interaction $\sigma$ and $\epsilon$ and for the repulsive potential $U$: $U_0$, $\delta$, and $x_0$, see the analytical expression below. The value of 3.822 for the cut-off was chosen to create a WCA, purely repulsive, potential \cite{weeks1971role}. It was calculated as $2^{1/6} \times 3.405$ where $3.405 = \sigma$. The potential is shifted to be equal to 0 at the cut-off using the \textit{pair$\_$modify}. The system of unit \textit{real}, for which energy is in kcal/mol, distance in Ångstrom, or time in femtosecond, has been chosen for practical reasons: the WHAM algorithm used in the second part of the tutorial automatically assumes the energy to be in kcal/mol.
 
 \paragraph{System creation and settings}
-\noindent Let us define the simulation box and randomly add atoms by adding the following lines into \textit{input.lammps}:
+\noindent Let us define the simulation box and randomly add atoms by copying the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 region myreg block -25 25 -5 5 -25 25
 create_box 1 myreg
 create_atoms 1 random 60 341341 myreg &
-    overlap 1.0 maxtry 50
+    overlap 1.5 maxtry 50
 
 mass * 39.95
 pair_coeff * * ${epsilon} ${sigma}
 neigh_modify every 1 delay 4 check yes
 \end{verbatim}}
-The values for the Lennard-Jones parameters ($\sigma$ and $\epsilon$) and the mass ($m$) are typical of argon. The variables $U_0$, $\delta$, and $x_0$ defined in the previous subsection are used here to create the repulsive potential, restricting the atoms from exploring the center of the box: 
+The variables $U_0$, $\delta$, and $x_0$ defined in the previous subsection are used here to create the repulsive potential, restricting the atoms from exploring the center of the box: 
 \begin{equation}
 U = U_0 \left[ \arctan \left( \dfrac{x+x_0}{\delta} \right) - \arctan \left(\dfrac{x-x_0}{\delta} \right) \right].
 \label{eq:U}
@@ -2096,7 +2096,7 @@ for the force that will be imposed on the atoms:
 F= \dfrac{U_0}{\delta} \left[ \dfrac{1}{(x-x_0)^2/\delta^2+1} - \dfrac{1}{(x+x_0)^2/\delta^2+1} \right].
 \label{eq:F}
 \end{equation}
-Fig.\,\ref{fig:potential} shows the potential $U$ and force $F$ along the $x$ axis. With $U_0 = 1.5 \epsilon = 0.36\,\text{kcal/mol}$, $U_0$ is of the same order as the thermal energy $k_\text{B} T = 0.24,\text{kcal/mol}$, where $k_\text{B} = 2\,\text{kcal/mol/K}$ is the Boltzmann constant and $T = 119.8\,\text{K}$ (see below). In this case, particles are expected to regularly overcome the energy barrier thanks to the thermal agitation.
+Fig.\,\ref{fig:potential} shows the potential $U$ and force $F$ along the $x$ axis. With $U_0 = 1.5 \epsilon = 0.36\,\text{kcal/mol}$, $U_0$ is of the same order as the thermal energy $k_\text{B} T = 0.24\,\text{kcal/mol}$, where $k_\text{B} = 0.002\,\text{kcal/mol/K}$ is the Boltzmann constant and $T = 119.8\,\text{K}$ (see below). In this case, particles are expected to regularly overcome the energy barrier thanks to the thermal agitation.
 
 \begin{figure}
 \centering
@@ -2110,10 +2110,10 @@ Let us apply energy minimization to the system, and then impose the force $F(x)$
 minimize 1e-4 1e-6 100 1000
 reset_timestep 0
 
-variable U atom ${U0}*atan((x+${x0})/${dlt}) &
+variable U atom ${U0}*atan((x+${x0})/${dlt})&
     -${U0}*atan((x-${x0})/${dlt})
 variable F atom &
-    ${U0}/((x-${x0})^2/${dlt}^2+1)/${dlt} &
+    ${U0}/((x-${x0})^2/${dlt}^2+1)/${dlt}&
     -${U0}/((x+${x0})^2/${dlt}^2+1)/${dlt}
 fix myadf all addforce v_F 0.0 0.0 energy v_U
 \end{verbatim}}
@@ -2146,23 +2146,23 @@ dump mydmp all atom 200000 dump.lammpstrj
 thermo 100000
 run 4000000
 \end{verbatim}}
-This simulation with a total duration of $9\,\text{ns}$ needs a few minutes to complete (Fig.\,\ref{fig:US-system}). Feel free to increase the duration of the last run for smoother results.
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{US-system}
-\caption{Snapshot of the system. The density of atoms is lowest in the central part of the box, \textit{mymes}, due to the additional force $F (x)$. Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
-\label{fig:US-system}
-\end{figure}
-
-\paragraph{Data analysis}
-First, let us ensure that the initial equilibration of $1\,\text{ns}$ is long enough by examining the \textit{density$\_$evolution.dat} file. Here, we can see that the number of atoms in the central region, $n_\mathrm{centrer}$, evolves near its equilibrium value (which is close to 0) after about $0.1\,\text{ns}$ (Fig.\,\ref{fig:US-density-evolution}). One can also look at the density profile, which shows that the density in the center of the box is about two orders of magnitude lower than inside the reservoir (Fig.\,\ref{fig:US-density}). Then, let us plot $-R T \ln(\rho/\rho_\mathrm{bulk})$ (i.e. Eq.\,\eqref{eq:G} where the pressure ratio $p/p_\mathrm{bulk}$ is replaced by the density ratio $\rho/\rho_\mathrm{bulk}$) and compare it with the imposed potential $U$ from Eq.\,\eqref{eq:U} (Fig.\,\ref{fig:US-FreeSampling}). The value for the reference density $\rho_\text{bulk} = 0.0033~\text{\AA{}}^{-3}$ was estimated from the raw density profiles. The agreement between the MD results and the imposed energy profile is reasonable, despite some noise in the central part (where fewer data points are available due to the repulsive potential).
+This simulation with a total duration of $9\,\text{ns}$ needs a few minutes to complete. Feel free to increase the duration of the last run for smoother results.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-density-evolution}
 \caption{Evolution of the number of atoms $n_\text{center}$ in the central region \textit{mymes} as a function of time $t$ during equilibration. The dark line serves as a guide for the eyes. Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
 \label{fig:US-density-evolution}
+\end{figure}
+
+\paragraph{Data analysis}
+First, let us ensure that the initial equilibration of $1\,\text{ns}$ is long enough by examining the \textit{density$\_$evolution.dat} file. Here, we can see that the number of atoms in the central region, $n_\mathrm{centrer}$, evolves near its equilibrium value (which is close to 0) after about $0.1\,\text{ns}$ (Fig.\,\ref{fig:US-density-evolution}). See also a snapshot of the equilibrated system made using VMD in Fig.\,\ref{fig:US-system}. One can also look at the density profile, which shows that the density in the center of the box is about two orders of magnitude lower than inside the reservoir (Fig.\,\ref{fig:US-density}). Then, let us plot $-R T \ln(\rho/\rho_\mathrm{bulk})$ (i.e. Eq.\,\eqref{eq:G} where the pressure ratio $p/p_\mathrm{bulk}$ is replaced by the density ratio $\rho/\rho_\mathrm{bulk}$ assuming the system is an ideal gas) and compare it with the imposed potential $U$ from Eq.\,\eqref{eq:U} (Fig.\,\ref{fig:US-FreeSampling}). The value for the reference density $\rho_\text{bulk} = 0.0033~\text{\AA{}}^{-3}$ was estimated by measuring the density of the reservoir from the raw density profiles. The agreement between the MD results and the imposed energy profile is reasonable, despite some noise in the central part (where fewer data points are available due to the repulsive potential).
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{US-system}
+\caption{Snapshot of the system. The density of atoms is lowest in the central part of the box, \textit{mymes}, due to the additional force $F$. Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
+\label{fig:US-system}
 \end{figure}
 
 \begin{figure}
@@ -2183,7 +2183,7 @@ First, let us ensure that the initial equilibration of $1\,\text{ns}$ is long en
 If we increase the value of $U_0$, the average number of atoms in the central region will decrease, making it difficult to obtain a good resolution for the free energy profile. For instance, when we run the same simulation using $U_0 = 10 \epsilon$, which corresponds to a situation where $U_0 \approx 10 k_\text{B} T$, not a single atom explores the central part of the simulation box during the 8 ns of simulation. In this case, using an enhanced sampling method is preferred; see the next section.
 
 \subsubsection{Method 2: Umbrella sampling}
-Umbrella sampling is a biased molecular dynamics method in which additional forces are added to a chosen atom to force it to explore the entire space, including the more unfavorable areas of the system \cite{kastner2011umbrella, allen2017computer, frenkel2023understanding}. To encourage one of the atoms to explore the central region of the box, we apply a potential $V$ and force it to move along the $x$-axis. The chosen path is called the axis of reaction. Several simulations (or windows) will be conducted with varying parameters for the applied biasing. The results will be analyzed using the weighted histogram analysis method (WHAM) \cite{kumar1992weighted}, which allows for the removal of the biasing effect and ultimately deduces the unbiased free energy profile.
+Umbrella sampling is a biased molecular dynamics method in which additional forces are added to a chosen atom to force it to explore the more unfavorable areas of the system \cite{kastner2011umbrella, allen2017computer, frenkel2023understanding}. Here, to encourage one of the atoms to explore the central region of the box, we apply a potential $V$ and force it to move along the $x$-axis. The chosen path is called the axis of reaction. Several simulations (called windows) will be conducted with varying positions for the center of the applied biasing. The results will be analyzed using the weighted histogram analysis method (WHAM) \cite{kumar1992weighted}, which allows for the removal of the biasing effect and ultimately deduces the unbiased free energy profile.
 
 \paragraph{LAMMPS input script}
 Create a new folder called \textit{BiasedSampling/}, and create a new input file named \textit{input.lammps} in it, and copy the following lines:
@@ -2204,18 +2204,21 @@ boundary p p p
 region myreg block -25 25 -5 5 -25 25
 create_box 2 myreg
 create_atoms 2 single 0 0 0
-create_atoms 1 random 5 341341 myreg &
-    overlap 1.0 maxtry 50
+create_atoms 59 random 5 341341 myreg &
+    overlap 1.5 maxtry 50
 
 mass * 39.948
 pair_coeff * * ${epsilon} ${sigma}
 neigh_modify every 1 delay 4 check yes
 group topull type 2
 
-variable U atom ${U0}*atan((x+${x0})/${dlt}) &
+minimize 1e-4 1e-6 100 1000
+reset_timestep 0
+
+variable U atom ${U0}*atan((x+${x0})/${dlt})&
     -${U0}*atan((x-${x0})/${dlt})
 variable F atom &
-    ${U0}/((x-${x0})^2/${dlt}^2+1)/${dlt} &
+    ${U0}/((x-${x0})^2/${dlt}^2+1)/${dlt}&
     -${U0}/((x+${x0})^2/${dlt}^2+1)/${dlt}
 fix pot all addforce v_F 0.0 0.0 energy v_U
 
@@ -2241,13 +2244,13 @@ fix mytth topull spring tether ${k} &
     ${xdes} 0 0 0
 run 200000
 fix myat1 all ave/time 10 10 100 v_xave &
-    v_xdes file data-k1.5/position.${a}.dat
+    v_xdes file data/position.${a}.dat
 run 1000000
 unfix myat1
 next a
 jump SELF loop
 \end{verbatim}}
-A folder named \textit{data-k1.5/} needs to be created within \textit{BiasedSampling/}. The spring command serves to impose the additional harmonic potential with the spring constant $k$. Note that the value of $k$ should be chosen with care, if $k$ is too small, the particle won't follow the biasing potential center, and if $k$ is too large, there will be no overlapping between the different windows. The center of the harmonic potential $x_\text{des}$ successively takes values from -25 to 25. For each value of $x_\text{des}$, an equilibration step of 0.4 ns is performed, followed by a step of 2 ns during which the position along $x$ of the particle is saved in data files (one data file per value of $x_\text{des}$). You can always increase the duration of the runs for better samplings.
+A folder named \textit{data/} needs to be created within \textit{BiasedSampling/}. The spring command serves to impose the additional harmonic potential $V$ with the spring constant $k$. Note that the value of $k$ should be chosen with care, if $k$ is too small, the particle won't follow the biasing potential center, and if $k$ is too large, there will be no overlapping between the different windows. The center of the harmonic potential $x_\text{des}$ successively takes values from -25 to 25. For each value of $x_\text{des}$, an equilibration step of 0.4 ns is performed, followed by a step of 2 ns during which the position along $x$ of the particle is saved in data files (one data file per value of $x_\text{des}$). You can always increase the duration of the runs for better samplings. Run the \textit{input.lammps}  file using LAMMPS.
 
 \paragraph{WHAM algorithm}
 \noindent To generate the free energy profile from the density distribution, let us use the WHAM algorithm as implemented by Marc Grossfield \cite{grossfieldimplementation}. You can download it from \href{http://membrane.urmc.rochester.edu/?page_id=126}{Alan Grossfield} website, and compile it by typing in the terminal: 
@@ -2268,7 +2271,7 @@ Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutor
     metadata.dat PMF.dat
 \end{verbatim}}
 where -25 and 25 are the boundaries, 50 is the number of bins, 1e-8 is the tolerance, and 119.8 is the temperature. A file named
-\textit{PMF.dat} has been created, containing the free energy profile in Kcal/mol. Again, one can compare the result of the PMF with the imposed potential $U$, demonstrating excellent agreement (Fig.\,\ref{fig:US-freenergy}). We can see that the agreement is quite good despite the very short calculation time and the very high value for the energy barrier. Obtaining the same results with Free Sampling would require performing extremely long and costly simulations.
+\textit{PMF.dat} has been created, containing the free energy profile in kcal/mol. Again, one can compare the result of the PMF with the imposed potential $U$, demonstrating excellent agreement (Fig.\,\ref{fig:US-freenergy}). We can see that the agreement is quite good despite the very short calculation time and the very high value for the energy barrier. Obtaining the same results with Free Sampling would require performing extremely long and costly simulations.
 
 \begin{figure}
 \centering
