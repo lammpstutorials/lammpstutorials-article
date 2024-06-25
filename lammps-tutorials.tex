@@ -1458,7 +1458,7 @@ From the force applied by the fluid on the solid, one can extract the stress wit
 \label{fig:SIO}
 \end{figure}
 
-\noindent The objective of this tutorial is to use a reactive force field (ReaxFF \cite{van2001reaxff, zou2012investigation}) to calculate the partial charges of a system undergoing deformation, as well as the formation and breaking of chemical bonds. The system simulated here is a block of silicon dioxide ($\text{SiO}_2$) that is deformed until rupture (Fig.\,\ref{fig:SIO}). Particular attention is given to the evolution of the atomic charges during the deformation of the structure, and the chemical reactions occurring due to the deformation are tracked over time.
+\noindent The objective of this tutorial is to use the reactive force field ReaxFF to calculate the partial charges of a system undergoing deformation, as well as the formation and breaking of chemical bonds \cite{van2001reaxff, zou2012investigation}. The system simulated here is a block of silicon dioxide $\text{SiO}_2$ (Fig.\,\ref{fig:SIO}) that is deformed until rupture. Particular attention is given to the evolution of the atomic charges during the deformation of the structure, and the chemical reactions occurring due to the deformation are tracked over time.
 
 \subsubsection{Prepare and relax}
 Create a folder, name it \textit{RelaxSilica/}, and download the initial topology of a small amorphous silica structure named \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/silica.data}{\textit{silica.data}}. This structure was created using a classical force field called Vashishta \cite{vashishta1990interaction}. If you open the \textit{silica.data} file, you will see in the Atoms section that all silicon atoms have the same charge $q = 1.1\,\text{e}$, and all oxygen atoms have the charge $q = -0.55\,\text{e}$. This is common with classical force fields and will change once ReaxFF is used. 
@@ -1519,13 +1519,13 @@ Run the \textit{input.lammps} file using LAMMPS. As seen from \textit{species.lo
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{SIO-charge}
-\caption{Average charge per atom of the silicon (a) and oxygen (b) atoms during equilibration, as given by the \textit{v$\_$qSi} and \textit{v$\_$qO} variables.}
+\caption{Average charge per atom of the silicon $q_\text{Si}$ (a) and oxygen $q_\text{O}$ (b) atoms during equilibration, as given by the \textit{v$\_$qSi} and \textit{v$\_$qO} variables.}
 \label{fig:SIO-charge}
 \end{figure}
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-volume}
-\caption{Volume of the system as a function of time.}
+\caption{Volume of the system $V$ as a function of time $t$.}
 \label{fig:SIO-volume}
 \end{figure}
 
@@ -1584,7 +1584,7 @@ Here, no barostat is used because the box volume will be imposed by the \textit{
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-deformed-charge}
-\caption{Evolution of the average charge per atom of the silicon $q_\text{Si}$ (a) and oxygen $q_\text{O}$ (b) over time $t$. The vertical dashed lines mark the beginning of the deformation, and the horizontal dashed lines denote the initial values for the average charge.}
+\caption{Evolution of the average charge per atom of the silicon $q_\text{Si}$ (a) and oxygen $q_\text{O}$ (b) over time $t$. The vertical dashed lines mark the beginning of the deformation, and the horizontal dotted lines denote the initial values for the average charge.}
 \label{fig:SIO-deformed-charge}
 \end{figure}
 
@@ -1598,7 +1598,7 @@ run 25000
 
 write_data silica-deformed.data
 \end{verbatim}}
-Run the *input.lammps* file using LAMMPS. During the deformation, the charge values progressively evolve until the structure eventually breaks down. After the structure breaks down, the charges equilibrate near new average values that differ from the starting averages (Fig.\,\ref{fig:SIO-deformed-charge}). The difference between the initial and the final charges can be explained by the presence of defects as well as new solid/vacuum interfaces, and the fact that surface atoms typically have different charges compared to bulk atoms. There is also a strong increase in temperature during the rupture of the material (Fig.\,\ref{fig:SIO-temperature}). At the end of the deformation, one can visualize the broken material using VMD. Notice the different charge values of the atoms located near the vacuum interfaces, compared to the atoms located in the bulk of the material (Fig.\,\ref{fig:SIO-deformed}).
+Run the \textit{input.lammps} file using LAMMPS. During the deformation, the charge values progressively evolve until the structure eventually breaks down. After the structure breaks down, the charges equilibrate near new average values that differ from the starting averages (Fig.\,\ref{fig:SIO-deformed-charge}). The difference between the initial and the final charges can be explained by the presence of defects as well as new solid/vacuum interfaces, and the fact that surface atoms typically have different charges compared to bulk atoms. There is also a strong increase in temperature during the rupture of the material (Fig.\,\ref{fig:SIO-temperature}). At the end of the deformation, one can visualize the broken material using VMD. Notice the different charge values of the atoms located near the vacuum interfaces, compared to the atoms located in the bulk of the material (Fig.\,\ref{fig:SIO-deformed}).
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-temperature}
@@ -1624,7 +1624,7 @@ Sometimes, $\text{O}_2$ molecules are formed during the deformation. If this is 
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-distribution-bis}
-\caption{Distribution of charge of silicon (positive, blue) and oxygen (negative, orange) after deformation. The stars correspond to the charge distribution during deformation.}
+\caption{Probability distribution of charge of silicon (positive, blue) and oxygen (negative, orange) after deformation. The stars correspond to the charge distribution during deformation.}
 \label{fig:SIO-distribution-bis}
 \end{figure}
 
