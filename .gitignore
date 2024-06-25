@@ -10,7 +10,10 @@ lammps-tutorials.fls
 lammps-tutorials.synctex*
 lammps-tutorials.fdb*
 
-chapters/*.aux
+presubmission-letter/*.log
+presubmission-letter/*.pdf
+presubmission-letter/*.aux
+presubmission-letter/*.out
 
 __pycache__
 **/__pycache__
