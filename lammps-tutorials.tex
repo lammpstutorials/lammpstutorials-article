@@ -290,7 +290,7 @@ To visualize the trajectories of the atoms, we first need to print the positions
 {\normalsize \begin{verbatim}
 dump mydmp all atom 100 dump.lammpstrj
 \end{verbatim}}
-Run the \textit{input.lammps} using LAMMPS again. The file named \textit{dump.lammpstrj} created by LAMMPS within \textit{my-first-input/} can be opened using VMD (The snapshot in Fig.\,\ref{fig:LJ} was made using VMD).
+Run the \textit{input.lammps} using LAMMPS again. The file called \textit{dump.lammpstrj} created by LAMMPS within \textit{my-first-input/} can be opened using VMD (The snapshot in Fig.\,\ref{fig:LJ} was made using VMD).
 
 \subsubsection{Improving the script}
 
@@ -338,13 +338,13 @@ dump mydmp all atom 10 dump.min.lammpstrj
 minimize 1.0e-4 1.0e-6 1000 10000
 write_data minimized_coordinate.data
 \end{verbatim}}
-The main novelty, compared to the previous input script, is the \textit{write$\_$data} command. This command is used to print the final state of the simulation in a file named \textit{minimized$\_$coordinate.data}. Note that the \textit{write$\_$data} command is placed after the \textit{minimize} command. This \textit{.data} file will be used later to restart the simulation from the final state of the energy minimization step.
+The main novelty, compared to the previous input script, is the \textit{write$\_$data} command. This command is used to print the final state of the simulation in a file called \textit{minimized$\_$coordinate.data}. Note that the \textit{write$\_$data} command is placed after the \textit{minimize} command. This \textit{.data} file will be used later to restart the simulation from the final state of the energy minimization step.
 
-Run the \textit{input.min.lammps} script using LAMMPS. As soon as the simulation starts, a new dump file named \textit{dump.min.lammpstrj} must appear in the folder. This \textit{.lammpstrj} can be used to visualize the atom's trajectories during minimization using VMD. At the end of the simulation, a file named \textit{minimized$\_$coordinate.data} is created by LAMMPS. If you open \textit{minimized$\_$coordinate.data} with a text editor, you can see that it contains all the information necessary to restart the simulation, such as the number of atoms, the box size, the \textit{masses}, and the \textit{pair$\_$coeffs}.
+Run the \textit{input.min.lammps} script using LAMMPS. As soon as the simulation starts, a new dump file called \textit{dump.min.lammpstrj} must appear in the folder. This \textit{.lammpstrj} can be used to visualize the atom's trajectories during minimization using VMD. At the end of the simulation, a file called \textit{minimized$\_$coordinate.data} is created by LAMMPS. If you open \textit{minimized$\_$coordinate.data} with a text editor, you can see that it contains all the information necessary to restart the simulation, such as the number of atoms, the box size, the \textit{masses}, and the \textit{pair$\_$coeffs}.
 The \textit{minimized$\_$coordinate.data} file also contains the final positions of the atoms within the \textit{Atoms} section. The first five columns of the \textit{Atoms} section correspond (from left to right) to the atom indexes (from 1 to the total number of atoms, 1150), the atom types (1 or 2 here), and the positions of the atoms $x$, $y$, $z$. The last three columns are image flags that keep track of which atoms crossed the periodic boundary.
 
 \paragraph{Restarting from a saved configuration}
-Let us create a new input file and start a molecular dynamics simulation directly from the previously saved configuration. Within \textit{improved-input/}, create a new file named \textit{input.md.lammps} and copy the same lines as previously:
+Let us create a new input file and start a molecular dynamics simulation directly from the previously saved configuration. Within \textit{improved-input/}, create a new file called \textit{input.md.lammps} and copy the same lines as previously:
 {\normalsize \begin{verbatim}
 # 1) Initialization
 units lj
@@ -446,10 +446,10 @@ There are a few differences from the previous simulation. First, the \textit{vel
 \noindent In this tutorial, the system of interest is a small carbon nanotube (CNT) in an empty box (Fig.\,\ref{fig:CNT}). An external force is imposed on the CNT, and its deformation is measured over time. To illustrate the difference between classical and reactive force fields, this tutorial is divided into two parts. Within the first part, a classical force field is used and the bonds between the atoms of the CNT are unbreakable. Within the second part, a reactive force field (named AIREBO \cite{stuart2000reactive}) is used, allowing for the breaking of chemical bonds when the CNT undergoes strong deformation.
 
 \subsubsection{Unbreakable bonds}
-\noindent With most classical molecular dynamics force fields, the chemical bonds between the atoms are set at the start of the simulation. Regardless of the forces applied to the atoms, the bonds remain intact during the simulation. The bonds between neighbor atoms typically consist of springs with given equilibrium distances $r_0$ and a constant $k_b$: $U_b = k_b \left( r - r_0 \right)^2$. Additionally, angular and dihedral constraints are usually applied to maintain the relative orientations of neighbor atoms. 
+\noindent With most classical molecular dynamics force fields, the chemical bonds between the atoms are set at the start of the simulation. Regardless of the forces applied to the atoms, the bonds remain intact during the simulation. The bonds between neighbor atoms typically consist of springs with given equilibrium distances $r_0$ and a constant $k_b$: $U_b = k_b \left( r - r_0 \right)^2$. Additionally, angular and dihedral constraints are usually applied to maintain the relative orientations of neighboring atoms. 
 
 Download directly the CNT topology \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial2/cnt_molecular.data}{\textit{cnt$\_$molecular.data}}. It was created using VMD and TopoTools \cite{kohlmeyer2017topotools}, and contains information about the positions of the carbon atoms, as well as the identity of the atoms that are linked by \textit{bonds}, \textit{angles}, \textit{dihedrals}, and \textit{impropers} constraints. Save the \textit{cnt$\_$molecular.data} file
-in a folder named \textit{unbreakable-bonds/}.
+in a folder called \textit{unbreakable-bonds/}.
 
 \paragraph{The LAMMPS input}
 Create a new text file within \textit{unbreakable-bonds/} and name it \textit{input.lammps}. Copy the following lines into it:
@@ -599,7 +599,7 @@ The two \textit{setforce} commands cancel the forces applied on the atoms of the
 is done at every step, and along all 3 directions of space, $x$, $y$, and $z$, due to the use of \textit{0 0 0}. The two \textit{velocity} commands set the initial velocities along $x$, $y$, and $z$ to 0 for the atoms of \textit{carbon$\_$top} and \textit{carbon$\_$bot}, respectively. As a consequence of these last four commands, the atoms of the edges will remain immobile during the simulation (or at least they would if no other command was applied to them). The \textit{velocity set} commands impose the velocity of a group of atoms at the start of a run but do not enforce the velocity during the entire simulation. When \textit{velocity set} is used in combination with \textit{setforce 0 0 0}, as is the case here, the atoms won't feel any force during the entire simulation. According to the Newton equation, no force means no acceleration, meaning that the initial velocity will persist during the entire simulation, thus producing a constant velocity motion.
 
 \paragraph{Data extraction}
-Next, in order to measure the strain and stress suffered by the CNT, let us extract the distance $L$ between the two edges as well as the force applied on the edges.
+Next, to measure the strain and stress suffered by the CNT, let us extract the distance $L$ between the two edges as well as the force applied on the edges.
 {\normalsize \begin{verbatim}
 variable L equal &
     xcm(carbon_top,z)-xcm(carbon_bot,z)
@@ -641,7 +641,7 @@ run 10000
 \label{fig:CNT-unbreakable-lenght}
 \end{figure}
 
-The length $L$ of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.\,\ref{fig:CNT-unbreakable-lenght}), as expected from the imposed constant velocity. The energy, which can be accessed from the log file, shows a non-linear increase with $t$ once the deformation starts, which is expected from the typical dependency of bond energy with bond distance $U_b = k_b \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-energy}). As always, is it important to ensure that the simulation behaves as expected by opening the \textit{dump.lammpstrj} file with VMD (Fig.\,\ref{fig:CNT-deformed-unbreakable}).
+The length $L$ of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.\,\ref{fig:CNT-unbreakable-lenght}), as expected from the imposed constant velocity. The energy, which can be accessed from the log file, shows a non-linear increase with $t$ once the deformation starts, which is expected from the typical dependency of bond energy with bond distance $U_b = k_b \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-energy}). As always, it is important to ensure that the simulation behaves as expected by opening the \textit{dump.lammpstrj} file with VMD (Fig.\,\ref{fig:CNT-deformed-unbreakable}).
 
 \begin{figure}
 \centering
@@ -661,7 +661,7 @@ The length $L$ of the CNT increases linearly over time for $t > 5\,\text{ps}$ (F
 When using a classical force field, as we just did, the bonds between the atoms are non-breakable. Let us perform a similar simulation and deform a small CNT again, but this time using a reactive force field that allows for the bonds to break if the applied deformation is large enough.
 
 \paragraph{Input file initialization}
-\noindent Create a second folder named \textit{breakable-bonds/} next to \textit{unbreakable-bonds/}, and create a new input file in it called \textit{input.lammps}. Type into input.lammps:
+\noindent Create a second folder called \textit{breakable-bonds/} next to \textit{unbreakable-bonds/}, and create a new input file in it called \textit{input.lammps}. Type into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 # Initialisation
 variable T equal 300
@@ -820,7 +820,7 @@ Looking at the evolution of energy again, one can see that the energy is increas
 \subsubsection{Preparing the water reservoir}
 
 In this tutorial, the water reservoir is first prepared in the absence of the polymer. A rectangular box of water is created and equilibrated at ambient temperature and ambient pressure. The SPC/Fw water model is used \cite{wu2006flexible}, which is
-a flexible variant of the rigid SPC (simple point charge) model \cite{berendsen1981interaction}. Create a folder named \textit{pureH2O/}. Inside this folder, create an empty text file named \textit{input.lammps}. Copy the following lines into it:
+a flexible variant of the rigid SPC (simple point charge) model \cite{berendsen1981interaction}. Create a folder called \textit{pureH2O/}. Inside this folder, create an empty text file called \textit{input.lammps}. Copy the following lines into it:
 {\normalsize \begin{verbatim}
 units real
 atom_style full
@@ -867,8 +867,7 @@ The \textit{overlap 1} option of the \textit{create$\_$atoms} command ensures th
 {\normalsize \begin{verbatim}
 Created 3150 atoms
 \end{verbatim}}
-When LAMMPS fails to create the desired number of molecules, a WARNING appears in the \textit{log} file.
-The molecule template named \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial3/H2O-SPCFw.mol}{\textit{H2O-SPCFw.mol}} must be downloaded and saved in the \textit{pureH2O/} folder. This template contains the necessary structural information of a water molecule, such as the number of atoms, or the IDs of the atoms that are connected by bonds, angles, etc.
+When LAMMPS fails to create the desired number of molecules, a WARNING appears in the \textit{log} file. The molecule template called \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial3/H2O-SPCFw.mol}{\textit{H2O-SPCFw.mol}} must be downloaded and saved in the \textit{pureH2O/} folder. This template contains the necessary structural information of a water molecule, such as the number of atoms, or the IDs of the atoms that are connected by bonds, angles, etc.
 
 Then, let us organize the atoms of types 8 and 9 of the water molecules in a group named \textit{H2O} and perform a small energy minimization. The energy minimization is mandatory here given the small \textit{overlap} value of 1 Ångstrom chosen in the \textit{create$\_$atoms} command. Add the following lines into \textit{input.lammps}:
 {\normalsize \begin{verbatim}
@@ -934,7 +933,7 @@ the GROMOS 54A7 force field \cite{schmid2011definition}.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-in-vacuum}
-\caption{The PEG molecule in vacuum. The carbon atoms are in gray, the oxygen atoms in red, and the hydrogen atoms in white..}
+\caption{The PEG molecule in vacuum. The carbon atoms are in gray, the oxygen atoms in red, and the hydrogen atoms in white.}
 \label{fig:PEG-in-vacuum}
 \end{figure}
 
@@ -960,7 +959,7 @@ read_data ../pureH2O/H2O.data &
     extra/special/per/atom 14
 include ../PARM.lammps
 \end{verbatim}}
-Download the template named \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial3/PEG-GROMOS.mol}{\textit{PEG-GROMOS.mol}} for the PEG molecule, and then create a single molecule in the middle of the box:
+Download the template called \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial3/PEG-GROMOS.mol}{\textit{PEG-GROMOS.mol}} for the PEG molecule, and then create a single molecule in the middle of the box:
 {\normalsize \begin{verbatim}
 molecule pegmol PEG-GROMOS.mol
 create_atoms 0 single 0 0 0 mol pegmol 454756
@@ -974,8 +973,7 @@ Water molecules that are overlapping with the PEG must be deleted to avoid futur
 {\normalsize \begin{verbatim}
 delete_atoms overlap 2.0 H2O PEG mol yes
 \end{verbatim}}
-Here, the value of 2 Ångstroms for the overlap cutoff was fixed arbitrarily and can be chosen through trial and error. If the cutoff is too small, the simulation will crash. If the cutoff is too large, too many water molecules will unnecessarily be deleted.
-Finally, let us use the \textit{fix npt} to control the temperature, as well as the pressure by allowing the box size to be rescaled along the \textit{x} axis:
+Here the value of 2 Ångstroms for the overlap cutoff was fixed arbitrarily and can be chosen through trial and error. If the cutoff is too small, the simulation will crash. If the cutoff is too large, too many water molecules will unnecessarily be deleted. Finally, let us use the \textit{fix npt} to control the temperature, as well as the pressure by allowing the box size to be rescaled along the \textit{x} axis:
 {\normalsize \begin{verbatim}
 fix mynpt all npt temp 300 300 100 x 1 1 1000
 timestep 1.0
@@ -1154,15 +1152,14 @@ region rtopwall block -3 3 -3 3 3 4
 region rwall union 2 rbotwall rtopwall
 create_atoms 5 region rwall
 \end{verbatim}}
-Atoms will be placed in the positions of the previously defined lattice, thus forming fcc solids. To add the water molecules, first download the molecule template named \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial4/RigidH2O.txt}{\textit{RigidH2O.txt}} and place it within \textit{systemcreation/}. The template contains all the
+Atoms will be placed in the positions of the previously defined lattice, thus forming fcc solids. To add the water molecules, first download the molecule template called \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial4/RigidH2O.txt}{\textit{RigidH2O.txt}} and place it within \textit{systemcreation/}. The template contains all the
 necessary information concerning the water molecule, such as atom positions, bonds, and angles. Add the following lines to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 region rliquid block INF INF INF INF -2 2
 molecule h2omol RigidH2O.txt
 create_atoms 0 region rliquid mol h2omol 482793
 \end{verbatim}}
-Within the last three lines, a \textit{region} named \textit{rliquid} is created based on the last defined lattice, \textit{fcc 4.04}. \textit{rliquid} will be used for depositing the water molecules. The \textit{molecule} command opens up the molecule template named
-\textit{RigidH2O.txt}, and names the associated molecule \textit{h2omol}. The new molecules are placed on the \textit{fcc 4.04} lattice by the \textit{create$\_$atoms} command. The first parameter is 0, meaning that the atom IDs from the \textit{RigidH2O.txt} file will be used. The number \textit{482793} is a seed that is required by LAMMPS, it can be any positive integer.
+Within the last three lines, a \textit{region} named \textit{rliquid} is created based on the last defined lattice, \textit{fcc 4.04}. \textit{rliquid} will be used for depositing the water molecules. The \textit{molecule} command opens up the molecule template called \textit{RigidH2O.txt}, and names the associated molecule \textit{h2omol}. The new molecules are placed on the \textit{fcc 4.04} lattice by the \textit{create$\_$atoms} command. The first parameter is 0, meaning that the atom IDs from the \textit{RigidH2O.txt} file will be used. The number \textit{482793} is a seed that is required by LAMMPS, it can be any positive integer.
 
 Finally, let us create 30 ions (15 $\text{Na}^+$ and 15 $\text{Cl}^-$) in between the water molecules, by adding the following commands to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
@@ -1232,7 +1229,7 @@ run 0
 write_data system.data
 write_dump all atom dump.lammpstrj
 \end{verbatim}}
-With \textit{run 0}, the simulation will run for 0 steps, which is enough for creating the system and saving the final state. The \textit{write$\_$data} creates a file named \textit{system.data} containing all the information required to restart the
+With \textit{run 0}, the simulation will run for 0 steps, which is enough for creating the system and saving the final state. The \textit{write$\_$data} creates a file called \textit{system.data} containing all the information required to restart the
 simulation from the final configuration generated by this input file. The \textit{write$\_$dump} command prints the final
 positions of the atoms into \textit{dump.lammpstrj}, a file that can be opened with VMD to visualize the system. Run the \textit{input.lammps} file using LAMMPS. Check that your system has been correctly created by also looking at the periodic images, just like in Fig.\,\ref{fig:NANOSHEAR-system}.
 
@@ -1246,7 +1243,7 @@ positions of the atoms into \textit{dump.lammpstrj}, a file that can be opened w
 \paragraph{Energy minimization}
 Let us move the atoms and place them in more energetically favorable positions before starting the actual molecular dynamics simulation. Let us call this step \textit{energy minimization}, although it is not a conventional \textit{minimization} as done for instance in the first tutorial; \hyperref[lennard-jones-label]{Lennard-Jones fluid}. Instead, a molecular dynamics simulation will be performed here, with some techniques employed to prevent the system from exploding due to overlapping atoms.
 
-Let us create a new folder named \textit{minimization/} next to \textit{systemcreation/}, and create a new input file named \textit{input.lammps} in it. Copy the following lines in \textit{input.lammps}:
+Let us create a new folder called \textit{minimization/} next to \textit{systemcreation/}, and create a new input file called \textit{input.lammps} in it. Copy the following lines in \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 boundary p p p
 units real
@@ -1457,7 +1454,7 @@ From the force applied by the fluid on the solid, one can extract the stress wit
 \noindent The objective of this tutorial is to use the reactive force field ReaxFF to calculate the partial charges of a system undergoing deformation, as well as the formation and breaking of chemical bonds \cite{van2001reaxff, zou2012investigation}. The system simulated here is a block of silicon dioxide $\text{SiO}_2$ (Fig.\,\ref{fig:SIO}) that is deformed until rupture. Particular attention is given to the evolution of the atomic charges during the deformation of the structure, and the chemical reactions occurring due to the deformation are tracked over time.
 
 \subsubsection{Prepare and relax}
-Create a folder, name it \textit{RelaxSilica/}, and download the initial topology of a small amorphous silica structure named \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/silica.data}{\textit{silica.data}}. This structure was created using a classical force field called Vashishta \cite{vashishta1990interaction}. If you open the \textit{silica.data} file, you will see in the Atoms section that all silicon atoms have the same charge $q = 1.1\,\text{e}$, and all oxygen atoms have the charge $q = -0.55\,\text{e}$. This is common with classical force fields and will change once ReaxFF is used. 
+Create a folder, name it \textit{RelaxSilica/}, and download the initial topology of a small amorphous silica structure called \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/silica.data}{\textit{silica.data}}. This structure was created using a classical force field called Vashishta \cite{vashishta1990interaction}. If you open the \textit{silica.data} file, you will see in the Atoms section that all silicon atoms have the same charge $q = 1.1\,\text{e}$, and all oxygen atoms have the charge $q = -0.55\,\text{e}$. This is common with classical force fields and will change once ReaxFF is used. 
 
 The first action we need to perform here is to relax the structure with ReaxFF, which we are gonna do using molecular dynamics. To make sure that the system equilibrates nicely, let us track some parameters over time. Create an input file called \textit{input.lammps} in \textit{RelaxSilica/}, and copy the following lines into it: 
 {\normalsize \begin{verbatim}
@@ -1498,8 +1495,7 @@ Let us also use the \textit{fix reaxff/species} to evaluate what species are pre
 fix myspec all reaxff/species 5 1 5 & 
     species.log element Si O
 \end{verbatim}}
-Here, the information will be printed every 5 steps in a file named \textit{species.log}.
-Let us perform a very short run using the anisotropic NPT command and relax the density of the system. 
+Here, the information will be printed every 5 steps in a file called \textit{species.log}. Let us perform a very short run using the anisotropic NPT command and relax the density of the system. 
 {\normalsize \begin{verbatim}
 velocity all create 300.0 3482028
 fix mynpt all npt temp 300.0 300.0 100 &
@@ -1540,7 +1536,7 @@ We can also plot the charge distribution $P(q)$, using the charge values printed
 \end{figure}
 
 \subsubsection{Deform the structure}
-Let us apply a deformation to the structure to force some $\text{Si}-\text{O}$ bonds to break (and eventually re-assemble). Next to \textit{RelaxSilica/}, create a folder, call it \textit{Deform/} and create a file named \textit{input.lammps} in it. Copy the same lines as previously in \textit{input.lammps}:
+Let us apply a deformation to the structure to force some $\text{Si}-\text{O}$ bonds to break (and eventually re-assemble). Next to \textit{RelaxSilica/}, create a folder, call it \textit{Deform/} and create a file called \textit{input.lammps} in it. Copy the same lines as previously in \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 units real
 atom_style full
@@ -1643,7 +1639,7 @@ Masses
 
 (...)
 \end{verbatim}}
-Create a file named \textit{input.lammps} into the \textit{Decorate/} folder, and copy the following lines into it:
+Create a file called \textit{input.lammps} into the \textit{Decorate/} folder, and copy the following lines into it:
 {\normalsize \begin{verbatim}
 units real
 atom_style full
@@ -1726,9 +1722,9 @@ At the end of the simulation, hydroxyl groups can be seen at the interfaces (Fig
 
 \subsubsection{Generation of the silica block}
 \noindent Let us first generate a block of amorphous silica ($\text{SiO}_2$). To do so, we are going to replicate a building block containing 3 Si and 6 O atoms. Create two folders side by side, and name them respectively \textit{Potential/}
-and \textit{SilicaBlock/}. The initial data file for the SiO atoms named \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/SiO.data}{\textit{SiO.data}} must be downloaded and saved in \textit{SilicaBlock/}. This data file contains the coordinates of the 9 atoms, their masses, and their charges.
+and \textit{SilicaBlock/}. The initial data file for the SiO atoms called \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/SiO.data}{\textit{SiO.data}} must be downloaded and saved in \textit{SilicaBlock/}. This data file contains the coordinates of the 9 atoms, their masses, and their charges.
 
-Let us replicate these atoms using LAMMPS, and apply an annealing procedure to obtain a block of amorphous silica. Create a new input file named \textit{input.lammps} in the \textit{SilicaBlock/} folder, and copy
+Let us replicate these atoms using LAMMPS, and apply an annealing procedure to obtain a block of amorphous silica. Create a new input file called \textit{input.lammps} in the \textit{SilicaBlock/} folder, and copy
 the following lines into it:
 {\normalsize \begin{verbatim}
 units metal
@@ -1796,7 +1792,7 @@ write_data amorphousSiO.data
 \end{verbatim}}
 Here, an isotropic barostat is used for the melted phase at $T = 6000\,\text{K}$, and an anisotropic barostat is used for all following phases. With the anisotropic barostat, all three directions of space are adjusted independently from one another. An anisotropic barostat is usually a better choice for a solid phase. For a liquid or a gas, an isotropic barostat is usually the best choice.
 
-The simulation takes about 15-20 minutes on 4 CPU cores. Let us check the evolution of the temperature from the \textit{temperature.dat} file. Apart from an initial spike (which may be due to an initial bad configuration, probably harmless here), the temperature follows well the desired annealing procedure  (Fig.\,\ref{fig:GCMC-temperature}). Let us also make sure that the box was indeed deformed isotropically during the first stage of the simulation, and then anisotropically by plotting the evolution of the box dimensions over time (Fig.\,\ref{fig:GCMC-dimension}). After running the simulation, the final LAMMPS topology file named \textit{amorphousSiO.data} will be located in \textit{SilicaBlock/} (Fig.\,\ref{fig:GCMC-snapshot}).
+The simulation takes about 15-20 minutes on 4 CPU cores. Let us check the evolution of the temperature from the \textit{temperature.dat} file. Apart from an initial spike (which may be due to an initial bad configuration, probably harmless here), the temperature follows well the desired annealing procedure  (Fig.\,\ref{fig:GCMC-temperature}). Let us also make sure that the box was indeed deformed isotropically during the first stage of the simulation, and then anisotropically by plotting the evolution of the box dimensions over time (Fig.\,\ref{fig:GCMC-dimension}). After running the simulation, the final LAMMPS topology file called \textit{amorphousSiO.data} will be located in \textit{SilicaBlock/} (Fig.\,\ref{fig:GCMC-snapshot}).
 
 \begin{figure}
 \centering
@@ -1863,7 +1859,7 @@ imposes incremental deformations of the box. Different scaling factors or differ
 \noindent In order to add the water molecules to the silica, we are going to use the Monte Carlo method in the grand canonical ensemble (GCMC). In short, the system is put into contact with a virtual reservoir of a given chemical potential $\mu$, and multiple attempts to insert water molecules at random positions are made. Each attempt is either accepted or rejected based on energy considerations. Find more details in classical textbooks like Ref.~\citenum{frenkel2023understanding}.
 
 \paragraph{Using hydrid potentials}
-\noindent Create a new folder called \textit{Addingwater/}. Download and save the water molecule template named \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/H2O.mol}{\textit{H2O.mol}} within the \textit{Addingwater/} folder. Create a new input file called \textit{input.lammps} within \textit{Addingwater/}, and copy the following lines into it:
+\noindent Create a new folder called \textit{Addingwater/}. Download and save the water molecule template called \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/H2O.mol}{\textit{H2O.mol}} within the \textit{Addingwater/} folder. Create a new input file called \textit{input.lammps} within \textit{Addingwater/}, and copy the following lines into it:
 {\normalsize \begin{verbatim}
 units metal
 boundary p p p
@@ -2057,7 +2053,7 @@ The most direct way to calculate a free energy profile is to extract the partiti
 where $\Delta G$ is the free energy difference, $R$ is the gas constant, $T$ is the temperature, $p$ is the pressure, and $p_0$ is a reference pressure. As an illustration, let us apply this method to an extremely simple configuration that consists of a few particles diffusing in a box in the presence of a position-dependent repelling force that makes the center of the box a relatively unfavorable area to explore.
 
 \paragraph{Basic LAMMPS parameters}
-\noindent Create a folder named \textit{FreeSampling/}, and create an input script named \textit{input.lammps} in it. Copy the following lines into it:
+\noindent Create a folder called \textit{FreeSampling/}, and create an input script called \textit{input.lammps} in it. Copy the following lines into it:
 {\normalsize \begin{verbatim}
 variable sigma equal 3.405
 variable epsilon equal 0.238
@@ -2186,7 +2182,7 @@ If we increase the value of $U_0$, the average number of atoms in the central re
 Umbrella sampling is a biased molecular dynamics method in which additional forces are added to a chosen atom to force it to explore the more unfavorable areas of the system \cite{kastner2011umbrella, allen2017computer, frenkel2023understanding}. Here, to encourage one of the atoms to explore the central region of the box, we apply a potential $V$ and force it to move along the $x$-axis. The chosen path is called the axis of reaction. Several simulations (called windows) will be conducted with varying positions for the center of the applied biasing. The results will be analyzed using the weighted histogram analysis method (WHAM) \cite{kumar1992weighted}, which allows for the removal of the biasing effect and ultimately deduces the unbiased free energy profile.
 
 \paragraph{LAMMPS input script}
-Create a new folder called \textit{BiasedSampling/}, and create a new input file named \textit{input.lammps} in it, and copy the following lines:
+Create a new folder called \textit{BiasedSampling/}, and create a new input file called \textit{input.lammps} in it, and copy the following lines:
 {\normalsize \begin{verbatim}
 variable sigma equal 3.405
 variable epsilon equal 0.238
@@ -2250,7 +2246,7 @@ unfix myat1
 next a
 jump SELF loop
 \end{verbatim}}
-A folder named \textit{data/} needs to be created within \textit{BiasedSampling/}. The spring command serves to impose the additional harmonic potential $V$ with the spring constant $k$. Note that the value of $k$ should be chosen with care, if $k$ is too small, the particle won't follow the biasing potential center, and if $k$ is too large, there will be no overlapping between the different windows. The center of the harmonic potential $x_\text{des}$ successively takes values from -25 to 25. For each value of $x_\text{des}$, an equilibration step of 0.4 ns is performed, followed by a step of 2 ns during which the position along $x$ of the particle is saved in data files (one data file per value of $x_\text{des}$). You can always increase the duration of the runs for better samplings. Run the \textit{input.lammps}  file using LAMMPS.
+A folder called \textit{data/} needs to be created within \textit{BiasedSampling/}. The spring command serves to impose the additional harmonic potential $V$ with the spring constant $k$. Note that the value of $k$ should be chosen with care, if $k$ is too small, the particle won't follow the biasing potential center, and if $k$ is too large, there will be no overlapping between the different windows. The center of the harmonic potential $x_\text{des}$ successively takes values from -25 to 25. For each value of $x_\text{des}$, an equilibration step of 0.4 ns is performed, followed by a step of 2 ns during which the position along $x$ of the particle is saved in data files (one data file per value of $x_\text{des}$). You can always increase the duration of the runs for better samplings. Run the \textit{input.lammps}  file using LAMMPS.
 
 \begin{figure}
 \centering
@@ -2277,8 +2273,7 @@ Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutor
 ./wham -25 25 50 1e-8 119.8 0 \
     metadata.dat PMF.dat
 \end{verbatim}}
-where -25 and 25 are the boundaries, 50 is the number of bins, 1e-8 is the tolerance, and 119.8 is the temperature. A file named
-\textit{PMF.dat} has been created, containing the free energy profile in kcal/mol. Again, one can compare the result of the PMF with the imposed potential $U$, demonstrating excellent agreement (Fig.\,\ref{fig:US-freenergy}). We can see that the agreement is quite good despite the very short calculation time and the very high value for the energy barrier. Obtaining the same results with Free Sampling would require performing extremely long and costly simulations.
+where -25 and 25 are the boundaries, 50 is the number of bins, 1e-8 is the tolerance, and 119.8 is the temperature. A file called \textit{PMF.dat} has been created, containing the free energy profile in kcal/mol. Again, one can compare the result of the PMF with the imposed potential $U$, demonstrating excellent agreement (Fig.\,\ref{fig:US-freenergy}). We can see that the agreement is quite good despite the very short calculation time and the very high value for the energy barrier. Obtaining the same results with Free Sampling would require performing extremely long and costly simulations.
 
 \begin{figure}
 \centering
