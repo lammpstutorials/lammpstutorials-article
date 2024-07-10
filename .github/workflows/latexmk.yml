@@ -9,5 +9,5 @@ jobs:
       - uses: yegor256/latexmk-action@0.12.0
         with:
           cmd: latexmk
-          path: foo
+          path: ./
           opts: -pdf
