@@ -178,6 +178,10 @@ The tutorials described in this article can be accessed at \href{https://lammpst
 
 \noindent The objective of this tutorial is to perform a simple MD simulation using LAMMPS. The system is a Lennard-Jones fluid composed of neutral particles with two different diameters, contained within a cubic box with periodic boundary conditions (Fig.\,\ref{fig:LJ}). In this tutorial, the temperature of the system is maintained using a Langevin thermostat \cite{schneider1978molecular}, and basic quantities are extracted from the system, including the potential and kinetic energies. 
 
+\begin{tcolorbox}[colback=mylightblue!5!white,colframe=mylightblue!75!black,title=For LAMMPS-GUI users]
+\hyperref[lennard-jones-label]{Tutorial 1} can be followed using the LAMMPS-GUI. Instructions for GUI users are written in these boxes that can be ignored by non-GUI users.
+\end{tcolorbox}
+
 \subsubsection{My first input}
 
 \noindent To run a simulation using LAMMPS, one needs to write a series of commands in an input script. For clarity, the input scripts written for this first tutorial will be divided into five categories which we are going to fill out one by one. Create a folder, call it \textit{my-first-input/}, and then create a blank text file in it called \textit{input.lammps}. Copy the following lines in \textit{input.lammps}, where a line starting with a hash symbol ($\#$) is a comment ignored by LAMMPS:
@@ -190,6 +194,10 @@ The tutorials described in this article can be accessed at \href{https://lammpst
 # 5) Run
 \end{verbatim}}
 \noindent These five categories are not required in every input script and do not necessarily need to be in that exact order. For instance, parts 3 and 4 could be inverted, or part 4 could be omitted. Note however that LAMMPS reads input files from top to bottom, therefore the \textit{Initialization} and \textit{System definition} categories must appear at the top of the input, and the \textit{Run} category at the bottom.
+
+\begin{tcolorbox}[colback=mylightblue!5!white,colframe=mylightblue!75!black,title=For LAMMPS-GUI users]
+Either open the \textit{input.lammps} file using LAMMPS-GUI, or simply open LAMMPS-GUI. In this later case, an empty buffer appear, in which LAMMPS commands can be written.
+\end{tcolorbox}
 
 \paragraph{System initialization}
 In the first section of the script, called \textit{Initialization}, let us indicate to LAMMPS the most basic information about the simulation, such as:
@@ -253,7 +261,17 @@ Run the simulation by typing the following command in a terminal:
 {\normalsize \begin{verbatim}
 lmp -in input.lammps
 \end{verbatim}}
-where the command \textit{lmp} is linked to a compiled version of LAMMPS. As the simulation progresses, the potential energy can be seen to decrease from a large positive value to a negative value (see also the orange lines in Fig.\,\ref{fig:evolution-energy}\,a). The initially large and positive value of the potential energy was expected because the atoms have been created at random positions within the simulation box and some of them are probably overlapping, resulting in a large initial energy which is the consequence of the repulsive part of the Lennard-Jones interaction potential. As the energy minimization progresses, the energy rapidly decreases and reaches a negative value, indicating that the atoms have been displaced at reasonable distances from each other.
+where the command \textit{lmp} is linked to a compiled version of LAMMPS. 
+
+\begin{tcolorbox}[colback=mylightblue!5!white,colframe=mylightblue!75!black,title=For LAMMPS-GUI users]
+Run the simulation by selecting \textit{Run LAMMPS from Editor Buffer} from the \textit{Run} menu.
+\end{tcolorbox}
+
+As the simulation progresses, the potential energy can be seen to decrease from a large positive value to a negative value (see also the orange lines in Fig.\,\ref{fig:evolution-energy}\,a). The initially large and positive value of the potential energy was expected because the atoms have been created at random positions within the simulation box and some of them are probably overlapping, resulting in a large initial energy which is the consequence of the repulsive part of the Lennard-Jones interaction potential. As the energy minimization progresses, the energy rapidly decreases and reaches a negative value, indicating that the atoms have been displaced at reasonable distances from each other.
+
+\begin{tcolorbox}[colback=mylightblue!5!white,colframe=mylightblue!75!black,title=For LAMMPS-GUI users]
+As the simulation runs, a windows showing the evolution of the temperature over time pops-up. Switch from the temperature to the potential energy by choosing \textit{PotEng} as the \textit{Select data}, or to the kinetic energy by choosing \textit{KinEng}.
+\end{tcolorbox}
 
 \paragraph{Molecular dynamics}
 
@@ -291,6 +309,10 @@ To visualize the trajectories of the atoms, we first need to print the positions
 dump mydmp all atom 100 dump.lammpstrj
 \end{verbatim}}
 Run the \textit{input.lammps} using LAMMPS again. The file called \textit{dump.lammpstrj} created by LAMMPS within \textit{my-first-input/} can be opened using VMD (The snapshot in Fig.\,\ref{fig:LJ} was made using VMD).
+
+\begin{tcolorbox}[colback=mylightblue!5!white,colframe=mylightblue!75!black,title=For LAMMPS-GUI users]
+Generate an image of the system by selecting \textit{Create image} from the \textit{Run} menu.
+\end{tcolorbox}
 
 \subsubsection{Improving the script}
 
