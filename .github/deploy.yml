@@ -1,0 +1,38 @@
+name: Deploy PDF
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: lammps-tutorials.tex
+      - name: Copy
+        run: |
+          mkdir out
+          cp ./lammps-tutorials.pdf ./out/lammps-tutorials.pdf
+      - uses: actions/upload-artifact@v2
+        with:
+          name: article
+          path: out/lammps-tutorials.pdf
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@3.6.2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          CLEAN: true
+          SINGLE_COMMIT: true
+          FOLDER: out
+          GIT_CONFIG_NAME: lukasbachbot
+          GIT_CONFIG_EMAIL: bot@noreply.lukasbach.com
