@@ -1,6 +1,7 @@
 name: latexmk
 on:
   push:
+  pull_request:
 jobs:
   latexmk:
     runs-on: ubuntu-22.04
@@ -9,5 +10,6 @@ jobs:
       - uses: yegor256/latexmk-action@0.12.0
         with:
           cmd: latexmk
-          path: ./
-          opts: -pdf
+          path: .
+          opts: -pdf lammps-tutorials
+          packages: regexpatch mdframed zref needspace opensans fontaxes authblk
