@@ -11,4 +11,3 @@ jobs:
           cmd: latexmk
           path: foo
           opts: -pdf
-          packages: acmart tikz
