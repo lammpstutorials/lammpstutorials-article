@@ -128,7 +128,7 @@ This set of tutorials consists of seven tutorials arranged in order of increasin
 
 In \hyperref[lennard-jones-label]{tutorial 1}, the structure of LAMMPS input files is illustrated through the creation of a simple Lennard-Jones fluid system. Basic LAMMPS commands are used to set the interaction between the atoms, perform an energy minimization, and finally a simple MD simulation in the canonical (NVT) ensemble. \textcolor{blue}{This tutorial also illustrates the use of the LAMMPS graphical user interface (GUI).}
 
-In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system where atoms are connected by bonds is used: a small carbon nanotube. The use of both classical and reactive force fields (here AIREBO) is illustrated. An external deformation is applied to the CNT, and its deformation is measured.
+In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system where atoms are connected by bonds is used: a small carbon nanotube. The use of both classical and reactive force fields (here AIREBO) is illustrated. An external deformation is applied to the CNT, and its deformation is measured. \textcolor{blue}{This tutorial illustrates the use of the YAML format to import the data from \textit{log} file into Python.}
 
 In \hyperref[all-atoms-label]{tutorial 3}, two components, liquid water and a polymer molecule, are merged and equilibrated. A long-range solver is used to handle the electrostatic interactions, and the system is equilibrated in the isothermal-isobaric (NPT) ensemble. A stretching force is then applied to the polymer.
 
@@ -606,9 +606,7 @@ fix myber carbon_mid temp/berendsen &
     ${T} ${T} 100
 fix_modify myber temp Tmid
 \end{verbatim}}
-Re-setting the atom IDs is necessary before using the \textit{velocity} command, this is done by the \textit{reset$\_$atoms} command.
-The \textit{velocity} command gives initial velocities to the atoms of the middle group \textit{carbon$\_$mid}, ensuring an initial temperature of 300 K for these atoms. The \textit{fix nve} is applied to all atoms so that all atom positions are recalculated at every step, and a \textit{Berendsen} thermostat is applied to the atoms of the group \textit{carbon$\_$mid} only \cite{berendsen1984molecular}. The \textit{fix$\_$modify myber} ensures that the \textit{fix Berendsen} uses the temperature of the group \textit{carbon$\_$mid} as an input, instead of the temperature of the whole system. This is necessary to make sure that the frozen edges won't bias the temperature. Note that the atoms
-of the edges do not need a thermostat because their motion will be restrained, see below.
+Re-setting the atom IDs is necessary before using the \textit{velocity} command, this is done by the \textit{reset$\_$atoms} command. The \textit{velocity} command gives initial velocities to the atoms of the middle group \textit{carbon$\_$mid}, ensuring an initial temperature of 300 K for these atoms. The \textit{fix nve} is applied to all atoms so that all atom positions are recalculated at every step, and a \textit{Berendsen} thermostat is applied to the atoms of the group \textit{carbon$\_$mid} only \cite{berendsen1984molecular}. The \textit{fix$\_$modify myber} ensures that the \textit{fix Berendsen} uses the temperature of the group \textit{carbon$\_$mid} as an input, instead of the temperature of the whole system. This is necessary to make sure that the frozen edges won't bias the temperature. Note that the atoms of the edges do not need a thermostat because their motion will be restrained, see below.
 
 To restrain the motion of the atoms at the edges, let us add the following commands to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
@@ -617,8 +615,7 @@ fix mysf2 carbon_bot setforce 0 0 0
 velocity carbon_top set 0 0 0
 velocity carbon_bot set 0 0 0
 \end{verbatim}}
-The two \textit{setforce} commands cancel the forces applied on the atoms of the two edges, respectively. The cancellation of the forces
-is done at every step, and along all 3 directions of space, $x$, $y$, and $z$, due to the use of \textit{0 0 0}. The two \textit{velocity} commands set the initial velocities along $x$, $y$, and $z$ to 0 for the atoms of \textit{carbon$\_$top} and \textit{carbon$\_$bot}, respectively. As a consequence of these last four commands, the atoms of the edges will remain immobile during the simulation (or at least they would if no other command was applied to them). The \textit{velocity set} commands impose the velocity of a group of atoms at the start of a run but do not enforce the velocity during the entire simulation. When \textit{velocity set} is used in combination with \textit{setforce 0 0 0}, as is the case here, the atoms won't feel any force during the entire simulation. According to the Newton equation, no force means no acceleration, meaning that the initial velocity will persist during the entire simulation, thus producing a constant velocity motion.
+The two \textit{setforce} commands cancel the forces applied on the atoms of the two edges, respectively. The cancellation of the forces is done at every step, and along all 3 directions of space, $x$, $y$, and $z$, due to the use of \textit{0 0 0}. The two \textit{velocity} commands set the initial velocities along $x$, $y$, and $z$ to 0 for the atoms of \textit{carbon$\_$top} and \textit{carbon$\_$bot}, respectively. As a consequence of these last four commands, the atoms of the edges will remain immobile during the simulation (or at least they would if no other command was applied to them). The \textit{velocity set} commands impose the velocity of a group of atoms at the start of a run but do not enforce the velocity during the entire simulation. When \textit{velocity set} is used in combination with \textit{setforce 0 0 0}, as is the case here, the atoms won't feel any force during the entire simulation. According to the Newton equation, no force means no acceleration, meaning that the initial velocity will persist during the entire simulation, thus producing a constant velocity motion.
 
 \paragraph{Data extraction}
 Next, to measure the strain and stress suffered by the CNT, let us extract the distance $L$ between the two edges as well as the force applied on the edges.
@@ -643,12 +640,12 @@ fix at3 all ave/time 10 10 100 c_Tmid &
 Let us run a small equilibration step to bring the system to the required temperature before applying any deformation:
 {\normalsize \begin{verbatim}
 thermo 100
-thermo_modify temp Tmid
+thermo_modify temp Tmid line yaml
 
 timestep 1.0
 run 5000
 \end{verbatim}}
-With the \textit{thermo$\_$modify} command, we specify to LAMMPS that we want the temperature $T_\mathrm{mid}$ to be printed in the terminal, not the temperature of the entire system (because of the frozen edges, the temperature of the entire system is not relevant). Let us impose a constant velocity deformation on the CNT by combining the \textit{velocity set} command with previously defined \textit{fix setforce}. Add the following lines in the \textit{input.lammps} file, right after the last \textit{run 5000} command:
+\textcolor{blue}{With the \textit{thermo$\_$modify} command, we specify to LAMMPS that the temperature $T_\mathrm{mid}$ must be printed in the terminal instead of the temperature of the entire system. This choice is motivated by the presence of frozen parts with an effective temperature of 0\,K, which makes the average temperature of the entire system not relevant. The \textit{thermo$\_$modify} command also imposes the use of the YAML format that can easily be read by Python (see below).} Let us impose a constant velocity deformation on the CNT by combining the \textit{velocity set} command with previously defined \textit{fix setforce}. Add the following lines in the \textit{input.lammps} file, right after the last \textit{run 5000} command:
 {\normalsize \begin{verbatim}
 velocity carbon_top set 0 0 0.0005
 velocity carbon_bot set 0 0 -0.0005
@@ -663,7 +660,7 @@ run 10000
 \label{fig:CNT-unbreakable-lenght}
 \end{figure}
 
-The length $L$ of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.\,\ref{fig:CNT-unbreakable-lenght}), as expected from the imposed constant velocity. The energy, which can be accessed from the log file, shows a non-linear increase with $t$ once the deformation starts, which is expected from the typical dependency of bond energy with bond distance $U_b = k_b \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-energy}). As always, it is important to ensure that the simulation behaves as expected by opening the \textit{dump.lammpstrj} file with VMD (Fig.\,\ref{fig:CNT-deformed-unbreakable}).
+The length $L$ of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.\,\ref{fig:CNT-unbreakable-lenght}), as expected from the imposed constant velocity. The total energy of the system shows a non-linear increase with $t$ once the deformation starts, which is expected from the typical dependency of bond energy with bond distance $U_b = k_b \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-energy}). As always, it is important to ensure that the simulation behaves as expected by opening the \textit{dump.lammpstrj} file with VMD (Fig.\,\ref{fig:CNT-deformed-unbreakable}).
 
 \begin{figure}
 \centering
@@ -678,6 +675,36 @@ The length $L$ of the CNT increases linearly over time for $t > 5\,\text{ps}$ (F
 \caption{CNT before (top) and after (bottom) deformation.}
 \label{fig:CNT-deformed-unbreakable}
 \end{figure}
+
+\textcolor{blue}{To import the YAML log file into Python and plot the total energy as a function of the number of step, create a new file within \textit{unbreakable-bonds/} called \textit{read-log.py}. Copy the following lines into it:}
+{\normalsize \begin{verbatim}
+import numpy as np
+import re, yaml
+
+docs = ""
+with open("log.lammps") as f:
+    for line in f:
+        pattern = (
+            r"^(keywords:.*$|"
+            r"data:$|"
+            r"---$|"
+            r"\.\.\.$|"
+            r"  - \[.*\]$)"
+        )
+        m = re.search(pattern, line)
+        if m:
+            docs += m.group(0) + '\n'
+thermo = list(yaml.load_all(docs,
+                Loader=yaml.CSafeLoader))
+
+Etot_vs_step = []
+for line in thermo[0]['data']:
+    Etot_vs_step.append([line[0], line[4]])
+for line in thermo[1]['data']:
+    Etot_vs_step.append([line[0], line[4]])
+np.savetxt("etot_vs_step.dat", Etot_vs_step)
+\end{verbatim}}
+\textcolor{blue}{The \textit{log} file is first open, a certain pattern is identified and stored as a string character named \textit{docs}. The string is then converted in a list, and the number of steps as well as the total energy $E_\text{tot}$ are extracted into the list named \textit{Etot$\_$vs$\_$step}, which is saved in the data file named \textit{etot$\_$vs$\_$step.dat} using the NumPy \textit{savetxt} function. \textit{thermo[0]} can be used to access the informations from the first minimization run, and  \textit{thermo[1]} from the second MD run.}
 
 \subsubsection{Breakable bonds}
 When using a classical force field, as we just did, the bonds between the atoms are non-breakable. Let us perform a similar simulation and deform a small CNT again, but this time using a reactive force field that allows for the bonds to break if the applied deformation is large enough.
