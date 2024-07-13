@@ -241,29 +241,16 @@ The system is now fully parametrized. Let us fill the two last remaining section
 {\normalsize \begin{verbatim}
 # 4) Visualization
 thermo 10
-thermo_style custom step temp pe ke &
-    etotal press
+thermo_style custom step etotal press
 
 # 5) Run
 minimize 1.0e-4 1.0e-6 1000 10000
 \end{verbatim}}
-The \textit{thermo} command asks LAMMPS to print thermodynamic information (e.g. temperature, energy) in the terminal every given number of steps, here 10 steps. The \textit{thermo$\_$style custom} requires LAMMPS to print the system temperature (\textit{temp}), potential energy (\textit{pe}), kinetic energy (\textit{ke}), total energy (\textit{etotal}), and pressure (\textit{press}). Finally, the \textit{minimize} command instructs LAMMPS to perform an energy minimization of the system. By default, LAMMPS uses the conjugate gradient (CG) algorithm \cite{hestenes1952methods}.
+The \textit{thermo} command asks LAMMPS to print thermodynamic informations in the terminal every given number of steps, here 10 steps. The \textit{thermo$\_$style custom} requires LAMMPS to print the step (\textit{step}), the total energy (\textit{etotal}), and the pressure (\textit{press}). Finally, the \textit{minimize} command instructs LAMMPS to perform an energy minimization of the system. By default, LAMMPS uses the conjugate gradient (CG) algorithm \cite{hestenes1952methods}.
 
-Run the simulation by typing the following command in a terminal:
-{\normalsize \begin{verbatim}
-lmp -in input.lammps
-\end{verbatim}}
-where the command \textit{lmp} is linked to a compiled version of LAMMPS.
-
-\begin{tcolorbox}[colback=mylightblue!5!white,colframe=mylightblue!75!black,title=For LAMMPS-GUI users]
 Run the simulation by selecting \textit{Run LAMMPS from Editor Buffer} from the \textit{Run} menu.
-\end{tcolorbox}
 
-As the simulation progresses, the potential energy can be seen to decrease from a large positive value to a negative value (see also the orange lines in Fig.\,\ref{fig:evolution-energy}\,a). The initially large and positive value of the potential energy was expected because the atoms have been created at random positions within the simulation box and some of them are probably overlapping, resulting in a large initial energy which is the consequence of the repulsive part of the Lennard-Jones interaction potential. As the energy minimization progresses, the energy rapidly decreases and reaches a negative value, indicating that the atoms have been displaced at reasonable distances from each other.
-
-\begin{tcolorbox}[colback=mylightblue!5!white,colframe=mylightblue!75!black,title=For LAMMPS-GUI users]
-As the simulation runs, a windows showing the evolution of the temperature over time pops-up. Switch from the temperature to the potential energy by choosing \textit{PotEng} as the \textit{Select data}, or to the kinetic energy by choosing \textit{KinEng}.
-\end{tcolorbox}
+As the simulation progresses, a windows showing the evolution of the total energy over time pops-up \textcolor{red}{RED: warning, this does not seem to work properly}. The potential energy can be seen to decrease from a large positive value to a negative value (see also the orange lines in Fig.\,\ref{fig:evolution-energy}\,a). The initially large and positive value of the potential energy was expected because the atoms have been created at random positions within the simulation box and some of them are probably overlapping, resulting in a large initial energy which is the consequence of the repulsive part of the Lennard-Jones interaction potential. As the energy minimization progresses, the energy rapidly decreases and reaches a negative value, indicating that the atoms have been displaced at reasonable distances from each other. Switch from the total energy to the pressure by choosing \textit{Press} in \textit{Select data}.
 
 \paragraph{Molecular dynamics}
 
@@ -273,9 +260,11 @@ lines:
 # PART B - MOLECULAR DYNAMICS
 # 4) Visualization
 thermo 50
+thermo_style custom step temp etotal pe ke press
 \end{verbatim}}
-Since LAMMPS reads the input from top to bottom, these lines will be executed after the energy minimization. There is no need to re-initialize or re-define the system. The \textit{thermo} command is called a second time within the same input, so the previously entered value of 10 will be replaced by
-the value of 50 as soon as \textit{PART B} starts. Then, let us add a second \textit{Run} section:
+Since LAMMPS reads the input from top to bottom, these lines will be executed after the energy minimization. There is no need to re-initialize or re-define the system. The \textit{thermo} command is called a second time within the same input, so the previously entered value of 10 will be replaced by the value of 50 as soon as \textit{PART B} starts. In addition, more thermodynamics informations will be printed by LAMMPS during \textit{PART B}. This is particulalry useful because, as the molecular dynamics starts, the system will have a non-zero temperature (\textit{temp}) and kinetic energy (\textit{ke}). Here, \textit{pe} is the potential energy of the system, such as \textit{pe + ke = etotal}.
+
+Then, let us add a second \textit{Run} section:
 {\normalsize \begin{verbatim}
 # 5) Run
 fix mynve all nve
@@ -285,7 +274,7 @@ run 10000
 \end{verbatim}}
 The \textit{fix nve} is used to update the positions and the velocities of the atoms in the group \textit{all} at every step. The group \textit{all} is a default group that contains every atom. The second fix applies a Langevin thermostat to the atoms in the group \textit{all}, with a desired initial temperature of 1.0 (unitless), and a final temperature of 1.0 as well \cite{schneider1978molecular}. A \textit{damping} parameter of 0.1 is used. The \textit{damping} parameter determines how rapidly the temperature is relaxed to its desired value. The number \textit{1530917} is a seed, you can change it to perform statistically independent simulations. Finally, the last two lines set the value of the \textit{timestep} and the number of steps for the \textit{run}, respectively, corresponding to a total duration of 50 (unitless).
 
-Run the simulation again using LAMMPS. From the information printed in the terminal, one can see that the temperature \textit{Temp} starts from 0, but rapidly reaches the requested value and stabilizes itself near $T=1$ (unitless). From what has been printed in the \textit{log} file, one can plot the energy of the system over time. The potential energy, $p_\text{e}$, rapidly decreases during energy minimization (Fig.\,\ref{fig:evolution-energy}\,a). Then, after the molecular dynamics simulation starts, $p_\text{e}$ increases until it reaches a plateau value of about -0.25. The kinetic energy, $k_\text{e}$, is equal to zero during energy minimization and then increases during molecular dynamics until it reaches a plateau value of about 1.5 (Fig.\,\ref{fig:evolution-energy}\,b).
+Run the simulation again using LAMMPS. From the information printed in the log file, one can see that the temperature \textit{Temp} starts from 0, but rapidly reaches the requested value and stabilizes itself near $T=1$ (unitless). One can also see that that the potential energy, $p_\text{e}$, rapidly decreases during energy minimization (Fig.\,\ref{fig:evolution-energy}\,a). Then, after the molecular dynamics simulation starts, $p_\text{e}$ increases until it reaches a plateau value of about -0.25. The kinetic energy, $k_\text{e}$, is equal to zero during energy minimization and then increases during molecular dynamics until it reaches a plateau value of about 1.5 (Fig.\,\ref{fig:evolution-energy}\,b).
 
 \begin{figure}
 \centering
@@ -300,11 +289,7 @@ To visualize the trajectories of the atoms, we first need to print the positions
 {\normalsize \begin{verbatim}
 dump mydmp all atom 100 dump.lammpstrj
 \end{verbatim}}
-Run the \textit{input.lammps} using LAMMPS again. The file called \textit{dump.lammpstrj} created by LAMMPS within \textit{my-first-input/} can be opened using VMD (The snapshot in Fig.\,\ref{fig:LJ} was made using VMD).
-
-\begin{tcolorbox}[colback=mylightblue!5!white,colframe=mylightblue!75!black,title=For LAMMPS-GUI users]
-Generate an image of the system by selecting \textit{Create image} from the \textit{Run} menu.
-\end{tcolorbox}
+Run the \textit{input.lammps} using LAMMPS again, and generate an image of the system by selecting \textit{Create image} from the \textit{Run} menu. The file called \textit{dump.lammpstrj} created by LAMMPS within \textit{my-first-input/} can be opened using VMD (The snapshot in Fig.\,\ref{fig:LJ} was made using VMD).
 
 \subsubsection{Improving the script}
 
@@ -344,8 +329,7 @@ pair_coeff 2 2 0.5 3.0
 
 # 4) Visualization
 thermo 10
-thermo_style custom step temp pe ke &
-    etotal press
+thermo_style custom step etotal press
 dump mydmp all atom 10 dump.min.lammpstrj
 
 # 5) Run
@@ -390,12 +374,13 @@ group group_type_2_out &
 delete_atoms group group_type_1_in
 delete_atoms group group_type_2_out
 \end{verbatim}}
-The two first \textit{region} commands recreate the previously defined regions, which is necessary since regions are not saved by the \textit{write$\_$data} command. The first two \textit{group} commands are used to create groups containing all the atoms of type 1 and all the atoms of type 2, respectively.
-The next two \textit{group} commands create atom groups based on their
+The two first \textit{region} commands recreate the previously defined regions, which is necessary since regions are not saved by the \textit{write$\_$data} command. The first two \textit{group} commands are used to create groups containing all the atoms of type 1 and all the atoms of type 2, respectively. The next two \textit{group} commands create atom groups based on their
 positions at the beginning of the simulation, i.e. when the commands are being read by LAMMPS. The last two \textit{group} commands create atom groups based on the intersection between the previously defined groups. Finally, the two \textit{delete$\_$atoms} commands delete the atoms of type 1 that are located within the cylinder and the atoms of type 2 that are located outside the cylinder, respectively. Add the following lines into \textit{input.md.lammps}. Note the absence of \textit{Simulation settings} section, because the settings are taken from the \textit{.data} file.
 {\normalsize \begin{verbatim}
 # 4) Visualization
 thermo 1000
+thermo_style custom step temp pe ke &
+    etotal press
 dump mydmp all atom 1000 dump.md.lammpstrj
 \end{verbatim}}
 Let us extract the number of atoms of each type inside the cylinder as a function of time, by adding the following commands to \textit{input.md.lammps}:
@@ -559,6 +544,12 @@ The atoms from the \textit{carbon$\_$top} and \textit{carbon$\_$bot} groups are 
 \caption{CNT with the atoms from the \textit{carbon$\_$mid} group in pink, and the atoms from the \textit{carbon$\_$top} and the \textit{carbon$\_$bot} groups in white.}
 \label{fig:CNT-underformed}
 \end{figure}
+
+{\color{blue}Run the simulation by typing the following command in a terminal:
+{\normalsize \begin{verbatim}
+lmp -in input.lammps
+\end{verbatim}}
+where the command \textit{lmp} is linked to a compiled version of LAMMPS.}
 
 When running a simulation, the number of atoms in each group is printed in the terminal (and in the \textit{log.lammps} file). Always make sure that the number of atoms in each group corresponds to what is expected, just like here:
 {\normalsize \begin{verbatim}
