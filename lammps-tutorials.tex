@@ -126,7 +126,7 @@ LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) is a highly f
 
 This set of tutorials consists of seven tutorials arranged in order of increasing difficulty. The novelties associated with each tutorial are briefly described below.
 
-In \hyperref[lennard-jones-label]{tutorial 1}, the structure of LAMMPS input files is illustrated through the creation of a simple Lennard-Jones fluid system. Basic LAMMPS commands are used to set the interaction between the atoms, perform an energy minimization, and finally a simple MD simulation in the canonical (NVT) ensemble. \textcolor{blue}{This tutorial also illustrates the use of the LAMMPS graphical user interface (GUI).}
+In \hyperref[lennard-jones-label]{tutorial 1}, the structure of LAMMPS input files is illustrated through the creation of a simple Lennard-Jones fluid system. Basic LAMMPS commands are used to set the interaction between the atoms, perform an energy minimization, and finally a simple MD simulation in the canonical (NVT) ensemble. This tutorial also illustrates the use of the LAMMPS graphical user interface (GUI).
 
 In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system where atoms are connected by bonds is used: a small carbon nanotube. The use of both classical and reactive force fields (here AIREBO) is illustrated. An external deformation is applied to the CNT, and its deformation is measured. \textcolor{blue}{This tutorial illustrates the use of the YAML format to import the data from \textit{log} file into Python.}
 
@@ -151,7 +151,7 @@ This set of tutorials requires no prior knowledge of LAMMPS. The tutorials assum
 
 \subsection{Software/system requirements}
 
-The LAMMPS version 2Aug2023 is required to follow the tutorials \cite{thompson2022lammps}. Install it by following the instructions of the LAMMPS website, \textcolor{blue}{or download directly a pre-compiled LAMMPS package} (\href{https://docs.lammps.org}{docs.lammps.org}). \textcolor{blue}{Optionally, to follow Tutorial 1, choose a package that was compiled with the LAMMPS-GUI.} Depending on your operating system (i.e. Linux, macOS, or Windows), the procedure may differ. LAMMPS must be compiled with the following packages:
+The LAMMPS version 2Aug2023 is required to follow the tutorials \cite{thompson2022lammps}. Install it by following the instructions of the LAMMPS website, or download directly a pre-compiled LAMMPS package (\href{https://docs.lammps.org}{docs.lammps.org}). To follow \hyperref[lennard-jones-label]{Tutorial 1}, choose a package that was compiled with the LAMMPS-GUI. Depending on your operating system (i.e. Linux, macOS, or Windows), the procedure may differ. LAMMPS must be compiled with the following packages:
 \begin{itemize}
 \item MANYBODY
 \item MOLECULE
@@ -178,13 +178,9 @@ The tutorials described in this article can be accessed at \href{https://lammpst
 
 \noindent The objective of this tutorial is to perform a simple MD simulation using LAMMPS. The system is a Lennard-Jones fluid composed of neutral particles with two different diameters, contained within a cubic box with periodic boundary conditions (Fig.\,\ref{fig:LJ}). In this tutorial, the temperature of the system is maintained using a Langevin thermostat \cite{schneider1978molecular}, and basic quantities are extracted from the system, including the potential and kinetic energies.
 
-\begin{tcolorbox}[colback=mylightblue!5!white,colframe=mylightblue!75!black,title=For LAMMPS-GUI users]
-\hyperref[lennard-jones-label]{Tutorial 1} can be followed using the LAMMPS-GUI. Instructions for GUI users are written in these boxes that can be ignored by non-GUI users.
-\end{tcolorbox}
-
 \subsubsection{My first input}
 
-\noindent To run a simulation using LAMMPS, one needs to write a series of commands in an input script. For clarity, the input scripts written for this first tutorial will be divided into five categories which we are going to fill out one by one. Create a folder, call it \textit{my-first-input/}, and then create a blank text file in it called \textit{input.lammps}. Copy the following lines in \textit{input.lammps}, where a line starting with a hash symbol ($\#$) is a comment ignored by LAMMPS:
+\noindent To run a simulation using LAMMPS, one needs to write a series of commands in an input script. For clarity, the input scripts written for this first tutorial will be divided into five categories which we are going to fill out one by one. Create a folder, call it \textit{my-first-input/}, and then create a blank text file in it called \textit{input.lammps}. Open \textit{input.lammps} using the LAMMPS-GUI. An empty buffer must open, in which the following lines must be copy-pasted:
 {\normalsize \begin{verbatim}
 # PART A - ENERGY MINIMIZATION
 # 1) Initialization
@@ -193,11 +189,7 @@ The tutorials described in this article can be accessed at \href{https://lammpst
 # 4) Visualization
 # 5) Run
 \end{verbatim}}
-\noindent These five categories are not required in every input script and do not necessarily need to be in that exact order. For instance, parts 3 and 4 could be inverted, or part 4 could be omitted. Note however that LAMMPS reads input files from top to bottom, therefore the \textit{Initialization} and \textit{System definition} categories must appear at the top of the input, and the \textit{Run} category at the bottom.
-
-\begin{tcolorbox}[colback=mylightblue!5!white,colframe=mylightblue!75!black,title=For LAMMPS-GUI users]
-Either open the \textit{input.lammps} file using LAMMPS-GUI, or simply open LAMMPS-GUI. In this later case, an empty buffer appear, in which LAMMPS commands can be written.
-\end{tcolorbox}
+\noindent A line starting with a hash symbol ($\#$) is a comment ignored by LAMMPS. These five categories are not required in every input script and do not necessarily need to be in that exact order. For instance, parts 3 and 4 could be inverted, or part 4 could be omitted. Note however that LAMMPS reads input files from top to bottom, therefore the \textit{Initialization} and \textit{System definition} categories must appear at the top of the input, and the \textit{Run} category at the bottom.
 
 \paragraph{System initialization}
 In the first section of the script, called \textit{Initialization}, let us indicate to LAMMPS the most basic information about the simulation, such as:
@@ -231,7 +223,7 @@ create_atoms 1 random 1500 &
 create_atoms 2 random 100 &
     127569 simulation_box
 \end{verbatim}}
-\noindent The first line, \textit{region simulation$\_$box (...)}, creates a region named \textit{simulation$\_$box} that is a block (i.e. a rectangular cuboid) that extends from -20 to 20 (no unit) along all 3 directions of space. The second line, \textit{create$\_$box 2 simulation$\_$box}, creates a simulation box based on the region \textit{simulation$\_$box} with \textit{2} types of atoms. The third line, \textit{create$\_$atoms (...)} creates 1500 atoms of type 1 randomly within the region \textit{simulation$\_$box}. The integer \textit{341341} is a seed that can be changed to create different initial conditions for the simulation. The fourth line creates 100 atoms of type 2.
+\noindent The first line, \textit{region simulation$\_$box (...)}, creates a region named \textit{simulation$\_$box} that is a block (i.e. a rectangular cuboid) that extends from -20 to 20 (no unit) along all 3 directions of space. The second line, \textit{create$\_$box 2 simulation$\_$box}, creates a simulation box based on the region \textit{simulation$\_$box} with \textit{2} types of atoms. The third line, \textit{create$\_$atoms (...)}, creates 1500 atoms of type 1 randomly within the region \textit{simulation$\_$box}. The integer \textit{341341} is a seed that can be changed to create different initial conditions for the simulation. The fourth line creates 100 atoms of type 2.
 
 \paragraph{Simulation Settings}
 Let us fill the \textit{Simulation Settings} category section of the \textit{input} script:
@@ -242,7 +234,7 @@ mass 2 1
 pair_coeff 1 1 1.0 1.0
 pair_coeff 2 2 0.5 3.0
 \end{verbatim}}
-The two first commands, \textit{mass (...)}, attribute a mass equal to 1 (unitless) to both atoms of type 1 and 2. The third line, \textit{pair$\_$coeff 1 1 1.0 1.0}, sets the Lennard-Jones coefficients for the interactions between atoms of type 1, respectively the energy parameter $\epsilon_{11} = 1.0$ and the distance parameter $\sigma_{11} = 1.0$. Similarly, the last line sets the Lennard-Jones coefficients for the interactions between atoms of type 2, $\epsilon_{22} = 0.5$, and $\sigma_{22} = 3.0$. By default, LAMMPS calculates the cross coefficients between the different atom types using geometric average: $\epsilon_{ij} = \sqrt{\epsilon_{ii} \epsilon_{jj}}$, $\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$.
+The two first commands, \textit{mass (...)}, attribute a mass equal to 1 (unitless) to both atoms of type 1 and 2, respectively. The third line, \textit{pair$\_$coeff 1 1 1.0 1.0}, sets the Lennard-Jones coefficients for the interactions between atoms of type 1, respectively the energy parameter $\epsilon_{11} = 1.0$ and the distance parameter $\sigma_{11} = 1.0$. Similarly, the last line sets the Lennard-Jones coefficients for the interactions between atoms of type 2, $\epsilon_{22} = 0.5$, and $\sigma_{22} = 3.0$. By default, LAMMPS calculates the cross coefficients between the different atom types using geometric average: $\epsilon_{ij} = \sqrt{\epsilon_{ii} \epsilon_{jj}}$, $\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$. In the present case, we thus have: $\epsilon_{12} = \sqrt{1.0 \times 0.5} = 0.707$, and $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
 
 \paragraph{Energy minimization}
 The system is now fully parametrized. Let us fill the two last remaining sections by adding the following lines into \textit{input.lammps}:
