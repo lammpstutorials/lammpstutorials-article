@@ -226,24 +226,23 @@ Let us fill the \textit{System definition} category of the input script:
 region simulation_box block &
     -20 20 -20 20 -20 20
 create_box 2 simulation_box
-labelmap atom 1 A 2 B
-create_atoms A random 1500 &
+create_atoms 1 random 1500 &
     341341 simulation_box
-create_atoms B random 100 &
+create_atoms 2 random 100 &
     127569 simulation_box
 \end{verbatim}}
-\noindent The first line, \textit{region simulation$\_$box (...)}, creates a region named \textit{simulation$\_$box} that is a block (i.e. a rectangular cuboid) that extends from -20 to 20 (no unit) along all 3 directions of space. The second line, \textit{create$\_$box 2 simulation$\_$box}, creates a simulation box based on the region \textit{simulation$\_$box} with \textit{2} types of atoms. The third line, \textit{labelmap (...)} assigns the label `A' to the first atom type, and the label `B' to the second atom type. The fourth line, \textit{create$\_$atoms (...)} creates 1500 atoms of type A randomly within the region \textit{simulation$\_$box}. The integer \textit{341341} is a seed that can be changed to create different initial conditions for the simulation. The fifth line creates 100 atoms of type B.
+\noindent The first line, \textit{region simulation$\_$box (...)}, creates a region named \textit{simulation$\_$box} that is a block (i.e. a rectangular cuboid) that extends from -20 to 20 (no unit) along all 3 directions of space. The second line, \textit{create$\_$box 2 simulation$\_$box}, creates a simulation box based on the region \textit{simulation$\_$box} with \textit{2} types of atoms. The third line, \textit{create$\_$atoms (...)} creates 1500 atoms of type 1 randomly within the region \textit{simulation$\_$box}. The integer \textit{341341} is a seed that can be changed to create different initial conditions for the simulation. The fourth line creates 100 atoms of type 2.
 
 \paragraph{Simulation Settings}
 Let us fill the \textit{Simulation Settings} category section of the \textit{input} script:
 {\normalsize \begin{verbatim}
 # 3) Simulation settings
-mass A 1.0
-mass B 1.0
-pair_coeff A A 1.0 1.0
-pair_coeff B B 0.5 3.0
+mass 1 1
+mass 2 1
+pair_coeff 1 1 1.0 1.0
+pair_coeff 2 2 0.5 3.0
 \end{verbatim}}
-The two first commands, \textit{mass (...)}, attribute a mass equal to 1.0 (unitless) to atoms of both type A and B. The third line, \textit{pair$\_$coeff A A 1.0 1.0}, sets the Lennard-Jones coefficients for the interactions between atoms of type A, respectively the energy parameter $\epsilon_{A} = 1.0$ and the distance parameter $\sigma_{A} = 1.0$. Similarly, the last line sets the Lennard-Jones coefficients for the interactions between atoms of type 2, $\epsilon_{B} = 0.5$, and $\sigma_{B} = 3.0$. By default, LAMMPS calculates the cross coefficients between the different atom types using geometric average: $\epsilon_{ij} = \sqrt{\epsilon_{ii} \epsilon_{jj}}$, $\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$.
+The two first commands, \textit{mass (...)}, attribute a mass equal to 1 (unitless) to both atoms of type 1 and 2. The third line, \textit{pair$\_$coeff 1 1 1.0 1.0}, sets the Lennard-Jones coefficients for the interactions between atoms of type 1, respectively the energy parameter $\epsilon_{11} = 1.0$ and the distance parameter $\sigma_{11} = 1.0$. Similarly, the last line sets the Lennard-Jones coefficients for the interactions between atoms of type 2, $\epsilon_{22} = 0.5$, and $\sigma_{22} = 3.0$. By default, LAMMPS calculates the cross coefficients between the different atom types using geometric average: $\epsilon_{ij} = \sqrt{\epsilon_{ii} \epsilon_{jj}}$, $\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$.
 
 \paragraph{Energy minimization}
 The system is now fully parametrized. Let us fill the two last remaining sections by adding the following lines into \textit{input.lammps}:
