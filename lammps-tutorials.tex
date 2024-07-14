@@ -206,10 +206,11 @@ atom_style atomic
 pair_style lj/cut 2.5
 boundary p p p
 \end{verbatim}}
-The first line, \textit{units lj}, indicates that we want to use the unit system called \textit{LJ} Lennard-Jones, in which all quantities are unitless. The second line, \textit{dimension 3}, indicates that the simulation is in 3D. The third line, \textit{atom$\_$style atomic}, that the \textit{atomic} style
-will be used, therefore each atom is just a dot with a mass. The fourth line, \textit{pair$\_$style lj/cut 2.5}, indicates that atoms will be interacting through a Lennard-Jones potential with a cut-off equal to $r_c = 2.5$ (unitless) \cite{wang2020lennard,fischer2023history}:
+The first line, \textit{units lj}, indicates that we want to use the unit system called \textit{LJ} Lennard-Jones, in which all quantities are unitless. The second line, \textit{dimension 3}, indicates that the simulation is in 3D. The third line, \textit{atom$\_$style atomic}, that the \textit{atomic} style will be used, therefore each atom is just a dot with a mass. The fourth line, \textit{pair$\_$style lj/cut 2.5}, indicates that atoms will be interacting through a Lennard-Jones potential with a cut-off equal to $r_c = 2.5$ (unitless) \cite{wang2020lennard,fischer2023history}:
 $$E_{ij} (r) = 4 \epsilon_{ij} \left[ \left( \dfrac{\sigma_{ij}}{r} \right)^{12} - \left( \dfrac{\sigma_{ij}}{r} \right)^{6} \right], ~ \text{for} ~ r < r_c,$$
 where $r$ is the inter-particle distance, $\epsilon_{ij}$ is the depth of potential well that sets the interaction strength, and $\sigma_{ij}$ is the distance parameter or particle effective size. Here, the indexes \textit{ij} refer to the particle types \textit{i} and \textit{j}. The last line, \textit{boundary p p p}, indicates that the periodic boundary conditions will be used along all three directions of space (the 3 \textit{p} stand for \textit{x}, \textit{y}, and \textit{z}, respectively).
+
+In the LAMMPS-GUI buffer, the LAMMPS documentation can be accessed by right-clicking a command, such as \textit{units lj}, and selecting \textit{View documentation for units}.
 
 \paragraph{System definition}
 Let us fill the \textit{System definition} category of the input script:
@@ -285,16 +286,30 @@ Run the simulation again using LAMMPS. From the information printed in the log f
 
 \paragraph{Trajectory visualization}
 
-To visualize the trajectories of the atoms, we first need to print the positions of the atoms in a file at a regular interval. Add the following command to the \textit{input.lammps} file, in the \textit{Visualization} section of \textit{PART B}:
+To visualize the trajectories of the atoms using the LAMMPS-GUI, let us use the \textit{dump image} command. Add the following command to the \textit{input.lammps} file, in the \textit{Visualization} section of \textit{PART B}:
 {\normalsize \begin{verbatim}
-dump mydmp all atom 100 dump.lammpstrj
+dump mydmp all image 100 dump.*.jpg type type
 \end{verbatim}}
-Run the \textit{input.lammps} using LAMMPS again, and generate an image of the system by selecting \textit{Create image} from the \textit{Run} menu. The file called \textit{dump.lammpstrj} created by LAMMPS within \textit{my-first-input/} can be opened using VMD (The snapshot in Fig.\,\ref{fig:LJ} was made using VMD).
+With this command, JPG images are generated every 100 steps. The two \text{type} keywords are for \textit{color} and \text{diameter}, respectely. Run the \textit{input.lammps} using LAMMPS again, a new window showing the system evolving over time will pop up.
+
+The rendering can be improved by taking advantage of the many options of the \textit{dump image} command Modify the previous \textit{dump} command as follows:
+{\normalsize \begin{verbatim}
+dump mydmp all image 100 dump.*.jpg type type &
+    shiny 0.1 box no 0.01 view 0 0 zoom 1.8
+\end{verbatim}}
+Here, the \textit{shiny} keyword is used to reduce the shininess of the atoms, the \textit{box} keyword removes the box, and the \textit{view} and \textit{zoom} keywords adjust the camera.
+
+Further improvements can be applied using the \textit{dump$\_$modify} command:
+{\normalsize \begin{verbatim}
+dump_modify mydmp acolor 1 darkturquoise &
+    acolor 2 darkblue adiam 1 1 adiam 2 3 &
+    backcolor white
+\end{verbatim}}
+The \textit{acolor} and \textit{adiam} keywords are used to adjust the color and diameters of the atoms, respectively, and the \textit{backcolor} keyword adjusts the color of the background.
 
 \subsubsection{Improving the script}
 
-Let us improve the input script and perform slightly more advanced operations, such as imposing a specific initial
-positions to the atoms, and restarting the simulation from a previously saved configuration.
+Let us improve the input script and perform slightly more advanced perations, such as imposing a specific initial positions to the atoms, and restarting the simulation from a previously saved configuration.
 
 \paragraph{Control the initial atom positions}
 \noindent Create a new folder next to \textit{my-first-input/}, and call it \textit{improved-input/}. Then, create a new input file within \textit{improved-input/} and call it \textit{input.min.lammps}. Similarly to what has been done previously, copy the following lines into \textit{input.min.lammps}:
@@ -330,7 +345,12 @@ pair_coeff 2 2 0.5 3.0
 # 4) Visualization
 thermo 10
 thermo_style custom step etotal press
-dump mydmp all atom 10 dump.min.lammpstrj
+dump mydmp all image 100 dump.min.*.jpg &
+    type type shiny 0.1 box no 0.01 &
+    view 0 0 zoom 1.8
+dump_modify mydmp acolor 1 darkturquoise &
+    acolor 2 darkblue adiam 1 1 adiam 2 3 &
+    backcolor white
 
 # 5) Run
 minimize 1.0e-4 1.0e-6 1000 10000
@@ -338,8 +358,7 @@ write_data minimized_coordinate.data
 \end{verbatim}}
 The main novelty, compared to the previous input script, is the \textit{write$\_$data} command. This command is used to print the final state of the simulation in a file called \textit{minimized$\_$coordinate.data}. Note that the \textit{write$\_$data} command is placed after the \textit{minimize} command. This \textit{.data} file will be used later to restart the simulation from the final state of the energy minimization step.
 
-Run the \textit{input.min.lammps} script using LAMMPS. As soon as the simulation starts, a new dump file called \textit{dump.min.lammpstrj} must appear in the folder. This \textit{.lammpstrj} can be used to visualize the atom's trajectories during minimization using VMD. At the end of the simulation, a file called \textit{minimized$\_$coordinate.data} is created by LAMMPS. If you open \textit{minimized$\_$coordinate.data} with a text editor, you can see that it contains all the information necessary to restart the simulation, such as the number of atoms, the box size, the \textit{masses}, and the \textit{pair$\_$coeffs}.
-The \textit{minimized$\_$coordinate.data} file also contains the final positions of the atoms within the \textit{Atoms} section. The first five columns of the \textit{Atoms} section correspond (from left to right) to the atom indexes (from 1 to the total number of atoms, 1150), the atom types (1 or 2 here), and the positions of the atoms $x$, $y$, $z$. The last three columns are image flags that keep track of which atoms crossed the periodic boundary.
+Run the \textit{input.min.lammps} script using LAMMPS. At the end of the simulation, a file called \textit{minimized$\_$coordinate.data} is created by LAMMPS. If you open \textit{minimized$\_$coordinate.data} with a text editor, you can see that it contains all the information necessary to restart the simulation, such as the number of atoms, the box size, the \textit{masses}, and the \textit{pair$\_$coeffs}. The \textit{minimized$\_$coordinate.data} file also contains the final positions of the atoms within the \textit{Atoms} section. The first five columns of the \textit{Atoms} section correspond (from left to right) to the atom indexes (from 1 to the total number of atoms, 1150), the atom types (1 or 2 here), and the positions of the atoms $x$, $y$, $z$. The last three columns are image flags that keep track of which atoms crossed the periodic boundary.
 
 \paragraph{Restarting from a saved configuration}
 Let us create a new input file and start a molecular dynamics simulation directly from the previously saved configuration. Within \textit{improved-input/}, create a new file called \textit{input.md.lammps} and copy the same lines as previously:
@@ -356,8 +375,7 @@ Here, instead of creating a new region and adding atoms to it, we can simply imp
 # 2) System definition
 read_data minimized_coordinate.data
 \end{verbatim}}
-By visualizing the previously generated \textit{dump.min.lammpstrj} file, you may have noticed that some atoms have moved from one region to the other during minimization. To start the simulation from a clean slate, with only atoms of type 2 within the cylinder and atoms of type
-1 outside the cylinder, let us delete the misplaced atoms by adding the following commands to \textit{input.md.lammps}:
+By visualizing the system using the generated JPG images, you may have noticed that some atoms have moved from one region to the other during minimization. To start the simulation from a clean slate, with only atoms of type 2 within the cylinder and atoms of type 1 outside the cylinder, let us delete the misplaced atoms by adding the following commands to \textit{input.md.lammps}:
 {\normalsize \begin{verbatim}
 region cylinder_in cylinder z 0 0 10 &
     INF INF side in
@@ -374,14 +392,20 @@ group group_type_2_out &
 delete_atoms group group_type_1_in
 delete_atoms group group_type_2_out
 \end{verbatim}}
-The two first \textit{region} commands recreate the previously defined regions, which is necessary since regions are not saved by the \textit{write$\_$data} command. The first two \textit{group} commands are used to create groups containing all the atoms of type 1 and all the atoms of type 2, respectively. The next two \textit{group} commands create atom groups based on their
-positions at the beginning of the simulation, i.e. when the commands are being read by LAMMPS. The last two \textit{group} commands create atom groups based on the intersection between the previously defined groups. Finally, the two \textit{delete$\_$atoms} commands delete the atoms of type 1 that are located within the cylinder and the atoms of type 2 that are located outside the cylinder, respectively. Add the following lines into \textit{input.md.lammps}. Note the absence of \textit{Simulation settings} section, because the settings are taken from the \textit{.data} file.
+The two first \textit{region} commands recreate the previously defined regions, which is necessary since regions are not saved by the \textit{write$\_$data} command. The first two \textit{group} commands are used to create groups containing all the atoms of type 1 and all the atoms of type 2, respectively. The next two \textit{group} commands create atom groups based on their positions at the beginning of the simulation, i.e. when the commands are being read by LAMMPS. The last two \textit{group} commands create atom groups based on the intersection between the previously defined groups. Finally, the two \textit{delete$\_$atoms} commands delete the atoms of type 1 that are located within the cylinder and the atoms of type 2 that are located outside the cylinder, respectively.
+
+Add the following lines into \textit{input.md.lammps}. Note the absence of \textit{Simulation settings} section, because the settings are taken from the \textit{.data} file.
 {\normalsize \begin{verbatim}
 # 4) Visualization
 thermo 1000
 thermo_style custom step temp pe ke &
     etotal press
-dump mydmp all atom 1000 dump.md.lammpstrj
+dump mydmp all image 100 dump.md.*.jpg &
+    type type shiny 0.1 box no 0.01 &
+    view 0 0 zoom 1.8
+dump_modify mydmp acolor 1 darkturquoise &
+    acolor 2 darkblue adiam 1 1 adiam 2 3 &
+    backcolor white
 \end{verbatim}}
 Let us extract the number of atoms of each type inside the cylinder as a function of time, by adding the following commands to \textit{input.md.lammps}:
 {\normalsize \begin{verbatim}
@@ -423,7 +447,7 @@ timestep 0.005
 run 300000
 write_data mixed.data
 \end{verbatim}}
-There are a few differences from the previous simulation. First, the \textit{velocity create} command attributes an initial velocity to each atom. The initial velocity is chosen so that the average initial temperature is equal to 1 (unitless). The additional keywords ensure that no linear momentum (\textit{mom yes}) and no angular momentum (\textit{rot yes}) are given to the system and that the generated velocities are distributed as a Gaussian. Another improvement is the \textit{zero yes} keyword in the Langevin thermostat, which ensures that the total random force applied to the atoms is equal to zero. Run \textit{input.md.lammps} using LAMMPS. Open the \textit{dump.md.lammpstrj} file using VMD to observe the mixing of the two populations over time (see also Fig.\,\ref{fig:evolution-population}). From the generated \textit{.dat} file, one can plot the number of atoms in each region as a function of time (Fig.\,\ref{fig:mixing}\,a). In addition, as the mixing progresses, the coordination number between atoms of types 1 and 2 increases from about $0.01$ to $0.35$ (Fig.\,\ref{fig:mixing}\,b). This indicates that, as time progresses, more and more particles of type 1 get into contact with particles of type 2, as expected during mixing.
+There are a few differences from the previous simulation. First, the \textit{velocity create} command attributes an initial velocity to each atom. The initial velocity is chosen so that the average initial temperature is equal to 1 (unitless). The additional keywords ensure that no linear momentum (\textit{mom yes}) and no angular momentum (\textit{rot yes}) are given to the system and that the generated velocities are distributed as a Gaussian. Another improvement is the \textit{zero yes} keyword in the Langevin thermostat, which ensures that the total random force applied to the atoms is equal to zero. Run \textit{input.md.lammps} using LAMMPS, and observe the mixing of the two populations over time (see also Fig.\,\ref{fig:evolution-population}). From the generated \textit{.dat} file, one can plot the number of atoms in each region as a function of time (Fig.\,\ref{fig:mixing}\,a). In addition, as the mixing progresses, the coordination number between atoms of types 1 and 2 increases from about $0.01$ to $0.35$ (Fig.\,\ref{fig:mixing}\,b). This indicates that, as time progresses, more and more particles of type 1 get into contact with particles of type 2, as expected during mixing.
 
 \begin{figure}
 \centering
@@ -545,11 +569,11 @@ The atoms from the \textit{carbon$\_$top} and \textit{carbon$\_$bot} groups are 
 \label{fig:CNT-underformed}
 \end{figure}
 
-{\color{blue}Run the simulation by typing the following command in a terminal:
+{\color{blue}Run the simulation by typing the following command in a terminal:}
 {\normalsize \begin{verbatim}
 lmp -in input.lammps
 \end{verbatim}}
-where the command \textit{lmp} is linked to a compiled version of LAMMPS.}
+{\color{blue}where the command \textit{lmp} is linked to a compiled version of LAMMPS.}
 
 When running a simulation, the number of atoms in each group is printed in the terminal (and in the \textit{log.lammps} file). Always make sure that the number of atoms in each group corresponds to what is expected, just like here:
 {\normalsize \begin{verbatim}
@@ -619,6 +643,14 @@ dump mydmp all atom 1000 dump.lammpstrj
 fix at3 all ave/time 10 10 100 c_Tmid &
     file temperature_middle_group.dat
 \end{verbatim}}
+
+{\color{blue}
+To visualize the trajectories of the atoms, we first need to print the positions of the atoms in a file at a regular interval. Add the following command to the \textit{input.lammps} file, in the \textit{Visualization} section of \textit{PART B}:}
+{\normalsize \begin{verbatim}
+dump mydmp all atom 100 dump.lammpstrj
+\end{verbatim}}
+{\color{blue}Run the \textit{input.lammps} using LAMMPS again, and generate an image of the system by selecting \textit{Create image} from the \textit{Run} menu. The file called \textit{dump.lammpstrj} created by LAMMPS within \textit{my-first-input/} can be opened using VMD (The snapshot in Fig.\,\ref{fig:LJ} was made using VMD).}
+
 
 Let us run a small equilibration step to bring the system to the required temperature before applying any deformation:
 {\normalsize \begin{verbatim}
