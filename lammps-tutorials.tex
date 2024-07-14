@@ -245,13 +245,11 @@ thermo 10
 thermo_style custom step etotal press
 
 # 5) Run
-minimize 1.0e-4 1.0e-6 1000 10000
+minimize 1.0e-6 1.0e-6 1000 10000
 \end{verbatim}}
 The \textit{thermo} command asks LAMMPS to print thermodynamic informations in the terminal every given number of steps, here 10 steps. The \textit{thermo$\_$style custom} requires LAMMPS to print the step (\textit{step}), the total energy (\textit{etotal}), and the pressure (\textit{press}). Finally, the \textit{minimize} command instructs LAMMPS to perform an energy minimization of the system. By default, LAMMPS uses the conjugate gradient (CG) algorithm \cite{hestenes1952methods}.
 
-Run the simulation by selecting \textit{Run LAMMPS from Editor Buffer} from the \textit{Run} menu.
-
-As the simulation progresses, a windows showing the evolution of the total energy over time pops-up \textcolor{red}{RED: warning, this does not seem to work properly}. The potential energy can be seen to decrease from a large positive value to a negative value (see also the orange lines in Fig.\,\ref{fig:evolution-energy}\,a). The initially large and positive value of the potential energy was expected because the atoms have been created at random positions within the simulation box and some of them are probably overlapping, resulting in a large initial energy which is the consequence of the repulsive part of the Lennard-Jones interaction potential. As the energy minimization progresses, the energy rapidly decreases and reaches a negative value, indicating that the atoms have been displaced at reasonable distances from each other. Switch from the total energy to the pressure by choosing \textit{Press} in \textit{Select data}.
+Before running the simulation, let us decrease the update interval of the GUI by clicking on \textit{Edit}, then \textit{Preferences}, and reducing the \textit{GUI update interval time} from $100\,\text{ms}$ to $1\,\text{ms}$. Then, run the simulation by selecting \textit{Run LAMMPS from Editor Buffer} from the \textit{Run} menu. As the simulation progresses, a window showing the evolution of the total energy over time pops up. The value of the potential energy can also be read from the log file that appears in a second pop-up window. The potential energy can be seen to decrease from a large positive value to a negative value (see also the orange lines in Fig.\,\ref{fig:evolution-energy}\,a). The initially large and positive value of the potential energy was expected because the atoms have been created at random positions within the simulation box and some of them are probably overlapping, resulting in a large initial energy which is the consequence of the repulsive part of the Lennard-Jones interaction potential. As the energy minimization progresses, the energy rapidly decreases and reaches a negative value, indicating that the atoms have been displaced at reasonable distances from each other. Switch from the total energy to the pressure by choosing \textit{Press} in \textit{Select data}.
 
 \paragraph{Molecular dynamics}
 
@@ -261,7 +259,8 @@ lines:
 # PART B - MOLECULAR DYNAMICS
 # 4) Visualization
 thermo 50
-thermo_style custom step temp etotal pe ke press
+thermo_style custom step temp etotal &
+    pe ke press
 \end{verbatim}}
 Since LAMMPS reads the input from top to bottom, these lines will be executed after the energy minimization. There is no need to re-initialize or re-define the system. The \textit{thermo} command is called a second time within the same input, so the previously entered value of 10 will be replaced by the value of 50 as soon as \textit{PART B} starts. In addition, more thermodynamics informations will be printed by LAMMPS during \textit{PART B}. This is particulalry useful because, as the molecular dynamics starts, the system will have a non-zero temperature (\textit{temp}) and kinetic energy (\textit{ke}). Here, \textit{pe} is the potential energy of the system, such as \textit{pe + ke = etotal}.
 
