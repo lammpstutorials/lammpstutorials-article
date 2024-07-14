@@ -128,7 +128,7 @@ This set of tutorials consists of seven tutorials arranged in order of increasin
 
 In \hyperref[lennard-jones-label]{tutorial 1}, the structure of LAMMPS input files is illustrated through the creation of a simple Lennard-Jones fluid system. Basic LAMMPS commands are used to set the interaction between the atoms, perform an energy minimization, and finally a simple MD simulation in the canonical (NVT) ensemble. This tutorial also illustrates the use of the LAMMPS graphical user interface (GUI).
 
-In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system where atoms are connected by bonds is used: a small carbon nanotube. The use of both classical and reactive force fields (here AIREBO) is illustrated. An external deformation is applied to the CNT, and its deformation is measured. \textcolor{blue}{This tutorial illustrates the use of the YAML format to import the data from \textit{log} file into Python.}
+In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system where atoms are connected by bonds is used: a small carbon nanotube. The use of both classical and reactive force fields (here, AIREBO) is illustrated. An external deformation is applied to the CNT, and its deformation is measured. This tutorial also illustrates the use of LAMMPS from the terminal, as well as the use of the YAML format to import data from the \textit{log} file into Python.
 
 In \hyperref[all-atoms-label]{tutorial 3}, two components, liquid water and a polymer molecule, are merged and equilibrated. A long-range solver is used to handle the electrostatic interactions, and the system is equilibrated in the isothermal-isobaric (NPT) ensemble. A stretching force is then applied to the polymer.
 
@@ -475,7 +475,7 @@ Download directly the CNT topology \href{https://raw.githubusercontent.com/lammp
 in a folder called \textit{unbreakable-bonds/}.
 
 \paragraph{The LAMMPS input}
-Create a new text file within \textit{unbreakable-bonds/} and name it \textit{input.lammps}. Copy the following lines into it:
+Create a new text file within \textit{unbreakable-bonds/} and name it \textit{input.lammps}. Open \textit{input.lammps} using a text editor, and copy the following lines into it:
 {\normalsize \begin{verbatim}
 variable T equal 300
 
@@ -493,7 +493,7 @@ special_bonds lj 0.0 0.0 0.5
 
 read_data cnt_molecular.data
 \end{verbatim}}
-The chosen unit system is \textit{real} (therefore distances are in Ångstrom and time in femtosecond), the \textit{atom$\_$style} is molecular (therefore atoms are dots that can be bonded with each other), and the boundary conditions are fixed. The boundary conditions do not matter here, as the box boundaries were placed far from the CNT. Just like in the previous tutorial, \hyperref[lennard-jones-label]{Lennard-Jones fluid}, the pair style is \textit{lj/cut} (i.e. a Lennard-Jones potential with a short-range cutoff) with parameter 14, which means that only the atoms closer than 14 Ångstroms from each other interact through a Lennard-Jones potential. The \textit{bond$\_$style}, \textit{angle$\_$style}, \textit{dihedral$\_$style}, and \textit{improper$\_$style} commands specify the different potentials used to restrain the relative positions of the atoms. More details about the potentials used here are given in the LAMMPS documentation. The \textit{special$\_$bonds} command sets the weighting factors for the Lennard-Jones interaction between atoms directly connected by one bond, two bonds, and three bonds, respectively. The last command, \textit{read$\_$data}, imports the \textit{cnt$\_$molecular.data} file previously generated with VMD, which contains information about the box size, atom positions, etc.
+The chosen unit system is \textit{real} (therefore distances are in Ångstrom and time in femtosecond), the \textit{atom$\_$style} is molecular (therefore atoms are dots that can be bonded with each other), and the boundary conditions are fixed. The boundary conditions do not matter here, as the box boundaries were placed far from the CNT. Just like in the previous tutorial, \hyperref[lennard-jones-label]{Lennard-Jones fluid}, the pair style is \textit{lj/cut} (i.e. a Lennard-Jones potential with a short-range cutoff) with parameter 14, which means that only the atoms closer than 14 Ångstroms from each other interact through a Lennard-Jones potential. The \textit{bond$\_$style}, \textit{angle$\_$style}, \textit{dihedral$\_$style}, and \textit{improper$\_$style} commands specify the different potentials used to restrain the relative positions of the atoms. More details about the potentials used here are given in the LAMMPS documentation. The \textit{special$\_$bonds} command sets the weighting factors for the Lennard-Jones interaction between atoms directly connected by one bond, two bonds, and three bonds, respectively. The last command, \textit{read$\_$data}, imports the \textit{cnt$\_$molecular.data} file which contains information about the box size, atom positions, etc.
 
 We need to specify the parameters of both bonded and non-bonded potentials. Here, the parameters are taken from the OPLS-AA (Optimised Potentials for Liquid Simulations-All-Atom) force field \cite{jorgensenDevelopmentTestingOPLS1996}. Create a new text file in the \textit{unbreakable-bonds/} folder and name it \textit{parm.lammps}. Copy the following lines into it:
 {\normalsize \begin{verbatim}
@@ -569,11 +569,11 @@ The atoms from the \textit{carbon$\_$top} and \textit{carbon$\_$bot} groups are 
 \label{fig:CNT-underformed}
 \end{figure}
 
-{\color{blue}Run the simulation by typing the following command in a terminal:}
+Run the simulation by typing the following command in a terminal:
 {\normalsize \begin{verbatim}
 lmp -in input.lammps
 \end{verbatim}}
-{\color{blue}where the command \textit{lmp} is linked to a compiled version of LAMMPS.}
+where the command \textit{lmp} is linked to the LAMMPS executable.
 
 When running a simulation, the number of atoms in each group is printed in the terminal (and in the \textit{log.lammps} file). Always make sure that the number of atoms in each group corresponds to what is expected, just like here:
 {\normalsize \begin{verbatim}
@@ -638,20 +638,11 @@ fix at2 all ave/time 10 10 100 f_mysf1[1] &
 {\normalsize \begin{verbatim}
 dump mydmp all atom 1000 dump.lammpstrj
 \end{verbatim}}
-\noindent Finally, let us check the temperature of the non-frozen group over time by printing it using a \textit{fix ave/time} command:
+A \textit{lammpstrj} file can be opened using VMD. Finally, let us check the temperature of the non-frozen group over time by printing it using a \textit{fix ave/time} command:
 {\normalsize \begin{verbatim}
 fix at3 all ave/time 10 10 100 c_Tmid &
     file temperature_middle_group.dat
 \end{verbatim}}
-
-{\color{blue}
-To visualize the trajectories of the atoms, we first need to print the positions of the atoms in a file at a regular interval. Add the following command to the \textit{input.lammps} file, in the \textit{Visualization} section of \textit{PART B}:}
-{\normalsize \begin{verbatim}
-dump mydmp all atom 100 dump.lammpstrj
-\end{verbatim}}
-{\color{blue}Run the \textit{input.lammps} using LAMMPS again, and generate an image of the system by selecting \textit{Create image} from the \textit{Run} menu. The file called \textit{dump.lammpstrj} created by LAMMPS within \textit{my-first-input/} can be opened using VMD (The snapshot in Fig.\,\ref{fig:LJ} was made using VMD).}
-
-
 Let us run a small equilibration step to bring the system to the required temperature before applying any deformation:
 {\normalsize \begin{verbatim}
 thermo 100
@@ -660,13 +651,13 @@ thermo_modify temp Tmid line yaml
 timestep 1.0
 run 5000
 \end{verbatim}}
-\textcolor{blue}{With the \textit{thermo$\_$modify} command, we specify to LAMMPS that the temperature $T_\mathrm{mid}$ must be printed in the terminal instead of the temperature of the entire system. This choice is motivated by the presence of frozen parts with an effective temperature of 0\,K, which makes the average temperature of the entire system not relevant. The \textit{thermo$\_$modify} command also imposes the use of the YAML format that can easily be read by Python (see below).} Let us impose a constant velocity deformation on the CNT by combining the \textit{velocity set} command with previously defined \textit{fix setforce}. Add the following lines in the \textit{input.lammps} file, right after the last \textit{run 5000} command:
+With the \textit{thermo$\_$modify} command, we specify to LAMMPS that the temperature $T_\mathrm{mid}$ must be printed in the terminal instead of the temperature of the entire system. This choice is motivated by the presence of frozen parts with an effective temperature of 0\,K, which makes the average temperature of the entire system not relevant. The \textit{thermo$\_$modify} command also imposes the use of the YAML format that can easily be read by Python (see below). Let us impose a constant velocity deformation on the CNT by combining the \textit{velocity set} command with previously defined \textit{fix setforce}. Add the following lines in the \textit{input.lammps} file, right after the last \textit{run 5000} command:
 {\normalsize \begin{verbatim}
 velocity carbon_top set 0 0 0.0005
 velocity carbon_bot set 0 0 -0.0005
 run 10000
 \end{verbatim}}
-\noindent The chosen velocity for the deformation is $100\,\text{m/s}$, or $0.001\,\text{\AA{}/fs}$.
+\noindent The chosen velocity for the deformation is $100\,\text{m/s}$, or $0.001\,\text{\AA{}/fs}$. Run the simulation using LAMMPS.
 
 \begin{figure}
 \centering
@@ -675,7 +666,7 @@ run 10000
 \label{fig:CNT-unbreakable-lenght}
 \end{figure}
 
-The length $L$ of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.\,\ref{fig:CNT-unbreakable-lenght}), as expected from the imposed constant velocity. The total energy of the system shows a non-linear increase with $t$ once the deformation starts, which is expected from the typical dependency of bond energy with bond distance $U_b = k_b \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-energy}). As always, it is important to ensure that the simulation behaves as expected by opening the \textit{dump.lammpstrj} file with VMD (Fig.\,\ref{fig:CNT-deformed-unbreakable}).
+The file called \textit{dump.lammpstrj} that is created by LAMMPS within \textit{unbreakable-bonds/} can be opened using VMD (Fig.\,\ref{fig:CNT-deformed-unbreakable}). The length $L$ of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.\,\ref{fig:CNT-unbreakable-lenght}), as expected from the imposed constant velocity. The total energy of the system shows a non-linear increase with $t$ once the deformation starts, which is expected from the typical dependency of bond energy with bond distance $U_b = k_b \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-energy}).
 
 \begin{figure}
 \centering
