@@ -73,10 +73,12 @@
 
 \author[1*]{Simon Gravelle}
 \affil[1]{University Grenoble Alpes, CNRS, LIPhy, Grenoble, 38000, France}
-
 \corr{simon.gravelle@cnrs.fr}{SG}
-
 \orcid{Simon Gravelle}{0000-0003-2149-6706}
+
+\author[2]{Axel Kohlmeyer}
+\affil[2]{Temple University, Philadelphia, PA 19122, USA}
+\orcid{Axel Kohlmeyer}{0000-0001-6204-6475}
 
 \blurb{This LiveCoMS document is maintained online on GitHub at \githubrepository; to provide feedback, suggestions, or help improve it, please visit the GitHub repository and participate via the issue tracker.}
 
@@ -103,7 +105,9 @@
 \maketitle
 
 \begin{abstract}
-The availability of open-source molecular simulation codes allows scientists and engineers to run simulations without parameterizing interparticle interactions or writing code for time-integration schemes. Although performing molecular simulations is now accessible to a large audience, the wide array of options and possible pitfalls when using these open-source tools can complicate their use, particularly for beginners. LAMMPS is a versatile molecular simulation code designed for modeling particle-based systems for a broad range of materials science and computational chemistry applications. The software package is widely used to run simulations on large-scale parallel computing environments, making it ideal for complex and extensive simulations of atomic and molecular systems. This article introduces a suite of tutorials designed to make learning LAMMPS more accessible to new users. The first four tutorials cover the basics of running molecular simulations in LAMMPS with systems of varying complexities, including a simple fluid and a carbon nanotube. The last three tutorials address more advanced molecular simulation techniques, specifically the use of a reactive force field, enhanced sampling, and grand canonical Monte Carlo.
+  The availability of open-source molecular simulation software packages allows scientists and engineers to focus on running and analyzing simulations without having to write, parallelize, and validate their own simulation software.  While molecular simulations thus become accessible to a larger audience, the ``black box'' nature of such software packages and wide array of options and features as well as possible pitfalls can make it challenging to use them correctly, particularly for beginners in the topic of simulations.  LAMMPS is one such versatile molecular simulation code designed for modeling particle-based systems for a broad range of materials science and computational chemistry applications from atomistic, over coarse--grained, mesoscale, and grid-free continuum models to discrete element modeling.  LAMMPS is capable of efficiently running simulations of varying sizes from small desktop computer to large-scale supercomputing environments. Its flexibility and extensibility makes it ideal for complex and extensive simulations of atomic and molecular systems and beyond.  This article introduces a suite of tutorials designed to make learning LAMMPS more accessible to new users.  The first four tutorials cover the basics of running molecular simulations in LAMMPS with systems of varying complexities, including a simple fluid and a carbon nanotube.  The last three tutorials address more advanced molecular simulation techniques, specifically the use of a reactive force field, enhanced sampling, and grand canonical Monte Carlo.
+  % AK: not sure how detailed this should be. I went for the max. Feel free to reduce.
+  In addition, we introduce the LAMMPS GUI, an enhanced graphical text editor with syntax highlighting, command completion, and context help plus built--in visualization and plotting facilities, and the ability to run LAMMPS directly on the input file while tracking its progress.
 \end{abstract}
 
 \end{frontmatter}
@@ -2367,3 +2371,8 @@ S.G. acknowledges funding from the European Union's Horizon 2020 research and in
 
 
 \end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
