@@ -184,7 +184,7 @@ In \hyperref[compiling-lammps-label]{appendix A} instructions for compiling LAMM
 
 In \hyperref[parallel-lammps-label]{appendix B} instructions for running LAMMPS in parallel using MPI are given.
 
-% AK: we should intoduce advanced visualization/plotting when beneficial and then use the LAMMPS GUI only to edit the input, run LAMMPS and visually validate initial geometry.
+% AK: we should introduce advanced visualization/plotting when beneficial and then use the LAMMPS GUI only to edit the input, run LAMMPS and visually validate initial geometry.
 %
 % SG: \textcolor{blue}{(To remove/adapt if we go GUI-only: To write and edit the LAMMPS input files, a text editor such as VIM or Emacs is required. Additionally, to visualize the trajectories of the atoms, VMD version 1.9.3 will be used . Feel free to use an alternative visualization software like Ovito. Finally, a graph plotting tool is required. To plot the results from the simulations, Matplotlib Pyplot version 3.5.2 is used together with Python version 3.11.4 \cite{van1995python, hunter2007Matplotlib}, but any plotting tool can be used, such as XmGrace or Gnuplot.}
 
@@ -204,6 +204,7 @@ The LAMMPS GUI is a graphical text editor enhanced for editing LAMMPS input file
 \item Automatic plot of thermodynamic data during run
 \item Capture of ``dump image'' outputs for animations
 \item Application of OpenMP or GPU acceleration
+\item Customization through preferences dialog
 \end{itemize}
 
 A detailed documentation for LAMMPS GUI is in the LAMMPS manual \cite{lammps_gui_docs}.
@@ -266,11 +267,11 @@ region simulation_box block &
     -20 20 -20 20 -20 20
 create_box 2 simulation_box
 create_atoms 1 random 1500 &
-    341341 simulation_box
+    341341 simulation_box overlap 0.3
 create_atoms 2 random 100 &
-    127569 simulation_box
+    127569 simulation_box overlap 0.3
 \end{verbatim}}
-\noindent The first line, \textit{region simulation$\_$box (...)}, creates a region named \textit{simulation$\_$box} that is a block (i.e. a rectangular cuboid) that extends from -20 to 20 (no unit) along all 3 directions of space. The second line, \textit{create$\_$box 2 simulation$\_$box}, creates a simulation box based on the region \textit{simulation$\_$box} with \textit{2} types of atoms. The third line, \textit{create$\_$atoms (...)}, creates 1500 atoms of type 1 randomly within the region \textit{simulation$\_$box}. The integer \textit{341341} is a seed that can be changed to create different initial conditions for the simulation. The fourth line creates 100 atoms of type 2.
+\noindent The first line, \textit{region simulation$\_$box (...)}, creates a region named \textit{simulation$\_$box} that is a block (i.e. a rectangular cuboid) that extends from -20 to 20 (no unit) along all 3 directions of space. The second line, \textit{create$\_$box 2 simulation$\_$box}, creates a simulation box based on the region \textit{simulation$\_$box} with \textit{2} types of atoms. The third line, \textit{create$\_$atoms (...)}, creates 1500 atoms of type 1 randomly within the region \textit{simulation$\_$box}. The integer \textit{341341} is a seed that can be changed to create different initial conditions for the simulation. The fourth line creates 100 atoms of type 2. The overlap keyword enforces that the created atoms have at least 0.3 length units distance from each other.
 
 \paragraph{Simulation Settings}
 Let us fill the \textit{Simulation Settings} category section of the \textit{input} script:
