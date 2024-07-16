@@ -36,6 +36,7 @@
 \usepackage{tcolorbox}
 \usepackage{newverbs}
 \usepackage{listings}
+\usepackage[title]{appendix}
 
 \usepackage[
     type={CC},
@@ -118,17 +119,33 @@ The availability of open-source molecular simulation codes allows scientists and
 
 %Additionally, for well-formatted manuscripts, we recommend that you let LaTeX handle figure/table placement for you as much as possible, so please avoid specifying strenuous float instructions like `[h!]` and `[H]` as much as possible.
 
-Molecular simulations (MS) can be used to model a large variety of atomic and coarse-grained systems, including solids, fluids, polymers, and biomolecules, as well as complex interfaces and multicomponent systems. Various MS methods exist, molecular dynamics (MD) and Monte Carlo (MC) being among the most commonly used. MD is the preferred method for obtaining the accurate dynamics of a system, as it relies on solving Newton's equations of motion. For systems with many degrees of freedom or complex energy landscapes, the MC method can be a better choice than MD because it allows for efficiently exploring a configuration space. MC involves performing random changes to the system configuration that are either accepted or rejected based on energy criteria \cite{frenkel2023understanding, allen2017computer}. MS allow for measuring a broad variety of properties, including structural properties (e.g. bond length, inter-atomic distances), thermodynamic properties (e.g. temperature, pressure, volume), dynamic behaviors (e.g. diffusion coefficient, viscosity), and mechanical responses (e.g. elastic constant, Poisson ratio). Some of these quantities can be directly compared with experimental data, enabling the validation of the simulated system, while others, available only through simulations, are often useful for interpreting experimental data  \cite{van2008molecular}.
+Molecular simulations (MS) can be used to model a large variety of atomic and coarse-grained systems, including solids, fluids, polymers, and biomolecules, as well as complex interfaces and multicomponent systems. Various MS methods exist, molecular dynamics (MD) and Monte Carlo (MC) being among the most commonly used. MD is the preferred method for obtaining the accurate dynamics of a system, as it relies on solving Newton's equations of motion. For systems with many degrees of freedom or complex energy landscapes, the MC method can be a better choice than MD because it allows for efficiently exploring a configuration space. MC involves performing random changes to the system configuration that are either accepted or rejected based on energy criteria \cite{frenkel2023understanding, allen2017computer}. MS allow for measuring a broad variety of properties, including structural properties (e.g. bond length distribution, coordination numbers, radial distribution functions), thermodynamic properties (e.g. temperature, pressure, volume), dynamic behaviors (e.g. diffusion coefficient, viscosity), and mechanical responses (e.g. elastic constant, Poisson ratio). Some of these quantities can be directly compared with experimental data, enabling the validation of the simulated system, while others, available only through simulations, are often useful for interpreting experimental data  \cite{van2008molecular}.
 
-LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) is a highly flexible open-source MS tool \cite{thompson2022lammps}. Over the years, a broad variety of particle interaction models have been implemented in LAMMPS, enabling it to model, among others, atomic, polymeric, biological, metallic, granular, and coarse-grained systems. LAMMPS can be used on a single CPU core or a supercomputing system, and it can handle complex and large-scale simulations efficiently. However, LAMMPS requires users to provide detailed input files that can be complex to write, particularly given the overwhelming number of options offered by LAMMPS, all contained in extensive documentation that can sometimes be difficult for new users to navigate. In addition to the intrinsic complexity of LAMMPS, performing accurate MS involves making several complex and system-specific decisions, such as selecting the thermodynamic ensemble (e.g. micro-canonical, grand-canonical), determining the simulation duration, and choosing the sets of parameters describing the interactions between the atoms (the so-called force field) \cite{van2018validation}. The tutorials presented in this article aim to shorten the learning curve and help users perform accurate and reliable MS using LAMMPS.
+LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) \cite{lammps_home} is a highly flexible open-source MS tool. Over the years, a broad variety of particle interaction models have been implemented in LAMMPS, enabling it to model, among others, atomic, polymeric, biological, metallic, reactive, granular, mesoscale, grid--free continuum, and coarse-grained systems \cite{thompson2022lammps}. LAMMPS can be used on a single CPU core or a supercomputing system, it can handle complex and large-scale simulations efficiently, including GPU acceleration for a subset of its functionality.
+% AK: Particularly popular features that make LAMMPS attractive in recent times are:
+% support for ReaxFF for chemical reactions, machine learning potentials
+% (to use and to add to LAMMPS), hybrid force fields, hybrid MD plus MC,
+% "empirical" chemical reactions (fix bond/react), multi-physics simulations (using LAMMPS as
+% a library to handle one of the multiple physics levels).
+% The list above could be expanded, but it already feels long and thus more confusing than helping.
+% I've added "reactive" to cover both, ReaxFF and fix bond/react. Not sure what else would fit.
+However, LAMMPS requires users to provide detailed input files that can be complex to write, particularly given the overwhelming number of options offered by LAMMPS, all contained in extensive documentation that can sometimes be difficult for new users to navigate. In addition to the intrinsic complexity of LAMMPS, performing accurate MS involves making several complex and system-specific decisions related to the physics to be modeled, such as selecting the thermodynamic ensemble (e.g. micro-canonical, grand-canonical), determining the simulation duration, and choosing the sets of parameters describing the interactions between the atoms (the so-called force field) \cite{van2018validation}. The tutorials presented in this article aim to flatten the learning curve and help users perform accurate and reliable MS using LAMMPS.
 
 \subsection{Scope}
 
 This set of tutorials consists of seven tutorials arranged in order of increasing difficulty. The novelties associated with each tutorial are briefly described below.
 
-In \hyperref[lennard-jones-label]{tutorial 1}, the structure of LAMMPS input files is illustrated through the creation of a simple Lennard-Jones fluid system. Basic LAMMPS commands are used to set the interaction between the atoms, perform an energy minimization, and finally a simple MD simulation in the canonical (NVT) ensemble. This tutorial also illustrates the use of the LAMMPS graphical user interface (GUI).
+In \hyperref[lennard-jones-label]{tutorial 1}, the structure of LAMMPS input files is illustrated through the creation of a simple Lennard-Jones fluid system. Basic LAMMPS commands are used to set the interaction between the atoms, perform an energy minimization, and finally a simple MD simulation in the canonical (NVT) ensemble. This tutorial also illustrates the basic use of the LAMMPS graphical user interface (GUI).
 
 In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system where atoms are connected by bonds is used: a small carbon nanotube. The use of both classical and reactive force fields (here, AIREBO) is illustrated. An external deformation is applied to the CNT, and its deformation is measured. This tutorial also illustrates the use of LAMMPS from the terminal, as well as the use of the YAML format to import data from the \textit{log} file into Python.
+% AK: when using the LAMMPS GUI, analyzing thermo data should be even easier since the data can
+% be exported from the chart window to a gnuplot/xmgrace compatible .dat file or a .csv file that
+% can be easily imported into Excel or OOCalc or by pandas into python. It would be straightforward
+% to add an YAML export for consistency with processing the log.
+% LAMMPS GUI will by default not create a log file, but instead capture the screen output.
+% This can be stored to a file and then the YAML content extracted.
+% Also, this could be automated by adding a "export thermo data to YAML" feature to the log
+% window of the GUI.
 
 In \hyperref[all-atoms-label]{tutorial 3}, two components, liquid water and a polymer molecule, are merged and equilibrated. A long-range solver is used to handle the electrostatic interactions, and the system is equilibrated in the isothermal-isobaric (NPT) ensemble. A stretching force is then applied to the polymer.
 
@@ -140,6 +157,9 @@ In \hyperref[gcmc-silica-label]{tutorial 6}, a Monte Carlo simulation in the Gra
 
 In \hyperref[umbrella-sampling-label]{tutorial 7}, an advanced free energy method named umbrella sampling is implemented. Through the calculation of an energy barrier, this tutorial describes a protocol that can be used to deal with energy landscapes that prevent their sampling through classical MD or MC methods.
 
+% AK: As an additional justification for type labels, there could be an 8th tutorial added
+% showcasing fix bond/react, possibly based on one of examples bundled with LAMMPS. Jake?
+
 \section{Prerequisites}
 
 % Here you would identify prerequisites/background knowledge that are assumed by your work, as well as any software/license requirements.
@@ -147,21 +167,46 @@ In \hyperref[umbrella-sampling-label]{tutorial 7}, an advanced free energy metho
 \subsection{Background knowledge}
 % Tutorials should clearly define what concepts or abilities researchers will need to complete the tutorial (e.g., some proficiency in Python; experience with Jupyter notebooks; knowledge of classical MD; etc).
 
-This set of tutorials requires no prior knowledge of LAMMPS. The tutorials assume that the user is familiar with the use of a plain-text editor such as VIM or Emacs, as well as with the most basic Unix/Linux command-line interactions. In addition, prior knowledge of the basics of molecular simulations and statistical physics would be beneficial. The user may refer to \textit{Understanding molecular simulation} by Daan Frenkel and Berend Smit \cite{frenkel2023understanding}, as well as \textit{Computer simulation of liquids} by Michael Allen and Dominic Tildesley \cite{allen2017computer}. Additionally, to better understand the fundamental concepts behind the soft matter systems simulated in these tutorials, the user can refer to \textit{Basic concepts for simple and complex liquids} by Jean-Louis Barrat and Jean-Pierre Hansen \cite{barrat2003basic}, as well as \textit{Theory of simple liquids: with applications to soft matter} by Jean-Pierre Hansen and Ian Ranald McDonald \cite{hansen2013theory}.
+This set of tutorials assumes no prior knowledge of the LAMMPS software itself. Performing the tutorials requires the use of a text editor: the LAMMPS GUI (see below) can serve this purpose but also other console or graphical text editors like GNU nano, VI/VIM, emacs, notepad, Gedit, Visual Studio Code and many more.  LAMMPS can be executed directly from the LAMMPS GUI or from the command line, which requires some familiarity with executing commands from a command--line prompt.
+
+In addition, prior knowledge of the basics of molecular simulations and statistical physics would be beneficial. The user may refer to \textit{Understanding molecular simulation} by Daan Frenkel and Berend Smit \cite{frenkel2023understanding}, as well as \textit{Computer simulation of liquids} by Michael Allen and Dominic Tildesley \cite{allen2017computer}. Additionally, to better understand the fundamental concepts behind the soft matter systems simulated in these tutorials, the user can refer to \textit{Basic concepts for simple and complex liquids} by Jean-Louis Barrat and Jean-Pierre Hansen \cite{barrat2003basic}, as well as \textit{Theory of simple liquids: with applications to soft matter} by Jean-Pierre Hansen and Ian Ranald McDonald \cite{hansen2013theory}.
 
 \subsection{Software/system requirements}
 
-The LAMMPS version 2Aug2023 is required to follow the tutorials \cite{thompson2022lammps}. Download a pre-compiled LAMMPS package that matches your operating system (i.e. Linux, macOS, or Windows) from the LAMMPS website (\href{https://docs.lammps.org}{docs.lammps.org}). Choose a package that was compiled with the LAMMPS-GUI.
-%Depending on your operating system (i.e. Linux, macOS, or Windows), the procedure may differ. LAMMPS must be compiled with the following packages:
-%\begin{itemize}
-%\item MANYBODY
-%\item MOLECULE
-%\item KSPACE
-%\item RIGID
-%\item REAXFF
-%\item EXTRA-DUMP
-%\end{itemize}
-\textcolor{blue}{(To remove/adapt if we go GUI-only: To write and edit the LAMMPS input files, a text editor such as VIM or Emacs is required. Additionally, to visualize the trajectories of the atoms, VMD version 1.9.3 will be used \cite{humphrey1996vmd}. Feel free to use an alternative visualization software like Ovito. Finally, a graph plotting tool is required. To plot the results from the simulations, Matplotlib Pyplot version 3.5.2 is used together with Python version 3.11.4 \cite{van1995python, hunter2007Matplotlib}, but any plotting tool can be used, such as XmGrace or Gnuplot.}
+% AK: FIXME fill in the version date for the next stable version
+The LAMMPS release version XXAug2024 \cite{lammps_code} and the matching LAMMPS GUI software is recommended to follow the tutorials.  For Linux (with x86\_64 CPU), macOS (BigSur or later), and Windows (10 and 11) you can download a pre-compiled LAMMPS package from the LAMMPS release page on GitHub (\href{https://github.com/lammps/lammps/releases}{github.com/lammps/lammps/releases}). Choose a package that contains GUI in the file name (it will contain the LAMMPS GUI and a LAMMPS executable for the console).  LAMMPS versions generally have good backward compatibility (i.e. old inputs work with newer LAMMPS versions) but are not as good in forward compatibility (i.e. newer inputs work with older LAMMPS version).  This tutorial shall be occasionally revised to remain compatible with the latest stable version of LAMMPS.
+
+It is also possible to follow the tutorials without the LAMMPS GUI using a console version of LAMMPS and a text editor as well as external tools for plotting and visualization.  For advanced simulations, those external tools may be required since the visualization and plotting facilities in the LAMMPS GUI have limited functionality and flexibility.  Suitable external tools for plotting are for example: Python with Pandas/Matplotlib \cite{van1995python, hunter2007Matplotlib}, XmGrace, Gnuplot, Excel, OOCalc.  Suitable external tools for visualization are VMD \cite{vmd_home,humphrey1996vmd} and OVITO \cite{ovito_home,ovito_paper}.
+% AK: Hopefully VMD 2.0 will be released before the article is submitted
+% VMD 1.9.3 is horribly outdated and missing a lot of LAMMPS support goodies
+
+In \hyperref[compiling-lammps-label]{appendix A} instructions for compiling LAMMPS from source for use with this tutorial are given.
+
+In \hyperref[parallel-lammps-label]{appendix B} instructions for running LAMMPS in parallel using MPI are given.
+
+% AK: we should intoduce advanced visualization/plotting when beneficial and then use the LAMMPS GUI only to edit the input, run LAMMPS and visually validate initial geometry.
+%
+% SG: \textcolor{blue}{(To remove/adapt if we go GUI-only: To write and edit the LAMMPS input files, a text editor such as VIM or Emacs is required. Additionally, to visualize the trajectories of the atoms, VMD version 1.9.3 will be used . Feel free to use an alternative visualization software like Ovito. Finally, a graph plotting tool is required. To plot the results from the simulations, Matplotlib Pyplot version 3.5.2 is used together with Python version 3.11.4 \cite{van1995python, hunter2007Matplotlib}, but any plotting tool can be used, such as XmGrace or Gnuplot.}
+
+\subsection{About LAMMPS GUI}
+
+The LAMMPS GUI is a graphical text editor enhanced for editing LAMMPS input files and linked to the LAMMPS library and thus capable of running LAMMPS through the LAMMPS C-library interface.  The text editor behaves similar to text editors like notepad or gedit, but has the following enhancements:
+\begin{itemize}
+\item Line numbers
+\item Syntax highlighting for LAMMPS input files
+\item Auto-completion for LAMMPS commands and options
+\item Auto-indent of lines
+\item Context sensitive online help through right click
+\item Start (and stop!) of simulations with a mouse click
+\item Monitoring of simulation progress
+\item Visualization using the renderer built into LAMMPS
+\item Capture of output to text window
+\item Automatic plot of thermodynamic data during run
+\item Capture of ``dump image'' outputs for animations
+\item Application of OpenMP or GPU acceleration
+\end{itemize}
+
+A detailed documentation for LAMMPS GUI is in the LAMMPS manual \cite{lammps_gui_docs}.
 
 \section{Content and links}
 
@@ -2363,7 +2408,32 @@ S.G. acknowledges funding from the European Union's Horizon 2020 research and in
 %%% APPENDICES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%\appendix
+\begin{appendices}
+  \section{Compiling LAMMPS from Source on Linux}
+  \label{compiling-lammps-label}
+  FIXME: add section
 
+  % AK: For beginner we recommend CMake and a current Linux OS (at least Ubuntu 22.04LTS, RHEL 9 (and Alma, or Rocky), Fedora 39)
+  % The Linux system must support packages for software development installed and the corresponding development packages for compiling with MPI
+
+  % AK: a mostly complete list of packages for different Linux flavors can be inferred from singularity/apptainer container definition files in "tools/singularity"
+
+%Depending on your operating system (i.e. Linux, macOS, or Windows), the procedure may differ. LAMMPS must be compiled with the following packages:
+%\begin{itemize}
+%\item MANYBODY
+%\item MOLECULE
+%\item KSPACE
+%\item RIGID
+%\item REAXFF
+%\item EXTRA-DUMP
+%\end{itemize}
+
+  % AK: for non-Linux OS please refer to LAMMPS Manual.
+
+
+  \section{Running LAMMPS in Parallel with MPI}
+  \label{parallel-lammps-label}
+  FIXME: add section
+\end{appendices}
 
 \end{document}
