@@ -216,15 +216,19 @@ Lennard-Jones fluid system. Basic LAMMPS commands are used to set the
 interaction between the atoms, perform an energy minimization, and
 finally a simple MD simulation in the canonical (NVT) ensemble. This
 tutorial also illustrates the basic use of the LAMMPS graphical user
-interface (GUI).
+interface (GUI) for running simulations.
 
 In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system
 where atoms are connected by bonds is used: a small carbon nanotube. The
 use of both classical and reactive force fields (here, AIREBO) is
 illustrated. An external deformation is applied to the CNT, and its
-deformation is measured. This tutorial also illustrates the use of
-LAMMPS from the terminal, as well as the use of the YAML format to
-import data from the \textit{log} file into Python.
+deformation is measured. This tutorial also illustrates the use of an
+external visualization tool to visualize breaking bonds.
+
+% AK: this is still useful stuff to be shown somewhere.
+% This tutorial also illustrates the use of LAMMPS from the command line
+% using the YAML thermo format to easily import data from the \textit{log} file into Python.
+
 % AK: when using the LAMMPS GUI, analyzing thermo data should be even easier since the data can
 % be exported from the chart window to a gnuplot/xmgrace compatible .dat file or a .csv file that
 % can be easily imported into Excel or OOCalc or by pandas into python. It would be straightforward
@@ -238,7 +242,9 @@ In \hyperref[all-atoms-label]{tutorial 3}, two components, liquid water
 and a polymer molecule, are merged and equilibrated. A long-range solver
 is used to handle the electrostatic interactions, and the system is
 equilibrated in the isothermal-isobaric (NPT) ensemble. A stretching
-force is then applied to the polymer.
+force is then applied to the polymer.  This tutorial also demonstrates
+the use of molecule files and typelabels \cite{typelabel_paper} to
+make molecule files more generic.
 
 In \hyperref[sheared-confined-label]{tutorial 4}, a fluid confined by
 two walls is simulated, illustrating the specifics of simulating systems
@@ -274,12 +280,13 @@ sampling through classical MD or MC methods.
 % Tutorials should clearly define what concepts or abilities researchers will need to complete the tutorial (e.g., some proficiency in Python; experience with Jupyter notebooks; knowledge of classical MD; etc).
 
 This set of tutorials assumes no prior knowledge of the LAMMPS software
-itself. Performing the tutorials requires the use of a text editor: the
-LAMMPS GUI (see below) can serve this purpose but also other console or
+itself. Performing the tutorials requires the use of a text editor. We
+use the LAMMPS GUI \cite{lammps_gui_docs} here, but other console or
 graphical text editors like GNU nano, VI/VIM, emacs, notepad, Gedit,
-Visual Studio Code and many more.  LAMMPS can be executed directly from
-the LAMMPS GUI or from the command line, which requires some familiarity
-with executing commands from a command--line prompt.
+Visual Studio Code, and many more can be used for this purpose.  LAMMPS
+can be executed directly from the LAMMPS GUI or from the command line,
+which requires some familiarity with executing commands from a
+command--line prompt.
 
 In addition, prior knowledge of the basics of molecular simulations and
 statistical physics would be beneficial. The user may refer to
@@ -311,16 +318,16 @@ inputs work with older LAMMPS version).  This tutorial shall be
 occasionally revised to remain compatible with the latest stable version
 of LAMMPS.
 
-It is also possible to follow the tutorials without the LAMMPS GUI using
-a console version of LAMMPS and a text editor as well as external tools
-for plotting and visualization.  For advanced simulations, those
+It is also possible to follow the tutorials without the LAMMPS GUI by
+using the console version of LAMMPS and a text editor as well as external
+tools for plotting and visualization.  For advanced simulations, those
 external tools may be required since the visualization and plotting
 facilities in the LAMMPS GUI have limited functionality and flexibility.
 Suitable external tools for plotting are for example: Python with
 Pandas/Matplotlib \cite{van1995python, hunter2007Matplotlib}, XmGrace,
 Gnuplot, Excel, OOCalc.  Suitable external tools for visualization are
-VMD \cite{vmd_home,humphrey1996vmd} and OVITO
-\cite{ovito_home,ovito_paper}.
+VMD \cite{vmd_home, humphrey1996vmd} and OVITO
+\cite{ovito_home, ovito_paper}.
 % AK: Hopefully VMD 2.0 will be released before the article is submitted
 % VMD 1.9.3 is horribly outdated and missing a lot of LAMMPS support goodies
 
@@ -2522,11 +2529,13 @@ A folder called \textit{data/} needs to be created within \textit{BiasedSampling
 
 \paragraph{WHAM algorithm}
 \noindent To generate the free energy profile from the density distribution, let us use the WHAM algorithm as implemented by Marc Grossfield \cite{grossfieldimplementation}. You can download it from \href{http://membrane.urmc.rochester.edu/?page_id=126}{Alan Grossfield} website, and compile it by typing in the terminal:
-{\normalsize \begin{verbatim}
+{\normalsize
+\begin{verbatim}
 cd wham
 make clean
 make
-\end{verbatim}}
+\end{verbatim}
+}
 \noindent The compilation creates an executable called \textit{wham} that you can copy in the \textit{BiasedSampling/} folder. To apply the WHAM algorithm to our simulation, we first need to create a metadata file. This file simply contains
 \begin{itemize}
 \item the paths to all the data files,
@@ -2534,10 +2543,12 @@ make
 \item and the values of $k$.
 \end{itemize}
 Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial7/metadata.dat}{\textit{metadata.dat}} file I have written and save it in \textit{BiasedSampling/}. Then, simply run the following command in the terminal:
-{\normalsize \begin{verbatim}
+{\normalsize
+\begin{verbatim}
 ./wham -25 25 50 1e-8 119.8 0 \
     metadata.dat PMF.dat
-\end{verbatim}}
+\end{verbatim}
+}
 where -25 and 25 are the boundaries, 50 is the number of bins, 1e-8 is the tolerance, and 119.8 is the temperature. A file called \textit{PMF.dat} has been created, containing the free energy profile in kcal/mol. Again, one can compare the result of the PMF with the imposed potential $U$, demonstrating excellent agreement (Fig.\,\ref{fig:US-freenergy}). We can see that the agreement is quite good despite the very short calculation time and the very high value for the energy barrier. Obtaining the same results with Free Sampling would require performing extremely long and costly simulations.
 
 \begin{figure}
@@ -2549,7 +2560,11 @@ where -25 and 25 are the boundaries, 50 is the number of bins, 1e-8 is the toler
 
 \section*{Author Contributions}
 
-SG conceived and wrote all the online tutorials and underlying Sphinx documentation for \href{https://lammpstutorials.github.io}{lammpstutorials.github.io}.
+S.G. conceived and wrote all the online tutorials and underlying Sphinx documentation for \href{https://lammpstutorials.github.io}{lammpstutorials.github.io}.
+
+A.K. wrote the LAMMPS GUI software and helped revise the tutorials for use with it.
+
+% TODO: add J.G.'s contributions
 
 \section*{Potentially Conflicting Interests}
 
@@ -2559,7 +2574,7 @@ There are no conflicting interests to declare.
 
 S.G. acknowledges funding from the European Union's Horizon 2020 research and innovation programme under the Marie Skłodowska-Curie grant agreement N$^\circ\;101065060$.
 
-A.K. acknowledges financial support by Sandia National Laboratories under POs 2149742 and 2407526.
+\noindent A.K. acknowledges financial support by Sandia National Laboratories under POs 2149742 and 2407526.
 
 \section*{Author Information}
 \makeorcid
@@ -2590,7 +2605,7 @@ A.K. acknowledges financial support by Sandia National Laboratories under POs 21
 %\item EXTRA-DUMP
 %\end{itemize}
 
-  % AK: for non-Linux OS please refer to LAMMPS Manual.
+% AK: for non-Linux OS please refer to LAMMPS Manual.
 
 
   \section{Running LAMMPS in Parallel with MPI}
