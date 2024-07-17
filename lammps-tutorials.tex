@@ -793,6 +793,7 @@ fix at3 all ave/time 10 10 100 c_Tmid &
 \end{verbatim}}
 Let us run a small equilibration step to bring the system to the required
 temperature before applying any deformation:
+% S.G.: the "line yaml" should be removed if we use the export to yaml from the GUI
 {\normalsize \begin{verbatim}
 thermo 100
 thermo_modify temp Tmid line yaml
@@ -856,6 +857,7 @@ The CNT starts deforming at $t = 5\,\text{ps}$. Here, the force field is OPLS-AA
 \paragraph{Importing YAML log file into Python (OPTIONAL)}
 % S.G.: Since we have the GUI, the YAML import make less sense and complicate the tutorial. What about writing a small dedicated YAML paragraph at the end of the article, instead of integrating it in this tutorial?
 % S.G.: The other option is to tell the users that this is an optional part, but this is kind of anoying still.
+% S.G.: EDIT: since now the GUI allow for exporting into YAML, it make more sense to include it, although it still make the tutorial a little complicated due to the use of python
 To import the YAML log file into Python and plot the total energy
 as a function of the number of steps, create a new file within
 \textit{unbreakable-bonds/} called \textit{read-log.py}. Copy the following
