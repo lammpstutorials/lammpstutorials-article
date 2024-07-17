@@ -529,7 +529,7 @@ in a folder called \textit{unbreakable-bonds/}.
 
 \paragraph{The LAMMPS input}
 Create a new text file within \textit{unbreakable-bonds/} and name
-it \textit{input.lammps}. Open \textit{input.lammps} using the GUI, and copy
+it \textit{input.lmp}. Open \textit{input.lmp} using the GUI, and copy
 the following lines into it:
 {\normalsize \begin{verbatim}
 variable T equal 300
@@ -593,7 +593,7 @@ and \textit{improper$\_$coeff} give the potential for the constraints between 4
 atoms.
 
 Let us include the file \textit{parm.lammps} in the simulation by adding
-the following line into the \textit{input.lammps} file:
+the following line into the \textit{input.lmp} file:
 {\normalsize \begin{verbatim}
 include parm.lammps
 \end{verbatim}}
@@ -609,7 +609,7 @@ respect to (0, 0, 0), which is not initially the case, as seen in
 -40.000000 40.000000  ylo yhi
 -12.130411 67.869589  zlo zhi
 \end{verbatim}}
-Let us recenter the CNT by adding the following lines into \textit{input.lammps}:
+Let us recenter the CNT by adding the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 group carbon_atoms type 1
 variable carbon_xcm equal &
@@ -630,7 +630,7 @@ respectively. Then, the \textit{displace$\_$atoms} command moves the group
 origin (0, 0, 0).
 
 Let us also change the box boundaries by adding the following
-line into \textit{input.lammps}:
+line into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 change_box all x final -40 40 &
     y final -40 40 z final -40 40
@@ -641,7 +641,7 @@ analysis, but won't make any difference to the molecular dynamics.
 A displacement will be imposed on the edges of the CNT. To do so, let us
 isolate the atoms from the two edges and place them into groups named
 \textit{rtop} and \textit{rbot}, respectively. Add the following lines into
-\textit{input.lammps}:
+\textit{input.lmp}:
 {\normalsize \begin{verbatim}
 variable zmax equal &
     bound(carbon_atoms,zmax)-0.5
@@ -662,7 +662,7 @@ and correspond respectively to: $z < z_\mathrm{min}$, (\textit{rbot}, for region
 bottom) $z_\mathrm{min} > z > z_\mathrm{max}$ (\textit{rmid}, for region middle),
 and $z > z_\mathrm{max}$ (\textit{rtop}, for region top). Finally, let us define
 3 groups of atoms corresponding to the atoms located in each of the 3 regions,
-respectively, by adding to \textit{input.lammps}:
+respectively, by adding to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 group carbon_top region rtop
 group carbon_bot region rbot
@@ -680,12 +680,6 @@ and the atoms from the \textit{carbon$\_$top} and the \textit{carbon$\_$bot}
 groups in white.}
 \label{fig:CNT-underformed}
 \end{figure}
-
-Run the simulation by typing the following command in a terminal:
-{\normalsize \begin{verbatim}
-lmp -in input.lammps
-\end{verbatim}}
-where the command \textit{lmp} is linked to the LAMMPS executable.
 
 Run the simulation. The number of atoms in each group is printed in the
 \textit{log.lammps} file. Always make sure that the number
@@ -722,7 +716,7 @@ The 10 deleted atoms were chosen randomly from the central part of the CNT.}
 
 \paragraph{The molecular dynamics}
 Let us specify the thermalization and the dynamics of the system. Add the following
-lines into \textit{input.lammps}:
+lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 reset_atoms id sort yes
 velocity carbon_mid create ${T} 48455 &
@@ -747,7 +741,7 @@ edges won't bias the temperature. Note that the atoms of the edges do not need
 a thermostat because their motion will be restrained, see below.
 
 To restrain the motion of the atoms at the edges, let us add the following
-commands to \textit{input.lammps}:
+commands to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 fix mysf1 carbon_top setforce 0 0 0
 fix mysf2 carbon_bot setforce 0 0 0
@@ -816,7 +810,7 @@ Python (see below).
 
 Let us impose a constant velocity deformation on the CNT
 by combining the \textit{velocity set} command with previously defined
-\textit{fix setforce}. Add the following lines in the \textit{input.lammps} file,
+\textit{fix setforce}. Add the following lines in the \textit{input.lmp} file,
 right after the last \textit{run 5000} command:
 {\normalsize \begin{verbatim}
 velocity carbon_top set 0 0 0.0005
@@ -911,7 +905,7 @@ to break if the applied deformation is large enough.
 \paragraph{Input file initialization}
 \noindent Create a second folder called \textit{breakable-bonds/} next to
 \textit{unbreakable-bonds/}, and create a new input file in it called
-\textit{input.lammps}. Type into \textit{input.lammps}:
+\textit{input.lmp}. Type into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 # Initialisation
 variable T equal 300
@@ -937,7 +931,7 @@ for placing the atoms, but no information related to the connection between thes
 
 \paragraph{Use of AIREBO potential}
 Then, let us import the LAMMPS data file, and set the pair coefficients by adding
-the following lines into \textit{input.lammps}:
+the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 # System definition
 read_data cnt_atom.data
@@ -945,7 +939,7 @@ pair_coeff * * CH.airebo C
 \end{verbatim}}
 Here, there is one single atom type. We impose this type to be carbon by using
 the letter \textit{C}. Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial2/CH.airebo}{\textit{CH.airebo}} file and place it within
-the \textit{breakable-bonds/} folder. The rest of the \textit{input.lammps} is
+the \textit{breakable-bonds/} folder. The rest of the \textit{input.lmp} is
 very similar to the previous one:
 
 {\normalsize \begin{verbatim}
@@ -1002,7 +996,7 @@ Here, let us impose a constant velocity deformation using the atoms of one
 edge while maintaining the other edge fixed (note that for the unbreakable CNT,
 the motion was imposed on the 2 edges). As an equilibration step, let us set the
 velocity to 0 for the atoms of both edges. Add the following lines into
-the \textit{input.lammps} file:
+the \textit{input.lmp} file:
 {\normalsize \begin{verbatim}
 fix mysf1 carbon_bot setforce 0 0 0
 fix mysf2 carbon_top setforce 0 0 0
@@ -1029,14 +1023,14 @@ run 5000
 \end{verbatim}}
 Note the relatively small timestep of $0.0005\,\text{ps}$ used. A reactive force
 field usually requires a smaller timestep than a classical one. When running
-\textit{input.lammps} with LAMMPS, you can see that the temperature deviates
+\textit{input.lmp} with LAMMPS, you can see that the temperature deviates
 from the target temperature of $300\,\text{K}$ at the start of the equilibration,
 but that after a few steps, it reaches the target value.
 
 \paragraph{Launch the deformation}
 After equilibration, let us set the velocity of one of the edges equal to
 $15~\text{m/s}$ and run for a longer duration than previously. Add the following
-lines into \textit{input.lammps}:
+lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 velocity carbon_top set 0 0 0.15
 run 280000
