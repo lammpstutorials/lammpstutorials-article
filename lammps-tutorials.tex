@@ -1122,12 +1122,17 @@ Start the simulation from the equilibrated PEG-water system and include again th
 read_data ../mergePEGH2O/mix.data
 include ../PARM.lammps
 \end{verbatim}}
-Then, let us create 4 atom groups: H2O and PEG (as previously), as well as 2 groups containing only the 2 oxygen atoms of types 6 and 7, respectively. Atoms of types 6 and 7 correspond to the oxygen atoms located at the ends of the PEG molecule, which we are going to use to pull on the PEG molecule. Add the following lines to the \textit{input.lammps}:
+Next, let us create some useful atom groups, including H2O and PEG (as previously), as well as 2 groups containing a single atom each, the oxygen atoms at the ends of the chain. Atoms of types OAlc correspond to the hydroxy (alcohol) group oxygen atoms located at the ends of the PEG molecule, which we are going to use to pull on the PEG molecule. Add the following lines to the \textit{input.lammps}:
 {\normalsize \begin{verbatim}
-group H2O type 8 9
-group PEG type 1 2 3 4 5 6 7
-group topull1 type 6
-group topull2 type 7
+group H2O type OW HW
+group PEG type C CPos H HC OAlc OE
+group ends type OAlc
+variable xcm equal xcm(ends,x)
+variable oxies atom type==label2type(atom,OAlc)
+variable end1 atom v_oxies*(x>v_xcm)
+variable end2 atom v_oxies*(x<v_xcm)
+group topull1 variable end1
+group topull2 variable end2
 \end{verbatim}}
 Add the following \textit{dump} command to the input to print the atom positions every 1000 steps:
 {\normalsize \begin{verbatim}
