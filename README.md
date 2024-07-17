@@ -27,7 +27,7 @@ make
 ## List of Authors
 
 - Simon Gravelle, University Grenoble Alpes, CNRS, LIPhy, Grenoble, 38000, France
-- Jake (add affiliation)
+- Jacob R. Gissinger, Stevens Institute of Technology, Hoboken, NJ 07030, USA
 - Axel Kohlmeyer, Institute for Computational Molecular Science, Temple University, Philadelphia, PA 19122, USA
 
 ## Funding Information
