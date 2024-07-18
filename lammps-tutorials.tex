@@ -1221,7 +1221,7 @@ pair_style lj/cut/tip4p/long 1 2 1 1 0.1546 12.0
 kspace_style pppm/tip4p 1.0e-4
 kspace_modify slab 3.0
 \end{verbatim}}
-These lines are used to define the most basic parameters, including the \textit{atom}, \textit{bond}, and \textit{angle} styles, as well as interaction potential. Here, \textit{lj/cut/tip4p/long} imposes a Lennard-Jones potential with a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential. So far, the commands are relatively similar to those in the previous tutorial, \hyperref[all-atoms-label]{Polymer in water}, with two major differences: the use of \textit{lj/cut/tip4p/long} instead of \textit{lj/cut/coul/long}, and \textit{pppm/tip4p} instead of \textit{pppm}. When using \textit{lj/cut/tip4p/long} and \textit{pppm/tip4p}, the interactions resemble the conventional Lennard-Jones and Coulomb interactions, except that they are specifically designed for the four-point water model. Therefore, LAMMPS automatically creates a four-point water molecule using atoms of type 1 as oxygen (\textit{O}) and atoms of type 2 as hydrogen (\textit{H}). The fourth massless atom (\textit{M}) of the TIP4P water molecule does not have to be defined explicitly, and the value of $0.1546\,\text{$\text{\AA{}}$}$ corresponds to the \textit{O-M} distance of the TIP4P-2005 water model \cite{abascal2005general}. All the other atoms in the simulation are treated normally with long-range Coulomb interactions. Another novelty, here, is the use of \textit{kspace$\_$modify slab 3.0} that is combined with the non-periodic boundaries along the $z$ coordinate: \textit{boundary p p f}. With the \textit{slab} option, the system is treated as periodical along $z$, but with an empty volume inserted between the periodic images of the slab, and the interactions along $z$ effectively turned off.
+These lines are used to define the most basic parameters, including the \textit{atom}, \textit{bond}, and \textit{angle} styles, as well as interaction potential. Here, \textit{lj/cut/tip4p/long} imposes a Lennard-Jones potential with a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential. So far, the commands are relatively similar to those in the previous tutorial, \hyperref[all-atoms-label]{Polymer in water}, with two major differences: the use of \textit{lj/cut/tip4p/long} instead of \textit{lj/cut/coul/long}, and \textit{pppm/tip4p} instead of \textit{pppm}. When using \textit{lj/cut/tip4p/long} and \textit{pppm/tip4p}, the interactions resemble the conventional Lennard-Jones and Coulomb interactions, except that they are specifically designed for the four-point water model. Therefore, LAMMPS automatically creates a four-point water molecule using atoms of type O as oxygen and atoms of type H as hydrogen. The fourth massless atom (\textit{M}) of the TIP4P water molecule does not have to be defined explicitly, and the value of $0.1546\,\text{$\text{\AA{}}$}$ corresponds to the \textit{O-M} distance of the TIP4P-2005 water model \cite{abascal2005general}. All the other atoms in the simulation are treated normally with long-range Coulomb interactions. Another novelty, here, is the use of \textit{kspace$\_$modify slab 3.0} that is combined with the non-periodic boundaries along the $z$ coordinate: \textit{boundary p p f}. With the \textit{slab} option, the system is treated as periodical along $z$, but with an empty volume inserted between the periodic images of the slab, and the interactions along $z$ effectively turned off.
 
 Let us create the box by adding the following lines to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
@@ -1240,12 +1240,12 @@ region of space. By choosing \textit{xlo=-3} and \textit{xhi=3}, and because we 
 factor of 4.04, the region box extends from $-12.12~\text{\AA{}}$ to $12.12~\text{\AA{}}$ along the $x$ direction. The \textit{create$\_$box} command creates a simulation box with 5 types of atoms: the oxygen and hydrogen of the water molecules, the two ions ($\text{Na}^+$,
 $\text{Cl}^-$), and the atom of the walls. The \textit{create$\_$box} command extends over 6 lines thanks to the $\&$ character. The second and third lines are used to indicate that the simulation contains 1 type of bond and 1 type of angle (both required by the water molecule). The parameters for these bond and angle constraints will be given later. The three last lines are for memory allocation.
 
-Now, we can add atoms to the system. First, let us create two sub-regions corresponding respectively to the two solid walls, and create a larger region from the union of the two regions. Then, let us create atoms of type 5 (the wall) within the two regions. Add the following lines to \textit{input.lammps}:
+Now, we can add atoms to the system. First, let us create two sub-regions corresponding respectively to the two solid walls, and create a larger region from the union of the two regions. Then, let us create atoms of type WALL within the two regions. Add the following lines to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
 region rbotwall block -3 3 -3 3 -4 -3
 region rtopwall block -3 3 -3 3 3 4
 region rwall union 2 rbotwall rtopwall
-create_atoms 5 region rwall
+create_atoms WALL region rwall
 \end{verbatim}}
 Atoms will be placed in the positions of the previously defined lattice, thus forming fcc solids. To add the water molecules, first download the molecule template called \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial4/RigidH2O.txt}{\textit{RigidH2O.txt}} and place it within \textit{systemcreation/}. The template contains all the
 necessary information concerning the water molecule, such as atom positions, bonds, and angles. Add the following lines to \textit{input.lammps}:
@@ -1258,12 +1258,12 @@ Within the last three lines, a \textit{region} named \textit{rliquid} is created
 
 Finally, let us create 30 ions (15 $\text{Na}^+$ and 15 $\text{Cl}^-$) in between the water molecules, by adding the following commands to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
-create_atoms 3 random 15 52802 rliquid &
+create_atoms Na+ random 15 52802 rliquid &
     overlap 0.3 maxtry 500
-create_atoms 4 random 15 90182 rliquid &
+create_atoms Cl- random 15 90182 rliquid &
     overlap 0.3 maxtry 500
-set type 3 charge 1
-set type 4 charge -1
+set type Na+ charge 1
+set type Cl- charge -1
 \end{verbatim}}
 Each \textit{create$\_$atoms} command will add 15 ions at random positions within the \textit{rliquid} region, ensuring that there is no \textit{overlap} with existing molecules. Feel free to increase or decrease the salt concentration by changing the number of desired ions. To keep the system charge neutral, always insert the same number of $\text{Na}^+$ and $\text{Cl}^-$, unless there are other charges in the system. The charges of the newly added ions are specified by the two \textit{set} commands.
 
@@ -1274,37 +1274,37 @@ include ../GROUP.lammps
 \end{verbatim}}
 Create a new text file called \textit{PARM.lammps} next to the \textit{systemcreation/} folder. Copy the following lines into \textit{PARM.lammps}:
 {\normalsize \begin{verbatim}
-mass 1 15.9994 # water
-mass 2 1.008 # water
-mass 3 28.990 # ion
-mass 4 35.453 # ion
-mass 5 26.9815 # wall
+mass O 15.9994
+mass H 1.008
+mass Na+ 22.990
+mass Cl- 35.453
+mass WALL 26.9815
 
-pair_coeff 1 1 0.185199 3.1589
-pair_coeff 2 2 0.0 1.0
-pair_coeff 3 3 0.04690 2.4299
-pair_coeff 4 4 0.1500 4.04470
-pair_coeff 5 5 11.697 2.574
-pair_coeff 1 5 0.4 2.86645
+pair_coeff O O 0.185199 3.1589
+pair_coeff H H 0.0 1.0
+pair_coeff Na+ Na+ 0.04690 2.4299
+pair_coeff Cl- Cl- 0.1500 4.04470
+pair_coeff WALL WALL 11.697 2.574
+pair_coeff O WALL 0.4 2.86645
 \end{verbatim}}
 Each \textit{mass} command assigns a mass in grams/mole to an atom type. Each \textit{pair$\_$coeff} assigns respectively the depth of the LJ potential (in kcal/mole), and the distance (in Ångstrom) at which the particle-particle potential energy is 0.
 
-As already seen in previous tutorials and with the important exception of \textit{pair$\_$coeff 1 5}, only pairwise interactions between atoms of identical types was assigned. By default, LAMMPS calculates the pair coefficients for the interactions between atoms of different types (i and j) by using geometrical average: $\epsilon_{ij} = (\epsilon_{ii} + \epsilon_{jj})/2$,  $\sigma_{ij} = (\sigma_{ii} + \sigma_{jj})/2$. If the default value of $5.941\,\text{kcal/mol}$ was kept for $\epsilon_\text{1-5}$, the solid walls would be extremely hydrophilic, causing the water molecule to form dense layers. As a comparison, the water-water energy $\epsilon_\text{1-1}$ is only $0.185199\,\text{kcal/mol}$. Therefore, the walls were made less hydrophilic by reducing the value of $\epsilon_\text{1-5}$. Copy the following lines into \textit{PARM.lammps} as well:
+As already seen in previous tutorials and with the important exception of \textit{pair$\_$coeff O WALL}, only pairwise interactions between atoms of identical types was assigned. By default, LAMMPS calculates the pair coefficients for the interactions between atoms of different types (i and j) by using geometrical average: $\epsilon_{ij} = (\epsilon_{ii} + \epsilon_{jj})/2$,  $\sigma_{ij} = (\sigma_{ii} + \sigma_{jj})/2$. If the default value of $5.941\,\text{kcal/mol}$ was kept for $\epsilon_\text{1-5}$, the solid walls would be extremely hydrophilic, causing the water molecule to form dense layers. As a comparison, the water-water energy $\epsilon_\text{1-1}$ is only $0.185199\,\text{kcal/mol}$. Therefore, the walls were made less hydrophilic by reducing the value of $\epsilon_\text{1-5}$. Copy the following lines into \textit{PARM.lammps} as well:
 {\normalsize \begin{verbatim}
-bond_coeff 1 0 0.9572
-angle_coeff 1 0 104.52
+bond_coeff O-H 0 0.9572
+angle_coeff H-O-H 0 104.52
 \end{verbatim}}
 The \textit{bond$\_$coeff} command, used here for the O-H bond of the water molecule, sets both the spring constant of the harmonic potential and the equilibrium distance of $0.9572~\text{\AA{}}$. The constant can be 0 for a rigid water molecule because the shape of the molecule will be preserved by the SHAKE algorithm (see below) \cite{ryckaert1977numerical, andersen1983rattle}. Similarly, the angle coefficient for the H-O-H angle of the water molecule sets the force constant of the angular harmonic potential to 0 and the equilibrium angle to $104.52^\circ$.
 
 Let us also create another file called \textit{GROUP.lammps} next to \textit{PARM.lammps}, and copy the following lines into it:
 {\normalsize \begin{verbatim}
-group H2O type 1 2
-group Na type 3
-group Cl type 4
+group H2O type O H
+group Na type Na+
+group Cl type Cl-
 group ions union Na Cl
 group fluid union H2O ions
 
-group wall type 5
+group wall type WALL
 region rtop block INF INF INF INF 0 INF
 region rbot block INF INF INF INF INF 0
 group top region rtop
