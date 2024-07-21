@@ -1363,17 +1363,32 @@ Run the \textit{input.lammps} file using LAMMPS. If you open the \textit{dump.la
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{NANOSHEAR}
-\caption{The electrolyte confined in a nanometer slit pore as simulated during \hyperref[sheared-confined-label]{Tutorial 4}. $\text{Na}^+$ ions are represented as purple spheres, $\text{Cl}^-$ ions as cyan spheres, water molecules are colored in red and white, and the walls are colored in gray. The arrows indicate the imposed lateral motion of the walls.}
+\caption{The electrolyte confined in a nanometer slit pore as simulated during
+\hyperref[sheared-confined-label]{Tutorial 4}. $\text{Na}^+$ ions are represented
+as purple spheres, $\text{Cl}^-$ ions as cyan spheres, water molecules are colored
+in red and white, and the walls are colored in gray. The arrows indicate the
+imposed lateral motion of the walls.}
 \label{fig:NANOSHEAR}
 \end{figure}
 
-\noindent The objective of this tutorial is to simulate an electrolyte nanoconfined and sheared by two walls (Fig.\,\ref{fig:NANOSHEAR}). The density and velocity profiles of the fluid in the direction normal to the walls are extracted to highlight the effect of confining a fluid on its local properties. This tutorial illustrates some key aspects of combining a fluid and a solid in the same simulation. A major difference from the previous tutorial, \hyperref[all-atoms-label]{Polymer in water}, is that here a rigid four-point water model named TIP4P is used \cite{abascal2005general}. TIP4P is one of the most common water models due to its high accuracy.
+\noindent The objective of this tutorial is to simulate an electrolyte
+nanoconfined and sheared by two walls (Fig.\,\ref{fig:NANOSHEAR}). The density
+and velocity profiles of the fluid in the direction normal to the walls are
+extracted to highlight the effect of confining a fluid on its local properties.
+This tutorial illustrates some key aspects of combining a fluid and a solid in
+the same simulation. A major difference from the previous tutorial,
+\hyperref[all-atoms-label]{Polymer in water}, is that here a rigid four-point
+water model named TIP4P is used \cite{abascal2005general}. TIP4P is one of
+the most common water models due to its high accuracy.
 
 \subsubsection{System preparation}
-The fluid and walls must first be generated and then equilibrated at a reasonable temperature and pressure.
+The fluid and walls must first be generated and then equilibrated at a reasonable
+temperature and pressure.
 
 \paragraph{System generation}
-Create a new folder called \textit{systemcreation/}. Within \textit{systemcreation/}, open a blank file called \textit{input.lammps}, and copy the following lines into it:
+Create a new folder called \textit{systemcreation/}. Within
+\textit{systemcreation/}, open a blank file called \textit{input.lammps}, and
+copy the following lines into it:
 {\normalsize \begin{verbatim}
 boundary p p f
 units real
@@ -1384,7 +1399,28 @@ pair_style lj/cut/tip4p/long 1 2 1 1 0.1546 12.0
 kspace_style pppm/tip4p 1.0e-4
 kspace_modify slab 3.0
 \end{verbatim}}
-These lines are used to define the most basic parameters, including the \textit{atom}, \textit{bond}, and \textit{angle} styles, as well as interaction potential. Here, \textit{lj/cut/tip4p/long} imposes a Lennard-Jones potential with a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential. So far, the commands are relatively similar to those in the previous tutorial, \hyperref[all-atoms-label]{Polymer in water}, with two major differences: the use of \textit{lj/cut/tip4p/long} instead of \textit{lj/cut/coul/long}, and \textit{pppm/tip4p} instead of \textit{pppm}. When using \textit{lj/cut/tip4p/long} and \textit{pppm/tip4p}, the interactions resemble the conventional Lennard-Jones and Coulomb interactions, except that they are specifically designed for the four-point water model. Therefore, LAMMPS automatically creates a four-point water molecule using atoms of type 1 as oxygen (\textit{O}) and atoms of type 2 as hydrogen (\textit{H}). The fourth massless atom (\textit{M}) of the TIP4P water molecule does not have to be defined explicitly, and the value of $0.1546\,\text{$\text{\AA{}}$}$ corresponds to the \textit{O-M} distance of the TIP4P-2005 water model \cite{abascal2005general}. All the other atoms in the simulation are treated normally with long-range Coulomb interactions. Another novelty, here, is the use of \textit{kspace$\_$modify slab 3.0} that is combined with the non-periodic boundaries along the $z$ coordinate: \textit{boundary p p f}. With the \textit{slab} option, the system is treated as periodical along $z$, but with an empty volume inserted between the periodic images of the slab, and the interactions along $z$ effectively turned off.
+These lines are used to define the most basic parameters, including the
+\textit{atom}, \textit{bond}, and \textit{angle} styles, as well as interaction
+potential. Here, \textit{lj/cut/tip4p/long} imposes a Lennard-Jones potential with
+a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential. So
+far, the commands are relatively similar to those in the previous tutorial,
+\hyperref[all-atoms-label]{Polymer in water}, with two major differences: the
+use of \textit{lj/cut/tip4p/long} instead of \textit{lj/cut/coul/long},
+and \textit{pppm/tip4p} instead of \textit{pppm}. When using \textit{lj/cut/tip4p/long}
+and \textit{pppm/tip4p}, the interactions resemble the conventional Lennard-Jones
+and Coulomb interactions, except that they are specifically designed for the four-point
+water model. Therefore, LAMMPS automatically creates a four-point water molecule
+using atoms of type 1 as oxygen (\textit{O}) and atoms of type 2 as hydrogen
+(\textit{H}). The fourth massless atom (\textit{M}) of the TIP4P water molecule
+does not have to be defined explicitly, and the value of $0.1546\,\text{$\text{\AA{}}$}$
+corresponds to the \textit{O-M} distance of the TIP4P-2005 water model
+\cite{abascal2005general}. All the other atoms in the simulation are treated
+normally with long-range Coulomb interactions. Another novelty, here, is the
+use of \textit{kspace$\_$modify slab 3.0} that is combined with the non-periodic
+boundaries along the $z$ coordinate: \textit{boundary p p f}. With the
+\textit{slab} option, the system is treated as periodical along $z$, but with an
+empty volume inserted between the periodic images of the slab, and the interactions
+along $z$ effectively turned off.
 
 Let us create the box by adding the following lines to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
@@ -1397,11 +1433,19 @@ extra/bond/per/atom 2 &
 extra/angle/per/atom 1 &
 extra/special/per/atom 2
 \end{verbatim}}
-The \textit{lattice} command defines the unit cell. Here, the face-centered cubic (fcc) lattice with a scale factor of
-4.04 has been chosen for the future positioning of the atoms of the walls. The \textit{region} command defines a geometric
-region of space. By choosing \textit{xlo=-3} and \textit{xhi=3}, and because we have previously chosen a lattice with a scale
-factor of 4.04, the region box extends from $-12.12~\text{\AA{}}$ to $12.12~\text{\AA{}}$ along the $x$ direction. The \textit{create$\_$box} command creates a simulation box with 5 types of atoms: the oxygen and hydrogen of the water molecules, the two ions ($\text{Na}^+$,
-$\text{Cl}^-$), and the atom of the walls. The \textit{create$\_$box} command extends over 6 lines thanks to the $\&$ character. The second and third lines are used to indicate that the simulation contains 1 type of bond and 1 type of angle (both required by the water molecule). The parameters for these bond and angle constraints will be given later. The three last lines are for memory allocation.
+The \textit{lattice} command defines the unit cell. Here, the face-centered cubic
+(fcc) lattice with a scale factor of 4.04 has been chosen for the future positioning
+of the atoms of the walls. The \textit{region} command defines a geometric
+region of space. By choosing \textit{xlo=-3} and \textit{xhi=3}, and because we
+have previously chosen a lattice with a scale factor of 4.04, the region box
+extends from $-12.12~\text{\AA{}}$ to $12.12~\text{\AA{}}$ along the $x$ direction.
+The \textit{create$\_$box} command creates a simulation box with 5 types of atoms:
+the oxygen and hydrogen of the water molecules, the two ions ($\text{Na}^+$,
+$\text{Cl}^-$), and the atom of the walls. The \textit{create$\_$box} command
+extends over 6 lines thanks to the $\&$ character. The second and third lines
+are used to indicate that the simulation contains 1 type of bond and 1 type of
+angle (both required by the water molecule). The parameters for these bond and
+angle constraints will be given later. The three last lines are for memory allocation.
 
 Now, we can add atoms to the system. First, let us create two sub-regions corresponding respectively to the two solid walls, and create a larger region from the union of the two regions. Then, let us create atoms of type 5 (the wall) within the two regions. Add the following lines to \textit{input.lammps}:
 {\normalsize \begin{verbatim}
