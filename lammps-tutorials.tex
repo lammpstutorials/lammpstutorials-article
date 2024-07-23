@@ -1387,7 +1387,7 @@ temperature and pressure.
 
 \paragraph{System generation}
 Create a new folder called \textit{systemcreation/}. Within
-\textit{systemcreation/}, open a blank file called \textit{input.lammps}, and
+\textit{systemcreation/}, open a blank file called \textit{input.lmp}, and
 copy the following lines into it:
 {\normalsize \begin{verbatim}
 boundary p p f
@@ -1424,7 +1424,7 @@ boundaries along the $z$ coordinate: \textit{boundary p p f}. With the
 empty volume inserted between the periodic images of the slab, and the interactions
 along $z$ effectively turned off.
 
-Let us create the box by adding the following lines to \textit{input.lammps}:
+Let us create the box by adding the following lines to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 lattice fcc 4.04
 region box block -3 3 -3 3 -5 5
@@ -1452,7 +1452,7 @@ angle constraints will be given later. The three last lines are for memory alloc
 Now, we can add atoms to the system. First, let us create two sub-regions corresponding
 respectively to the two solid walls, and create a larger region from the union
 of the two regions. Then, let us create atoms of type 5 (the wall) within the
-two regions. Add the following lines to \textit{input.lammps}:
+two regions. Add the following lines to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 region rbotwall block -3 3 -3 3 -4 -3
 region rtopwall block -3 3 -3 3 3 4
@@ -1464,7 +1464,7 @@ forming fcc solids. To add the water molecules, first download the molecule
 template called \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial4/RigidH2O.txt}{\textit{RigidH2O.txt}}
 and place it within \textit{systemcreation/}. The template contains all the
 necessary information concerning the water molecule, such as atom positions,
-bonds, and angles. Add the following lines to \textit{input.lammps}:
+bonds, and angles. Add the following lines to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 region rliquid block INF INF INF INF -2 2
 molecule h2omol RigidH2O.txt
@@ -1481,7 +1481,7 @@ will be used. The number \textit{482793} is a seed that is required by LAMMPS,
 it can be any positive integer.
 
 Finally, let us create 30 ions (15 $\text{Na}^+$ and 15 $\text{Cl}^-$) in between
-the water molecules, by adding the following commands to \textit{input.lammps}:
+the water molecules, by adding the following commands to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 create_atoms 3 random 15 52802 rliquid &
     overlap 0.3 maxtry 500
@@ -1502,13 +1502,13 @@ Before starting the simulation, we still need to define the parameters of the
 simulation: the mass of the 5 atom types (O, H, $\text{Na}^+$, $\text{Cl}^-$,
 and wall), the pairwise interaction parameters (here, the parameters for the
 Lennard-Jones potential), and the bond and angle parameters. Copy the following
-lines into \textit{input.lammps}:
+lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
-include ../PARM.lammps
-include ../GROUP.lammps
+include ../PARM.lmp
+include ../GROUP.lmp
 \end{verbatim}}
-Create a new text file called \textit{PARM.lammps} next to the \textit{systemcreation/}
-folder. Copy the following lines into \textit{PARM.lammps}:
+Create a new text file called \textit{PARM.lmp} next to the \textit{systemcreation/}
+folder. Copy the following lines into \textit{PARM.lmp}:
 {\normalsize \begin{verbatim}
 mass 1 15.9994 # water
 mass 2 1.008 # water
@@ -1530,7 +1530,7 @@ potential energy is 0.
 
 As already seen in previous tutorials and with the important exception of
 \textit{pair$\_$coeff 1 5}, only pairwise interactions between atoms of identical
-types was assigned. By default, LAMMPS calculates the pair coefficients for
+types were assigned. By default, LAMMPS calculates the pair coefficients for
 the interactions between atoms of different types (i and j) by using geometrical
 average: $\epsilon_{ij} = (\epsilon_{ii} + \epsilon_{jj})/2$,  $\sigma_{ij} = (\sigma_{ii} + \sigma_{jj})/2$.
 If the default value of $5.941\,\text{kcal/mol}$ was kept for $\epsilon_\text{1-5}$,
@@ -1538,7 +1538,7 @@ the solid walls would be extremely hydrophilic, causing the water molecule to
 form dense layers. As a comparison, the water-water energy $\epsilon_\text{1-1}$
 is only $0.185199\,\text{kcal/mol}$. Therefore, the walls were made less
 hydrophilic by reducing the value of $\epsilon_\text{1-5}$. Copy the following
-lines into \textit{PARM.lammps} as well:
+lines into \textit{PARM.lmp} as well:
 {\normalsize \begin{verbatim}
 bond_coeff 1 0 0.9572
 angle_coeff 1 0 104.52
@@ -1552,8 +1552,8 @@ Similarly, the angle coefficient for the H-O-H angle of the water molecule sets
 the force constant of the angular harmonic potential to 0 and the equilibrium
 angle to $104.52^\circ$.
 
-Let us also create another file called \textit{GROUP.lammps} next to
-\textit{PARM.lammps}, and copy the following lines into it:
+Let us also create another file called \textit{GROUP.lmp} next to
+\textit{PARM.lmp}, and copy the following lines into it:
 {\normalsize \begin{verbatim}
 group H2O type 1 2
 group Na type 3
@@ -1570,13 +1570,13 @@ group walltop intersect wall top
 group wallbot intersect wall bot
 \end{verbatim}}
 As it is now, the fluid density within the two walls is too high. To avoid
-high density and pressure, let us add the following lines into \textit{input.lammps}
+high density and pressure, let us add the following lines into \textit{input.lmp}
 to delete to delete about $15~\%$ of the water molecules:
 {\normalsize \begin{verbatim}
 delete_atoms random fraction 0.15 yes &
     H2O NULL 482793 mol yes
 \end{verbatim}}
-Finally, add the following lines into \textit{input.lammps}:
+Finally, add the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 run 0
 
@@ -1589,7 +1589,7 @@ creates a file called \textit{system.data} containing the information required
 to restart the simulation from the final configuration generated by this input
 file. With the \textit{nocoeff} option, the parameters from the force field are
 not written in the \textit{.data} file. The \textit{write$\_$dump} command creates 
-an image of the system. Run the \textit{input.lammps} file
+an image of the system. Run the \textit{input.lmp} file
 using LAMMPS. Check that your system has been correctly created by also looking
 at the periodic images, just like in Fig.\,\ref{fig:NANOSHEAR-system}.
 
@@ -1612,8 +1612,8 @@ Instead, a molecular dynamics simulation will be performed here, with some techn
 employed to prevent the system from exploding due to overlapping atoms.
 
 Let us create a new folder called \textit{minimization/} next to \textit{systemcreation/},
-and create a new input file called \textit{input.lammps} in it. Copy the following lines
-in \textit{input.lammps}:
+and create a new input file called \textit{input.lmp} in it. Copy the following lines
+in \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 boundary p p f
 units real
@@ -1627,8 +1627,8 @@ kspace_modify slab 3.0
 
 read_data ../systemcreation/system.data
 
-include ../PARM.lammps
-include ../GROUP.lammps
+include ../PARM.lmp
+include ../GROUP.lmp
 \end{verbatim}}
 The only difference from the previous input is that instead of creating a new
 box and new atoms, we open the previously created file \textit{system.data}
@@ -1654,12 +1654,12 @@ force the temperature of the system to reach the desired value of $1~\text{K}$,
 and the SHAKE algorithm is used in order to maintain the shape of the water molecules.
 
 Let us also print the atom positions in a \textit{.lammpstrj} file and control
-the printing of thermodynamic outputs by adding the following lines to \textit{input.lammps}:
+the printing of thermodynamic outputs by adding the following lines to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 dump mydmp all atom 1000 dump.lammpstrj
 thermo 200
 \end{verbatim}}
-Finally, let us run for 4000 steps. Add the following lines into \textit{input.lammps}:
+Finally, let us run for 4000 steps. Add the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 run 4000
 \end{verbatim}}
@@ -1679,9 +1679,9 @@ run 4000
 write_data system.data nocoeff
 \end{verbatim}}
 For the last of the three steps, fix \textit{nve} is used instead of
-\textit{nve/limit}, which will allow for a better relaxation of the atom positions.
+\textit{nve/limit}, which will allow for better relaxation of the atom positions.
 
-When running the \textit{input.lammps} file with LAMMPS, you should see that the
+When running the \textit{input.lmp} file with LAMMPS, you should see that the
 total energy of the system decreases during the first of the 3 steps, before
 re-increasing a little after the temperature is increased from 1 to $300\,\text{K}$
 (Fig.\,\ref{fig:NANOSHEAR-minimization}). If you look at the trajectory using VMD,
@@ -1701,8 +1701,8 @@ consecutive steps.}
 \paragraph{System equilibration}
 Let us equilibrate further the entire system by letting both fluid and piston
 relax at ambient temperature. Create a new folder called \textit{equilibration/}
-next to the previously created folders, and create a new \textit{input.lammps}
-file in it. Add the following lines into \textit{input.lammps}:
+next to the previously created folders, and create a new \textit{input.lmp}
+file in it. Add the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 boundary p p f
 units real
@@ -1716,8 +1716,8 @@ kspace_modify slab 3.0
 
 read_data ../minimization/system.data
 
-include ../PARM.lammps
-include ../GROUP.lammps
+include ../PARM.lmp
+include ../GROUP.lmp
 
 fix mynve all nve
 fix myber all temp/berendsen 300 300 100
@@ -1727,7 +1727,7 @@ timestep 1.0
 \end{verbatim}}
 The fix \textit{recenter} does not influence the dynamics but will keep the 
 system in the center of the box, which makes the
-visualization easier. Then, add the following lines into \textit{input.lammps}
+visualization easier. Then, add the following lines into \textit{input.lmp}
 for the trajectory visualization and output:
 {\normalsize \begin{verbatim}
 dump mydmp all atom 1000 dump.lammpstrj
@@ -1747,7 +1747,7 @@ Finally, let us add the \textit{run} command:
 run 30000
 write_data system.data nocoeff
 \end{verbatim}}
-Run the \textit{input.lammps} file using LAMMPS. As seen from the data printed by
+Run the \textit{input.lmp} file using LAMMPS. As seen from the data printed by
 \textit{fix myat1}, the distance between the two walls reduces until it reaches
 an equilibrium value (Fig.\,\ref{fig:NANOSHEAR-equilibration}).
 
@@ -1768,7 +1768,7 @@ i.e. on the order of half a nanosecond.
 
 From the equilibrated configuration, let us impose a lateral motion on the two
 walls and shear the electrolyte. In a new folder called \textit{shearing/},
-create a new \textit{input.lammps} file that starts like the previous ones:
+create a new \textit{input.lmp} file that starts like the previous ones:
 {\normalsize \begin{verbatim}
 boundary p p f
 units real
@@ -1785,8 +1785,8 @@ files, and then deal with the dynamics of the system.
 {\normalsize \begin{verbatim}
 read_data ../equilibration/system.data
 
-include ../PARM.lammps
-include ../GROUP.lammps
+include ../PARM.lmp
+include ../GROUP.lmp
 
 fix mynve all nve
 compute Tfluid fluid temp/partial 0 1 1
@@ -1807,7 +1807,7 @@ the \textit{x} coordinate from the thermalization, which is important since a
 large velocity will be imposed along \textit{x}.
 
 Then, let us impose the velocity of the two walls by adding the following
-commands to \textit{input.lammps}:
+commands to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 fix mysf1 walltop setforce 0 NULL NULL
 fix mysf2 wallbot setforce 0 NULL NULL
@@ -1823,7 +1823,7 @@ commands act only once and impose the velocity of the atoms of the groups
 
 Finally, let us dump the atom positions, extract the velocity profiles using
 several \textit{ave/chunk} commands, extract the force applied on the walls, and
-then run for $200\,\text{ps}$ Add the following lines into \textit{input.lammps}:
+then run for $200\,\text{ps}$ Add the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 dump mydmp all atom 5000 dump.lammpstrj
 thermo 500
