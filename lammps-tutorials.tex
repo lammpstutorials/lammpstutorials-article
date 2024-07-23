@@ -1663,7 +1663,7 @@ dump_modify mydmp backcolor white &
     acolor 2 white adiam 2 1 &
     acolor 3 blue adiam 3 2.5 &
     acolor 4 cyan adiam 4 3 &
-    acolor 5 gray adiam 5 3 &
+    acolor 5 gray adiam 5 3
 thermo 200
 \end{verbatim}}
 Finally, let us run for 4000 steps. Add the following lines into \textit{input.lmp}:
@@ -1740,7 +1740,15 @@ system in the center of the box, which makes the
 visualization easier. Then, add the following lines into \textit{input.lmp}
 for the trajectory visualization and output:
 {\normalsize \begin{verbatim}
-dump mydmp all atom 1000 dump.lammpstrj
+
+dump mydmp all image 200 dump.*.jpg type type &
+    shiny 0.1 box no 0.01 view 90 0 zoom 1.8
+dump_modify mydmp backcolor white &
+    acolor 1 red adiam 1 2 &
+    acolor 2 white adiam 2 1 &
+    acolor 3 blue adiam 3 2.5 &
+    acolor 4 cyan adiam 4 3 &
+    acolor 5 gray adiam 5 3
 thermo 500
 variable walltopz equal xcm(walltop,z)
 variable wallbotz equal xcm(wallbot,z)
@@ -1835,7 +1843,15 @@ Finally, let us dump the atom positions, extract the velocity profiles using
 several \textit{ave/chunk} commands, extract the force applied on the walls, and
 then run for $200\,\text{ps}$ Add the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
-dump mydmp all atom 5000 dump.lammpstrj
+dump mydmp all image 200 dump.*.jpg type type &
+    shiny 0.1 box no 0.01 view 90 0 zoom 1.8
+dump_modify mydmp backcolor white &
+    acolor 1 red adiam 1 2 &
+    acolor 2 white adiam 2 1 &
+    acolor 3 blue adiam 3 2.5 &
+    acolor 4 cyan adiam 4 3 &
+    acolor 5 gray adiam 5 3
+
 thermo 500
 thermo_modify temp Tfluid
 
