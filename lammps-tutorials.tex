@@ -1919,16 +1919,34 @@ larger than what would be measured in the absence of a wall.
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{SIO}
-\caption{A portion of the silicon dioxide structure as simulated during \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}. Atoms are colored by their charges.}
+\caption{A portion of the silicon dioxide structure as simulated during
+\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}. Atoms are colored by their charges.}
 \label{fig:SIO}
 \end{figure}
 
-\noindent The objective of this tutorial is to use the reactive force field ReaxFF to calculate the partial charges of a system undergoing deformation, as well as the formation and breaking of chemical bonds \cite{van2001reaxff, zou2012investigation}. The system simulated here is a block of silicon dioxide $\text{SiO}_2$ (Fig.\,\ref{fig:SIO}) that is deformed until rupture. Particular attention is given to the evolution of the atomic charges during the deformation of the structure, and the chemical reactions occurring due to the deformation are tracked over time.
+\noindent The objective of this tutorial is to use the reactive force field ReaxFF
+to calculate the partial charges of a system undergoing deformation, as well as
+the formation and breaking of chemical bonds \cite{van2001reaxff, zou2012investigation}.
+The system simulated here is a block of silicon dioxide $\text{SiO}_2$ (Fig.\,\ref{fig:SIO})
+that is deformed until rupture. Particular attention is given to the evolution of
+the atomic charges during the deformation of the structure, and the chemical
+reactions occurring due to the deformation are tracked over time.
 
 \subsubsection{Prepare and relax}
-Create a folder, name it \textit{RelaxSilica/}, and download the initial topology of a small amorphous silica structure called \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/silica.data}{\textit{silica.data}}. This structure was created using a classical force field called Vashishta \cite{vashishta1990interaction}. If you open the \textit{silica.data} file, you will see in the Atoms section that all silicon atoms have the same charge $q = 1.1\,\text{e}$, and all oxygen atoms have the charge $q = -0.55\,\text{e}$. This is common with classical force fields and will change once ReaxFF is used.
+Create a folder, name it \textit{RelaxSilica/}, and download the initial topology
+of a small amorphous silica structure called
+\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/silica.data}{\textit{silica.data}}.
+This structure was created using a classical force field called
+Vashishta \cite{vashishta1990interaction}. If you open the \textit{silica.data}
+file, you will see in the Atoms section that all silicon atoms have the same
+charge $q = 1.1\,\text{e}$, and all oxygen atoms have the charge $q = -0.55\,\text{e}$.
+This is common with classical force fields and will change once ReaxFF is used.
 
-The first action we need to perform here is to relax the structure with ReaxFF, which we are gonna do using molecular dynamics. To make sure that the system equilibrates nicely, let us track some parameters over time. Create an input file called \textit{input.lammps} in \textit{RelaxSilica/}, and copy the following lines into it:
+The first action we need to perform here is to relax the structure with ReaxFF,
+which we are gonna do using molecular dynamics. To make sure that the system
+equilibrates nicely, let us track some parameters over time. Create an input
+file called \textit{input.lmp} in \textit{RelaxSilica/}, and copy the following
+lines into it:
 {\normalsize \begin{verbatim}
 units real
 atom_style full
@@ -1938,36 +1956,72 @@ read_data silica.data
 mass 1 28.0855 # Si
 mass 2 15.999 # O
 \end{verbatim}}
-So far, the input is very similar to what was seen in the previous tutorials. Some basic parameters are defined (\textit{units}, \textit{atom$\_$style} and \textit{masses}), and the \textit{.data} file is imported by the \textit{read$\_$data} command. Now, let us copy three crucial lines into the \textit{input.lammps} file:
+So far, the input is very similar to what was seen in the previous tutorials.
+Some basic parameters are defined (\textit{units}, \textit{atom$\_$style} and \textit{masses}),
+and the \textit{.data} file is imported by the \textit{read$\_$data} command.
+
+Now, let us copy three crucial lines into the \textit{input.lmp} file:
 {\normalsize \begin{verbatim}
 pair_style reaxff NULL safezone 3.0 mincap 150
 pair_coeff * * reaxCHOFe.ff Si O
 fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 &
     reaxff maxiter 400
 \end{verbatim}}
-Here, the \textit{pair$\_$style reaxff} is used with no control file. The \textit{safezone} and \textit{mincap} keywords have been added to avoid memory allocation issues, which sometimes can trigger the segmentation faults and \textit{bondchk} failed errors. The \textit{pair$\_$coeff} uses the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/reaxCHOFe.ff}{\textit{reaxCHOFe.ff}} file, which must be downloaded and saved within \textit{RelaxSilica/}. For consistency with the masses and the \textit{silica.data} file, the atoms of type 1 are set as silicon (Si), and the atoms of type 2 as oxygen (O). Finally, the \textit{fix qeq/reaxff} is used to perform charge equilibration \cite{rappe1991charge}. The charge equilibration occurs at every step. The values 0.0 and 10.0 are the low and the high cutoffs, respectively, and $1.0 \text{e} -6$ is a tolerance. Finally, \textit{maxiter} sets an upper limit to the number of attempts to equilibrate the charge.
+Here, the \textit{pair$\_$style reaxff} is used with no control file. The
+\textit{safezone} and \textit{mincap} keywords have been added to avoid memory
+allocation issues, which sometimes can trigger the segmentation faults and
+\textit{bondchk} failed errors. The \textit{pair$\_$coeff} uses the
+\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/reaxCHOFe.ff}{\textit{reaxCHOFe.ff}}
+file, which must be downloaded and saved within \textit{RelaxSilica/}. For
+consistency with the masses and the \textit{silica.data} file, the atoms of type 1
+are set as silicon (Si), and the atoms of type 2 as oxygen (O). Finally, the
+\textit{fix qeq/reaxff} is used to perform charge equilibration \cite{rappe1991charge}.
+The charge equilibration occurs at every step. The values 0.0 and 10.0 are the
+low and the high cutoffs, respectively, and $1.0 \text{e} -6$ is a tolerance.
+Finally, \textit{maxiter} sets an upper limit to the number of attempts to
+equilibrate the charge.
 
-Then, let us add some commands to the \textit{input.lammps} file  to measure the evolution of the charges during the simulation:
+Then, let us add some commands to the \textit{input.lmp} file  to measure the
+evolution of the charges during the simulation:
 {\normalsize \begin{verbatim}
 group grpSi type 1
 group grpO type 2
 variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
 \end{verbatim}}
-Let us also print the charge in the \textit{.log} file by using \textit{thermo$\_$style}, and create a \textit{.lammpstrj} file for visualization. Add the following lines into the \textit{input.lammps}:
+Let us also print the charge in the \textit{.log} file by using \textit{thermo$\_$style},
+and create images of the system. Add the following lines into the \textit{input.lmp}:
 {\normalsize \begin{verbatim}
-thermo 5
+thermo 100
 thermo_style custom step temp etotal press &
     vol v_qSi v_qO
+dump mydmp all image 200 dump.*.jpg type type &
+    shiny 0.1 box no 0.01 view 90 0 zoom 1.8
+dump_modify mydmp backcolor white &
+    acolor 1 yellow adiam 1 2.5 &
+    acolor 2 red adiam 2 2
+\end{verbatim}}
+
+In order to also vizualize the system using an external tool, VMD, let us also 
+create a \textit{.lammpstrj} file for visualization:
+{\normalsize \begin{verbatim}
 dump dmp all custom 100 dump.lammpstrj &
     id type q x y z
 \end{verbatim}}
-Let us also use the \textit{fix reaxff/species} to evaluate what species are present within the simulation. It will be useful later when the system is deformed and some bonds are broken:
+The \textit{.lammpstrj} that will be creating when running lammps will contain
+6 columns with respectively the atom ids, the atom types, the atom charges ($q$),
+and finally the atom coordinates ($x$, $y$, and $z$).
+
+Let us also use the \textit{fix reaxff/species} to evaluate what species are
+present within the simulation. It will be useful later when the system is deformed
+and some bonds are broken:
 {\normalsize \begin{verbatim}
 fix myspec all reaxff/species 5 1 5 &
     species.log element Si O
 \end{verbatim}}
-Here, the information will be printed every 5 steps in a file called \textit{species.log}. Let us perform a very short run using the anisotropic NPT command and relax the density of the system.
+Here, the information will be printed every 5 steps in a file called \textit{species.log}.
+Let us perform a very short run using the anisotropic NPT command and relax the
+density of the system.
 {\normalsize \begin{verbatim}
 velocity all create 300.0 3482028
 fix mynpt all npt temp 300.0 300.0 100 &
@@ -1978,7 +2032,14 @@ run 5000
 
 write_data silica-relaxed.data
 \end{verbatim}}
-Run the \textit{input.lammps} file using LAMMPS. As seen from \textit{species.log}, only one species is detected, called \textit{Si192O384}, representing the entire system. As the simulation progresses, you can see that the charges of the atoms are fluctuating since the charge of every individual atom is adjusting to its local environment in real time (Fig.\,\ref{fig:SIO-charge}). Additionally, the average charge of the atoms is strongly fluctuating at the beginning of the simulation. This early fluctuation correlates with a rapid volume change of the box (Fig.\,\ref{fig:SIO-volume}), during which the inter-atomic distances are expected to quickly change.
+Run the \textit{input.lmp} file using LAMMPS. As seen from \textit{species.log},
+only one species is detected, called \textit{O384Si192}, representing the entire system.
+As the simulation progresses, you can see that the charges of the atoms are fluctuating
+since the charge of every individual atom is adjusting to its local environment in
+real time (Fig.\,\ref{fig:SIO-charge}). Additionally, the average charge of the
+atoms is strongly fluctuating at the beginning of the simulation. This early
+fluctuation correlates with a rapid volume change of the box (Fig.\,\ref{fig:SIO-volume}),
+during which the inter-atomic distances are expected to quickly change.
 
 \begin{figure}
 \centering
@@ -1993,7 +2054,13 @@ Run the \textit{input.lammps} file using LAMMPS. As seen from \textit{species.lo
 \label{fig:SIO-volume}
 \end{figure}
 
-We can also plot the charge distribution $P(q)$, using the charge values printed in the \textit{.lammptrj} file (Fig.\,\ref{fig:SIO-distribution}). Using VMD and coloring the atoms by their charges, one can see that the atoms with the extreme-most charges are located at defects in the amorphous structure (here at the positions of the dangling oxygen groups) (Fig.\,\ref{fig:SIO-slice}).
+% S.G.: use the value of charges contained in the log file instead? (with YAML format)
+We can also plot the charge distribution $P(q)$, using the charge values
+printed in the \textit{dump.lammptrj} file (Fig.\,\ref{fig:SIO-distribution}).
+The \textit{dump.lammptrj} file can be opened using VMD. By coloring the atoms
+by their charges, one can see that the atoms with the extreme-most charges are
+located at defects in the amorphous structure (here at the positions of the
+dangling oxygen groups) (Fig.\,\ref{fig:SIO-slice}).
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-distribution}
@@ -2008,7 +2075,7 @@ We can also plot the charge distribution $P(q)$, using the charge values printed
 \end{figure}
 
 \subsubsection{Deform the structure}
-Let us apply a deformation to the structure to force some $\text{Si}-\text{O}$ bonds to break (and eventually re-assemble). Next to \textit{RelaxSilica/}, create a folder, call it \textit{Deform/} and create a file called \textit{input.lammps} in it. Copy the same lines as previously in \textit{input.lammps}:
+Let us apply a deformation to the structure to force some $\text{Si}-\text{O}$ bonds to break (and eventually re-assemble). Next to \textit{RelaxSilica/}, create a folder, call it \textit{Deform/} and create a file called \textit{input.lmp} in it. Copy the same lines as previously in \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 units real
 atom_style full
@@ -2023,7 +2090,7 @@ pair_coeff * * ../RelaxSilica/reaxCHOFe.ff Si O
 fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 &
     reaxff maxiter 400
 \end{verbatim}}
-The only differences with the previous \textit{input.lammps} file are the paths to the \textit{.data} and \textit{.ff} files located within \textit{RelaxSilica/}. Copy the following lines as well:
+The only differences with the previous \textit{input.lmp} file are the paths to the \textit{.data} and \textit{.ff} files located within \textit{RelaxSilica/}. Copy the following lines as well:
 {\normalsize \begin{verbatim}
 group grpSi type 1
 group grpO type 2
@@ -2052,7 +2119,7 @@ Here, no barostat is used because the box volume will be imposed by the \textit{
 \label{fig:SIO-deformed-charge}
 \end{figure}
 
-Let us run for 5000 steps without deformation, then apply the \textit{fix deform} for elongating progressively the box along \textit{x} during 25000 steps. Add the following line to \textit{input.lammps}:
+Let us run for 5000 steps without deformation, then apply the \textit{fix deform} for elongating progressively the box along \textit{x} during 25000 steps. Add the following line to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 run 5000
 
@@ -2062,7 +2129,7 @@ run 25000
 
 write_data silica-deformed.data
 \end{verbatim}}
-Run the \textit{input.lammps} file using LAMMPS. During the deformation, the charge values progressively evolve until the structure eventually breaks down. After the structure breaks down, the charges equilibrate near new average values that differ from the starting averages (Fig.\,\ref{fig:SIO-deformed-charge}). The difference between the initial and the final charges can be explained by the presence of defects as well as new solid/vacuum interfaces, and the fact that surface atoms typically have different charges compared to bulk atoms. There is also a strong increase in temperature during the rupture of the material (Fig.\,\ref{fig:SIO-temperature}). At the end of the deformation, one can visualize the broken material using VMD. Notice the different charge values of the atoms located near the vacuum interfaces, compared to the atoms located in the bulk of the material (Fig.\,\ref{fig:SIO-deformed}).
+Run the \textit{input.lmp} file using LAMMPS. During the deformation, the charge values progressively evolve until the structure eventually breaks down. After the structure breaks down, the charges equilibrate near new average values that differ from the starting averages (Fig.\,\ref{fig:SIO-deformed-charge}). The difference between the initial and the final charges can be explained by the presence of defects as well as new solid/vacuum interfaces, and the fact that surface atoms typically have different charges compared to bulk atoms. There is also a strong increase in temperature during the rupture of the material (Fig.\,\ref{fig:SIO-temperature}). At the end of the deformation, one can visualize the broken material using VMD. Notice the different charge values of the atoms located near the vacuum interfaces, compared to the atoms located in the bulk of the material (Fig.\,\ref{fig:SIO-deformed}).
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-temperature}
@@ -2111,7 +2178,7 @@ Masses
 
 (...)
 \end{verbatim}}
-Create a file called \textit{input.lammps} into the \textit{Decorate/} folder, and copy the following lines into it:
+Create a file called \textit{input.lmp} into the \textit{Decorate/} folder, and copy the following lines into it:
 {\normalsize \begin{verbatim}
 units real
 atom_style full
