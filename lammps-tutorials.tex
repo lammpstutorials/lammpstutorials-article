@@ -1992,11 +1992,11 @@ variable qO equal charge(grpO)/count(grpO)
 Let us also print the charge in the \textit{.log} file by using \textit{thermo$\_$style},
 and create images of the system. Add the following lines into the \textit{input.lmp}:
 {\normalsize \begin{verbatim}
-thermo 100
+thermo 200
 thermo_style custom step temp etotal press &
     vol v_qSi v_qO
 dump mydmp all image 200 dump.*.jpg type type &
-    shiny 0.1 box no 0.01 view 90 0 zoom 1.8
+    shiny 0.1 box no 0.01 view 0 0 zoom 1.8
 dump_modify mydmp backcolor white &
     acolor 1 yellow adiam 1 2.5 &
     acolor 2 red adiam 2 2
@@ -2005,10 +2005,10 @@ dump_modify mydmp backcolor white &
 In order to also vizualize the system using an external tool, VMD, let us also 
 create a \textit{.lammpstrj} file for visualization:
 {\normalsize \begin{verbatim}
-dump dmp all custom 100 dump.lammpstrj &
+dump dmp all custom 200 dump.lammpstrj &
     id type q x y z
 \end{verbatim}}
-The \textit{.lammpstrj} that will be creating when running lammps will contain
+The \textit{.lammpstrj} that will be created when running lammps will contain
 6 columns with respectively the atom ids, the atom types, the atom charges ($q$),
 and finally the atom coordinates ($x$, $y$, and $z$).
 
@@ -2064,18 +2064,27 @@ dangling oxygen groups) (Fig.\,\ref{fig:SIO-slice}).
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-distribution}
-\caption{Probability distribution of charge of silicon (positive, blue) and oxygen (negative, orange) atoms during equilibration.}
+\caption{Probability distribution of charge of silicon (positive, blue) and oxygen
+(negative, orange) atoms during equilibration.}
 \label{fig:SIO-distribution}
 \end{figure}
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-slice}
-\caption{A slice of the amorphous silica, where atoms are colored by their charges. Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of about $1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of about $-0.9~\text{e}$ appear in blue. To color the atoms by their charge using VMD, use \textit{Charge} as the coloring method in the representation windows, and then tune the \textit{Color scale} in the \textit{Color control windows}.}
+\caption{A slice of the amorphous silica, where atoms are colored by their charges.
+Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of about
+$1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of about
+$-0.9~\text{e}$ appear in blue. To color the atoms by their charge using VMD,
+use \textit{Charge} as the coloring method in the representation windows, and
+then tune the \textit{Color scale} in the \textit{Color control windows}.}
 \label{fig:SIO-slice}
 \end{figure}
 
 \subsubsection{Deform the structure}
-Let us apply a deformation to the structure to force some $\text{Si}-\text{O}$ bonds to break (and eventually re-assemble). Next to \textit{RelaxSilica/}, create a folder, call it \textit{Deform/} and create a file called \textit{input.lmp} in it. Copy the same lines as previously in \textit{input.lmp}:
+Let us apply a deformation to the structure to force some $\text{Si}-\text{O}$
+bonds to break (and eventually re-assemble). Next to \textit{RelaxSilica/},
+create a folder, call it \textit{Deform/} and create a file called \textit{input.lmp}
+in it. Copy the same lines as previously in \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 units real
 atom_style full
@@ -2090,23 +2099,33 @@ pair_coeff * * ../RelaxSilica/reaxCHOFe.ff Si O
 fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 &
     reaxff maxiter 400
 \end{verbatim}}
-The only differences with the previous \textit{input.lmp} file are the paths to the \textit{.data} and \textit{.ff} files located within \textit{RelaxSilica/}. Copy the following lines as well:
+The only differences with the previous \textit{input.lmp} file are the paths to
+the \textit{.data} and \textit{.ff} files located within \textit{RelaxSilica/}.
+Copy the following lines as well:
 {\normalsize \begin{verbatim}
 group grpSi type 1
 group grpO type 2
 variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
 
-thermo 5
+thermo 200
 thermo_style custom step temp etotal &
     press vol v_qSi v_qO
-dump dmp all custom 100 dump.lammpstrj &
+
+dump mydmp all image 200 dump.*.jpg type type &
+    shiny 0.1 box no 0.01 view 0 0 zoom 1.8
+dump_modify mydmp backcolor white &
+    acolor 1 yellow adiam 1 2.5 &
+    acolor 2 red adiam 2 2
+
+dump dmp all custom 200 dump.lammpstrj &
     id type q x y z
 
 fix myspec all reaxff/species 5 1 5 species.log &
     element Si O
 \end{verbatim}}
-Then, let us use \textit{fix nvt} instead of \textit{fix npt} to apply a thermostat but no barostat:
+Then, let us use \textit{fix nvt} instead of \textit{fix npt} to apply a
+thermostat but no barostat:
 {\normalsize \begin{verbatim}
 fix mynvt all nvt temp 300.0 300.0 100
 timestep 0.5
@@ -2115,11 +2134,16 @@ Here, no barostat is used because the box volume will be imposed by the \textit{
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-deformed-charge}
-\caption{Evolution of the average charge per atom of the silicon $q_\text{Si}$ (a) and oxygen $q_\text{O}$ (b) over time $t$. The vertical dashed lines mark the beginning of the deformation, and the horizontal dotted lines denote the initial values for the average charge.}
+\caption{Evolution of the average charge per atom of the silicon $q_\text{Si}$
+(a) and oxygen $q_\text{O}$ (b) over time $t$. The vertical dashed lines mark
+the beginning of the deformation, and the horizontal dotted lines denote the
+initial values for the average charge.}
 \label{fig:SIO-deformed-charge}
 \end{figure}
 
-Let us run for 5000 steps without deformation, then apply the \textit{fix deform} for elongating progressively the box along \textit{x} during 25000 steps. Add the following line to \textit{input.lmp}:
+Let us run for 5000 steps without deformation, then apply the \textit{fix deform}
+for elongating progressively the box along \textit{x} during 25000 steps. Add
+the following line to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 run 5000
 
@@ -2129,21 +2153,39 @@ run 25000
 
 write_data silica-deformed.data
 \end{verbatim}}
-Run the \textit{input.lmp} file using LAMMPS. During the deformation, the charge values progressively evolve until the structure eventually breaks down. After the structure breaks down, the charges equilibrate near new average values that differ from the starting averages (Fig.\,\ref{fig:SIO-deformed-charge}). The difference between the initial and the final charges can be explained by the presence of defects as well as new solid/vacuum interfaces, and the fact that surface atoms typically have different charges compared to bulk atoms. There is also a strong increase in temperature during the rupture of the material (Fig.\,\ref{fig:SIO-temperature}). At the end of the deformation, one can visualize the broken material using VMD. Notice the different charge values of the atoms located near the vacuum interfaces, compared to the atoms located in the bulk of the material (Fig.\,\ref{fig:SIO-deformed}).
+Run the \textit{input.lmp} file using LAMMPS. During the deformation, the charge
+values progressively evolve until the structure eventually breaks down. After the
+structure breaks down, the charges equilibrate near new average values that differ
+from the starting averages (Fig.\,\ref{fig:SIO-deformed-charge}). The difference
+between the initial and the final charges can be explained by the presence of
+defects as well as new solid/vacuum interfaces, and the fact that surface atoms
+typically have different charges compared to bulk atoms. There is also a strong
+increase in temperature during the rupture of the material (Fig.\,\ref{fig:SIO-temperature}).
+At the end of the deformation, one can visualize the broken material using VMD.
+Notice the different charge values of the atoms located near the vacuum interfaces,
+compared to the atoms located in the bulk of the material (Fig.\,\ref{fig:SIO-deformed}).
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-temperature}
-\caption{Evolution of the temperature $T$ of the silica system over time $t$. The material ruptures near $t = 10~\text{ps}$.}
+\caption{Evolution of the temperature $T$ of the silica system over time $t$.
+The material ruptures near $t = 10~\text{ps}$.}
 \label{fig:SIO-temperature}
 \end{figure}
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-deformed}
-\caption{Amorphous silicon oxide after deformation. The atoms are colored by their charges. Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of about $1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of about $-0.9 ~ \text{e}$ appear in blue.}
+\caption{Amorphous silicon oxide after deformation. The atoms are colored by their
+charges. Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of
+about $1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of
+about $-0.9 ~ \text{e}$ appear in blue.}
 \label{fig:SIO-deformed}
 \end{figure}
 
-One can have a look at the charge distribution after deformation, as well as during the deformation (Fig.\,\ref{fig:SIO-distribution-bis}). As expected, the final charge distribution slightly differs from the previously calculated. In my case, no new species were formed during the simulation, as can be seen from the \textit{species.log} file:
+One can have a look at the charge distribution after deformation, as well as during
+the deformation (Fig.\,\ref{fig:SIO-distribution-bis}). As expected, the final
+charge distribution slightly differs from the previously calculated. In my case,
+no new species were formed during the simulation, as can be seen from the
+\textit{species.log} file:
 {\normalsize \begin{verbatim}
 #  Timestep   No_Moles   No_Specs  Si192O384
         5            1          1          1
@@ -2151,17 +2193,26 @@ One can have a look at the charge distribution after deformation, as well as dur
 #  Timestep   No_Moles   No_Specs  Si192O384
     30000            1          1          1
 \end{verbatim}}
-Sometimes, $\text{O}_2$ molecules are formed during the deformation. If this is the case, a new column \textit{O2} appears in the \textit{species.log} file.
+Sometimes, $\text{O}_2$ molecules are formed during the deformation. If this is
+the case, a new column \textit{O2} appears in the \textit{species.log} file.
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-distribution-bis}
-\caption{Probability distribution of charge of silicon (positive, blue) and oxygen (negative, orange) after deformation. The stars correspond to the charge distribution during deformation.}
+\caption{Probability distribution of charge of silicon (positive, blue) and oxygen
+(negative, orange) after deformation. The stars correspond to the charge distribution
+during deformation.}
 \label{fig:SIO-distribution-bis}
 \end{figure}
 
 \subsubsection{Decorate the surface}
 In ambient conditions, some of the surface $\text{SiO}_2$ atoms are chemically
-passivated by forming covalent bonds with hydrogen (H) atom \cite{sulpizi2012silica}. Let us add hydrogen atoms randomly to the cracked silica and observe how the system evolves.  Next to \textit{RelaxSilica/} and \textit{Deform/}, create a folder, and call it \textit{Decorate/}. Then, let us modify the previously generated data file \textit{silica-deformed.data} and make space for a third atom type. Copy \textit{silica-deformed.data} from the \textit{Deform/} folder, and modify the first lines as follow:
+passivated by forming covalent bonds with hydrogen (H) atom \cite{sulpizi2012silica}.
+Let us add hydrogen atoms randomly to the cracked silica and observe how the
+system evolves.  Next to \textit{RelaxSilica/} and \textit{Deform/}, create a folder,
+and call it \textit{Decorate/}. Then, let us modify the previously generated data
+file \textit{silica-deformed.data} and make space for a third atom type.
+Copy \textit{silica-deformed.data} from the \textit{Deform/} folder, and modify
+the first lines as follow:
 {\normalsize \begin{verbatim}
 576 atoms
 3 atom types
@@ -2178,7 +2229,8 @@ Masses
 
 (...)
 \end{verbatim}}
-Create a file called \textit{input.lmp} into the \textit{Decorate/} folder, and copy the following lines into it:
+Create a file called \textit{input.lmp} into the \textit{Decorate/} folder, and
+copy the following lines into it:
 {\normalsize \begin{verbatim}
 units real
 atom_style full
@@ -2191,10 +2243,15 @@ pair_coeff * * ../RelaxSilica/reaxCHOFe.ff Si O H
 fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 &
     reaxff maxiter 400
 \end{verbatim}}
-Here, the \textit{displace$\_$atoms} command was used to move the center of the crack near the center of the box. This step is optional but makes the visualization of the interface in VMD easier. A different value for the shift may be needed in your case, depending on the location of the crack. A difference with the previous input is that three atom types are specified
-in the \textit{pair$\_$coeff} command, \textit{Si O H}, instead of two.
+Here, the \textit{displace$\_$atoms} command was used to move the center of the
+crack near the center of the box. This step is optional but makes the visualization
+of the interface in VMD easier. A different value for the shift may be needed in
+your case, depending on the location of the crack. A difference with the previous
+input is that three atom types are specified in the \textit{pair$\_$coeff} command,
+\textit{Si O H}, instead of two.
 
-Then, let us adapt some familiar commands to measure the charges of all three types of atoms, and output the charge values into log files:
+Then, let us adapt some familiar commands to measure the charges of all three
+types of atoms, and output the charge values into log files:
 {\normalsize \begin{verbatim}
 group grpSi type 1
 group grpO type 2
@@ -2209,7 +2266,10 @@ thermo_style custom step temp etotal press vol &
 fix myspec all reaxff/species 5 1 5 species.log &
     element Si O H
 \end{verbatim}}
-Here, the $+1\text{e}-10$ was added to the denominator of the \textit{variable qH} to avoid dividing by 0 at the beginning of the simulation. Finally, let us create a loop with 10 steps, and create two hydrogen atoms at random locations at every step:
+Here, the $+1\text{e}-10$ was added to the denominator of the \textit{variable qH}
+to avoid dividing by 0 at the beginning of the simulation. Finally, let us
+create a loop with 10 steps, and create two hydrogen atoms at random locations at
+every step:
 {\normalsize \begin{verbatim}
 fix mynvt all nvt temp 300.0 300.0 100
 timestep 0.5
@@ -2230,8 +2290,11 @@ jump SELF loop
 
 write_data decorated.data
 \end{verbatim}}
-Here, a different \textit{lammpstrj} file is created for each step of the loop to avoid creating dump files with varying numbers of atoms, which VMD can't read. Once the simulation is over, it can be seen from the \textit{species.log} file that
-all the created hydrogen atoms reacted with the $\text{SiO}_{2}$ structure to form surface groups (such as hydroxyl (-OH) groups).
+Here, a different \textit{lammpstrj} file is created for each step of the loop
+to avoid creating dump files with varying numbers of atoms, which VMD can't read.
+Once the simulation is over, it can be seen from the \textit{species.log} file that
+all the created hydrogen atoms reacted with the $\text{SiO}_{2}$ structure to
+form surface groups (such as hydroxyl (-OH) groups).
 {\normalsize \begin{verbatim}
 # Timestep   No_Moles   No_Specs  Si192O384  H
   5          3          2         1          2
@@ -2239,11 +2302,15 @@ all the created hydrogen atoms reacted with the $\text{SiO}_{2}$ structure to fo
 # Timestep   No_Moles No_Specs Si192O384H20
   20000      1        1        1
 \end{verbatim}}
-At the end of the simulation, hydroxyl groups can be seen at the interfaces (Fig.\,\ref{fig:SIO-decorated}).
+At the end of the simulation, hydroxyl groups can be seen at the interfaces
+(Fig.\,\ref{fig:SIO-decorated}).
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-decorated}
-\caption{Cracked silicon oxide after the addition of hydrogen atoms. The atoms are colored by their charges. Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of about $1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of about $-0.9 ~ \text{e}$ appear in blue.}
+\caption{Cracked silicon oxide after the addition of hydrogen atoms. The atoms
+are colored by their charges. Dangling oxygen groups appear in greenish, bulk
+Si atoms with a charge of about $1.8~\text{e}$  appear in red/orange, and bulk
+O atoms with a charge of about $-0.9 ~ \text{e}$ appear in blue.}
 \label{fig:SIO-decorated}
 \end{figure}
 
