@@ -2002,7 +2002,7 @@ dump_modify mydmp backcolor white &
     acolor 2 red adiam 2 2
 \end{verbatim}}
 
-In order to also vizualize the system using an external tool, VMD, let us also 
+In order to also visualize the system using an external tool, VMD, let us also 
 create a \textit{.lammpstrj} file for visualization:
 {\normalsize \begin{verbatim}
 dump dmp all custom 200 dump.lammpstrj &
@@ -2033,18 +2033,24 @@ run 5000
 write_data silica-relaxed.data
 \end{verbatim}}
 Run the \textit{input.lmp} file using LAMMPS. As seen from \textit{species.log},
-only one species is detected, called \textit{O384Si192}, representing the entire system.
-As the simulation progresses, you can see that the charges of the atoms are fluctuating
-since the charge of every individual atom is adjusting to its local environment in
-real time (Fig.\,\ref{fig:SIO-charge}). Additionally, the average charge of the
-atoms is strongly fluctuating at the beginning of the simulation. This early
-fluctuation correlates with a rapid volume change of the box (Fig.\,\ref{fig:SIO-volume}),
-during which the inter-atomic distances are expected to quickly change.
+only one species is detected, called O384Si192, representing the entire system.
+The value of the charge of the atoms can be extracted from the \textit{dump.lammpstrj}
+file using Python. You can use this 
+\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/dump-reader.py}{\textit{dump-reader}}
+script to import the charge values into Python.
+As the simulation progresses, the charge of every atom fluctuates
+because it is adjusting to the local environment of the atom (Fig.\,\ref{fig:SIO-charge}).
+It can also be seen that the averaged charges for both silicon and oxygen
+atoms vary abruptly at the beginning of the simulation, which correlates with
+a rapid volume change of the box during which the inter-atomic distances are
+expected to quickly change (Fig.\,\ref{fig:SIO-volume}).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{SIO-charge}
-\caption{Average charge per atom of the silicon $q_\text{Si}$ (a) and oxygen $q_\text{O}$ (b) atoms during equilibration, as given by the \textit{v$\_$qSi} and \textit{v$\_$qO} variables.}
+\caption{Average charge per atom of the silicon $q_\text{Si}$ (a) and oxygen
+$q_\text{O}$ (b) atoms during equilibration, as given by the \textit{v$\_$qSi} and
+\textit{v$\_$qO} variables.}
 \label{fig:SIO-charge}
 \end{figure}
 
@@ -2270,7 +2276,6 @@ Here, the $+1\text{e}-10$ was added to the denominator of the \textit{variable q
 to avoid dividing by 0 at the beginning of the simulation. Finally, let us
 create a loop with 10 steps, and create two hydrogen atoms at random locations at
 every step:
-% S.G. can we avoid the loop? or just may be remove the dump image here...
 {\normalsize \begin{verbatim}
 fix mynvt all nvt temp 300.0 300.0 100
 timestep 0.5
@@ -2282,13 +2287,6 @@ variable seed equal 35672+${a}
 create_atoms 3 random 2 ${seed} NULL &
     overlap 2.6 maxtry 50
 group grpH type 3
-
-dump mydmp all image 200 dump.*.jpg type type &
-    shiny 0.1 box no 0.01 view 0 0 zoom 1.8
-dump_modify mydmp backcolor white &
-    acolor 1 yellow adiam 1 2.5 &
-    acolor 2 red adiam 2 2 &
-    acolor 3 white adiam 3 1
 
 run 2000
 write_dump all custom dump.${a}.lammpstrj &
@@ -2302,7 +2300,6 @@ write_data decorated.data
 \end{verbatim}}
 Here, a different \textit{lammpstrj} file is created for each step of the loop
 to avoid creating dump files with varying numbers of atoms, which VMD can't read.
-A third atom of color white and 
 Once the simulation is over, it can be seen from the \textit{species.log} file that
 all the created hydrogen atoms reacted with the $\text{SiO}_{2}$ structure to
 form surface groups (such as hydroxyl (-OH) groups).
