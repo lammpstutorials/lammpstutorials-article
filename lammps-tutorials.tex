@@ -1839,7 +1839,7 @@ on those atoms, they will conserve their initial velocity. The \textit{velocity}
 commands act only once and impose the velocity of the atoms of the groups
 \textit{wallbot} and \textit{walltop}, respectively.
 
-Finally, let us dump the atom positions, extract the velocity profiles using
+Finally, let us dump the atom positions, and extract the velocity profiles using
 several \textit{ave/chunk} commands, extract the force applied on the walls, and
 then run for $200\,\text{ps}$ Add the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
@@ -2009,7 +2009,7 @@ dump dmp all custom 200 dump.lammpstrj &
     id type q x y z
 \end{verbatim}}
 The \textit{.lammpstrj} that will be created when running lammps will contain
-6 columns with respectively the atom ids, the atom types, the atom charges ($q$),
+6 columns with respectively the atom IDs, the atom types, the atom charges ($q$),
 and finally the atom coordinates ($x$, $y$, and $z$).
 
 Let us also use the \textit{fix reaxff/species} to evaluate what species are
@@ -2061,7 +2061,6 @@ respectively.}
 \label{fig:SIO-volume}
 \end{figure}
 
-% S.G.: use the value of charges contained in the log file instead? (with YAML format)
 We can also plot the charge distribution $P(q)$, using the charge values
 printed in the \textit{dump.lammptrj} file (Fig.\,\ref{fig:SIO-distribution}).
 The \textit{dump.lammptrj} file can be opened using VMD. By coloring the atoms
@@ -2219,7 +2218,7 @@ system evolves.  Next to \textit{RelaxSilica/} and \textit{Deform/}, create a fo
 and call it \textit{Decorate/}. Then, let us modify the previously generated data
 file \textit{silica-deformed.data} and make space for a third atom type.
 Copy \textit{silica-deformed.data} from the \textit{Deform/} folder, and modify
-the first lines as follow:
+the first lines as follows:
 {\normalsize \begin{verbatim}
 576 atoms
 3 atom types
@@ -2305,13 +2304,11 @@ Once the simulation is over, it can be seen from the \textit{species.log} file t
 all the created hydrogen atoms reacted with the $\text{SiO}_{2}$ structure to
 form surface groups (such as hydroxyl (-OH) groups).
 {\normalsize \begin{verbatim}
-# Timestep   No_Moles   No_Specs  O384Si192  H
-  5          3          2         1          2
 (...)
-# Timestep   No_Moles No_Specs Si192O384H20
+# Timestep   No_Moles No_Specs H20O384Si192
   20000      1        1        1
 \end{verbatim}}
-At the end of the simulation, hydroxyl groups can be seen at the interfaces
+At the end of the simulation, hydroxyl (-OH) groups can be seen at the interfaces
 (Fig.\,\ref{fig:SIO-decorated}).
 
 \begin{figure}
