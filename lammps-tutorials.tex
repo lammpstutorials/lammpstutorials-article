@@ -2382,24 +2382,21 @@ pair_coeff * * &
 Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/SiO.1990.vashishta}{SiO.1990.vashishta},
 and copy it within the \textit{Potential/} folder.
 
-Let us add some commands to \textit{input.lmp} to help us follow the evolution
-of the system, such as its temperature, volume, and potential energy:
+Let us add a \textit{dump image} command to \textit{input.lmp} to follow the
+evolution of the system with time:
 {\normalsize \begin{verbatim}
-dump dmp all atom 5000 dump.lammpstrj
-variable myvol equal vol
-variable mylx equal lx
-variable myly equal ly
-variable mylz equal lz
-variable mypot equal pe
-variable mytemp equal temp
-fix myat1 all ave/time 10 100 1000 v_mytemp &
-    file temperature.dat
-fix myat2 all ave/time 10 100 1000 v_myvol &
-    v_mylx v_myly v_mylz file dimensions.dat
-fix myat3 all ave/time 10 100 1000 v_mypot &
-    file potential-energy.dat
+dump mydmp all image 200 dump.*.jpg type type &
+    shiny 0.1 box no 0.01 view 0 0 zoom 1.2
+dump_modify mydmp backcolor white &
+    acolor 1 yellow adiam 1 2.5 &
+    acolor 2 red adiam 2 2
 thermo 1000
+thermo_style custom step temp etotal & 
+    vol lx ly lz
 \end{verbatim}}
+Thanks to the \textit{thermo$\_$style custom} command, the box size along each direction
+will be printed in the log file.
+
 Finally, let us create the last part of our script. The annealing procedure is
 made of four consecutive runs. First, a $50\,\text{ps}$ phase at $T = 6000\,\text{K}$
 and isotropic pressure coupling with desired pressure $p = 100\,\text{atm}$:
@@ -2436,13 +2433,11 @@ barostat, all three directions of space are adjusted independently from one anot
 An anisotropic barostat is usually a better choice for a solid phase. For a liquid
 or a gas, an isotropic barostat is usually the best choice.
 
-Run the simulation using LAMMPS. Let us check the evolution of the temperature
-from the \textit{temperature.dat} file. Apart from an initial spike (which may be
-due to an initial bad configuration, probably harmless here), the temperature
-follows well the desired annealing procedure (Fig.\,\ref{fig:GCMC-temperature}).
-Let us also make sure that the box was indeed deformed isotropically during the
-first stage of the simulation, and then anisotropically by plotting the evolution
-of the box dimensions over time (Fig.\,\ref{fig:GCMC-dimension}). After running
+Run the simulation using LAMMPS. From the \textit{Charts} window, the temperature
+can be seen to follow well the desired annealing procedure (Fig.\,\ref{fig:GCMC-temperature}).
+The evolution of the box dimensions over time confirms that the box was indeed
+deformed isotropically during the first stage of the simulation, and then anisotropically
+(Fig.\,\ref{fig:GCMC-dimension}). After running
 the simulation, the final LAMMPS topology file called \textit{amorphousSiO.data}
 will be located in \textit{SilicaBlock/} (Fig.\,\ref{fig:GCMC-snapshot}).
 
