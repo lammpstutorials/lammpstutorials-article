@@ -2049,8 +2049,9 @@ expected to quickly change (Fig.\,\ref{fig:SIO-volume}).
 \centering
 \includegraphics[width=\linewidth]{SIO-charge}
 \caption{Average charge per atom of the silicon $q_\text{Si}$ (a) and oxygen
-$q_\text{O}$ (b) atoms during equilibration, as given by the \textit{v$\_$qSi} and
-\textit{v$\_$qO} variables.}
+$q_\text{O}$ (b) atoms as a function of time $t$ during equilibration.  $q_\text{Si}$
+and $q_\text{O}$ are given by the \textit{v$\_$qSi} and \textit{v$\_$qO} variables,
+respectively.}
 \label{fig:SIO-charge}
 \end{figure}
 
@@ -2189,14 +2190,14 @@ about $-0.9 ~ \text{e}$ appear in blue.}
 
 One can have a look at the charge distribution after deformation, as well as during
 the deformation (Fig.\,\ref{fig:SIO-distribution-bis}). As expected, the final
-charge distribution slightly differs from the previously calculated. In my case,
-no new species were formed during the simulation, as can be seen from the
-\textit{species.log} file:
+charge distribution slightly differs from the previously calculated. If
+no new species were formed during the simulation, the \textit{species.log} file
+should resemble:
 {\normalsize \begin{verbatim}
-#  Timestep   No_Moles   No_Specs  Si192O384
+#  Timestep   No_Moles   No_Specs  O384Si192
         5            1          1          1
 (...)
-#  Timestep   No_Moles   No_Specs  Si192O384
+#  Timestep   No_Moles   No_Specs  O384Si192
     30000            1          1          1
 \end{verbatim}}
 Sometimes, $\text{O}_2$ molecules are formed during the deformation. If this is
@@ -2304,7 +2305,7 @@ Once the simulation is over, it can be seen from the \textit{species.log} file t
 all the created hydrogen atoms reacted with the $\text{SiO}_{2}$ structure to
 form surface groups (such as hydroxyl (-OH) groups).
 {\normalsize \begin{verbatim}
-# Timestep   No_Moles   No_Specs  Si192O384  H
+# Timestep   No_Moles   No_Specs  O384Si192  H
   5          3          2         1          2
 (...)
 # Timestep   No_Moles No_Specs Si192O384H20
