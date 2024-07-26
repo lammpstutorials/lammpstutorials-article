@@ -135,8 +135,8 @@
   reactive force field, enhanced sampling, and grand canonical Monte
   Carlo.
   % AK: not sure how detailed this should be. I went for the max. Feel free to reduce.
-  In addition, we introduce the LAMMPS GUI, an enhanced graphical text
-  editor with syntax highlighting, command completion, and context help
+  In addition, we introduce LAMMPS--GUI, an enhanced graphical text
+  editor with syntax highlighting, command completion, context help,
   plus built--in visualization and plotting facilities, and the ability
   to run LAMMPS directly on the input file while tracking its progress.
 \end{abstract}
@@ -218,7 +218,7 @@ Lennard-Jones fluid system. Basic LAMMPS commands are used to set the
 interaction between the atoms, perform an energy minimization, and
 finally a simple MD simulation in the canonical (NVT) ensemble. This
 tutorial also illustrates the basic use of the LAMMPS graphical user
-interface (GUI) for running simulations.
+interface (LAMMPS--GUI) for writing input files and running simulations.
 
 In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system
 where atoms are connected by bonds is used: a small carbon nanotube. The
@@ -231,7 +231,7 @@ external visualization tool to visualize breaking bonds.
 % This tutorial also illustrates the use of LAMMPS from the command line
 % using the YAML thermo format to easily import data from the \textit{log} file into Python.
 
-% AK: when using the LAMMPS GUI, analyzing thermo data should be even easier since the data can
+% AK: when using LAMMPS-GUI, analyzing thermo data should be even easier since the data can
 % be exported from the chart window to a gnuplot/xmgrace compatible .dat file or a .csv file that
 % can be easily imported into Excel or OOCalc or by pandas into python. It would be straightforward
 % to add an YAML export for consistency with processing the log.
@@ -282,11 +282,11 @@ sampling through classical MD or MC methods.
 % Tutorials should clearly define what concepts or abilities researchers will need to complete the tutorial (e.g., some proficiency in Python; experience with Jupyter notebooks; knowledge of classical MD; etc).
 
 This set of tutorials assumes no prior knowledge of the LAMMPS software
-itself. Performing the tutorials requires the use of a text editor. We
-use the LAMMPS GUI \cite{lammps_gui_docs} here, but other console or
-graphical text editors like GNU nano, VI/VIM, emacs, notepad, Gedit,
+itself.  Performing the tutorials requires the use of a text editor.  We
+use the LAMMPS--GUI \cite{lammps_gui_docs} here, but other console or
+graphical text editors like GNU nano, vi/vim, emacs, notepad, Gedit,
 Visual Studio Code, and many more can be used for this purpose.  LAMMPS
-can be executed directly from the LAMMPS GUI or from the command line,
+can be executed directly from LAMMPS--GUI or from the command line,
 which requires some familiarity with executing commands from a
 command--line prompt.
 
