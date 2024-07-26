@@ -2550,10 +2550,11 @@ From now on, the system will combine water and silica, and therefore two force
 fields are combined: Vashishta for $\text{SiO}_2$, and lj/cut/tip4p/long for
 TIP4P water model (here the TIP4P/2005 model is used \cite{abascal2005general}).
 Combining the two force fields is done using the \textit{hybrid/overlay} pair
-style. The \textit{kspace} solver is used to calculate the long-range Coulomb
-interactions associated with \textit{tip4p/long}. Finally, the style for the bonds
+style. The PPPM solver \cite{luty1996calculating} is set with the \textit{kspace} 
+command, and is used to calculate the long-range Coulomb interactions associated
+with \textit{tip4p/long}. Finally, the style for the bonds
 and angles of the water molecules are defined, although they are not important
-since a rigid water model is used here.
+since TIP4P/2005 is a rigid water model.
 
 Before going further, we also need to make a few changes to our data file.
 Currently, \textit{dilatedSiO.data} only includes two atom types, but we need four.
@@ -2563,9 +2564,9 @@ Currently, \textit{dilatedSiO.data} starts with:
 576 atoms
 2 atom types
 
--5.512084438507452 26.09766215010596 xlo xhi
--0.12771230207837192 20.71329001367807 ylo yhi
-3.211752393088563 17.373825318513106 zlo zhi
+-3.517115256285223 24.10269296788487 xlo xhi
+0.5721674106566077 20.013410300943264 ylo yhi
+1.3237302567479095 19.261847454851658 zlo zhi
 
 Masses
 
@@ -2589,9 +2590,9 @@ the file so that it looks like the following (with 4 atom types, 1 bond type,
 1 extra angle per atom
 2 extra special per atom
 
-0.910777522101565 19.67480018949893 xlo xhi
-2.1092682236518137 18.476309487947546 ylo yhi
--4.1701120819606885 24.75568979356097 zlo zhi
+-3.517115256285223 24.10269296788487 xlo xhi
+0.5721674106566077 20.013410300943264 ylo yhi
+1.3237302567479095 19.261847454851658 zlo zhi
 
 Masses
 
@@ -2637,15 +2638,6 @@ pair_coeff 3 3 lj/cut/tip4p/long 0.008 3.1589
 pair_coeff 4 4 lj/cut/tip4p/long 0.0 0.0
 bond_coeff 1 0 0.9572
 angle_coeff 1 0 104.52
-
-variable oxygen atom "type==3"
-group oxygen dynamic all var oxygen
-variable nO equal count(oxygen)
-fix myat1 all ave/time 100 10 1000 v_nO &
-    file numbermolecule.dat
-
-fix shak H2O shake 1.0e-4 200 0 b 1 a 1 &
-    mol h2omol
 \end{verbatim}}
 The force field Vashishta applies only to Si (type 1) and O of $\text{SiO}_2$ (type 2),
 and not to the O and H of $\text{H}_2\text{O}$, thanks to the NULL parameters
@@ -2654,16 +2646,36 @@ potential are defined between O($\text{H}_2\text{O}$) and between H($\text{H}_2\
 atoms, as well as between O($\text{SiO}_2$)-O($\text{H}_2\text{O}$) and
 Si($\text{SiO}_2$)-O($\text{H}_2\text{O}$). Therefore, the fluid-fluid and the
 fluid-solid interactions will be dealt with by the lj/cut/tip4p/long potential.
-The number of oxygen atoms from water molecules (i.e. the number of molecules)
-will be printed in the file \textit{numbermolecule.dat}. The SHAKE algorithm is
-used to maintain the shape of the water molecules over time. Some of these features
-have been seen in previous tutorials.
 
-Finally, let us delete the overlapping water molecules, and print the
-positions of the remaining atoms in a \textit{.lammpstrj} file by adding the following lines into \textit{input.lmp}:
+Add the following lines as well:
+{\normalsize \begin{verbatim}
+variable oxygen atom "type==3"
+group oxygen dynamic all var oxygen
+variable nO equal count(oxygen)
+thermo_style custom step temp etotal v_nO
+thermo 1000
+
+fix shak H2O shake 1.0e-4 200 0 b 1 a 1 &
+    mol h2omol
+\end{verbatim}}
+The number of oxygen atoms from water molecules (i.e. the number of molecules)
+is calculated by the \textit{nO} variable, and will be printed in the log file.
+The SHAKE algorithm is used to maintain the shape of the water molecules over time,
+as seen in \hyperref[sheared-confined-label]{tutorial 4}.
+
+Finally, let us delete the overlapping water molecules, and create images
+of the system using \textit{dump image}:
 {\normalsize \begin{verbatim}
 delete_atoms overlap 2 H2O SiO mol yes
-dump dmp all atom 1000 dump.init.lammpstrj
+
+dump mydmp all image 1000 dump.*.jpg type type &
+    shiny 0.1 box yes 0.01 view 0 0 zoom 1.2
+dump_modify mydmp backcolor white &
+    acolor 1 yellow adiam 1 2.5 &
+    acolor 2 red adiam 2 2 &
+    acolor 3 cyan adiam 3 2 &
+    acolor 4 white adiam 4 1 &
+    boxcolor black
 \end{verbatim}}
 
 \paragraph{GCMC simulation}
@@ -2679,7 +2691,7 @@ compute ctSiO SiO temp
 fix mynvt2 SiO nvt temp 300 300 0.1
 fix_modify mynvt2 temp ctSiO
 timestep 0.001
-thermo 1000
+
 run 5000
 \end{verbatim}}
 Two different thermostats are used for $\text{SiO}_2$ and $\text{H}_2\text{O}$,
@@ -2693,21 +2705,11 @@ Finally, let us use the \textit{fix gcmc} and perform the grand canonical Monte
 Carlo steps. Add the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 variable tfac equal 5.0/3.0
-variable xlo equal xlo+0.1
-variable xhi equal xhi-0.1
-variable ylo equal ylo+0.1
-variable yhi equal yhi-0.1
-variable zlo equal zlo+0.1
-variable zhi equal zhi-0.1
-region system block ${xlo} ${xhi} &
-    ${ylo} ${yhi} ${zlo} ${zhi}
 fix fgcmc H2O gcmc 100 100 0 0 65899 300 &
     -0.5 0.1 mol h2omol tfac_insert ${tfac} &
     group H2O shake shak full_energy &
-    pressure 10000 region system
+    pressure 10000
 run 45000
-write_data SiOwithwater.data
-write_dump all atom dump.lammpstrj
 \end{verbatim}}
 The \textit{tfac$\_$insert} option ensures the correct estimate for the temperature
 of the inserted water molecules by taking into account the internal degrees of
@@ -2717,6 +2719,14 @@ chemical potential (here $\mu = -0.5\,\text{eV}$, which corresponds roughly to
 ambient conditions, i.e. to a relative humidity $\text{RH} \approx 50\,\%$ \cite{gravelle2020multi}.)
 The large pressure value of 10000 bars was chosen to ensure that some successful
 insertions of molecules would occur during the extremely short duration of this simulation.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{GCMC-number}
+\caption{Number of water molecules $N_\text{H2O}$ as a function of the time $t$.
+The dashed vertical line marks the beginning of the GCMC step.}
+\label{fig:GCMC-number}
+\end{figure}
 
 When you run the simulation, the log file indicates that 840 atoms (i.e. 280 molecules)
 were added by the \textit{create$\_$atoms} command (the exact number you get may differ):
@@ -2738,14 +2748,6 @@ between water and silica (i.e. its hydrophilicity). Note that GCMC simulations
 of such dense phases are usually slow to converge due to the very low probability
 of successfully inserting a molecule. Here, the short simulation duration was
 made possible by the use of a large pressure.
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{GCMC-number}
-\caption{Number of water molecules $N_\text{H2O}$ as a function of the time $t$.
-The dashed vertical line marks the beginning of the GCMC step.}
-\label{fig:GCMC-number}
-\end{figure}
 
 \begin{figure}
 \centering
