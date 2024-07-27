@@ -266,7 +266,7 @@ LAMMPS for simulating an open system that can exchange particles with a
 reservoir.
 
 In \hyperref[umbrella-sampling-label]{tutorial 7}, an advanced free
-energy method named umbrella sampling is implemented. Through the
+energy method named umbrella sampling is implemented.  Through the
 calculation of an energy barrier, this tutorial describes a protocol
 that can be used to deal with energy landscapes that prevent their
 sampling through classical MD or MC methods.
@@ -291,82 +291,93 @@ which requires some familiarity with executing commands from a
 command--line prompt.
 
 In addition, prior knowledge of the basics of molecular simulations and
-statistical physics would be beneficial. The user may refer to
-\textit{Understanding molecular simulation} by Daan Frenkel and Berend
+statistical physics would be beneficial.  The user may refer to
+\textit{Understanding Molecular Simulation} by Daan Frenkel and Berend
 Smit \cite{frenkel2023understanding}, as well as \textit{Computer
-  simulation of liquids} by Michael Allen and Dominic Tildesley
-\cite{allen2017computer}. Additionally, to better understand the
+  Simulation of Liquids} by Michael Allen and Dominic Tildesley
+\cite{allen2017computer}.  Additionally, to better understand the
 fundamental concepts behind the soft matter systems simulated in these
-tutorials, the user can refer to \textit{Basic concepts for simple and
-  complex liquids} by Jean-Louis Barrat and Jean-Pierre Hansen
-\cite{barrat2003basic}, as well as \textit{Theory of simple liquids:
-  with applications to soft matter} by Jean-Pierre Hansen and Ian Ranald
+tutorials, the user can refer to \textit{Basic Concepts for Simple and
+  Complex Liquids} by Jean-Louis Barrat and Jean-Pierre Hansen
+\cite{barrat2003basic}, as well as \textit{Theory of Simple Liquids:
+  with Applications to Soft Matter} by Jean-Pierre Hansen and Ian Ranald
 McDonald \cite{hansen2013theory}.
 
 \subsection{Software/system requirements}
+% AK: FIXME fill in the version dates and numbers for the next stable version
 
-% AK: FIXME fill in the version date for the next stable version
 The LAMMPS release version XXAug2024 \cite{lammps_code} and the matching
-LAMMPS GUI software is recommended to follow the tutorials.  For Linux
-(with x86\_64 CPU), macOS (BigSur or later), and Windows (10 and 11) you
-can download a pre-compiled LAMMPS package from the LAMMPS release page
-on GitHub
+LAMMPS--GUI software version 1.6.XX are recommended to follow the
+tutorials.  For Linux (with x86\_64 CPU), macOS (BigSur or later), and
+Windows (10 and 11) you can download a pre-compiled LAMMPS package from
+the LAMMPS release page on GitHub
 (\href{https://github.com/lammps/lammps/releases}{github.com/lammps/lammps/releases}).
-Choose a package that has GUI in the file name (it will contain the
-LAMMPS GUI and a LAMMPS executable for the console).  LAMMPS versions
-generally have good backward compatibility (i.e. old inputs work with
-newer LAMMPS versions) but are not as good in forward compatibility
-(i.e. newer inputs work with older LAMMPS version).  This tutorial shall
-be occasionally revised to remain compatible with the latest stable
-version of LAMMPS.
+Choose a package that has GUI in the file name (it will contain
+LAMMPS--GUI and a LAMMPS executable for the console).  These
+pre--compiled packages aim to be portable and therefore omit support for
+running in parallel with MPI. \hyperref[using-lammps-gui]{Appendix A}
+has instructions for using LAMMPS-GUI features that are relevant to the
+tutorials.
 
-It is also possible to follow the tutorials without the LAMMPS GUI by
-using the console version of LAMMPS and a text editor as well as
-external tools for plotting and visualization.  For advanced
-simulations, those external tools may be required since the
-visualization and plotting facilities in the LAMMPS GUI have limited
-functionality and flexibility.  Suitable external tools for plotting
-are, for example: Python with Pandas/Matplotlib \cite{van1995python,
-  hunter2007Matplotlib}, XmGrace, Gnuplot, Excel, OOCalc.  Suitable
-external tools for visualization are VMD \cite{vmd_home,
-  humphrey1996vmd} and OVITO \cite{ovito_home, ovito_paper}.
+LAMMPS versions generally have good backward compatibility (that is, old
+inputs work with newer LAMMPS versions) but are not as good in forward
+compatibility (i.e. newer inputs are not as likely to work with older
+LAMMPS versions).  This tutorial shall thus be occasionally revised to
+remain compatible with the latest stable version of LAMMPS.
+
+It is also possible to follow the tutorials without LAMMPS--GUI by using
+the console version of LAMMPS and a text editor plus some external tools
+for plotting and visualization.  For advanced simulations, those
+external tools may be required, anyway, since the visualization and
+plotting facilities in LAMMPS--GUI have limited functionality and
+flexibility.  Suitable external tools for plotting are, for example:
+Python with Pandas/Matplotlib \cite{van1995python,hunter2007Matplotlib},
+XmGrace, Gnuplot, Microsoft Excel, LibreOffice Calc.  Suitable external
+tools for visualization are, for example: VMD
+\cite{vmd_home,humphrey1996vmd} and OVITO \cite{ovito_home,ovito_paper}.
 % AK: Hopefully VMD 2.0 will be released before the article is submitted
 % VMD 1.9.3 is horribly outdated and missing a lot of LAMMPS support goodies
 
-In \hyperref[compiling-lammps-label]{appendix A} instructions for
-compiling LAMMPS from source for use with this tutorial are given.
+\hyperref[compiling-lammps-label]{Appendix B} has instructions for
+compiling LAMMPS from source for use with this tutorial.
 
-In \hyperref[parallel-lammps-label]{appendix B} instructions for running
-LAMMPS in parallel using MPI are given.
+\hyperref[parallel-lammps-label]{Appendix C} instructions for running
+LAMMPS in parallel using MPI when using LAMMPS executables compiled
+with MPI enabled, for example on HPC clusters.
 
 % AK: we should introduce advanced visualization/plotting when beneficial and then use the LAMMPS GUI only to edit the input, run LAMMPS and visually validate initial geometry.
 %
 % SG: \textcolor{blue}{(To remove/adapt if we go GUI-only: To write and edit the LAMMPS input files, a text editor such as VIM or Emacs is required. Additionally, to visualize the trajectories of the atoms, VMD version 1.9.3 will be used . Feel free to use an alternative visualization software like Ovito. Finally, a graph plotting tool is required. To plot the results from the simulations, Matplotlib Pyplot version 3.5.2 is used together with Python version 3.11.4 \cite{van1995python, hunter2007Matplotlib}, but any plotting tool can be used, such as XmGrace or Gnuplot.}
 
-\subsection{About LAMMPS GUI}
+\subsection{About LAMMPS--GUI}
 
-The LAMMPS GUI is a graphical text editor enhanced for editing LAMMPS
-input files and linked to the LAMMPS library and thus capable of running
-LAMMPS through the LAMMPS C-library interface.  The text editor behaves
-similar to text editors like notepad or gedit, but has the following
-enhancements:
+LAMMPS--GUI is a graphical text editor enhanced for editing LAMMPS input
+files and linked to the LAMMPS library and thus capable of running
+LAMMPS directly.  The text editor behaves similar to other graphical
+text editors like Notepad or Gedit, but has the following enhancements
+specifically for working with LAMMPS:
 \begin{itemize}
 \item Line numbers
 \item Syntax highlighting for LAMMPS input files
 \item Auto-completion for LAMMPS commands and options
 \item Auto-indent of lines
 \item Context sensitive online help through right click
-\item Start (and stop!) of simulations with a mouse click
+\item Start and stop of simulations with a mouse click
 \item Monitoring of simulation progress
 \item Visualization using the renderer built into LAMMPS
 \item Capture of output to text window
 \item Automatic plot of thermodynamic data during run
 \item Capture of ``dump image'' outputs for animations
+\item Viewer for plain text files
+\item Export of thermodynamic data for plotting
 \item Application of OpenMP or GPU acceleration
 \item Customization through preferences dialog
 \end{itemize}
 
-A detailed documentation for LAMMPS GUI is in the LAMMPS manual \cite{lammps_gui_docs}.
+\hyperref[using-lammps-gui]{Appendix A} contains instructions for using
+LAMMPS--GUI with the tutorials presented here.  A detailed description
+of all LAMMPS--GUI features is in the LAMMPS manual
+\cite{lammps_gui_docs}.
 
 \section{Content and links}
 
@@ -3108,6 +3119,15 @@ S.G. acknowledges funding from the European Union's Horizon 2020 research and in
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{appendices}
+  \section{Using LAMMPS-GUI}
+  \label{using-lammps-gui}
+  
+  { \normalsize
+\begin{verbatim}
+  lammps-gui input.lmp
+\end{verbatim}
+  }
+
   \section{Compiling LAMMPS from Source on Linux}
   \label{compiling-lammps-label}
   FIXME: add section
