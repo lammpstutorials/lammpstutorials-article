@@ -1067,16 +1067,31 @@ Here, the potential is AIREBO (i.e. the bonds are breakable).}
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{PEG}
-\caption{The polymer molecule (PEG - PolyEthylene Glycol) solvated in water as simulated during \hyperref[all-atoms-label]{Tutorial 3}. Water molecules are represented as a transparent continuum field for clarity.}
+\caption{The polymer molecule (PEG - PolyEthylene Glycol) solvated in water as
+simulated during \hyperref[all-atoms-label]{Tutorial 3}. Water molecules are
+represented as a transparent continuum field for clarity.}
 \label{fig:PEG}
 \end{figure}
 
-\noindent The goal of this tutorial is to use LAMMPS to solvate a small hydrophilic polymer (PEG - PolyEthylene Glycol) in a reservoir of water (Fig.\,\ref{fig:PEG}). Once the water reservoir is properly equilibrated at the desired temperature and pressure, the polymer molecule is added and a constant stretching force is applied to both ends of the polymer. The evolution of the polymer length is measured as a function of time. The GROMOS 54A7 force field \cite{schmid2011definition} is used for the PEG, the SPC/Fw model \cite{wu2006flexible} is used for the water, and the long-range Coulomb interactions are solved using the PPPM solver \cite{luty1996calculating}. This tutorial was inspired by a publication by Liese and coworkers, in which molecular dynamics simulations are compared with force spectroscopy experiments \cite{liese2017hydration}.
+\noindent The goal of this tutorial is to use LAMMPS to solvate a small hydrophilic
+polymer (PEG - PolyEthylene Glycol) in a reservoir of water (Fig.\,\ref{fig:PEG}).
+Once the water reservoir is properly equilibrated at the desired temperature and
+pressure, the polymer molecule is added and a constant stretching force is applied
+to both ends of the polymer. The evolution of the polymer length is measured as
+a function of time. The GROMOS 54A7 force field \cite{schmid2011definition} is used
+for the PEG, the SPC/Fw model \cite{wu2006flexible} is used for the water, and the
+long-range Coulomb interactions are solved using the PPPM solver \cite{luty1996calculating}.
+This tutorial was inspired by a publication by Liese and coworkers, in which molecular
+dynamics simulations are compared with force spectroscopy experiments \cite{liese2017hydration}.
 
 \subsubsection{Preparing the water reservoir}
 
-In this tutorial, the water reservoir is first prepared in the absence of the polymer. A rectangular box of water is created and equilibrated at ambient temperature and ambient pressure. The SPC/Fw water model is used \cite{wu2006flexible}, which is
-a flexible variant of the rigid SPC (simple point charge) model \cite{berendsen1981interaction}. Create a folder called \textit{pureH2O/}. Inside this folder, create an empty text file called \textit{input.lammps}. Copy the following lines into it:
+In this tutorial, the water reservoir is first prepared in the absence of the polymer.
+A rectangular box of water is created and equilibrated at ambient temperature and
+ambient pressure. The SPC/Fw water model is used \cite{wu2006flexible}, which is
+a flexible variant of the rigid SPC (simple point charge) model \cite{berendsen1981interaction}.
+Create a folder called \textit{pureH2O/}. Inside this folder, create an empty text
+file called \textit{input.lmp}. Copy the following lines into it:
 {\normalsize \begin{verbatim}
 units real
 atom_style full
@@ -1088,13 +1103,25 @@ kspace_style pppm 1e-5
 special_bonds lj 0.0 0.0 0.5 &
     coul 0.0 0.0 1.0 angle yes
 \end{verbatim}}
-With the unit style \textit{real}, masses are in grams per mole, distances in Ångstroms, time in femtoseconds, and energies
-in kcal/mole. With the \textit{atom$\_$style full}, each atom is a dot with a mass and a charge that can be linked by bonds, angles, dihedrals, and/or impropers. The \textit{bond$\_$style}, \textit{angle$\_$style}, and \textit{dihedral$\_$style} commands define the potentials for the bonds, angles, and dihedrals used in the simulation, here \textit{harmonic}. Finally, the \textit{special$\_$bonds} command, which was already seen in \hyperref[carbon-nanotube-label]{tutorial 2}, sets the LJ and Coulomb weighting factors for the interaction between neighboring atoms. With the \textit{pair$\_$style} named \textit{lj/cut/coul/long}, atoms interact through both a Lennard-Jones (LJ) potential and Coulomb interactions. The value of $10\,\text{\AA{}}$ is the cutoff. Finally, the \textit{kspace} command defines the long-range solver for the Coulomb interactions. The \textit{pppm} style refers to particle-particle particle-mesh \cite{luty1996calculating}.
+With the unit style \textit{real}, masses are in grams per mole, distances in
+Ångstroms, time in femtoseconds, and energies in kcal/mole. With the \textit{atom$\_$style full}, each atom is a dot with a mass and a charge that can be linked by bonds, angles, dihedrals, and/or impropers. The \textit{bond$\_$style},
+\textit{angle$\_$style}, and \textit{dihedral$\_$style} commands define the potentials
+for the bonds, angles, and dihedrals used in the simulation, here \textit{harmonic}.
+Finally, the \textit{special$\_$bonds} command, which was already seen in
+\hyperref[carbon-nanotube-label]{tutorial 2}, sets the LJ and Coulomb weighting
+factors for the interaction between neighboring atoms. With the \textit{pair$\_$style}
+named \textit{lj/cut/coul/long}, atoms interact through both a Lennard-Jones (LJ)
+potential and Coulomb interactions. The value of $10\,\text{\AA{}}$ is the cutoff.
+Finally, the \textit{kspace} command defines the long-range solver for the Coulomb
+interactions. The \textit{pppm} style refers to particle-particle particle-mesh \cite{luty1996calculating}.
 
-Then, let us create a 3D simulation box of dimensions $9 \times 3 \times 3 \; \text{nm}^3$, and make space for 8 atom types (2 for the water, 6 for the polymer), 7 bond types (1 for the water, 6 for the polymer), 8 angle types (1 for the water, 7 for the polymer), and 4 dihedral types (only for the polymer). Copy the following lines into \textit{input.lammps}:
+Then, let us create a 3D simulation box of dimensions $9 \times 3 \times 3 \; \text{nm}^3$,
+and make space for 8 atom types (2 for the water, 6 for the polymer), 7 bond types
+(1 for the water, 6 for the polymer), 8 angle types (1 for the water, 7 for the polymer),
+and 4 dihedral types (only for the polymer). Copy the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 region box block -45 45 -15 15 -15 15
-create_box 9 box &
+create_box 8 box &
 bond/types 7 &
 angle/types 8 &
 dihedral/types 4 &
@@ -1104,44 +1131,80 @@ extra/dihedral/per/atom 10 &
 extra/special/per/atom 14
 \end{verbatim}}
 The \textit{extra/x/per/atom} commands are here for
-memory allocation.
-We will use a file named \textit{PARM.lammps} that contains all the parameters (masses, interaction energies, bond equilibrium
-distances, etc). In \textit{input.lammps}, add the following line:
+memory allocation. We will use a file named \textit{PARM.lmp} that contains
+all the parameters (masses, interaction energies, bond equilibrium
+distances, etc). In \textit{input.lmp}, add the following line:
 {\normalsize \begin{verbatim}
-include ../PARM.lammps
+include ../PARM.lmp
 \end{verbatim}}
 
-Download and save the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial3/PARM.lammps}{\textit{PARM.lammps}} file next to the \textit{pureH2O/} folder. This example uses type labels, which are strings that map to each of the numeric atom types, bond types, angles types, etc. in the simulation. Type labels can be any string defined by the user, and we will use the atom types from the GROMOS 54A7 force field. In this example, the atom types are defined in the data file. Within \textit{PARM.lammps}, the \textit{mass} and \textit{pair$\_$coeff} of atoms of types OW and HW are for water and the remaining atom types are for the polymer molecule. Similarly, the \textit{bond$\_$coeff HW-OW} and \textit{angle$\_$coeff HW-OW-HW} are for water, while all the other parameters are for the polymer.
+Download and save the
+\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial3/PARM.lmp}{\textit{PARM.lmp}}
+file next to the \textit{pureH2O/} folder. This example uses type labels, which
+are strings that map to each of the numeric atom types, bond types, angles types,
+etc. in the simulation. Type labels can be any string defined by the user, and we
+will use the atom types from the GROMOS 54A7 force field. In this example, the atom
+types are defined in the data file. Within \textit{PARM.lammps}, the \textit{mass}
+and \textit{pair$\_$coeff} of atoms of types OW and HW are for water and the remaining
+atom types are for the polymer molecule. Similarly, the \textit{bond$\_$coeff HW-OW}
+and \textit{angle$\_$coeff HW-OW-HW} are for water, while all the other parameters
+are for the polymer.
 
 Let us create water molecules. To do so, let us import a molecule template called
-\textit{H2O-SPCFw.mol} and then randomly create 1050 molecules. Add the following lines into \textit{input.lammps}:
+\textit{H2O-SPCFw.mol} and then randomly create 1050 molecules. Add the following
+lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 molecule h2omol H2O-SPCFw.mol
 create_atoms 0 random 1050 87910 NULL mol &
     h2omol 454756 overlap 1.0 maxtry 50
 \end{verbatim}}
-The \textit{overlap 1} option of the \textit{create$\_$atoms} command ensures that no atoms are placed exactly in the same position, as this would cause the simulation to crash. The \textit{maxtry 50} asks LAMMPS to try at most 50 times to insert the molecules, which is useful in case some insertion attempts are rejected due to overlap. In some cases, depending on the system and the values of \textit{overlap} and \textit{maxtry}, LAMMPS may not create the desired number of molecules. Always check the number of created atoms in the \textit{log} file after starting the simulation:
+The \textit{overlap 1} option of the \textit{create$\_$atoms} command ensures
+that no atoms are placed exactly in the same position, as this would cause the
+simulation to crash. The \textit{maxtry 50} asks LAMMPS to try at most 50 times
+to insert the molecules, which is useful in case some insertion attempts are
+rejected due to overlap. In some cases, depending on the system and the values
+of \textit{overlap} and \textit{maxtry}, LAMMPS may not create the desired number
+of molecules. Always check the number of created atoms in the \textit{log} file
+after starting the simulation:
 {\normalsize \begin{verbatim}
 Created 3150 atoms
 \end{verbatim}}
-When LAMMPS fails to create the desired number of molecules, a WARNING appears in the \textit{log} file. The molecule template called \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial3/H2O-SPCFw.mol}{\textit{H2O-SPCFw.mol}} must be downloaded and saved in the \textit{pureH2O/} folder. This template contains the necessary structural information of a water molecule, such as the number of atoms, or the IDs of the atoms that are connected by bonds, angles, etc.
+When LAMMPS fails to create the desired number of molecules, a WARNING appears
+in the \textit{log} file. The molecule template called
+\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial3/H2O-SPCFw.mol}{\textit{H2O-SPCFw.mol}}
+must be downloaded and saved in the \textit{pureH2O/} folder. This template contains
+the necessary structural information of a water molecule, such as the number of
+atoms, or the IDs of the atoms that are connected by bonds, angles, etc.
 
-Then, let us organize the atoms of types OW and HW of the water molecules in a group named \textit{H2O} and perform a small energy minimization. The energy minimization is mandatory here given the small \textit{overlap} value of 1 Ångstrom chosen in the \textit{create$\_$atoms} command. Add the following lines into \textit{input.lammps}:
+Then, let us organize the atoms of types OW and HW of the water molecules in a
+group named \textit{H2O} and perform a small energy minimization. The energy
+minimization is mandatory here given the small \textit{overlap} value of 1 Ångstrom
+chosen in the \textit{create$\_$atoms} command. Add the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 group H2O type OW HW
 minimize 1.0e-4 1.0e-6 100 1000
 reset_timestep 0
 \end{verbatim}}
-In general, resetting the step of the simulation to 0 using the \textit{reset$\_$timestep} command is optional.
-It is used here because the number of iterations performed by the \textit{minimize} command is usually not a round number (since the minimization stops when one of four criteria is reached). Let us use the \textit{fix npt} to control the temperature of the molecules with a Nosé-Hoover thermostat and the pressure of the system with a Nosé-Hoover barostat \cite{nose1984unified, hoover1985canonical, martyna1994constant}, by adding the following line into \textit{input.lammps}:
+In general, resetting the step of the simulation to 0 using the
+\textit{reset$\_$timestep} command is optional.
+It is used here because the number of iterations performed by the \textit{minimize}
+command is usually not a round number (since the minimization stops when one of
+four criteria is reached). Let us use the \textit{fix npt} to control the temperature
+of the molecules with a Nosé-Hoover thermostat and the pressure of the system with
+a Nosé-Hoover barostat \cite{nose1984unified, hoover1985canonical, martyna1994constant},
+by adding the following line into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 fix mynpt all npt temp 300 300 100 &
     iso 1 1 1000
 \end{verbatim}}
-The \textit{fix npt} allows us to impose both a temperature of $300\,\text{K}$ (with a damping constant of $100\,\text{fs}$),
-and a pressure of 1 atmosphere (with a damping constant of $1000\,\text{fs}$). With the \textit{iso} keyword, the three dimensions of the box will be re-scaled simultaneously.
+The \textit{fix npt} allows us to impose both a temperature of $300\,\text{K}$
+(with a damping constant of $100\,\text{fs}$), and a pressure of 1 atmosphere
+(with a damping constant of $1000\,\text{fs}$). With the \textit{iso} keyword,
+the three dimensions of the box will be re-scaled simultaneously.
 
-Let us print the atom positions in a \textit{.lammpstrj} file every 1000 steps (i.e. 1 ps), print the temperature volume, and density every 100 steps in 3 separate data files, and print the information in the terminal every 1000 steps:
+Let us print the atom positions in a \textit{.lammpstrj} file every 1000 steps
+(i.e. 1 ps), print the temperature volume, and density every 100 steps in 3
+separate data files, and print the information in the terminal every 1000 steps:
 {\normalsize \begin{verbatim}
 dump mydmp all atom 1000 dump.lammpstrj
 variable mytemp equal temp
@@ -1156,46 +1219,57 @@ fix myat3 all ave/time 10 10 100 v_mydensity &
     file density.dat
 thermo 1000
 \end{verbatim}}
-The variable \textit{myoxy} corresponds to the number of atoms divided by 3, i.e. the number of molecules.
+The variable \textit{myoxy} corresponds to the number of atoms divided by 3, i.e.
+the number of molecules.
 
-Finally, let us set the timestep to 1.0 fs, and run the simulation for 20 ps by adding the
-following lines into \textit{input.lammps}:
+Finally, let us set the timestep to 1.0 fs, and run the simulation for 20 ps by
+adding the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 timestep 1.0
 run 20000
 
 write_data H2O.data
 \end{verbatim}}
-The final state is written into \textit{H2O.data}. If you open the \textit{dump.lammpstrj} file using VMD, you should
-see the system quickly reaching its equilibrium volume and density (see a snapshot of the equilibrated system in Fig.\,\ref{fig:PEG-water}). You can also open the \textit{density.dat} file to ensure that the system converged toward the density of liquid water during the 20 ps of simulation (Fig.\,\ref{fig:PEG-density}).
+The final state is written into \textit{H2O.data}. If you open the \textit{dump.lammpstrj}
+file using VMD, you should see the system quickly reaching its equilibrium volume
+and density (see a snapshot of the equilibrated system in Fig.\,\ref{fig:PEG-water}).
+You can also open the \textit{density.dat} file to ensure that the system converged
+toward the density of liquid water during the 20 ps of simulation (Fig.\,\ref{fig:PEG-density}).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-water}
-\caption{Water reservoir after equilibration. Oxygen atoms are in red, and hydrogen atoms are in white.}
+\caption{Water reservoir after equilibration. Oxygen atoms are in red, and hydrogen
+atoms are in white.}
 \label{fig:PEG-water}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-density}
-\caption{Evolution of the density $\rho$ of water with time $t$. The density $\rho$ reaches a plateau after $t \approx 10\,\text{ps}$.}
+\caption{Evolution of the density $\rho$ of water with time $t$. The density $\rho$
+reaches a plateau after $t \approx 10\,\text{ps}$.}
 \label{fig:PEG-density}
 \end{figure}
 
 \subsubsection{Solvating the PEG in water}
-Now that the water reservoir is equilibrated, we can safely include the PEG polymer in the water. The PEG molecule topology was downloaded from the ATB repository \cite{malde2011automated, oostenbrink2004biomolecular}. It has a formula $\text{C}_{28}\text{H}_{58}\text{O}_{15}$, and the parameters are taken from
+Now that the water reservoir is equilibrated, we can safely include the PEG polymer
+in the water. The PEG molecule topology was downloaded from the ATB repository
+\cite{malde2011automated, oostenbrink2004biomolecular}. It has a formula
+$\text{C}_{28}\text{H}_{58}\text{O}_{15}$, and the parameters are taken from
 the GROMOS 54A7 force field \cite{schmid2011definition}.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-in-vacuum}
-\caption{The PEG molecule in vacuum. The carbon atoms are in gray, the oxygen atoms in red, and the hydrogen atoms in white.}
+\caption{The PEG molecule in vacuum. The carbon atoms are in gray, the oxygen
+atoms in red, and the hydrogen atoms in white.}
 \label{fig:PEG-in-vacuum}
 \end{figure}
 
-Create a second folder alongside \textit{pureH2O/} and call it \textit{mergePEGH2O/}. Create a new blank file in it,
-call it \textit{input.lammps}. Within \textit{input.lammps}, copy the same first lines as previously:
+Create a second folder alongside \textit{pureH2O/} and call it \textit{mergePEGH2O/}.
+Create a new blank file in it, call it \textit{input.lmp}. Within \textit{input.lmp},
+copy the same first lines as previously:
 {\normalsize \begin{verbatim}
 units real
 atom_style full
@@ -1207,30 +1281,38 @@ kspace_style pppm 1e-5
 special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 &
     angle yes dihedral yes
 \end{verbatim}}
-Then, import the previously generated data file \textit{H2O.data} as well as the \textit{PARM.lammps} file:
+Then, import the previously generated data file \textit{H2O.data} as well as the \textit{PARM.lmp} file:
 {\normalsize \begin{verbatim}
 read_data ../pureH2O/H2O.data &
     extra/bond/per/atom 3 &
     extra/angle/per/atom 6 &
     extra/dihedral/per/atom 10 &
     extra/special/per/atom 14
-include ../PARM.lammps
+include ../PARM.lmp
 \end{verbatim}}
-Download the template called \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial3/PEG-GROMOS.mol}{\textit{PEG-GROMOS.mol}} for the PEG molecule, and then create a single molecule in the middle of the box:
+Download the template called
+\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial3/PEG-GROMOS.mol}{\textit{PEG-GROMOS.mol}}
+for the PEG molecule, and then create a single molecule in the middle of the box:
 {\normalsize \begin{verbatim}
 molecule pegmol PEG-GROMOS.mol
 create_atoms 0 single 0 0 0 mol pegmol 454756
 \end{verbatim}}
-Let us create 2 groups to differentiate the PEG from the H2O, by adding the following lines into \textit{input.lammps}:
+Let us create 2 groups to differentiate the PEG from the H2O, by adding the following
+lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 group H2O type OW HW
 group PEG type C CPos H HC OAlc OE
 \end{verbatim}}
-Water molecules that are overlapping with the PEG must be deleted to avoid future crashing. Add the following line into \textit{input.lammps}:
+Water molecules that are overlapping with the PEG must be deleted to avoid future crashing.
+Add the following line into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 delete_atoms overlap 2.0 H2O PEG mol yes
 \end{verbatim}}
-Here the value of 2 Ångstroms for the overlap cutoff was fixed arbitrarily and can be chosen through trial and error. If the cutoff is too small, the simulation will crash. If the cutoff is too large, too many water molecules will unnecessarily be deleted. Finally, let us use the \textit{fix npt} to control the temperature, as well as the pressure by allowing the box size to be rescaled along the \textit{x} axis:
+Here the value of 2 Ångstroms for the overlap cutoff was fixed arbitrarily and can
+be chosen through trial and error. If the cutoff is too small, the simulation will
+crash. If the cutoff is too large, too many water molecules will unnecessarily be
+deleted. Finally, let us use the \textit{fix npt} to control the temperature, as
+well as the pressure by allowing the box size to be rescaled along the \textit{x} axis:
 {\normalsize \begin{verbatim}
 fix mynpt all npt temp 300 300 100 x 1 1 1000
 timestep 1.0
@@ -1258,22 +1340,34 @@ final state in a data file. Add the following lines to the data file:
 run 30000
 write_data mix.data
 \end{verbatim}}
-If you open the \textit{dump.lammpstrj} file using VMD or have a look at the evolution of the volume in \textit{volume.dat},
-you should see that the box dimensions slightly evolve along \textit{x} to accommodate the new configuration. In addition, the temperature remains close to the target value of $300~\text{K}$ throughout the entire simulation, and the enthalpy is almost constant, suggesting that the system was close to equilibrium from the start.
+If you open the \textit{dump.lammpstrj} file using VMD or have a look at the
+evolution of the volume in \textit{volume.dat}, you should see that the box
+dimensions slightly evolve along \textit{x} to accommodate the new configuration.
+In addition, the temperature remains close to the target value of $300~\text{K}$
+throughout the entire simulation, and the enthalpy is almost constant, suggesting
+that the system was close to equilibrium from the start.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-solvated}
-\caption{A single PEG molecule in water. Water molecules are represented as a transparent continuum field for clarity.}
+\caption{A single PEG molecule in water. Water molecules are represented as a
+transparent continuum field for clarity.}
 \label{fig:PEG-solvated}
 \end{figure}
 
 \subsubsection{Stretching the PEG molecule}
-Here, a constant forcing is applied to the two ends of the PEG molecule until it stretches. Create a new folder next to the previously created folders, call it \textit{pullonPEG/}, and create a new input file in it called \textit{input.lammps}. First, let us create a variable \textit{f0} corresponding to the magnitude of the force we are going to apply. Copy the following line into the \textit{input.lammps} file:
+Here, a constant forcing is applied to the two ends of the PEG molecule until it
+stretches. Create a new folder next to the previously created folders, call it
+\textit{pullonPEG/}, and create a new input file in it called \textit{input.lmp}.
+First, let us create a variable \textit{f0} corresponding to the magnitude of the
+force we are going to apply. Copy the following line into the \textit{input.lmp} file:
 {\normalsize \begin{verbatim}
 variable f0 equal 5
 \end{verbatim}}
-The force magnitude of $1\,\text{kcal/mol/\AA{}}$ corresponds to $67.2\,\text{pN}$ and was chosen to be large enough to overcome the thermal agitation and the entropic contribution from both water and PEG molecules (it was chosen by trial and error). Then, copy the same lines as previously:
+The force magnitude of $1\,\text{kcal/mol/\AA{}}$ corresponds to $67.2\,\text{pN}$
+and was chosen to be large enough to overcome the thermal agitation and the entropic
+contribution from both water and PEG molecules (it was chosen by trial and error).
+Then, copy the same lines as previously:
 {\normalsize \begin{verbatim}
 units real
 atom_style full
@@ -1286,12 +1380,17 @@ special_bonds lj 0.0 0.0 0.5 &
     coul 0.0 0.0 1.0 &
     angle yes dihedral yes
 \end{verbatim}}
-Start the simulation from the equilibrated PEG-water system and include again the parameter file by adding the following lines to the \textit{input.lammps}:
+Start the simulation from the equilibrated PEG-water system and include again the
+parameter file by adding the following lines to the \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 read_data ../mergePEGH2O/mix.data
-include ../PARM.lammps
+include ../PARM.lmp
 \end{verbatim}}
-Next, let us create some useful atom groups, including H2O and PEG (as previously), as well as 2 groups containing a single atom each, the oxygen atoms at the ends of the chain. Atoms of types OAlc correspond to the hydroxy (alcohol) group oxygen atoms located at the ends of the PEG molecule, which we are going to use to pull on the PEG molecule. Add the following lines to the \textit{input.lammps}:
+Next, let us create some useful atom groups, including H2O and PEG (as previously),
+as well as 2 groups containing a single atom each, the oxygen atoms at the ends
+of the chain. Atoms of types OAlc correspond to the hydroxy (alcohol) group oxygen
+atoms located at the ends of the PEG molecule, which we are going to use to pull
+on the PEG molecule. Add the following lines to the \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 group H2O type OW HW
 group PEG type C CPos H HC OAlc OE
@@ -1303,11 +1402,13 @@ variable end2 atom v_oxies*(x<v_xcm)
 group topull1 variable end1
 group topull2 variable end2
 \end{verbatim}}
-Add the following \textit{dump} command to the input to print the atom positions every 1000 steps:
+Add the following \textit{dump} command to the input to print the atom positions
+every 1000 steps:
 {\normalsize \begin{verbatim}
 dump mydmp all atom 1000 dump.lammpstrj
 \end{verbatim}}
-Let us use a single Nosé-Hoover thermostat applied to all the atoms by adding the following lines to \textit{input.lammps}:
+Let us use a single Nosé-Hoover thermostat applied to all the atoms by adding the
+following lines to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 timestep 1.0
 fix mynvt all nvt temp 300 300 100
@@ -1316,7 +1417,8 @@ Let us also print the end-to-end distance of the PEG,
 here defined as the distance between the groups \textit{topull1}
 and \textit{topull2}, as well as the temperature of the system and the gyration
 radius of the molecule \cite{fixmanRadiusGyrationPolymer1962a}
-by adding the following lines to \textit{input.lammps}:
+by adding the following lines to \textit{input.lmp}:
+% S.G.: should we keep the data file, or just use thermo custom as its better for LAMMPS-GUI?  
 {\normalsize \begin{verbatim}
 variable mytemp equal temp
 fix myat1 all ave/time 10 10 100 &
@@ -1341,25 +1443,35 @@ Finally, let us simulate 30 picoseconds without any external forcing:
 {\normalsize \begin{verbatim}
 run 30000
 \end{verbatim}}
-This first run will serve as a benchmark to quantify later the changes induced by the forcing. Then, let us apply a forcing on the 2 oxygen atoms using two \textit{add$\_$force} commands, and run for an extra 30 ps:
+This first run will serve as a benchmark to quantify later the changes induced
+by the forcing. Then, let us apply a forcing on the 2 oxygen atoms using two
+\textit{add$\_$force} commands, and run for an extra 30 ps:
 {\normalsize \begin{verbatim}
 fix myaf1 topull1 addforce ${f0} 0 0
 fix myaf2 topull2 addforce -${f0} 0 0
 run 30000
 \end{verbatim}}
-Run the \textit{input.lammps} file using LAMMPS. If you open the \textit{dump.lammpstrj} file using \textit{VMD}, you should see that the PEG molecule eventually aligns in the direction of the force (as seen in Fig.\,\ref{fig:PEG-in-water}). The evolutions of the end-to-end distance and of the gyration radius over time show that the PEG is adjusting to the external forcing in less than $10~\text{ps}$ (Fig.\,\ref{fig:PEG-distance}).
+Run the \textit{input.lmp} file using LAMMPS. If you open the \textit{dump.lammpstrj}
+file using \textit{VMD}, you should see that the PEG molecule eventually aligns
+in the direction of the force (as seen in Fig.\,\ref{fig:PEG-in-water}).
+The evolutions of the end-to-end distance and of the gyration radius over
+time show that the PEG is adjusting to the external forcing in less than
+$10~\text{ps}$ (Fig.\,\ref{fig:PEG-distance}).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-in-water}
-\caption{PEG molecule stretched along the $x$ direction in water. Water molecules are represented as a transparent continuum field for clarity.}
+\caption{PEG molecule stretched along the $x$ direction in water. Water molecules
+are represented as a transparent continuum field for clarity.}
 \label{fig:PEG-in-water}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-distance}
-\caption{a) Evolution of the end-to-end distance $d_\text{end-to-end}$ of the PEG with time $t$. The forcing starts at $t = 5\,\text{ps}$. b) Evolution of the gyration radius $R_\text{gyr}$ of the PEG molecule.}
+\caption{a) Evolution of the end-to-end distance $d_\text{end-to-end}$ of the
+PEG with time $t$. The forcing starts at $t = 5\,\text{ps}$. b) Evolution of
+the gyration radius $R_\text{gyr}$ of the PEG molecule.}
 \label{fig:PEG-distance}
 \end{figure}
 
@@ -2747,7 +2859,7 @@ run 500000
 \paragraph{Run and data acquisition}
 Finally, let us record the density profile of the atoms along the $x$ axis using the \textit{ave/chunk} command. A total of 10 density profiles will be printed. The step count is reset to 0 to synchronize with the output times of \textit{fix density/number}, and the \textit{fix myat} is canceled (it has to be canceled before a reset time):
 {\normalsize \begin{verbatim}
-unfix myat
+unfix myati 
 reset_timestep 0
 
 compute cc1 all chunk/atom bin/1d x 0.0 1.0
