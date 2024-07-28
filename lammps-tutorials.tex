@@ -1361,7 +1361,7 @@ timestep ($0.5\,\text{fs}$) and a low temperature of $T = 1\,\text{K}$:
 {\normalsize \begin{verbatim}
 fix mynve fluid nve/limit 0.1
 fix myber fluid temp/berendsen 1 1 100
-fix myshk H2O shake 1.0e-4 200 0 b 1 a 1
+fix myshk H2O shake 1.0e-4 200 0 b O-H a H-O-H
 timestep 0.5
 \end{verbatim}}
 Just like \textit{fix nve}, the \textit{fix nve/limit} command performs constant NVE integration to update the positions and velocities of the atoms at each timestep. The difference is that \textit{fix nve/limit} also limits the maximum distance atoms can travel at each timestep. Here, the chosen maximum distance is $0.1~\text{\AA{}}$. Because the \textit{fix nve/limit} is applied to the group \textit{fluid}, only the water molecules and ions will move. The \textit{fix temp/berendsen} rescales the velocities of the atoms to force the temperature of the system to reach the desired value of $1~\text{K}$, and the SHAKE algorithm is used in order to maintain the shape of the water molecules.
@@ -1420,7 +1420,7 @@ include ../GROUP.lammps
 
 fix mynve all nve
 fix myber all temp/berendsen 300 300 100
-fix myshk H2O shake 1.0e-4 200 0 b 1 a 1
+fix myshk H2O shake 1.0e-4 200 0 b O-H a H-O-H
 fix myrct all recenter NULL NULL 0
 timestep 1.0
 \end{verbatim}}
@@ -1482,7 +1482,7 @@ fix_modify myber1 temp Tfluid
 compute Twall wall temp/partial 0 1 1
 fix myber2 wall temp/berendsen 300 300 100
 fix_modify myber2 temp Twall
-fix myshk H2O shake 1.0e-4 200 0 b 1 a 1
+fix myshk H2O shake 1.0e-4 200 0 b O-H a H-O-H
 fix myrct all recenter NULL NULL 0
 \end{verbatim}}
 One difference with the previous input is that, here, two thermostats are used, one for the fluid (\textit{myber1}) and one for the solid (\textit{myber2}). The use of \textit{fix$\_$modify} together with \textit{compute temp} ensures that the right temperature value is used by the thermostats. The use of temperature \textit{compute} with \textit{temp/partial 0 1 1} is meant to exclude the \textit{x} coordinate from the thermalization, which is important since a large velocity will be imposed along \textit{x}.
