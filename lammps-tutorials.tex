@@ -2839,17 +2839,20 @@ mass * 39.95
 pair_coeff * * ${epsilon} ${sigma}
 neigh_modify every 1 delay 4 check yes
 \end{verbatim}}
+
 The variables $U_0$, $\delta$, and $x_0$ defined in the previous subsection are
 used here to create the repulsive potential, restricting the atoms from exploring
 the center of the box:
 \begin{equation}
-U = U_0 \left[ \arctan \left( \dfrac{x+x_0}{\delta} \right) - \arctan \left(\dfrac{x-x_0}{\delta} \right) \right].
+U = U_0 \left[ \arctan \left( \dfrac{x+x_0}{\delta} \right)
+- \arctan \left(\dfrac{x-x_0}{\delta} \right) \right].
 \label{eq:U}
 \end{equation}
 From the derivative of the potential with respect to $x$, we obtain the expression
 for the force that will be imposed on the atoms:
 \begin{equation}
-F= \dfrac{U_0}{\delta} \left[ \dfrac{1}{(x-x_0)^2/\delta^2+1} - \dfrac{1}{(x+x_0)^2/\delta^2+1} \right].
+F= \dfrac{U_0}{\delta} \left[ \dfrac{1}{(x-x_0)^2/\delta^2+1}
+- \dfrac{1}{(x+x_0)^2/\delta^2+1} \right].
 \label{eq:F}
 \end{equation}
 Fig.\,\ref{fig:potential} shows the potential $U$ and force $F$ along the $x$ axis.
@@ -2883,34 +2886,51 @@ variable F atom &
 fix myadf all addforce v_F 0.0 0.0 energy v_U
 \end{verbatim}}
 Finally, let us combine the \textit{fix nve} with a \textit{Langevin} thermostat
-and run a molecular dynamics simulation. With these two commands, the MD simulation
-is effectively in the NVT ensemble: constant number of atoms $N$, constant volume
-$V$, and constant temperature $T$. Let us perform an equilibration of 500000 steps
-in total, using a timestep of $2\,\text{fs}$ (i.e. a total duration of $1\,\text{ns}$).
-To make sure that $1\,\text{ns}$ is long enough, we will record the evolution of
-the number of atoms in the central (energetically unfavorable) region called \textit{mymes}:
+and run a molecular dynamics simulation: 
 {\normalsize \begin{verbatim}
 fix mynve all nve
 fix mylgv all langevin 119.8 119.8 50 1530917
+\end{verbatim}}
+With these two commands, the MD simulation
+is effectively in the NVT ensemble: constant number of atoms $N$, constant volume
+$V$, and constant temperature $T$.
 
+To make sure that $1\,\text{ns}$ is long enough, we will record the evolution of
+the number of atoms in the central (energetically unfavorable) region called \textit{mymes}
+using the \textit{n$\_$center} variable:
+{\normalsize \begin{verbatim}
 region mymes block -${x0} ${x0} INF INF INF INF
 variable n_center equal count(all,mymes)
-fix myat all ave/time 10 50 500 v_n_center &
-    file density_evolution.dat
-
-timestep 2.0
+thermo_style custom step temp etotal v_n_center
 thermo 10000
+
+dump mydmp all image 5000 dump.*.jpg type type &
+    shiny 0.1 box yes 0.02 view 0 90 zoom 1.9
+dump_modify mydmp backcolor white &
+    acolor 1 cyan adiam 1 1 boxcolor black
+\end{verbatim}}
+A \textit{dump image} was also added for system visualization.
+
+Finally, let us perform an equilibration of 500000 steps
+in total, using a timestep of $2\,\text{fs}$ (i.e. a total duration of $1\,\text{ns}$):
+{\normalsize \begin{verbatim}
+timestep 2.0
 run 500000
 \end{verbatim}}
+Run the simulation with LAMMPS. To ensure that the equilibration of $1\,\text{ns}$ is long
+enough, let us have a look at the evolution of the number of atoms in the central region,
+$n_\mathrm{center}$. We can see that $n_\mathrm{center}$ reaches
+its equilibrium value (which is close to 0) after about $0.1\,\text{ns}$
+(Fig.\,\ref{fig:US-density-evolution}). See also a snapshot of the equilibrated
+system in Fig.\,\ref{fig:US-system-unbiased}. 
 
 \paragraph{Run and data acquisition}
-Finally, let us record the density profile of the atoms along the $x$ axis using
+Once the system is equilibrated, let us record the density profile of
+the atoms along the $x$ axis using
 the \textit{ave/chunk} command. A total of 10 density profiles will be printed.
-The step count is reset to 0 to synchronize with the output times of
-\textit{fix density/number}, and the \textit{fix myat} is canceled (it has to be
-canceled before a reset time):
+Add the following line to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
-unfix myat
+undump mydmp
 reset_timestep 0
 
 compute cc1 all chunk/atom bin/1d x 0.0 1.0
@@ -2921,8 +2941,9 @@ dump mydmp all atom 200000 dump.lammpstrj
 thermo 100000
 run 4000000
 \end{verbatim}}
-This simulation with a total duration of $9\,\text{ns}$ needs a few minutes to
-complete. Feel free to increase the duration of the last run for smoother results.
+The step count is reset to 0 using \textit{reset$\_$timestep} to synchronize
+with the output times of \textit{fix density/number}. Feel free to increase the
+duration of the last run for a better resolved density profile.
 
 \begin{figure}
 \centering
@@ -2935,13 +2956,8 @@ $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
 \end{figure}
 
 \paragraph{Data analysis}
-First, let us ensure that the initial equilibration of $1\,\text{ns}$ is long
-enough by examining the \textit{density$\_$evolution.dat} file. Here, we can see
-that the number of atoms in the central region, $n_\mathrm{centrer}$, evolves near
-its equilibrium value (which is close to 0) after about $0.1\,\text{ns}$
-(Fig.\,\ref{fig:US-density-evolution}). See also a snapshot of the equilibrated
-system made using VMD in Fig.\,\ref{fig:US-system-unbiased}. One can also look
-at the density profile, which shows that the density in the center of the box is
+
+Once the simulation is over, the density profile shows that the density in the center of the box is
 about two orders of magnitude lower than inside the reservoir (Fig.\,\ref{fig:US-density}).
 Then, let us plot $-R T \ln(\rho/\rho_\mathrm{bulk})$ (i.e. Eq.\,\eqref{eq:G} where
 the pressure ratio $p/p_\mathrm{bulk}$ is replaced by the density ratio
