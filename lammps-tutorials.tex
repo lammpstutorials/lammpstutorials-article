@@ -494,20 +494,43 @@ There are a few differences from the previous simulation. First, the \textit{vel
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{CNT}
-\caption{The carbon nanotube (CNT) simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.}
+\caption{The carbon nanotube (CNT) simulated during
+\hyperref[carbon-nanotube-label]{Tutorial 2}.}
 \label{fig:CNT}
 \end{figure}
 
-\noindent In this tutorial, the system of interest is a small carbon nanotube (CNT) in an empty box (Fig.\,\ref{fig:CNT}). An external force is imposed on the CNT, and its deformation is measured over time. To illustrate the difference between classical and reactive force fields, this tutorial is divided into two parts. Within the first part, a classical force field is used and the bonds between the atoms of the CNT are unbreakable. Within the second part, a reactive force field (named AIREBO \cite{stuart2000reactive}) is used, allowing for the breaking of chemical bonds when the CNT undergoes strong deformation.
+\noindent In this tutorial, the system of interest is a small carbon nanotube
+(CNT) in an empty box (Fig.\,\ref{fig:CNT}). An external force is imposed on
+the CNT, and its deformation is measured over time. To illustrate the
+difference between classical and reactive force fields, this tutorial is
+divided into two parts. Within the first part, a classical force field is
+used and the bonds between the atoms of the CNT are unbreakable. Within the
+second part, a reactive force field (named AIREBO \cite{stuart2000reactive})
+is used, allowing for the breaking of chemical bonds when the CNT undergoes
+strong deformation.
 
 \subsubsection{Unbreakable bonds}
-\noindent With most classical molecular dynamics force fields, the chemical bonds between the atoms are set at the start of the simulation. Regardless of the forces applied to the atoms, the bonds remain intact during the simulation. The bonds between neighbor atoms typically consist of springs with given equilibrium distances $r_0$ and a constant $k_b$: $U_b = k_b \left( r - r_0 \right)^2$. Additionally, angular and dihedral constraints are usually applied to maintain the relative orientations of neighboring atoms.
+\noindent With most classical molecular dynamics force fields, the chemical
+bonds between the atoms are set at the start of the simulation. Regardless
+of the forces applied to the atoms, the bonds remain intact during the
+simulation. The bonds between neighbor atoms typically consist of springs
+with given equilibrium distances $r_0$ and a constant
+$k_b$: $U_b = k_b \left( r - r_0 \right)^2$. Additionally, angular and dihedral
+constraints are usually applied to maintain the relative orientations of
+neighboring atoms.
 
-Download directly the CNT topology \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial2/cnt_molecular.data}{\textit{cnt$\_$molecular.data}}. It was created using VMD and TopoTools \cite{kohlmeyer2017topotools}, and contains information about the positions of the carbon atoms, as well as the identity of the atoms that are linked by \textit{bonds}, \textit{angles}, \textit{dihedrals}, and \textit{impropers} constraints. Save the \textit{cnt$\_$molecular.data} file
+First, download the CNT topology
+\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial2/cnt_molecular.data}{\textit{cnt$\_$molecular.data}}. It was created using VMD and
+TopoTools \cite{kohlmeyer2017topotools}, and contains information about the
+positions of the carbon atoms, as well as the identity of the atoms that are
+linked by \textit{bonds}, \textit{angles}, \textit{dihedrals},
+and \textit{impropers} constraints. Save the \textit{cnt$\_$molecular.data} file
 in a folder called \textit{unbreakable-bonds/}.
 
 \paragraph{The LAMMPS input}
-Create a new text file within \textit{unbreakable-bonds/} and name it \textit{input.lammps}. Open \textit{input.lammps} using a text editor, and copy the following lines into it:
+Create a new text file within \textit{unbreakable-bonds/} and name
+it \textit{input.lmp}. Open \textit{input.lmp} using the GUI, and copy
+the following lines into it:
 {\normalsize \begin{verbatim}
 variable T equal 300
 
@@ -525,9 +548,29 @@ special_bonds lj 0.0 0.0 0.5
 
 read_data cnt_molecular.data
 \end{verbatim}}
-The chosen unit system is \textit{real} (therefore distances are in Ångstrom and time in femtosecond), the \textit{atom$\_$style} is molecular (therefore atoms are dots that can be bonded with each other), and the boundary conditions are fixed. The boundary conditions do not matter here, as the box boundaries were placed far from the CNT. Just like in the previous tutorial, \hyperref[lennard-jones-label]{Lennard-Jones fluid}, the pair style is \textit{lj/cut} (i.e. a Lennard-Jones potential with a short-range cutoff) with parameter 14, which means that only the atoms closer than 14 Ångstroms from each other interact through a Lennard-Jones potential. The \textit{bond$\_$style}, \textit{angle$\_$style}, \textit{dihedral$\_$style}, and \textit{improper$\_$style} commands specify the different potentials used to restrain the relative positions of the atoms. More details about the potentials used here are given in the LAMMPS documentation. The \textit{special$\_$bonds} command sets the weighting factors for the Lennard-Jones interaction between atoms directly connected by one bond, two bonds, and three bonds, respectively. The last command, \textit{read$\_$data}, imports the \textit{cnt$\_$molecular.data} file which contains information about the box size, atom positions, etc.
+The chosen unit system is \textit{real} (therefore distances are in Ångstrom
+and time in femtosecond), the \textit{atom$\_$style} is molecular (therefore
+atoms are dots that can be bonded with each other), and the boundary conditions
+are fixed. The boundary conditions do not matter here, as the box boundaries
+were placed far from the CNT. Just like in the previous tutorial,
+\hyperref[lennard-jones-label]{Lennard-Jones fluid}, the pair style
+is \textit{lj/cut} (i.e. a Lennard-Jones potential with a short-range cutoff)
+with parameter 14, which means that only the atoms closer than 14 Ångstroms
+from each other interact through a Lennard-Jones potential.
+The \textit{bond$\_$style}, \textit{angle$\_$style}, \textit{dihedral$\_$style},
+and \textit{improper$\_$style} commands specify the different potentials used
+to restrain the relative positions of the atoms. The \textit{special$\_$bonds}
+command sets the weighting factors for the Lennard-Jones interaction between
+atoms directly connected by one bond, two bonds, and three bonds, respectively.
+The last command, \textit{read$\_$data}, imports the
+\textit{cnt$\_$molecular.data} file which contains information about the box
+size, atom positions, etc.
 
-We need to specify the parameters of both bonded and non-bonded potentials. Here, the parameters are taken from the OPLS-AA (Optimised Potentials for Liquid Simulations-All-Atom) force field \cite{jorgensenDevelopmentTestingOPLS1996}. Create a new text file in the \textit{unbreakable-bonds/} folder and name it \textit{parm.lammps}. Copy the following lines into it:
+We need to specify the parameters of both bonded and non-bonded potentials.
+Here, the parameters are taken from the OPLS-AA (Optimised Potentials for
+Liquid Simulations-All-Atom) force field \cite{jorgensenDevelopmentTestingOPLS1996}.
+Create a new text file in the \textit{unbreakable-bonds/} folder and name
+it \textit{parm.lammps}. Copy the following lines into it:
 {\normalsize \begin{verbatim}
 pair_coeff 1 1 0.066 3.4
 bond_coeff 1 469 1.4
@@ -535,22 +578,38 @@ angle_coeff 1 63 120
 dihedral_coeff 1 0 7.25 0 0
 improper_coeff 1 5 180
 \end{verbatim}}
-The \textit{pair$\_$coeff} command sets the parameters for the non-bonded Lennard-Jones interaction $\epsilon_{11} = 0.066 \, \text{kcal/mol}$ and $\sigma_{11} = 3.4 \, \text{\AA{}}$ for the only type of atom of the simulation; the carbon atom of type 1.  The \textit{bond$\_$coeff} provides the equilibrium distance $r_0= 1.4 \, \text{\AA{}}$ as well as the spring constant $k_b = 469 \, \text{kcal/mol/\AA{}}^2$ for the harmonic potential imposed between two neighboring carbon atoms, where the potential is $U_b = k_b ( r - r_0)^2$. The
-\textit{angle$\_$coeff} gives the equilibrium angle $\theta_0$ and constant for the potential between three neighbor atoms :
-$U_\theta = k_\theta ( \theta - \theta_0)^2$. The \textit{dihedral$\_$coeff} and \textit{improper$\_$coeff} give the potential for the constraints between 4 atoms. The file \textit{parm.lammps} is included in the simulation by adding the following line into the \textit{input.lammps} file:
+The \textit{pair$\_$coeff} command sets the parameters for the non-bonded
+Lennard-Jones interaction $\epsilon_{11} = 0.066 \, \text{kcal/mol}$ and
+$\sigma_{11} = 3.4 \, \text{\AA{}}$ for the only type of atom of the simulation;
+the carbon atom of type 1.  The \textit{bond$\_$coeff} provides the equilibrium
+distance $r_0= 1.4 \, \text{\AA{}}$ as well as the spring constant
+$k_b = 469 \, \text{kcal/mol/\AA{}}^2$ for the harmonic potential imposed
+between two neighboring carbon atoms, where the potential is
+$U_b = k_b ( r - r_0)^2$. The
+\textit{angle$\_$coeff} gives the equilibrium angle $\theta_0$ and constant for
+the potential between three neighbor atoms :
+$U_\theta = k_\theta ( \theta - \theta_0)^2$. The \textit{dihedral$\_$coeff}
+and \textit{improper$\_$coeff} give the potential for the constraints between 4
+atoms.
+
+Let us include the file \textit{parm.lammps} in the simulation by adding
+the following line into the \textit{input.lmp} file:
 {\normalsize \begin{verbatim}
 include parm.lammps
 \end{verbatim}}
 
 \paragraph{Prepare the initial state}
-Before starting the molecular dynamics simulation, let us make sure that we start from a clean initial state
-by recentering the CNT at the origin (0, 0, 0). In addition, let us make sure that the box boundaries are symmetric with respect to (0, 0, 0), which is not initially the case, as seen in \textit{cnt$\_$molecular.data}:
+Before starting the molecular dynamics simulation, let us make sure that we
+start from a clean initial state by recentering the CNT at the origin (0, 0, 0).
+In addition, let us make sure that the box boundaries are symmetric with
+respect to (0, 0, 0), which is not initially the case, as seen in
+\textit{cnt$\_$molecular.data}:
 {\normalsize \begin{verbatim}
 -40.000000 40.000000  xlo xhi
 -40.000000 40.000000  ylo yhi
 -12.130411 67.869589  zlo zhi
 \end{verbatim}}
-Let us recenter the CNT by adding the following lines into \textit{input.lammps}:
+Let us recenter the CNT by adding the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 group carbon_atoms type 1
 variable carbon_xcm equal &
@@ -562,17 +621,27 @@ variable carbon_zcm equal &
 displace_atoms carbon_atoms move &
     ${carbon_xcm} ${carbon_ycm} ${carbon_zcm}
 \end{verbatim}}
-The first command includes all the atoms of type 1 (i.e. all the atoms here) in a group named \textit{carbon$\_$atoms}.
-The 3 variables, \textit{carbon$\_$xcm}, \textit{carbon$\_$ycm}, and \textit{carbon$\_$zcm} are used to measure
-the current position of the group \textit{carbon$\_$atoms} along all 3 directions, respectively. Then, the \textit{displace$\_$atoms} command moves the group \textit{carbon$\_$atoms}, ensuring that its center of mass is located at the origin (0, 0, 0).
-Let us also change the box boundaries by adding the following line into \textit{input.lammps}:
+The first command includes all the atoms of type 1 (i.e. all the atoms here)
+in a group named \textit{carbon$\_$atoms}. The 3 variables, \textit{carbon$\_$xcm},
+\textit{carbon$\_$ycm}, and \textit{carbon$\_$zcm} are used to measure the
+current position of the group \textit{carbon$\_$atoms} along all 3 directions,
+respectively. Then, the \textit{displace$\_$atoms} command moves the group
+\textit{carbon$\_$atoms}, ensuring that its center of mass is located at the
+origin (0, 0, 0).
+
+Let us also change the box boundaries by adding the following
+line into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 change_box all x final -40 40 &
     y final -40 40 z final -40 40
 \end{verbatim}}
-Such a cleaner and more symmetrical initial state can simplify future data analysis, but won't make any difference to the molecular dynamics.
+Such a cleaner and more symmetrical initial state can simplify future data
+analysis, but won't make any difference to the molecular dynamics.
 
-A displacement will be imposed on the edges of the CNT. To do so, let us isolate the atoms from the two edges and place them into groups named \textit{rtop} and \textit{rbot}, respectively. Add the following lines into \textit{input.lammps}:
+A displacement will be imposed on the edges of the CNT. To do so, let us
+isolate the atoms from the two edges and place them into groups named
+\textit{rtop} and \textit{rbot}, respectively. Add the following lines into
+\textit{input.lmp}:
 {\normalsize \begin{verbatim}
 variable zmax equal &
     bound(carbon_atoms,zmax)-0.5
@@ -586,35 +655,45 @@ region rmid block &
     INF INF INF INF ${zmin} ${zmax}
 \end{verbatim}}
 
-\noindent The variable $z_\mathrm{max}$ corresponds to the coordinate of the last atoms along $z$ minus 0.5 Ångstroms, and $z_\mathrm{min}$ to the coordinate of the first atoms along $z$ plus 0.5 Ångstroms. Then, three regions are defined and correspond respectively to: $z < z_\mathrm{min}$, (\textit{rbot}, for region bottom) $z_\mathrm{min} > z > z_\mathrm{max}$ (\textit{rmid}, for region middle), and $z > z_\mathrm{max}$ (\textit{rtop}, for region top). Finally, let us define 3 groups of atoms corresponding to the atoms located in each of the 3 regions, respectively, by adding to \textit{input.lammps}:
+\noindent The variable $z_\mathrm{max}$ corresponds to the coordinate of the
+last atoms along $z$ minus 0.5 Ångstroms, and $z_\mathrm{min}$ to the coordinate
+of the first atoms along $z$ plus 0.5 Ångstroms. Then, three regions are defined
+and correspond respectively to: $z < z_\mathrm{min}$, (\textit{rbot}, for region
+bottom) $z_\mathrm{min} > z > z_\mathrm{max}$ (\textit{rmid}, for region middle),
+and $z > z_\mathrm{max}$ (\textit{rtop}, for region top). Finally, let us define
+3 groups of atoms corresponding to the atoms located in each of the 3 regions,
+respectively, by adding to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 group carbon_top region rtop
 group carbon_bot region rbot
 group carbon_mid region rmid
 \end{verbatim}}
-The atoms from the \textit{carbon$\_$top} and \textit{carbon$\_$bot} groups are represented in white in Fig.\,\ref{fig:CNT-underformed}, and the atoms from the \textit{carbon$\_$mid} group in pink.
+The atoms from the \textit{carbon$\_$top} and \textit{carbon$\_$bot} groups are
+represented in white in Fig.\,\ref{fig:CNT-underformed}, and the atoms from
+the \textit{carbon$\_$mid} group in pink.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-underformed}
-\caption{CNT with the atoms from the \textit{carbon$\_$mid} group in pink, and the atoms from the \textit{carbon$\_$top} and the \textit{carbon$\_$bot} groups in white.}
+\caption{CNT with the atoms from the \textit{carbon$\_$mid} group in pink,
+and the atoms from the \textit{carbon$\_$top} and the \textit{carbon$\_$bot}
+groups in white.}
 \label{fig:CNT-underformed}
 \end{figure}
 
-Run the simulation by typing the following command in a terminal:
-{\normalsize \begin{verbatim}
-lmp -in input.lammps
-\end{verbatim}}
-where the command \textit{lmp} is linked to the LAMMPS executable.
-
-When running a simulation, the number of atoms in each group is printed in the terminal (and in the \textit{log.lammps} file). Always make sure that the number of atoms in each group corresponds to what is expected, just like here:
+Run the simulation. The number of atoms in each group is printed in the
+\textit{log.lammps} file. Always make sure that the number
+of atoms in each group corresponds to what is expected, just like here:
 {\normalsize \begin{verbatim}
 10 atoms in group carbon_top
 10 atoms in group carbon_bot
 680 atoms in group carbon_mid
 \end{verbatim}}
+
 Finally, to start from a less ideal state and create a system with some defects,
-let us randomly delete a small fraction of the carbon atoms. To avoid deleting atoms that are too close to the edges, let us define a new region name \textit{rdel} that starts $2\,\text{\AA{}}$ from the CNT edges.
+let us randomly delete a small fraction of the carbon atoms. To avoid deleting
+atoms that are too close to the edges, let us define a new region name \textit{rdel}
+that starts $2\,\text{\AA{}}$ from the CNT edges.
 {\normalsize \begin{verbatim}
 variable zmax_del equal ${zmax}-2
 variable zmin_del equal ${zmin}+2
@@ -624,17 +703,20 @@ group rdel region rdel
 delete_atoms random fraction 0.02 no rdel &
     NULL 482793 bond yes
 \end{verbatim}}
-The \textit{delete$\_$atoms} command randomly deletes $2\,\%$ of the atoms from the \textit{rdel} group (i.e. about 10 atoms) (Fig.\,\ref{fig:CNT-underformed-deleted}).
+The \textit{delete$\_$atoms} command randomly deletes $2\,\%$ of the atoms from
+the \textit{rdel} group (i.e. about 10 atoms) (Fig.\,\ref{fig:CNT-underformed-deleted}).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-underformed-deleted}
-\caption{Same CNT as in Fig.\,\ref{fig:CNT-underformed}, but with 10 deleted atoms. The 10 deleted atoms were chosen randomly from the central part of the CNT.}
+\caption{Same CNT as in Fig.\,\ref{fig:CNT-underformed}, but with 10 deleted atoms.
+The 10 deleted atoms were chosen randomly from the central part of the CNT.}
 \label{fig:CNT-underformed-deleted}
 \end{figure}
 
 \paragraph{The molecular dynamics}
-Let us specify the thermalization and the dynamics of the system. Add the following lines into \textit{input.lammps}:
+Let us specify the thermalization and the dynamics of the system. Add the following
+lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 reset_atoms id sort yes
 velocity carbon_mid create ${T} 48455 &
@@ -645,19 +727,46 @@ fix myber carbon_mid temp/berendsen &
     ${T} ${T} 100
 fix_modify myber temp Tmid
 \end{verbatim}}
-Re-setting the atom IDs is necessary before using the \textit{velocity} command, this is done by the \textit{reset$\_$atoms} command. The \textit{velocity} command gives initial velocities to the atoms of the middle group \textit{carbon$\_$mid}, ensuring an initial temperature of 300 K for these atoms. The \textit{fix nve} is applied to all atoms so that all atom positions are recalculated at every step, and a \textit{Berendsen} thermostat is applied to the atoms of the group \textit{carbon$\_$mid} only \cite{berendsen1984molecular}. The \textit{fix$\_$modify myber} ensures that the \textit{fix Berendsen} uses the temperature of the group \textit{carbon$\_$mid} as an input, instead of the temperature of the whole system. This is necessary to make sure that the frozen edges won't bias the temperature. Note that the atoms of the edges do not need a thermostat because their motion will be restrained, see below.
+Re-setting the atom IDs is necessary before using the \textit{velocity} command,
+this is done by the \textit{reset$\_$atoms} command. The \textit{velocity}
+command gives initial velocities to the atoms of the middle group \textit{carbon$\_$mid},
+ensuring an initial temperature of 300 K for these atoms. The \textit{fix nve}
+is applied to all atoms so that all atom positions are recalculated at every step,
+and a \textit{Berendsen} thermostat is applied to the atoms of the group
+\textit{carbon$\_$mid} only \cite{berendsen1984molecular}. The
+\textit{fix$\_$modify myber} ensures that the \textit{fix Berendsen} uses the
+temperature of the group \textit{carbon$\_$mid} as an input, instead of the
+temperature of the whole system. This is necessary to make sure that the frozen
+edges won't bias the temperature. Note that the atoms of the edges do not need
+a thermostat because their motion will be restrained, see below.
 
-To restrain the motion of the atoms at the edges, let us add the following commands to \textit{input.lammps}:
+To restrain the motion of the atoms at the edges, let us add the following
+commands to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 fix mysf1 carbon_top setforce 0 0 0
 fix mysf2 carbon_bot setforce 0 0 0
 velocity carbon_top set 0 0 0
 velocity carbon_bot set 0 0 0
 \end{verbatim}}
-The two \textit{setforce} commands cancel the forces applied on the atoms of the two edges, respectively. The cancellation of the forces is done at every step, and along all 3 directions of space, $x$, $y$, and $z$, due to the use of \textit{0 0 0}. The two \textit{velocity} commands set the initial velocities along $x$, $y$, and $z$ to 0 for the atoms of \textit{carbon$\_$top} and \textit{carbon$\_$bot}, respectively. As a consequence of these last four commands, the atoms of the edges will remain immobile during the simulation (or at least they would if no other command was applied to them). The \textit{velocity set} commands impose the velocity of a group of atoms at the start of a run but do not enforce the velocity during the entire simulation. When \textit{velocity set} is used in combination with \textit{setforce 0 0 0}, as is the case here, the atoms won't feel any force during the entire simulation. According to the Newton equation, no force means no acceleration, meaning that the initial velocity will persist during the entire simulation, thus producing a constant velocity motion.
+The two \textit{setforce} commands cancel the forces applied on the atoms of the
+two edges, respectively. The cancellation of the forces is done at every step,
+and along all 3 directions of space, $x$, $y$, and $z$, due to the use of
+\textit{0 0 0}. The two \textit{velocity} commands set the initial velocities
+along $x$, $y$, and $z$ to 0 for the atoms of \textit{carbon$\_$top} and
+\textit{carbon$\_$bot}, respectively. As a consequence of these last four commands,
+the atoms of the edges will remain immobile during the simulation (or at least
+they would if no other command was applied to them). The \textit{velocity set}
+commands impose the velocity of a group of atoms at the start of a run but do
+not enforce the velocity during the entire simulation. When \textit{velocity set}
+is used in combination with \textit{setforce 0 0 0}, as is the case here, the
+atoms won't feel any force during the entire simulation. According to the Newton
+equation, no force means no acceleration, meaning that the initial velocity
+will persist during the entire simulation, thus producing a constant velocity motion.
 
 \paragraph{Data extraction}
-Next, to measure the strain and stress suffered by the CNT, let us extract the distance $L$ between the two edges as well as the force applied on the edges.
+Next, to measure the strain and stress suffered by the CNT, let us extract the
+distance $L$ between the two edges as well as the force applied on the edges.
+% S.G. Should we keep printing these information using ave/time only, or should we print them in the log as well using a custom thermo style, so that the user can access them from the GUI?
 {\normalsize \begin{verbatim}
 variable L equal &
     xcm(carbon_top,z)-xcm(carbon_bot,z)
@@ -666,16 +775,25 @@ fix at1 all ave/time 10 10 100 v_L &
 fix at2 all ave/time 10 10 100 f_mysf1[1] &
     f_mysf2[1] file edge_force.dat
 \end{verbatim}}
-\noindent Let us also add a command to print the atom coordinates in a \textit{lammpstrj} file every 1000 steps.
+\noindent Let us also add a \textit{dump image} command to visualise the system
+every 500 steps:
+% S.G.: I can't find a combination of the two angles that would make the CNT horizontal. Is it me, or is it simply impossible? If so, maybe we should pull the CNT along a different axis...
 {\normalsize \begin{verbatim}
-dump mydmp all atom 1000 dump.lammpstrj
+dump mydmp all image 500 dump.*.jpg type type &
+    shiny 0.1 box no 0.01 view 90 0 zoom 1.8
+dump_modify mydmp acolor 1 pink &
+    adiam 1 1 backcolor white
 \end{verbatim}}
-A \textit{lammpstrj} file can be opened using VMD. Finally, let us check the temperature of the non-frozen group over time by printing it using a \textit{fix ave/time} command:
+A \textit{lammpstrj} file can be opened using VMD. Finally, let us check the
+temperature of the non-frozen group over time by printing it using a
+\textit{fix ave/time} command:
 {\normalsize \begin{verbatim}
 fix at3 all ave/time 10 10 100 c_Tmid &
     file temperature_middle_group.dat
 \end{verbatim}}
-Let us run a small equilibration step to bring the system to the required temperature before applying any deformation:
+Let us run a small equilibration step to bring the system to the required
+temperature before applying any deformation:
+% S.G.: the "line yaml" should be removed if we use the export to yaml from the GUI
 {\normalsize \begin{verbatim}
 thermo 100
 thermo_modify temp Tmid line yaml
@@ -683,29 +801,42 @@ thermo_modify temp Tmid line yaml
 timestep 1.0
 run 5000
 \end{verbatim}}
-With the \textit{thermo$\_$modify} command, we specify to LAMMPS that the temperature $T_\mathrm{mid}$ must be printed in the terminal instead of the temperature of the entire system. This choice is motivated by the presence of frozen parts with an effective temperature of 0\,K, which makes the average temperature of the entire system not relevant. The \textit{thermo$\_$modify} command also imposes the use of the YAML format that can easily be read by Python (see below). Let us impose a constant velocity deformation on the CNT by combining the \textit{velocity set} command with previously defined \textit{fix setforce}. Add the following lines in the \textit{input.lammps} file, right after the last \textit{run 5000} command:
+With the \textit{thermo$\_$modify} command, we specify to LAMMPS that the
+temperature $T_\mathrm{mid}$ must be printed in the terminal instead of the
+temperature of the entire system. This choice is motivated by the presence of
+frozen parts with an effective temperature of 0\,K, which makes the average
+temperature of the entire system less relevant. The \textit{thermo$\_$modify}
+command also imposes the use of the YAML format that can easily be read by
+Python (see below).
+
+Let us impose a constant velocity deformation on the CNT
+by combining the \textit{velocity set} command with previously defined
+\textit{fix setforce}. Add the following lines in the \textit{input.lmp} file,
+right after the last \textit{run 5000} command:
 {\normalsize \begin{verbatim}
 velocity carbon_top set 0 0 0.0005
 velocity carbon_bot set 0 0 -0.0005
 run 10000
 \end{verbatim}}
-\noindent The chosen velocity for the deformation is $100\,\text{m/s}$, or $0.001\,\text{\AA{}/fs}$. Run the simulation using LAMMPS.
+\noindent The chosen velocity for the deformation is $100\,\text{m/s}$, or
+$0.001\,\text{\AA{}/fs}$. Run the simulation using LAMMPS.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-lenght-unbreakable}
-\caption{Evolution of the length $L$ of the CNT with time. The CNT starts deforming at $t = 5\,\text{ps}$.}
+\caption{Evolution of the length $L$ of the CNT with time. The CNT starts
+deforming at $t = 5\,\text{ps}$.}
 \label{fig:CNT-unbreakable-lenght}
 \end{figure}
 
-The file called \textit{dump.lammpstrj} that is created by LAMMPS within \textit{unbreakable-bonds/} can be opened using VMD (Fig.\,\ref{fig:CNT-deformed-unbreakable}). The length $L$ of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.\,\ref{fig:CNT-unbreakable-lenght}), as expected from the imposed constant velocity. The total energy of the system shows a non-linear increase with $t$ once the deformation starts, which is expected from the typical dependency of bond energy with bond distance $U_b = k_b \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-energy}).
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{CNT-energy-unbreakable}
-\caption{Evolution of the total energy $E_\text{tot}$ of the system with time $t$. The CNT starts deforming at $t = 5\,\text{ps}$. Here, the force field is OPLS-AA (i.e. the bonds are unbreakable).}
-\label{fig:CNT-unbreakable-energy}
-\end{figure}
+Run the simulation using LAMMPS. As can be seen from the new file named
+\textit{cnt$\_$length.dat}, the length $L$ of the CNT increases linearly over time
+for $t > 5\,\text{ps}$ (Fig.\,\ref{fig:CNT-unbreakable-lenght}),
+as expected from the imposed constant velocity. What you observe in the \textit{Slide Show}
+windows should resembles Fig.\,\ref{fig:CNT-deformed-unbreakable}. The total energy of the system
+shows a non-linear increase with $t$ once the deformation starts, which is expected
+from the typical dependency of bond energy with bond distance,
+$U_b = k_b \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-energy}).
 
 \begin{figure}
 \centering
@@ -714,7 +845,23 @@ The file called \textit{dump.lammpstrj} that is created by LAMMPS within \textit
 \label{fig:CNT-deformed-unbreakable}
 \end{figure}
 
-\textcolor{blue}{To import the YAML log file into Python and plot the total energy as a function of the number of step, create a new file within \textit{unbreakable-bonds/} called \textit{read-log.py}. Copy the following lines into it:}
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{CNT-energy-unbreakable}
+\caption{Evolution of the total energy $E_\text{tot}$ of the system with time $t$.
+The CNT starts deforming at $t = 5\,\text{ps}$. Here, the force field is OPLS-AA
+(i.e. the bonds are unbreakable).}
+\label{fig:CNT-unbreakable-energy}
+\end{figure}
+
+\paragraph{Importing YAML log file into Python (OPTIONAL)}
+% S.G.: Since we have the GUI, the YAML import make less sense and complicate the tutorial. What about writing a small dedicated YAML paragraph at the end of the article, instead of integrating it in this tutorial?
+% S.G.: The other option is to tell the users that this is an optional part, but this is kind of anoying still.
+% S.G.: EDIT: since now the GUI allow for exporting into YAML, it make more sense to include it, although it still make the tutorial a little complicated due to the use of python
+To import the YAML log file into Python and plot the total energy
+as a function of the number of steps, create a new file within
+\textit{unbreakable-bonds/} called \textit{read-log.py}. Copy the following
+lines into it:
 {\normalsize \begin{verbatim}
 import numpy as np
 import re, yaml
@@ -742,13 +889,25 @@ for line in thermo[1]['data']:
     Etot_vs_step.append([line[0], line[4]])
 np.savetxt("etot_vs_step.dat", Etot_vs_step)
 \end{verbatim}}
-\textcolor{blue}{The \textit{log} file is first open, a certain pattern is identified and stored as a string character named \textit{docs}. The string is then converted in a list, and the number of steps as well as the total energy $E_\text{tot}$ are extracted into the list named \textit{Etot$\_$vs$\_$step}, which is saved in the data file named \textit{etot$\_$vs$\_$step.dat} using the NumPy \textit{savetxt} function. \textit{thermo[0]} can be used to access the informations from the first minimization run, and  \textit{thermo[1]} from the second MD run.}
+The \textit{log} file is first open, and a certain pattern is
+identified and stored as a string character named \textit{docs}. The string is
+then converted into a list, and the number of steps as well as the total
+energy $E_\text{tot}$ are extracted into the list named \textit{Etot$\_$vs$\_$step},
+which is saved in the data file named \textit{etot$\_$vs$\_$step.dat} using the
+NumPy \textit{savetxt} function. \textit{thermo[0]} can be used to access the
+informations from the first minimization run, and  \textit{thermo[1]} from
+the second MD run.
 
 \subsubsection{Breakable bonds}
-When using a classical force field, as we just did, the bonds between the atoms are non-breakable. Let us perform a similar simulation and deform a small CNT again, but this time using a reactive force field that allows for the bonds to break if the applied deformation is large enough.
+When using a classical force field, as we just did, the bonds between the atoms
+are non-breakable. Let us perform a similar simulation and deform a small
+CNT again, but this time using a reactive force field that allows for the bonds
+to break if the applied deformation is large enough.
 
 \paragraph{Input file initialization}
-\noindent Create a second folder called \textit{breakable-bonds/} next to \textit{unbreakable-bonds/}, and create a new input file in it called \textit{input.lammps}. Type into \textit{input.lammps}:
+\noindent Create a second folder called \textit{breakable-bonds/} next to
+\textit{unbreakable-bonds/}, and create a new input file in it called
+\textit{input.lmp}. Type into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 # Initialisation
 variable T equal 300
@@ -758,44 +917,32 @@ atom_style atomic
 boundary p p p
 pair_style airebo 2.5 1 1
 \end{verbatim}}
-The first difference with the previous part is the unit system, here \textit{metal} instead of \textit{real}, a choice that is imposed by the AIREBO force field. A second difference is the use of the \textit{atom$\_$style atomic} instead of \textit{molecular}, since no explicit bond information is required with AIREBO.
+The first difference with the previous part is the unit system, here
+\textit{metal} instead of \textit{real}, a choice that is imposed by the
+AIREBO force field. A second difference is the use of the
+\textit{atom$\_$style atomic} instead of \textit{molecular}, since no explicit
+bond information is required with AIREBO.
 
 \paragraph{Adapt the topology file}
-Since \textit{bond}, \textit{angle}, and \textit{dihedral} do not need to be explicitly set when using AIREBO, some small changes need to be made to the previously generated \textit{.data} file. Duplicate the previous file \textit{cnt$\_$molecular.data}, name the copy \textit{cnt$\_$atom.data}, and place it within \textit{breakable-bonds/}. Then, remove all bond, angle, and dihedral information from \textit{cnt$\_$atom.data}. Also, remove the second column of the \textit{Atoms} table, so that the \textit{cnt$\_$atom.data} looks like the following:
-{\normalsize \begin{verbatim}
-700 atoms
-1 atom types
--40.000000 40.000000  xlo xhi
--40.000000 40.000000  ylo yhi
--12.130411 67.869589  zlo zhi
-
-Masses
-
-1 12.010700 # CA
-
-Atoms # atomic
-
-1 1 5.162323 0.464617 8.843235 # CA CNT
-2 1 4.852682 1.821242 9.111212 # CA CNT
-(...)
-\end{verbatim}}
-In addition, remove the \textit{Bonds} table that is placed right after the \textit{Atoms} table (near line 743), as well as the \textit{Angles}, \textit{Dihedrals}, and \textit{Impropers} tables. The last lines of the file should look like this:
-{\normalsize \begin{verbatim}
-(...)
-697 1 4.669892 -2.248901 45.824036 # CA CNT
-698 1 5.099893 -0.925494 46.092010 # CA CNT
-699 1 5.162323 -0.464617 47.431896 # CA CNT
-700 1 5.099893 0.925494 47.699871 # CA CNT
-\end{verbatim}}
+Since \textit{bond}, \textit{angle}, and \textit{dihedral} do not need to be
+explicitly set when using AIREBO, some simplification must be made to the
+previously generated \textit{.data} file. Download the new \textit{.data}
+file named \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial2/cnt_atom.data}{\textit{cnt$\_$atom.data}}, and place it within \textit{unbreakable-bonds/}.
+The \textit{cnt$\_$atom.data} file only contains the informations required
+for placing the atoms, but no information related to the connection between these atoms.
 
 \paragraph{Use of AIREBO potential}
-Then, let us import the LAMMPS data file, and set the pair coefficients by adding the following lines into \textit{input.lammps}
+Then, let us import the LAMMPS data file, and set the pair coefficients by adding
+the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 # System definition
 read_data cnt_atom.data
 pair_coeff * * CH.airebo C
 \end{verbatim}}
-Here, there is one single atom type. We impose this type to be carbon by using the letter \textit{C}. Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial2/CH.airebo}{\textit{CH.airebo}} file and place it within the \textit{breakable-bonds/} folder. The rest of the \textit{input.lammps} is very similar to the previous one:
+Here, there is one single atom type. We impose this type to be carbon by using
+the letter \textit{C}. Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial2/CH.airebo}{\textit{CH.airebo}} file and place it within
+the \textit{breakable-bonds/} folder. The rest of the \textit{input.lmp} is
+very similar to the previous one:
 
 {\normalsize \begin{verbatim}
 change_box all x final -40 40 y &
@@ -841,10 +988,17 @@ fix myber carbon_mid temp/berendsen &
     ${T} ${T} 0.1
 fix_modify myber temp Tmid
 \end{verbatim}}
-Note that a large distance of 120 Ångstroms was used for the box size along the \textit{z} axis, to allow for larger deformation. In addition, the \textit{change$\_$box} command was placed before the \textit{displace$\_$atoms} to avoid having the CNT crossing the edge of the box.
+Note that a large distance of 120 Ångstroms was used for the box size along
+the \textit{z} axis, to allow for larger deformation. In addition, the
+\textit{change$\_$box} command was placed before the \textit{displace$\_$atoms}
+to avoid having the CNT crossing the edge of the box.
 
 \paragraph{Start the simulation}
-Here, let us impose a constant velocity deformation using the atoms of one edge while maintaining the other edge fixed (note that for the unbreakable CNT, the motion was imposed on the 2 edges). As an equilibration step, let us set the velocity to 0 for the atoms of both edges. Add the following lines into the \textit{input.lammps} file:
+Here, let us impose a constant velocity deformation using the atoms of one
+edge while maintaining the other edge fixed (note that for the unbreakable CNT,
+the motion was imposed on the 2 edges). As an equilibration step, let us set the
+velocity to 0 for the atoms of both edges. Add the following lines into
+the \textit{input.lmp} file:
 {\normalsize \begin{verbatim}
 fix mysf1 carbon_bot setforce 0 0 0
 fix mysf2 carbon_top setforce 0 0 0
@@ -858,7 +1012,10 @@ fix at1 all ave/time 10 10 100 v_L file &
 fix at2 all ave/time 10 10 100 f_mysf1[1] &
     f_mysf2[1] file edge_force.dat
 
-dump mydmp all atom 1000 dump.lammpstrj
+dump mydmp all image 500 dump.*.jpg type type &
+    shiny 0.1 box no 0.01 view 90 0 zoom 1.8
+dump_modify mydmp acolor 1 pink &
+    adiam 1 1 backcolor white
 
 thermo 100
 thermo_modify temp Tmid
@@ -866,29 +1023,41 @@ thermo_modify temp Tmid
 timestep 0.0005
 run 5000
 \end{verbatim}}
-Note the relatively small timestep of $0.0005\,\text{ps}$ used. A reactive force field usually requires a smaller timestep than a classical one. When running \textit{input.lammps} with LAMMPS, you can see that the temperature deviates from the target temperature of $300\,\text{K}$ at the start of the equilibration, but that after a few steps, it reaches the target value.
+Note the relatively small timestep of $0.0005\,\text{ps}$ used. A reactive force
+field usually requires a smaller timestep than a classical one. When running
+\textit{input.lmp} with LAMMPS, you can see that the temperature deviates
+from the target temperature of $300\,\text{K}$ at the start of the equilibration,
+but that after a few steps, it reaches the target value.
 
 \paragraph{Launch the deformation}
-After equilibration, let us set the velocity of one of the edges equal to $15~\text{m/s}$ and run for a longer duration than previously. Add the following lines into \textit{input.lammps}:
+After equilibration, let us set the velocity of one of the edges equal to
+$15~\text{m/s}$ and run for a longer duration than previously. Add the following
+lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 velocity carbon_top set 0 0 0.15
 run 280000
 \end{verbatim}}
-By opening the \textit{lammpstrj} file using VMD, it is possible to observe the bonds breaking at approximately two-thirds of the simulation (Fig.\,\ref{fig:CNT-deformed-breakable}). If the bonds do not break, use a longer run.
+Run the simulation. Some bonds are expected to break at approximately
+two-thirds of the simulation (Fig.\,\ref{fig:CNT-deformed-breakable}).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-deformed-breakable}
-\caption{CNT with broken bonds. Here, the \textit{DynamicBonds} representation of VMD is used to properly visualize the bond breaking.}
+\caption{CNT with broken bonds. Here, the \textit{DynamicBonds} representation
+of VMD is used to properly visualize the bond breaking.}
 \label{fig:CNT-deformed-breakable}
 \end{figure}
 
-Looking at the evolution of energy again, one can see that the energy is increasing with the deformation. When bonds break, the energy relaxes abruptly, as can be seen near $t=110~\text{ps}$ and again near $t=130~\text{ps}$ in Fig.\,\ref{fig:CNT-breakable-energy}.
+Looking at the evolution of energy, one can see that it is initially
+increasing with the deformation. When bonds break, the energy relaxes abruptly,
+as can be seen near $t=110~\text{ps}$ and again near $t=130~\text{ps}$ in
+Fig.\,\ref{fig:CNT-breakable-energy}.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-energy-breakable}
-\caption{Evolution of the total energy $E_\text{tot}$ of the CNT with time $t$. Here, the potential is AIREBO (i.e. the bonds are breakable).}
+\caption{Evolution of the total energy $E_\text{tot}$ of the CNT with time $t$.
+Here, the potential is AIREBO (i.e. the bonds are breakable).}
 \label{fig:CNT-breakable-energy}
 \end{figure}
 
@@ -1200,30 +1369,68 @@ Run the \textit{input.lammps} file using LAMMPS. If you open the \textit{dump.la
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{NANOSHEAR}
-\caption{The electrolyte confined in a nanometer slit pore as simulated during \hyperref[sheared-confined-label]{Tutorial 4}. $\text{Na}^+$ ions are represented as purple spheres, $\text{Cl}^-$ ions as cyan spheres, water molecules are colored in red and white, and the walls are colored in gray. The arrows indicate the imposed lateral motion of the walls.}
+\caption{The electrolyte confined in a nanometer slit pore as simulated during
+\hyperref[sheared-confined-label]{Tutorial 4}. $\text{Na}^+$ ions are represented
+as purple spheres, $\text{Cl}^-$ ions as cyan spheres, water molecules are colored
+in red and white, and the walls are colored in gray. The arrows indicate the
+imposed lateral motion of the walls.}
 \label{fig:NANOSHEAR}
 \end{figure}
 
-\noindent The objective of this tutorial is to simulate an electrolyte nanoconfined and sheared by two walls (Fig.\,\ref{fig:NANOSHEAR}). The density and velocity profiles of the fluid in the direction normal to the walls are extracted to highlight the effect of confining a fluid on its local properties. This tutorial illustrates some key aspects of combining a fluid and a solid in the same simulation. A major difference from the previous tutorial, \hyperref[all-atoms-label]{Polymer in water}, is that here a rigid four-point water model named TIP4P is used \cite{abascal2005general}. TIP4P is one of the most common water models due to its high accuracy.
+\noindent The objective of this tutorial is to simulate an electrolyte
+nanoconfined and sheared by two walls (Fig.\,\ref{fig:NANOSHEAR}). The density
+and velocity profiles of the fluid in the direction normal to the walls are
+extracted to highlight the effect of confining a fluid on its local properties.
+This tutorial illustrates some key aspects of combining a fluid and a solid in
+the same simulation. A major difference from the previous tutorial,
+\hyperref[all-atoms-label]{Polymer in water}, is that here a rigid four-point
+water model named TIP4P is used \cite{abascal2005general}. TIP4P is one of
+the most common water models due to its high accuracy.
 
 \subsubsection{System preparation}
-The fluid and walls must first be generated and then equilibrated at a reasonable temperature and pressure.
+The fluid and walls must first be generated and then equilibrated at a reasonable
+temperature and pressure.
 
 \paragraph{System generation}
-Create a new folder called \textit{systemcreation/}. Within \textit{systemcreation/}, open a blank file called \textit{input.lammps}, and copy the following lines into it:
+Create a new folder called \textit{systemcreation/}. Within
+\textit{systemcreation/}, open a blank file called \textit{input.lmp}, and
+copy the following lines into it:
 {\normalsize \begin{verbatim}
 boundary p p f
 units real
 atom_style full
 bond_style harmonic
 angle_style harmonic
-pair_style lj/cut/tip4p/long 1 2 1 1 0.1546 12.0
+pair_style lj/cut/tip4p/long 1 2 1 1 &
+    0.1546 12.0
 kspace_style pppm/tip4p 1.0e-4
 kspace_modify slab 3.0
 \end{verbatim}}
-These lines are used to define the most basic parameters, including the \textit{atom}, \textit{bond}, and \textit{angle} styles, as well as interaction potential. Here, \textit{lj/cut/tip4p/long} imposes a Lennard-Jones potential with a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential. So far, the commands are relatively similar to those in the previous tutorial, \hyperref[all-atoms-label]{Polymer in water}, with two major differences: the use of \textit{lj/cut/tip4p/long} instead of \textit{lj/cut/coul/long}, and \textit{pppm/tip4p} instead of \textit{pppm}. When using \textit{lj/cut/tip4p/long} and \textit{pppm/tip4p}, the interactions resemble the conventional Lennard-Jones and Coulomb interactions, except that they are specifically designed for the four-point water model. Therefore, LAMMPS automatically creates a four-point water molecule using atoms of type O as oxygen and atoms of type H as hydrogen. The fourth massless atom (\textit{M}) of the TIP4P water molecule does not have to be defined explicitly, and the value of $0.1546\,\text{$\text{\AA{}}$}$ corresponds to the \textit{O-M} distance of the TIP4P-2005 water model \cite{abascal2005general}. All the other atoms in the simulation are treated normally with long-range Coulomb interactions. Another novelty, here, is the use of \textit{kspace$\_$modify slab 3.0} that is combined with the non-periodic boundaries along the $z$ coordinate: \textit{boundary p p f}. With the \textit{slab} option, the system is treated as periodical along $z$, but with an empty volume inserted between the periodic images of the slab, and the interactions along $z$ effectively turned off.
 
-Let us create the box by adding the following lines to \textit{input.lammps}:
+These lines are used to define the most basic parameters, including the
+\textit{atom}, \textit{bond}, and \textit{angle} styles, as well as interaction
+potential. Here, \textit{lj/cut/tip4p/long} imposes a Lennard-Jones potential with
+a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential.
+
+So far, the commands are relatively similar to those in the previous tutorial,
+\hyperref[all-atoms-label]{Polymer in water}, with two major differences: the use
+of \textit{lj/cut/tip4p/long} instead of \textit{lj/cut/coul/long}, and \textit{pppm/tip4p}
+instead of \textit{pppm}. When using \textit{lj/cut/tip4p/long} and \textit{pppm/tip4p},
+the interactions resemble the conventional Lennard-Jones and Coulomb interactions,
+except that they are specifically designed for the four-point water model. Therefore,
+LAMMPS automatically creates a four-point water molecule using atoms of type O as
+oxygen and atoms of type H as hydrogen. The fourth massless atom (\textit{M}) of the
+TIP4P water molecule does not have to be defined explicitly, and the value of
+$0.1546\,\text{$\text{\AA{}}$}$ corresponds to the \textit{O-M} distance of the
+TIP4P-2005 water model \cite{abascal2005general}. All the other atoms in the simulation
+are treated normally with long-range Coulomb interactions. Another novelty, here, is
+the use of \textit{kspace$\_$modify slab 3.0} that is combined with the non-periodic
+boundaries along the $z$ coordinate: \textit{boundary p p f}. With the \textit{slab}
+option, the system is treated as periodical along $z$, but with an empty volume inserted
+between the periodic images of the slab, and the interactions along $z$ effectively turned off.
+
+Let us create the box by adding the following lines to \textit{input.lmp}:
+
 {\normalsize \begin{verbatim}
 lattice fcc 4.04
 region box block -3 3 -3 3 -5 5
@@ -1234,29 +1441,52 @@ extra/bond/per/atom 2 &
 extra/angle/per/atom 1 &
 extra/special/per/atom 2
 \end{verbatim}}
-The \textit{lattice} command defines the unit cell. Here, the face-centered cubic (fcc) lattice with a scale factor of
-4.04 has been chosen for the future positioning of the atoms of the walls. The \textit{region} command defines a geometric
-region of space. By choosing \textit{xlo=-3} and \textit{xhi=3}, and because we have previously chosen a lattice with a scale
-factor of 4.04, the region box extends from $-12.12~\text{\AA{}}$ to $12.12~\text{\AA{}}$ along the $x$ direction. The \textit{create$\_$box} command creates a simulation box with 5 types of atoms: the oxygen and hydrogen of the water molecules, the two ions ($\text{Na}^+$,
-$\text{Cl}^-$), and the atom of the walls. The \textit{create$\_$box} command extends over 6 lines thanks to the $\&$ character. The second and third lines are used to indicate that the simulation contains 1 type of bond and 1 type of angle (both required by the water molecule). The parameters for these bond and angle constraints will be given later. The three last lines are for memory allocation.
+The \textit{lattice} command defines the unit cell. Here, the face-centered cubic (fcc) lattice
+with a scale factor of 4.04 has been chosen for the future positioning of the atoms
+of the walls. The \textit{region} command defines a geometric region of space. By choosing
+\textit{xlo=-3} and \textit{xhi=3}, and because we have previously chosen a lattice with a scale
+factor of 4.04, the region box extends from $-12.12~\text{\AA{}}$ to $12.12~\text{\AA{}}$
+along the $x$ direction. The \textit{create$\_$box} command creates a simulation box with
+5 types of atoms: the oxygen and hydrogen of the water molecules, the two ions ($\text{Na}^+$,
+$\text{Cl}^-$), and the atom of the walls. The \textit{create$\_$box} command extends over 6
+lines thanks to the $\&$ character. The second and third lines are used to indicate that the
+simulation contains 1 type of bond and 1 type of angle (both required by the water molecule).
+The parameters for these bond and angle constraints will be given later. The three last
+lines are for memory allocation.
 
-Now, we can add atoms to the system. First, let us create two sub-regions corresponding respectively to the two solid walls, and create a larger region from the union of the two regions. Then, let us create atoms of type WALL within the two regions. Add the following lines to \textit{input.lammps}:
+Now, we can add atoms to the system. First, let us create two sub-regions corresponding
+respectively to the two solid walls, and create a larger region from the union of the
+two regions. Then, let us create atoms of type WALL within the two regions. Add the
+following lines to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 region rbotwall block -3 3 -3 3 -4 -3
 region rtopwall block -3 3 -3 3 3 4
 region rwall union 2 rbotwall rtopwall
 create_atoms WALL region rwall
 \end{verbatim}}
-Atoms will be placed in the positions of the previously defined lattice, thus forming fcc solids. To add the water molecules, first download the molecule template called \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial4/RigidH2O.txt}{\textit{RigidH2O.txt}} and place it within \textit{systemcreation/}. The template contains all the
-necessary information concerning the water molecule, such as atom positions, bonds, and angles. Add the following lines to \textit{input.lammps}:
+Atoms will be placed in the positions of the previously defined lattice, thus
+forming fcc solids. To add the water molecules, first download the molecule
+template called \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial4/RigidH2O.txt}{\textit{RigidH2O.txt}}
+and place it within \textit{systemcreation/}. The template contains all the
+necessary information concerning the water molecule, such as atom positions,
+bonds, and angles. Add the following lines to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 region rliquid block INF INF INF INF -2 2
 molecule h2omol RigidH2O.txt
 create_atoms 0 region rliquid mol h2omol 482793
 \end{verbatim}}
-Within the last three lines, a \textit{region} named \textit{rliquid} is created based on the last defined lattice, \textit{fcc 4.04}. \textit{rliquid} will be used for depositing the water molecules. The \textit{molecule} command opens up the molecule template called \textit{RigidH2O.txt}, and names the associated molecule \textit{h2omol}. The new molecules are placed on the \textit{fcc 4.04} lattice by the \textit{create$\_$atoms} command. The first parameter is 0, meaning that the atom IDs from the \textit{RigidH2O.txt} file will be used. The number \textit{482793} is a seed that is required by LAMMPS, it can be any positive integer.
+Within the last three lines, a \textit{region} named \textit{rliquid} is
+created based on the last defined lattice, \textit{fcc 4.04}. \textit{rliquid}
+will be used for depositing the water molecules. The \textit{molecule} command
+opens up the molecule template called \textit{RigidH2O.txt}, and names the
+associated molecule \textit{h2omol}. The new molecules are placed on the
+\textit{fcc 4.04} lattice by the \textit{create$\_$atoms} command. The first
+parameter is 0, meaning that the atom IDs from the \textit{RigidH2O.txt} file
+will be used. The number \textit{482793} is a seed that is required by LAMMPS,
+it can be any positive integer.
 
-Finally, let us create 30 ions (15 $\text{Na}^+$ and 15 $\text{Cl}^-$) in between the water molecules, by adding the following commands to \textit{input.lammps}:
+Finally, let us create 30 ions (15 $\text{Na}^+$ and 15 $\text{Cl}^-$) in between
+the water molecules, by adding the following commands to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 create_atoms Na+ random 15 52802 rliquid &
     overlap 0.3 maxtry 500
@@ -1265,14 +1495,25 @@ create_atoms Cl- random 15 90182 rliquid &
 set type Na+ charge 1
 set type Cl- charge -1
 \end{verbatim}}
-Each \textit{create$\_$atoms} command will add 15 ions at random positions within the \textit{rliquid} region, ensuring that there is no \textit{overlap} with existing molecules. Feel free to increase or decrease the salt concentration by changing the number of desired ions. To keep the system charge neutral, always insert the same number of $\text{Na}^+$ and $\text{Cl}^-$, unless there are other charges in the system. The charges of the newly added ions are specified by the two \textit{set} commands.
+Each \textit{create$\_$atoms} command will add 15 ions at random positions
+within the \textit{rliquid} region, ensuring that there is no \textit{overlap}
+with existing molecules. Feel free to increase or decrease the salt concentration
+by changing the number of desired ions. To keep the system charge neutral,
+always insert the same number of $\text{Na}^+$ and $\text{Cl}^-$, unless there
+are other charges in the system. The charges of the newly added ions are specified
+by the two \textit{set} commands.
 
-Before starting the simulation, we still need to define the parameters of the simulation: the mass of the 5 atom types (O, H, $\text{Na}^+$, $\text{Cl}^-$, and wall), the pairwise interaction parameters (here, the parameters for the Lennard-Jones potential), and the bond and angle parameters. Copy the following line into \textit{input.lammps}:
+Before starting the simulation, we still need to define the parameters of the
+simulation: the mass of the 5 atom types (O, H, $\text{Na}^+$, $\text{Cl}^-$,
+and wall), the pairwise interaction parameters (here, the parameters for the
+Lennard-Jones potential), and the bond and angle parameters. Copy the following
+lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
-include ../PARM.lammps
-include ../GROUP.lammps
+include ../PARM.lmp
+include ../GROUP.lmp
 \end{verbatim}}
-Create a new text file called \textit{PARM.lammps} next to the \textit{systemcreation/} folder. Copy the following lines into \textit{PARM.lammps}:
+Create a new text file called \textit{PARM.lmp} next to the \textit{systemcreation/}
+folder. Copy the following lines into \textit{PARM.lmp}:
 {\normalsize \begin{verbatim}
 mass O 15.9994
 mass H 1.008
@@ -1287,16 +1528,37 @@ pair_coeff Cl- Cl- 0.1500 4.04470
 pair_coeff WALL WALL 11.697 2.574
 pair_coeff O WALL 0.4 2.86645
 \end{verbatim}}
-Each \textit{mass} command assigns a mass in grams/mole to an atom type. Each \textit{pair$\_$coeff} assigns respectively the depth of the LJ potential (in kcal/mole), and the distance (in Ångstrom) at which the particle-particle potential energy is 0.
+Each \textit{mass} command assigns a mass in grams/mole to an atom type.
+Each \textit{pair$\_$coeff} assigns respectively the depth of the LJ potential
+(in kcal/mole), and the distance (in Ångstrom) at which the particle-particle
+potential energy is 0.
 
-As already seen in previous tutorials and with the important exception of \textit{pair$\_$coeff O WALL}, only pairwise interactions between atoms of identical types was assigned. By default, LAMMPS calculates the pair coefficients for the interactions between atoms of different types (i and j) by using geometrical average: $\epsilon_{ij} = (\epsilon_{ii} + \epsilon_{jj})/2$,  $\sigma_{ij} = (\sigma_{ii} + \sigma_{jj})/2$. If the default value of $5.941\,\text{kcal/mol}$ was kept for $\epsilon_\text{1-5}$, the solid walls would be extremely hydrophilic, causing the water molecule to form dense layers. As a comparison, the water-water energy $\epsilon_\text{1-1}$ is only $0.185199\,\text{kcal/mol}$. Therefore, the walls were made less hydrophilic by reducing the value of $\epsilon_\text{1-5}$. Copy the following lines into \textit{PARM.lammps} as well:
+As already seen in previous tutorials and with the important exception of
+\textit{pair$\_$coeff O WALL}, only pairwise interactions between atoms of identical
+types was assigned. By default, LAMMPS calculates the pair coefficients for the
+interactions between atoms of different types (i and j) by using geometrical average:
+$\epsilon_{ij} = (\epsilon_{ii} + \epsilon_{jj})/2$,  $\sigma_{ij} = (\sigma_{ii} + \sigma_{jj})/2$.
+If the default value of $5.941\,\text{kcal/mol}$ was kept for $\epsilon_\text{1-5}$, the solid
+walls would be extremely hydrophilic, causing the water molecule to form dense layers. As a
+comparison, the water-water energy $\epsilon_\text{1-1}$ is only $0.185199\,\text{kcal/mol}$.
+Therefore, the walls were made less hydrophilic by reducing the value of $\epsilon_\text{1-5}$.
+
+Copy the following lines into \textit{PARM.lmp} as well:
 {\normalsize \begin{verbatim}
 bond_coeff O-H 0 0.9572
 angle_coeff H-O-H 0 104.52
 \end{verbatim}}
-The \textit{bond$\_$coeff} command, used here for the O-H bond of the water molecule, sets both the spring constant of the harmonic potential and the equilibrium distance of $0.9572~\text{\AA{}}$. The constant can be 0 for a rigid water molecule because the shape of the molecule will be preserved by the SHAKE algorithm (see below) \cite{ryckaert1977numerical, andersen1983rattle}. Similarly, the angle coefficient for the H-O-H angle of the water molecule sets the force constant of the angular harmonic potential to 0 and the equilibrium angle to $104.52^\circ$.
+The \textit{bond$\_$coeff} command, used here for the O-H bond of the water
+molecule, sets both the spring constant of the harmonic potential and the
+equilibrium distance of $0.9572~\text{\AA{}}$. The constant can be 0 for a
+rigid water molecule because the shape of the molecule will be preserved by
+the SHAKE algorithm (see below) \cite{ryckaert1977numerical, andersen1983rattle}.
+Similarly, the angle coefficient for the H-O-H angle of the water molecule sets
+the force constant of the angular harmonic potential to 0 and the equilibrium
+angle to $104.52^\circ$.
 
-Let us also create another file called \textit{GROUP.lammps} next to \textit{PARM.lammps}, and copy the following lines into it:
+Let us also create another file called \textit{GROUP.lmp} next to
+\textit{PARM.lmp}, and copy the following lines into it:
 {\normalsize \begin{verbatim}
 group H2O type O H
 group Na type Na+
@@ -1312,49 +1574,70 @@ group bot region rbot
 group walltop intersect wall top
 group wallbot intersect wall bot
 \end{verbatim}}
-As it is now, the fluid density within the two walls is too high. To avoid high density and pressure, let us add the following lines into \textit{input.lammps} to delete to delete about $15~\%$ of the water molecules:
+As it is now, the fluid density within the two walls is too high. To avoid
+high density and pressure, let us add the following lines into \textit{input.lmp}
+to delete to delete about $15~\%$ of the water molecules:
 {\normalsize \begin{verbatim}
 delete_atoms random fraction 0.15 yes &
     H2O NULL 482793 mol yes
 \end{verbatim}}
-Finally, add the following lines into \textit{input.lammps}:
+Finally, add the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 run 0
 
 write_data system.data nocoeff
-write_dump all atom dump.lammpstrj
+write_dump all image dump.jpg type type
 \end{verbatim}}
-With \textit{run 0}, the simulation will run for 0 steps, which is enough for creating the system and saving the final state. The \textit{write$\_$data} creates a file called \textit{system.data} containing the information required to restart the
-simulation from the final configuration generated by this input file. With the \textit{nocoeff} option, the parameters from the force field are not written in the \textit{.data} file. The \textit{write$\_$dump} command prints the final
-positions of the atoms into \textit{dump.lammpstrj}, a file that can be opened with VMD to visualize the system. Run the \textit{input.lammps} file using LAMMPS. Check that your system has been correctly created by also looking at the periodic images, just like in Fig.\,\ref{fig:NANOSHEAR-system}.
+With \textit{run 0}, the simulation will run for 0 steps, which is enough for
+creating the system and saving the final state. The \textit{write$\_$data}
+creates a file called \textit{system.data} containing the information required
+to restart the simulation from the final configuration generated by this input
+file. With the \textit{nocoeff} option, the parameters from the force field are
+not written in the \textit{.data} file. The \textit{write$\_$dump} command creates 
+an image of the system (see also Fig.\,\ref{fig:NANOSHEAR-system}).
+Run the \textit{input.lmp} file using LAMMPS.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{NANOSHEAR-system}
-\caption{Side view of the system. Periodic images are represented in darker colors. Water molecules are in red and white, $\text{Na}^+$ ions in purple, $\text{Cl}^-$ ions in lime, and wall atoms in gray. Note the absence of atomic defect at the cell boundaries.}
+\caption{Side view of the system. Periodic images are represented in darker colors.
+Water molecules are in red and white, $\text{Na}^+$ ions in purple, $\text{Cl}^-$
+ions in lime, and wall atoms in gray. Note the absence of atomic defect at the
+cell boundaries.}
 \label{fig:NANOSHEAR-system}
 \end{figure}
 
 \paragraph{Energy minimization}
-Let us move the atoms and place them in more energetically favorable positions before starting the actual molecular dynamics simulation. Let us call this step \textit{energy minimization}, although it is not a conventional \textit{minimization} as done for instance in the first tutorial; \hyperref[lennard-jones-label]{Lennard-Jones fluid}. Instead, a molecular dynamics simulation will be performed here, with some techniques employed to prevent the system from exploding due to overlapping atoms.
+Let us move the atoms and place them in more energetically favorable positions
+before starting the actual molecular dynamics simulation. Let us call this step
+\textit{energy minimization}, although it is not a conventional \textit{minimization}
+as done for instance in the first tutorial; \hyperref[lennard-jones-label]{Lennard-Jones fluid}.
+Instead, a molecular dynamics simulation will be performed here, with some techniques
+employed to prevent the system from exploding due to overlapping atoms.
 
-Let us create a new folder called \textit{minimization/} next to \textit{systemcreation/}, and create a new input file called \textit{input.lammps} in it. Copy the following lines in \textit{input.lammps}:
+Let us create a new folder called \textit{minimization/} next to \textit{systemcreation/},
+and create a new input file called \textit{input.lmp} in it. Copy the following lines
+in \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 boundary p p f
 units real
 atom_style full
 bond_style harmonic
 angle_style harmonic
-pair_style lj/cut/tip4p/long 1 2 1 1 0.1546 12.0
+pair_style lj/cut/tip4p/long 1 2 1 1 &
+    0.1546 12.0
 kspace_style pppm/tip4p 1.0e-4
 kspace_modify slab 3.0
 
 read_data ../systemcreation/system.data
 
-include ../PARM.lammps
-include ../GROUP.lammps
+include ../PARM.lmp
+include ../GROUP.lmp
 \end{verbatim}}
-The only difference from the previous input is that instead of creating a new box and new atoms, we open the previously created file \textit{system.data} located in \textit{systemcreation/}. The file \textit{system.data} contains the definition of the simulation box and the positions of the atoms.
+The only difference from the previous input is that instead of creating a new
+box and new atoms, we open the previously created file \textit{system.data}
+located in \textit{systemcreation/}. The file \textit{system.data} contains the
+definition of the simulation box and the positions of the atoms.
 
 Now, let us create a first simulation step using a relatively small
 timestep ($0.5\,\text{fs}$) and a low temperature of $T = 1\,\text{K}$:
@@ -1364,19 +1647,41 @@ fix myber fluid temp/berendsen 1 1 100
 fix myshk H2O shake 1.0e-4 200 0 b O-H a H-O-H
 timestep 0.5
 \end{verbatim}}
-Just like \textit{fix nve}, the \textit{fix nve/limit} command performs constant NVE integration to update the positions and velocities of the atoms at each timestep. The difference is that \textit{fix nve/limit} also limits the maximum distance atoms can travel at each timestep. Here, the chosen maximum distance is $0.1~\text{\AA{}}$. Because the \textit{fix nve/limit} is applied to the group \textit{fluid}, only the water molecules and ions will move. The \textit{fix temp/berendsen} rescales the velocities of the atoms to force the temperature of the system to reach the desired value of $1~\text{K}$, and the SHAKE algorithm is used in order to maintain the shape of the water molecules.
+Just like \textit{fix nve}, the \textit{fix nve/limit} command performs constant
+NVE integration to update the positions and velocities of the atoms at each
+timestep. The difference is that \textit{fix nve/limit} also limits the maximum
+distance atoms can travel at each timestep. Here, the chosen maximum distance
+is $0.1~\text{\AA{}}$. Because the \textit{fix nve/limit} is applied to the
+group \textit{fluid}, only the water molecules and ions will move.
+The \textit{fix temp/berendsen} rescales the velocities of the atoms to
+force the temperature of the system to reach the desired value of $1~\text{K}$,
+and the SHAKE algorithm is used in order to maintain the shape of the water molecules.
 
-Let us also print the atom positions in a \textit{.lammpstrj} file and control the printing of thermodynamic outputs by adding the following lines to \textit{input.lammps}:
-{
-ormal \begin{verbatim}
-dump mydmp all atom 1000 dump.lammpstrj
+Let us also create images of the system and control
+the printing of thermodynamic outputs by adding the following lines to \textit{input.lmp}:
+{\normalsize \begin{verbatim}
+dump mydmp all image 200 dump.*.jpg type type &
+    shiny 0.1 box no 0.01 view 90 0 zoom 1.8
+dump_modify mydmp backcolor white &
+    acolor 1 red adiam 1 2 &
+    acolor 2 white adiam 2 1 &
+    acolor 3 blue adiam 3 2.5 &
+    acolor 4 cyan adiam 4 3 &
+    acolor 5 gray adiam 5 3
 thermo 200
 \end{verbatim}}
-Finally, let us run for 4000 steps. Add the following lines into \textit{input.lammps}:
+Finally, let us run for 4000 steps. Add the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 run 4000
 \end{verbatim}}
-In order to better equilibrate the system, let us perform two additional steps with a larger timestep and a higher imposed temperature:
+When running the \textit{input.lmp} file with LAMMPS, you should see that the
+total energy of the system is initially very high, but rapidly decreases and
+reach a plateau (Fig.\,\ref{fig:NANOSHEAR-minimization}). From the generated image of the system,
+you will see that some of the atoms are moving, particularly those that were
+initially in problematic positions.
+
+In order to better equilibrate the system, let us perform two additional steps
+with a larger timestep and a higher imposed temperature:
 {\normalsize \begin{verbatim}
 fix myber fluid temp/berendsen 300 300 100
 timestep 1.0
@@ -1390,33 +1695,43 @@ run 4000
 
 write_data system.data nocoeff
 \end{verbatim}}
-For the last of the three steps, fix \textit{nve} is used instead of \textit{nve/limit}, which will allow for a better relaxation of the atom positions.
+For the last of the three steps, fix \textit{nve} is used instead of
+\textit{nve/limit}, which will allow for better relaxation of the atom positions.
 
-When running the \textit{input.lammps} file with LAMMPS, you should see that the total energy of the system decreases during the first of the 3 steps, before re-increasing a little after the temperature is increased from 1 to $300\,\text{K}$ (Fig.\,\ref{fig:NANOSHEAR-minimization}). If you look at the trajectory using VMD, you will see that some of the atoms are moving, particularly those that were initially in problematic positions.
+When running the \textit{input.lmp} file with LAMMPS, you should see that the
+the temperature reaches the desired value of $300\,\text{K}$. The generated file
+\textit{system.data} contains the final state of the system.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{NANOSHEAR-minimization}
-\caption{Total energy of the system $E_\text{tot}$ as a function of time $t$ extracted from the log file using \textit{Python} and \textit{lammps$\_$logfile} \cite{sveinsson2021logfile}. The vertical dashed lines demarcate the three consecutive steps.}
+\caption{Total energy of the system $E_\text{tot}$ as a function of time $t$
+extracted from the log file using \textit{Python} and \textit{lammps$\_$logfile}
+\cite{sveinsson2021logfile}. The vertical dashed lines demarcate the three
+consecutive steps.}
 \label{fig:NANOSHEAR-minimization}
 \end{figure}
 
 \paragraph{System equilibration}
-Let us equilibrate further the entire system by letting both fluid and piston relax at ambient temperature. Create a new folder called \textit{equilibration/} next to the previously created folders, and create a new \textit{input.lammps} file in it. Add the following lines into \textit{input.lammps}:
+Let us equilibrate further the entire system by letting both fluid and piston
+relax at ambient temperature. Create a new folder called \textit{equilibration/}
+next to the previously created folders, and create a new \textit{input.lmp}
+file in it. Add the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 boundary p p f
 units real
 atom_style full
 bond_style harmonic
 angle_style harmonic
-pair_style lj/cut/tip4p/long 1 2 1 1 0.1546 12.0
+pair_style lj/cut/tip4p/long 1 2 1 1 &
+    0.1546 12.0
 kspace_style pppm/tip4p 1.0e-4
 kspace_modify slab 3.0
 
 read_data ../minimization/system.data
 
-include ../PARM.lammps
-include ../GROUP.lammps
+include ../PARM.lmp
+include ../GROUP.lmp
 
 fix mynve all nve
 fix myber all temp/berendsen 300 300 100
@@ -1424,10 +1739,20 @@ fix myshk H2O shake 1.0e-4 200 0 b O-H a H-O-H
 fix myrct all recenter NULL NULL 0
 timestep 1.0
 \end{verbatim}}
-The fix \textit{recenter} does not influence the dynamics but will keep the system in the center of the box, which makes the
-visualization easier. Then, add the following lines into \textit{input.lammps} for the trajectory visualization and output:
+The fix \textit{recenter} does not influence the dynamics but will keep the 
+system in the center of the box, which makes the
+visualization easier. Then, add the following lines into \textit{input.lmp}
+for the trajectory visualization and output:
 {\normalsize \begin{verbatim}
-dump mydmp all atom 1000 dump.lammpstrj
+
+dump mydmp all image 200 dump.*.jpg type type &
+    shiny 0.1 box no 0.01 view 90 0 zoom 1.8
+dump_modify mydmp backcolor white &
+    acolor 1 red adiam 1 2 &
+    acolor 2 white adiam 2 1 &
+    acolor 3 blue adiam 3 2.5 &
+    acolor 4 cyan adiam 4 3 &
+    acolor 5 gray adiam 5 3
 thermo 500
 variable walltopz equal xcm(walltop,z)
 variable wallbotz equal xcm(wallbot,z)
@@ -1435,17 +1760,24 @@ variable deltaz equal v_walltopz-v_wallbotz
 fix myat1 all ave/time 100 1 100 v_deltaz &
     file interwall_distance.dat
 \end{verbatim}}
-The first two variables extract the centers of mass of the two walls. Then, the \textit{deltaz} variable is used to calculate the distance between the two variables \textit{walltopz} and \textit{wallbotz}, i.e. the distance between the two walls.
+The first two variables extract the centers of mass of the two walls. Then,
+the \textit{deltaz} variable is used to calculate the distance between the two
+variables \textit{walltopz} and \textit{wallbotz}, i.e. the distance between the two walls.
 
 Finally, let us add the \textit{run} command:
 {\normalsize \begin{verbatim}
 run 30000
 write_data system.data nocoeff
 \end{verbatim}}
-Run the \textit{input.lammps} file using LAMMPS. As seen from the data printed by \textit{fix myat1}, the distance between the two walls reduces until it reaches an equilibrium value (Fig.\,\ref{fig:NANOSHEAR-equilibration}).
+Run the \textit{input.lmp} file using LAMMPS. As seen from the data printed by
+\textit{fix myat1}, the distance between the two walls reduces until it reaches
+an equilibrium value (Fig.\,\ref{fig:NANOSHEAR-equilibration}).
 
-Note that it is generally recommended to run longer equilibration. Here, for instance, the slowest process in the system is probably the ionic diffusion. Therefore, the equilibration should in principle be longer than the time
-the ions need to diffuse over the size of the pore ($\approx 1.2\,\text{nm}$), i.e. on the order of half a nanosecond.
+Note that it is generally recommended to run longer equilibration. Here, for
+instance, the slowest process in the system is probably the ionic diffusion.
+Therefore, the equilibration should in principle be longer than the time
+the ions need to diffuse over the size of the pore ($\approx 1.2\,\text{nm}$),
+i.e. on the order of half a nanosecond.
 
 \begin{figure}
 \centering
@@ -1456,24 +1788,27 @@ the ions need to diffuse over the size of the pore ($\approx 1.2\,\text{nm}$), i
 
 \subsubsection{Imposed shearing}
 
-From the equilibrated configuration, let us impose a lateral motion on the two walls and shear the electrolyte.
-In a new folder called \textit{shearing/}, create a new \textit{input.lammps} file that starts like the previous ones:
+From the equilibrated configuration, let us impose a lateral motion on the two
+walls and shear the electrolyte. In a new folder called \textit{shearing/},
+create a new \textit{input.lmp} file that starts like the previous ones:
 {\normalsize \begin{verbatim}
 boundary p p f
 units real
 atom_style full
 bond_style harmonic
 angle_style harmonic
-pair_style lj/cut/tip4p/long 1 2 1 1 0.1546 12.0
+pair_style lj/cut/tip4p/long 1 2 1 1 &
+    0.1546 12.0
 kspace_style pppm/tip4p 1.0e-4
 kspace_modify slab 3.0
 \end{verbatim}}
-Let us import the previously equilibrated data, include the parameter and group files, and then deal with the dynamics of the system.
+Let us import the previously equilibrated data, include the parameter and group
+files, and then deal with the dynamics of the system.
 {\normalsize \begin{verbatim}
 read_data ../equilibration/system.data
 
-include ../PARM.lammps
-include ../GROUP.lammps
+include ../PARM.lmp
+include ../GROUP.lmp
 
 fix mynve all nve
 compute Tfluid fluid temp/partial 0 1 1
@@ -1485,21 +1820,42 @@ fix_modify myber2 temp Twall
 fix myshk H2O shake 1.0e-4 200 0 b O-H a H-O-H
 fix myrct all recenter NULL NULL 0
 \end{verbatim}}
-One difference with the previous input is that, here, two thermostats are used, one for the fluid (\textit{myber1}) and one for the solid (\textit{myber2}). The use of \textit{fix$\_$modify} together with \textit{compute temp} ensures that the right temperature value is used by the thermostats. The use of temperature \textit{compute} with \textit{temp/partial 0 1 1} is meant to exclude the \textit{x} coordinate from the thermalization, which is important since a large velocity will be imposed along \textit{x}.
+One difference with the previous input is that, here, two thermostats are used,
+one for the fluid (\textit{myber1}) and one for the solid (\textit{myber2}).
+The use of \textit{fix$\_$modify} together with \textit{compute temp} ensures
+that the right temperature value is used by the thermostats. The use of
+temperature \textit{compute} with \textit{temp/partial 0 1 1} is meant to exclude
+the \textit{x} coordinate from the thermalization, which is important since a
+large velocity will be imposed along \textit{x}.
 
-Then, let us impose the velocity of the two walls by adding the following commands to \textit{input.lammps}:
+Then, let us impose the velocity of the two walls by adding the following
+commands to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 fix mysf1 walltop setforce 0 NULL NULL
 fix mysf2 wallbot setforce 0 NULL NULL
 velocity wallbot set -2e-4 NULL NULL
 velocity walltop set 2e-4 NULL NULL
 \end{verbatim}}
-The \textit{setforce} commands cancel the forces on \textit{walltop} and \textit{wallbot}, respectively. Therefore the atoms of the two groups do not experience any force from the rest of the system. In the absence of force acting on those atoms, they will conserve their initial velocity. The \textit{velocity} commands act only once and impose the velocity of the atoms of the groups \textit{wallbot} and \textit{walltop}, respectively.
+The \textit{setforce} commands cancel the forces on \textit{walltop} and
+\textit{wallbot}, respectively. Therefore the atoms of the two groups do not
+experience any force from the rest of the system. In the absence of force acting
+on those atoms, they will conserve their initial velocity. The \textit{velocity}
+commands act only once and impose the velocity of the atoms of the groups
+\textit{wallbot} and \textit{walltop}, respectively.
 
-Finally, let us dump the atom positions, extract the velocity profiles using several \textit{ave/chunk} commands, extract the
-force applied on the walls, and then run for $200\,\text{ps}$ Add the following lines into \textit{input.lammps}:
+Finally, let us dump the atom positions, and extract the velocity profiles using
+several \textit{ave/chunk} commands, extract the force applied on the walls, and
+then run for $200\,\text{ps}$ Add the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
-dump mydmp all atom 5000 dump.lammpstrj
+dump mydmp all image 200 dump.*.jpg type type &
+    shiny 0.1 box no 0.01 view 90 0 zoom 1.8
+dump_modify mydmp backcolor white &
+    acolor 1 red adiam 1 2 &
+    acolor 2 white adiam 2 1 &
+    acolor 3 blue adiam 3 2.5 &
+    acolor 4 cyan adiam 4 3 &
+    acolor 5 gray adiam 5 3
+
 thermo 500
 thermo_modify temp Tfluid
 
@@ -1521,12 +1877,19 @@ timestep 1.0
 run 200000
 write_data system.data nocoeff
 \end{verbatim}}
-Here, a binning of $1\,\text{\AA{}}$ is used for the density profiles generated by the \textit{ave/chunk} commands. For smoother profiles, you can reduce the value of the bins. The averaged velocity and density profiles of the fluid are plotted in Figs.\ref{fig:NANOSHEAR-velocity}-\ref{fig:NANOSHEAR-density}. As expected for such Couette flow geometry, the velocity of the fluid is found to increase linearly along $z$.
+Here, a binning of $1\,\text{\AA{}}$ is used for the density profiles generated
+by the \textit{ave/chunk} commands. For smoother profiles, you can reduce the value
+of the bins. The averaged velocity and density profiles of the fluid are plotted
+in Figs.\ref{fig:NANOSHEAR-velocity}-\ref{fig:NANOSHEAR-density}. As expected for
+such Couette flow geometry, the velocity of the fluid is found to increase linearly
+along $z$.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{NANOSHEAR-velocity}
-\caption{Velocity profiles for water molecules and ions (blue disks), and walls (orange squares) along the \textit{z} axis. The line is a linear fit assuming that the pore size is $h = 1.8\,\text{nm}$.}
+\caption{Velocity profiles for water molecules and ions (blue disks), and walls
+(orange squares) along the \textit{z} axis. The line is a linear fit assuming
+that the pore size is $h = 1.8\,\text{nm}$.}
 \label{fig:NANOSHEAR-velocity}
 \end{figure}
 
@@ -1537,7 +1900,22 @@ Here, a binning of $1\,\text{\AA{}}$ is used for the density profiles generated 
 \label{fig:NANOSHEAR-density}
 \end{figure}
 
-From the force applied by the fluid on the solid, one can extract the stress within the fluid, which allows for the measurement of its viscosity $\dot{\eta}$ according to $\eta = \tau / \dot{\gamma}$ where $\tau$ is the stress applied by the fluid on the shearing wall, and $\dot{\gamma}$ the shear rate (which is imposed here) \cite{gravelle2021violations}. Here, the shear rate is approximatively $\dot{\gamma} = 16 \cdot 10^9\,\text{s}^{-1}$, and using a surface area of $A = 6 \cdot 10^{-18}\,\text{m}^2$, one gets an estimate for the shear viscosity for the confined fluid of $\eta = 6.6\,\text{mPa.s}$. The viscosity calculated at such a high shear rate may differ from the expected \textit{bulk} value. In general, it is recommended to use a lower value for the shear rate. Note that for lower shear rates, the ratio of noise-to-signal is larger, and longer simulations are needed. Another important point to keep in mind is that the viscosity of a fluid next to a solid surface is typically larger than in bulk due to interaction with the walls \cite{wolde-kidanInterplayInterfacialViscosity2021}. Therefore, one expects the present simulation to return a viscosity that is slightly larger than what would be measured in the absence of a wall.
+From the force applied by the fluid on the solid, one can extract the stress
+within the fluid, which allows for the measurement of its viscosity $\dot{\eta}$
+according to $\eta = \tau / \dot{\gamma}$ where $\tau$ is the stress applied by
+the fluid on the shearing wall, and $\dot{\gamma}$ the shear rate (which is
+imposed here) \cite{gravelle2021violations}. Here, the shear rate is
+approximatively $\dot{\gamma} = 16 \cdot 10^9\,\text{s}^{-1}$, and using a
+surface area of $A = 6 \cdot 10^{-18}\,\text{m}^2$, one gets an estimate for
+the shear viscosity for the confined fluid of $\eta = 6.6\,\text{mPa.s}$. The
+viscosity calculated at such a high shear rate may differ from the expected
+\textit{bulk} value. In general, it is recommended to use a lower value for the
+shear rate. Note that for lower shear rates, the ratio of noise-to-signal is
+larger, and longer simulations are needed. Another important point to keep in
+mind is that the viscosity of a fluid next to a solid surface is typically larger
+than in bulk due to interaction with the walls \cite{wolde-kidanInterplayInterfacialViscosity2021}.
+Therefore, one expects the present simulation to return a viscosity that is slightly
+larger than what would be measured in the absence of a wall.
 
 \subsection{Tutorial 5: Reactive silicon dioxide}
 \label{reactive-silicon-dioxide-label}
@@ -1545,16 +1923,34 @@ From the force applied by the fluid on the solid, one can extract the stress wit
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{SIO}
-\caption{A portion of the silicon dioxide structure as simulated during \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}. Atoms are colored by their charges.}
+\caption{A portion of the silicon dioxide structure as simulated during
+\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}. Atoms are colored by their charges.}
 \label{fig:SIO}
 \end{figure}
 
-\noindent The objective of this tutorial is to use the reactive force field ReaxFF to calculate the partial charges of a system undergoing deformation, as well as the formation and breaking of chemical bonds \cite{van2001reaxff, zou2012investigation}. The system simulated here is a block of silicon dioxide $\text{SiO}_2$ (Fig.\,\ref{fig:SIO}) that is deformed until rupture. Particular attention is given to the evolution of the atomic charges during the deformation of the structure, and the chemical reactions occurring due to the deformation are tracked over time.
+\noindent The objective of this tutorial is to use the reactive force field ReaxFF
+to calculate the partial charges of a system undergoing deformation, as well as
+the formation and breaking of chemical bonds \cite{van2001reaxff, zou2012investigation}.
+The system simulated here is a block of silicon dioxide $\text{SiO}_2$ (Fig.\,\ref{fig:SIO})
+that is deformed until rupture. Particular attention is given to the evolution of
+the atomic charges during the deformation of the structure, and the chemical
+reactions occurring due to the deformation are tracked over time.
 
 \subsubsection{Prepare and relax}
-Create a folder, name it \textit{RelaxSilica/}, and download the initial topology of a small amorphous silica structure called \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/silica.data}{\textit{silica.data}}. This structure was created using a classical force field called Vashishta \cite{vashishta1990interaction}. If you open the \textit{silica.data} file, you will see in the Atoms section that all silicon atoms have the same charge $q = 1.1\,\text{e}$, and all oxygen atoms have the charge $q = -0.55\,\text{e}$. This is common with classical force fields and will change once ReaxFF is used.
+Create a folder, name it \textit{RelaxSilica/}, and download the initial topology
+of a small amorphous silica structure called
+\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/silica.data}{\textit{silica.data}}.
+This structure was created using a classical force field called
+Vashishta \cite{vashishta1990interaction}. If you open the \textit{silica.data}
+file, you will see in the Atoms section that all silicon atoms have the same
+charge $q = 1.1\,\text{e}$, and all oxygen atoms have the charge $q = -0.55\,\text{e}$.
+This is common with classical force fields and will change once ReaxFF is used.
 
-The first action we need to perform here is to relax the structure with ReaxFF, which we are gonna do using molecular dynamics. To make sure that the system equilibrates nicely, let us track some parameters over time. Create an input file called \textit{input.lammps} in \textit{RelaxSilica/}, and copy the following lines into it:
+The first action we need to perform here is to relax the structure with ReaxFF,
+which we are gonna do using molecular dynamics. To make sure that the system
+equilibrates nicely, let us track some parameters over time. Create an input
+file called \textit{input.lmp} in \textit{RelaxSilica/}, and copy the following
+lines into it:
 {\normalsize \begin{verbatim}
 units real
 atom_style full
@@ -1564,36 +1960,72 @@ read_data silica.data
 mass 1 28.0855 # Si
 mass 2 15.999 # O
 \end{verbatim}}
-So far, the input is very similar to what was seen in the previous tutorials. Some basic parameters are defined (\textit{units}, \textit{atom$\_$style} and \textit{masses}), and the \textit{.data} file is imported by the \textit{read$\_$data} command. Now, let us copy three crucial lines into the \textit{input.lammps} file:
+So far, the input is very similar to what was seen in the previous tutorials.
+Some basic parameters are defined (\textit{units}, \textit{atom$\_$style} and \textit{masses}),
+and the \textit{.data} file is imported by the \textit{read$\_$data} command.
+
+Now, let us copy three crucial lines into the \textit{input.lmp} file:
 {\normalsize \begin{verbatim}
 pair_style reaxff NULL safezone 3.0 mincap 150
 pair_coeff * * reaxCHOFe.ff Si O
 fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 &
     reaxff maxiter 400
 \end{verbatim}}
-Here, the \textit{pair$\_$style reaxff} is used with no control file. The \textit{safezone} and \textit{mincap} keywords have been added to avoid memory allocation issues, which sometimes can trigger the segmentation faults and \textit{bondchk} failed errors. The \textit{pair$\_$coeff} uses the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/reaxCHOFe.ff}{\textit{reaxCHOFe.ff}} file, which must be downloaded and saved within \textit{RelaxSilica/}. For consistency with the masses and the \textit{silica.data} file, the atoms of type 1 are set as silicon (Si), and the atoms of type 2 as oxygen (O). Finally, the \textit{fix qeq/reaxff} is used to perform charge equilibration \cite{rappe1991charge}. The charge equilibration occurs at every step. The values 0.0 and 10.0 are the low and the high cutoffs, respectively, and $1.0 \text{e} -6$ is a tolerance. Finally, \textit{maxiter} sets an upper limit to the number of attempts to equilibrate the charge.
+Here, the \textit{pair$\_$style reaxff} is used with no control file. The
+\textit{safezone} and \textit{mincap} keywords have been added to avoid memory
+allocation issues, which sometimes can trigger the segmentation faults and
+\textit{bondchk} failed errors. The \textit{pair$\_$coeff} uses the
+\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/reaxCHOFe.ff}{\textit{reaxCHOFe.ff}}
+file, which must be downloaded and saved within \textit{RelaxSilica/}. For
+consistency with the masses and the \textit{silica.data} file, the atoms of type 1
+are set as silicon (Si), and the atoms of type 2 as oxygen (O). Finally, the
+\textit{fix qeq/reaxff} is used to perform charge equilibration \cite{rappe1991charge}.
+The charge equilibration occurs at every step. The values 0.0 and 10.0 are the
+low and the high cutoffs, respectively, and $1.0 \text{e} -6$ is a tolerance.
+Finally, \textit{maxiter} sets an upper limit to the number of attempts to
+equilibrate the charge.
 
-Then, let us add some commands to the \textit{input.lammps} file  to measure the evolution of the charges during the simulation:
+Then, let us add some commands to the \textit{input.lmp} file  to measure the
+evolution of the charges during the simulation:
 {\normalsize \begin{verbatim}
 group grpSi type 1
 group grpO type 2
 variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
 \end{verbatim}}
-Let us also print the charge in the \textit{.log} file by using \textit{thermo$\_$style}, and create a \textit{.lammpstrj} file for visualization. Add the following lines into the \textit{input.lammps}:
+Let us also print the charge in the \textit{.log} file by using \textit{thermo$\_$style},
+and create images of the system. Add the following lines into the \textit{input.lmp}:
 {\normalsize \begin{verbatim}
-thermo 5
+thermo 200
 thermo_style custom step temp etotal press &
     vol v_qSi v_qO
-dump dmp all custom 100 dump.lammpstrj &
+dump mydmp all image 200 dump.*.jpg type type &
+    shiny 0.1 box no 0.01 view 0 0 zoom 1.8
+dump_modify mydmp backcolor white &
+    acolor 1 yellow adiam 1 2.5 &
+    acolor 2 red adiam 2 2
+\end{verbatim}}
+
+In order to also visualize the system using an external tool, VMD, let us also 
+create a \textit{.lammpstrj} file for visualization:
+{\normalsize \begin{verbatim}
+dump dmp all custom 200 dump.lammpstrj &
     id type q x y z
 \end{verbatim}}
-Let us also use the \textit{fix reaxff/species} to evaluate what species are present within the simulation. It will be useful later when the system is deformed and some bonds are broken:
+The \textit{.lammpstrj} that will be created when running lammps will contain
+6 columns with respectively the atom IDs, the atom types, the atom charges ($q$),
+and finally the atom coordinates ($x$, $y$, and $z$).
+
+Let us also use the \textit{fix reaxff/species} to evaluate what species are
+present within the simulation. It will be useful later when the system is deformed
+and some bonds are broken:
 {\normalsize \begin{verbatim}
 fix myspec all reaxff/species 5 1 5 &
     species.log element Si O
 \end{verbatim}}
-Here, the information will be printed every 5 steps in a file called \textit{species.log}. Let us perform a very short run using the anisotropic NPT command and relax the density of the system.
+Here, the information will be printed every 5 steps in a file called \textit{species.log}.
+Let us perform a very short run using the anisotropic NPT command and relax the
+density of the system.
 {\normalsize \begin{verbatim}
 velocity all create 300.0 3482028
 fix mynpt all npt temp 300.0 300.0 100 &
@@ -1604,12 +2036,26 @@ run 5000
 
 write_data silica-relaxed.data
 \end{verbatim}}
-Run the \textit{input.lammps} file using LAMMPS. As seen from \textit{species.log}, only one species is detected, called \textit{Si192O384}, representing the entire system. As the simulation progresses, you can see that the charges of the atoms are fluctuating since the charge of every individual atom is adjusting to its local environment in real time (Fig.\,\ref{fig:SIO-charge}). Additionally, the average charge of the atoms is strongly fluctuating at the beginning of the simulation. This early fluctuation correlates with a rapid volume change of the box (Fig.\,\ref{fig:SIO-volume}), during which the inter-atomic distances are expected to quickly change.
+Run the \textit{input.lmp} file using LAMMPS. As seen from \textit{species.log},
+only one species is detected, called O384Si192, representing the entire system.
+The value of the charge of the atoms can be extracted from the \textit{dump.lammpstrj}
+file using Python. You can use this 
+\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/dump-reader.py}{\textit{dump-reader}}
+script to import the charge values into Python.
+As the simulation progresses, the charge of every atom fluctuates
+because it is adjusting to the local environment of the atom (Fig.\,\ref{fig:SIO-charge}).
+It can also be seen that the averaged charges for both silicon and oxygen
+atoms vary abruptly at the beginning of the simulation, which correlates with
+a rapid volume change of the box during which the inter-atomic distances are
+expected to quickly change (Fig.\,\ref{fig:SIO-volume}).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{SIO-charge}
-\caption{Average charge per atom of the silicon $q_\text{Si}$ (a) and oxygen $q_\text{O}$ (b) atoms during equilibration, as given by the \textit{v$\_$qSi} and \textit{v$\_$qO} variables.}
+\caption{Average charge per atom of the silicon $q_\text{Si}$ (a) and oxygen
+$q_\text{O}$ (b) atoms as a function of time $t$ during equilibration.  $q_\text{Si}$
+and $q_\text{O}$ are given by the \textit{v$\_$qSi} and \textit{v$\_$qO} variables,
+respectively.}
 \label{fig:SIO-charge}
 \end{figure}
 
@@ -1619,22 +2065,36 @@ Run the \textit{input.lammps} file using LAMMPS. As seen from \textit{species.lo
 \label{fig:SIO-volume}
 \end{figure}
 
-We can also plot the charge distribution $P(q)$, using the charge values printed in the \textit{.lammptrj} file (Fig.\,\ref{fig:SIO-distribution}). Using VMD and coloring the atoms by their charges, one can see that the atoms with the extreme-most charges are located at defects in the amorphous structure (here at the positions of the dangling oxygen groups) (Fig.\,\ref{fig:SIO-slice}).
+We can also plot the charge distribution $P(q)$, using the charge values
+printed in the \textit{dump.lammptrj} file (Fig.\,\ref{fig:SIO-distribution}).
+The \textit{dump.lammptrj} file can be opened using VMD. By coloring the atoms
+by their charges, one can see that the atoms with the extreme-most charges are
+located at defects in the amorphous structure (here at the positions of the
+dangling oxygen groups) (Fig.\,\ref{fig:SIO-slice}).
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-distribution}
-\caption{Probability distribution of charge of silicon (positive, blue) and oxygen (negative, orange) atoms during equilibration.}
+\caption{Probability distribution of charge of silicon (positive, blue) and oxygen
+(negative, orange) atoms during equilibration.}
 \label{fig:SIO-distribution}
 \end{figure}
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-slice}
-\caption{A slice of the amorphous silica, where atoms are colored by their charges. Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of about $1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of about $-0.9~\text{e}$ appear in blue. To color the atoms by their charge using VMD, use \textit{Charge} as the coloring method in the representation windows, and then tune the \textit{Color scale} in the \textit{Color control windows}.}
+\caption{A slice of the amorphous silica, where atoms are colored by their charges.
+Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of about
+$1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of about
+$-0.9~\text{e}$ appear in blue. To color the atoms by their charge using VMD,
+use \textit{Charge} as the coloring method in the representation windows, and
+then tune the \textit{Color scale} in the \textit{Color control windows}.}
 \label{fig:SIO-slice}
 \end{figure}
 
 \subsubsection{Deform the structure}
-Let us apply a deformation to the structure to force some $\text{Si}-\text{O}$ bonds to break (and eventually re-assemble). Next to \textit{RelaxSilica/}, create a folder, call it \textit{Deform/} and create a file called \textit{input.lammps} in it. Copy the same lines as previously in \textit{input.lammps}:
+Let us apply a deformation to the structure to force some $\text{Si}-\text{O}$
+bonds to break (and eventually re-assemble). Next to \textit{RelaxSilica/},
+create a folder, call it \textit{Deform/} and create a file called \textit{input.lmp}
+in it. Copy the same lines as previously in \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 units real
 atom_style full
@@ -1649,23 +2109,33 @@ pair_coeff * * ../RelaxSilica/reaxCHOFe.ff Si O
 fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 &
     reaxff maxiter 400
 \end{verbatim}}
-The only differences with the previous \textit{input.lammps} file are the paths to the \textit{.data} and \textit{.ff} files located within \textit{RelaxSilica/}. Copy the following lines as well:
+The only differences with the previous \textit{input.lmp} file are the paths to
+the \textit{.data} and \textit{.ff} files located within \textit{RelaxSilica/}.
+Copy the following lines as well:
 {\normalsize \begin{verbatim}
 group grpSi type 1
 group grpO type 2
 variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
 
-thermo 5
+thermo 200
 thermo_style custom step temp etotal &
     press vol v_qSi v_qO
-dump dmp all custom 100 dump.lammpstrj &
+
+dump mydmp all image 200 dump.*.jpg type type &
+    shiny 0.1 box no 0.01 view 0 0 zoom 1.8
+dump_modify mydmp backcolor white &
+    acolor 1 yellow adiam 1 2.5 &
+    acolor 2 red adiam 2 2
+
+dump dmp all custom 200 dump.lammpstrj &
     id type q x y z
 
 fix myspec all reaxff/species 5 1 5 species.log &
     element Si O
 \end{verbatim}}
-Then, let us use \textit{fix nvt} instead of \textit{fix npt} to apply a thermostat but no barostat:
+Then, let us use \textit{fix nvt} instead of \textit{fix npt} to apply a
+thermostat but no barostat:
 {\normalsize \begin{verbatim}
 fix mynvt all nvt temp 300.0 300.0 100
 timestep 0.5
@@ -1674,11 +2144,16 @@ Here, no barostat is used because the box volume will be imposed by the \textit{
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-deformed-charge}
-\caption{Evolution of the average charge per atom of the silicon $q_\text{Si}$ (a) and oxygen $q_\text{O}$ (b) over time $t$. The vertical dashed lines mark the beginning of the deformation, and the horizontal dotted lines denote the initial values for the average charge.}
+\caption{Evolution of the average charge per atom of the silicon $q_\text{Si}$
+(a) and oxygen $q_\text{O}$ (b) over time $t$. The vertical dashed lines mark
+the beginning of the deformation, and the horizontal dotted lines denote the
+initial values for the average charge.}
 \label{fig:SIO-deformed-charge}
 \end{figure}
 
-Let us run for 5000 steps without deformation, then apply the \textit{fix deform} for elongating progressively the box along \textit{x} during 25000 steps. Add the following line to \textit{input.lammps}:
+Let us run for 5000 steps without deformation, then apply the \textit{fix deform}
+for elongating progressively the box along \textit{x} during 25000 steps. Add
+the following line to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 run 5000
 
@@ -1688,46 +2163,71 @@ run 25000
 
 write_data silica-deformed.data
 \end{verbatim}}
-Run the \textit{input.lammps} file using LAMMPS. During the deformation, the charge values progressively evolve until the structure eventually breaks down. After the structure breaks down, the charges equilibrate near new average values that differ from the starting averages (Fig.\,\ref{fig:SIO-deformed-charge}). The difference between the initial and the final charges can be explained by the presence of defects as well as new solid/vacuum interfaces, and the fact that surface atoms typically have different charges compared to bulk atoms. There is also a strong increase in temperature during the rupture of the material (Fig.\,\ref{fig:SIO-temperature}). At the end of the deformation, one can visualize the broken material using VMD. Notice the different charge values of the atoms located near the vacuum interfaces, compared to the atoms located in the bulk of the material (Fig.\,\ref{fig:SIO-deformed}).
+Run the \textit{input.lmp} file using LAMMPS. During the deformation, the charge
+values progressively evolve until the structure eventually breaks down. After the
+structure breaks down, the charges equilibrate near new average values that differ
+from the starting averages (Fig.\,\ref{fig:SIO-deformed-charge}). The difference
+between the initial and the final charges can be explained by the presence of
+defects as well as new solid/vacuum interfaces, and the fact that surface atoms
+typically have different charges compared to bulk atoms. There is also a strong
+increase in temperature during the rupture of the material (Fig.\,\ref{fig:SIO-temperature}).
+At the end of the deformation, one can visualize the broken material using VMD.
+Notice the different charge values of the atoms located near the vacuum interfaces,
+compared to the atoms located in the bulk of the material (Fig.\,\ref{fig:SIO-deformed}).
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-temperature}
-\caption{Evolution of the temperature $T$ of the silica system over time $t$. The material ruptures near $t = 10~\text{ps}$.}
+\caption{Evolution of the temperature $T$ of the silica system over time $t$.
+The material ruptures near $t = 10~\text{ps}$.}
 \label{fig:SIO-temperature}
 \end{figure}
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-deformed}
-\caption{Amorphous silicon oxide after deformation. The atoms are colored by their charges. Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of about $1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of about $-0.9 ~ \text{e}$ appear in blue.}
+\caption{Amorphous silicon oxide after deformation. The atoms are colored by their
+charges. Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of
+about $1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of
+about $-0.9 ~ \text{e}$ appear in blue.}
 \label{fig:SIO-deformed}
 \end{figure}
 
-One can have a look at the charge distribution after deformation, as well as during the deformation (Fig.\,\ref{fig:SIO-distribution-bis}). As expected, the final charge distribution slightly differs from the previously calculated. In my case, no new species were formed during the simulation, as can be seen from the \textit{species.log} file:
+One can have a look at the charge distribution after deformation, as well as during
+the deformation (Fig.\,\ref{fig:SIO-distribution-bis}). As expected, the final
+charge distribution slightly differs from the previously calculated. If
+no new species were formed during the simulation, the \textit{species.log} file
+should resemble:
 {\normalsize \begin{verbatim}
-#  Timestep   No_Moles   No_Specs  Si192O384
+#  Timestep   No_Moles   No_Specs  O384Si192
         5            1          1          1
 (...)
-#  Timestep   No_Moles   No_Specs  Si192O384
+#  Timestep   No_Moles   No_Specs  O384Si192
     30000            1          1          1
 \end{verbatim}}
-Sometimes, $\text{O}_2$ molecules are formed during the deformation. If this is the case, a new column \textit{O2} appears in the \textit{species.log} file.
+Sometimes, $\text{O}_2$ molecules are formed during the deformation. If this is
+the case, a new column \textit{O2} appears in the \textit{species.log} file.
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-distribution-bis}
-\caption{Probability distribution of charge of silicon (positive, blue) and oxygen (negative, orange) after deformation. The stars correspond to the charge distribution during deformation.}
+\caption{Probability distribution of charge of silicon (positive, blue) and oxygen
+(negative, orange) after deformation. The stars correspond to the charge distribution
+during deformation.}
 \label{fig:SIO-distribution-bis}
 \end{figure}
 
 \subsubsection{Decorate the surface}
 In ambient conditions, some of the surface $\text{SiO}_2$ atoms are chemically
-passivated by forming covalent bonds with hydrogen (H) atom \cite{sulpizi2012silica}. Let us add hydrogen atoms randomly to the cracked silica and observe how the system evolves.  Next to \textit{RelaxSilica/} and \textit{Deform/}, create a folder, and call it \textit{Decorate/}. Then, let us modify the previously generated data file \textit{silica-deformed.data} and make space for a third atom type. Copy \textit{silica-deformed.data} from the \textit{Deform/} folder, and modify the first lines as follow:
+passivated by forming covalent bonds with hydrogen (H) atom \cite{sulpizi2012silica}.
+Let us add hydrogen atoms randomly to the cracked silica and observe how the
+system evolves.  Next to \textit{RelaxSilica/} and \textit{Deform/}, create a folder,
+and call it \textit{Decorate/}. Then, let us modify the previously generated data
+file \textit{silica-deformed.data} and make space for a third atom type.
+Copy \textit{silica-deformed.data} from the \textit{Deform/} folder, and modify
+the first lines as follows:
 {\normalsize \begin{verbatim}
 576 atoms
 3 atom types
 
--12.15958814509652 32.74516585669389 xlo xhi
-2.316358282925984 18.26921942866687 ylo yhi
-1.3959542953413138 19.189623416252907 zlo zhi
+(...)
 
 Masses
 
@@ -1737,7 +2237,8 @@ Masses
 
 (...)
 \end{verbatim}}
-Create a file called \textit{input.lammps} into the \textit{Decorate/} folder, and copy the following lines into it:
+Create a file called \textit{input.lmp} into the \textit{Decorate/} folder, and
+copy the following lines into it:
 {\normalsize \begin{verbatim}
 units real
 atom_style full
@@ -1746,29 +2247,39 @@ read_data silica-deformed.data
 displace_atoms all move -12 0 0 # optional
 
 pair_style reaxff NULL safezone 3.0 mincap 150
-pair_coeff * * ../RelaxSilica/reaxCHOFe.ff Si O H
+pair_coeff * * ../RelaxSilica/reaxCHOFe.ff &
+    Si O H
 fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 &
     reaxff maxiter 400
 \end{verbatim}}
-Here, the \textit{displace$\_$atoms} command was used to move the center of the crack near the center of the box. This step is optional but makes the visualization of the interface in VMD easier. A different value for the shift may be needed in your case, depending on the location of the crack. A difference with the previous input is that three atom types are specified
-in the \textit{pair$\_$coeff} command, \textit{Si O H}, instead of two.
+Here, the \textit{displace$\_$atoms} command was used to move the center of the
+crack near the center of the box. This step is optional but makes the visualization
+of the interface in VMD easier. A different value for the shift may be needed in
+your case, depending on the location of the crack. A difference with the previous
+input is that three atom types are specified in the \textit{pair$\_$coeff} command,
+\textit{Si O H}, instead of two.
 
-Then, let us adapt some familiar commands to measure the charges of all three types of atoms, and output the charge values into log files:
+Then, let us adapt some familiar commands to measure the charges of all three
+types of atoms, and output the charge values into log files:
 {\normalsize \begin{verbatim}
 group grpSi type 1
 group grpO type 2
 group grpH type 3
 variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
-variable qH equal charge(grpH)/(count(grpH)+1e-10)
+variable qH equal &
+    charge(grpH)/(count(grpH)+1e-10)
 
 thermo 5
-thermo_style custom step temp etotal press vol &
-    v_qSi v_qO v_qH
-fix myspec all reaxff/species 5 1 5 species.log &
-    element Si O H
+thermo_style custom step temp etotal press &
+    vol v_qSi v_qO v_qH
+fix myspec all reaxff/species 5 1 5 & 
+    species.log element Si O H
 \end{verbatim}}
-Here, the $+1\text{e}-10$ was added to the denominator of the \textit{variable qH} to avoid dividing by 0 at the beginning of the simulation. Finally, let us create a loop with 10 steps, and create two hydrogen atoms at random locations at every step:
+Here, the $+1\text{e}-10$ was added to the denominator of the \textit{variable qH}
+to avoid dividing by 0 at the beginning of the simulation. Finally, let us
+create a loop with 10 steps, and create two hydrogen atoms at random locations at
+every step:
 {\normalsize \begin{verbatim}
 fix mynvt all nvt temp 300.0 300.0 100
 timestep 0.5
@@ -1780,29 +2291,36 @@ variable seed equal 35672+${a}
 create_atoms 3 random 2 ${seed} NULL &
     overlap 2.6 maxtry 50
 group grpH type 3
+
 run 2000
 write_dump all custom dump.${a}.lammpstrj &
     id type q x y z
+undump mydmp
 
 next a
 jump SELF loop
 
 write_data decorated.data
 \end{verbatim}}
-Here, a different \textit{lammpstrj} file is created for each step of the loop to avoid creating dump files with varying numbers of atoms, which VMD can't read. Once the simulation is over, it can be seen from the \textit{species.log} file that
-all the created hydrogen atoms reacted with the $\text{SiO}_{2}$ structure to form surface groups (such as hydroxyl (-OH) groups).
+Here, a different \textit{lammpstrj} file is created for each step of the loop
+to avoid creating dump files with varying numbers of atoms, which VMD can't read.
+Once the simulation is over, it can be seen from the \textit{species.log} file that
+all the created hydrogen atoms reacted with the $\text{SiO}_{2}$ structure to
+form surface groups (such as hydroxyl (-OH) groups).
 {\normalsize \begin{verbatim}
-# Timestep   No_Moles   No_Specs  Si192O384  H
-  5          3          2         1          2
 (...)
-# Timestep   No_Moles No_Specs Si192O384H20
+# Timestep   No_Moles No_Specs H20O384Si192
   20000      1        1        1
 \end{verbatim}}
-At the end of the simulation, hydroxyl groups can be seen at the interfaces (Fig.\,\ref{fig:SIO-decorated}).
+At the end of the simulation, hydroxyl (-OH) groups can be seen at the interfaces
+(Fig.\,\ref{fig:SIO-decorated}).
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-decorated}
-\caption{Cracked silicon oxide after the addition of hydrogen atoms. The atoms are colored by their charges. Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of about $1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of about $-0.9 ~ \text{e}$ appear in blue.}
+\caption{Cracked silicon oxide after the addition of hydrogen atoms. The atoms
+are colored by their charges. Dangling oxygen groups appear in greenish, bulk
+Si atoms with a charge of about $1.8~\text{e}$  appear in red/orange, and bulk
+O atoms with a charge of about $-0.9 ~ \text{e}$ appear in blue.}
 \label{fig:SIO-decorated}
 \end{figure}
 
