@@ -2330,17 +2330,32 @@ O atoms with a charge of about $-0.9 ~ \text{e}$ appear in blue.}
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{GCMC}
-\caption{Water molecules adsorbed in cracked silica (SiO$_2$) material as simulated during \hyperref[gcmc-silica-label]{Tutorial 6}. Water molecules are colored in cyan and white, oxygen (O) atoms from SiO$_2$ in red, and silicon (Si) atoms in yellow.}
+\caption{Water molecules adsorbed in cracked silica (SiO$_2$) material as simulated
+during \hyperref[gcmc-silica-label]{Tutorial 6}. Water molecules are colored in
+cyan and white, oxygen (O) atoms from SiO$_2$ in red, and silicon (Si) atoms in yellow.}
 \label{fig:GCMC}
 \end{figure}
 
-\noindent The objective of this tutorial is to combine molecular dynamics and grand canonical Monte Carlo simulations to compute the adsorption of water molecules in cracked silica material (Fig.\,\ref{fig:GCMC}). This tutorial illustrates the use of the grand canonical ensemble in molecular simulation, an open ensemble in which the number of atoms or molecules within the simulation box is not constant. When using the grand canonical ensemble, it is possible to impose the chemical potential (or pressure) of a given fluid in a nanoporous structure.
+\noindent The objective of this tutorial is to combine molecular dynamics and
+grand canonical Monte Carlo simulations to compute the adsorption of water
+molecules in cracked silica material (Fig.\,\ref{fig:GCMC}). This tutorial
+illustrates the use of the grand canonical ensemble in molecular simulation, an
+open ensemble in which the number of atoms or molecules within the simulation
+box is not constant. When using the grand canonical ensemble, it is possible to
+impose the chemical potential (or pressure) of a given fluid in a nanoporous structure.
 
 \subsubsection{Generation of the silica block}
-\noindent Let us first generate a block of amorphous silica ($\text{SiO}_2$). To do so, we are going to replicate a building block containing 3 Si and 6 O atoms. Create two folders side by side, and name them respectively \textit{Potential/}
-and \textit{SilicaBlock/}. The initial data file for the SiO atoms called \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/SiO.data}{\textit{SiO.data}} must be downloaded and saved in \textit{SilicaBlock/}. This data file contains the coordinates of the 9 atoms, their masses, and their charges.
+\noindent Let us first generate a block of amorphous silica ($\text{SiO}_2$).
+To do so, we are going to replicate a building block containing 3 Si and 6 O atoms.
+Create two folders side by side, and name them respectively \textit{Potential/}
+and \textit{SilicaBlock/}. The initial data file for the SiO atoms called
+\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/SiO.data}{\textit{SiO.data}}
+must be downloaded and saved in \textit{SilicaBlock/}. This data file contains
+the coordinates of the 9 atoms, their masses, and their charges.
 
-Let us replicate these atoms using LAMMPS, and apply an annealing procedure to obtain a block of amorphous silica. Create a new input file called \textit{input.lammps} in the \textit{SilicaBlock/} folder, and copy
+Let us replicate these atoms using LAMMPS, and apply an annealing procedure to
+obtain a block of amorphous silica. Create a new input file called \textit{input.lmp}
+in the \textit{SilicaBlock/} folder, and copy
 the following lines into it:
 {\normalsize \begin{verbatim}
 units metal
@@ -2350,38 +2365,45 @@ pair_style vashishta
 neighbor 1.0 bin
 neigh_modify delay 1
 \end{verbatim}}
-The main difference from some of the previous tutorials is the use of the \textit{Vashishta} pair style. The Vashishta potential is a bond-angle energy-based potential, it deduces the bonds between atoms from their relative positions \cite{vashishta1990interaction}.
+The main difference from some of the previous tutorials is the use of the \textit{Vashishta}
+pair style. The Vashishta potential is a bond-angle energy-based potential, it deduces
+the bonds between atoms from their relative positions \cite{vashishta1990interaction}.
 
-Let us then import the system consisting of 9 atoms, and replicate it four times in all three directions of space, thus creating a system with 576 atoms. Add the following lines into \textit{input.lammps}:
+Let us then import the system consisting of 9 atoms, and replicate it four times
+in all three directions of space, thus creating a system with 576 atoms. Add the
+following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 read_data SiO.data
 replicate 4 4 4
 \end{verbatim}}
-Then, let us specify the pair coefficients by indicating that the first atom type is \textit{Si} and the second is \textit{O}. Let us also add a dump command to print out the positions of the atoms every 5000 steps:
+Then, let us specify the pair coefficients by indicating that the first atom type
+is \textit{Si} and the second is \textit{O}. Let us also add a dump command to
+print out the positions of the atoms every 5000 steps:
 {\normalsize \begin{verbatim}
 pair_coeff * * &
     ../Potential/SiO.1990.vashishta Si O
 \end{verbatim}}
-Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/SiO.1990.vashishta}{SiO.1990.vashishta}, and copy it within the \textit{Potential/} folder.
+Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/SiO.1990.vashishta}{SiO.1990.vashishta},
+and copy it within the \textit{Potential/} folder.
 
-Let us add some commands to \textit{input.lammps} to help us follow the evolution of the system, such as its temperature, volume, and potential energy:
+Let us add a \textit{dump image} command to \textit{input.lmp} to follow the
+evolution of the system with time:
 {\normalsize \begin{verbatim}
-dump dmp all atom 5000 dump.lammpstrj
-variable myvol equal vol
-variable mylx equal lx
-variable myly equal ly
-variable mylz equal lz
-variable mypot equal pe
-variable mytemp equal temp
-fix myat1 all ave/time 10 100 1000 v_mytemp &
-    file temperature.dat
-fix myat2 all ave/time 10 100 1000 v_myvol &
-    v_mylx v_myly v_mylz file dimensions.dat
-fix myat3 all ave/time 10 100 1000 v_mypot &
-    file potential-energy.dat
+dump mydmp all image 200 dump.*.jpg type type &
+    shiny 0.1 box no 0.01 view 0 0 zoom 1.2
+dump_modify mydmp backcolor white &
+    acolor 1 yellow adiam 1 2.5 &
+    acolor 2 red adiam 2 2
 thermo 1000
+thermo_style custom step temp etotal & 
+    vol lx ly lz
 \end{verbatim}}
-Finally, let us create the last part of our script. The annealing procedure is made of four consecutive runs. First, a $50\,\text{ps}$ phase at $T = 6000\,\text{K}$ and isotropic pressure coupling with desired pressure $p = 100\,\text{atm}$:
+Thanks to the \textit{thermo$\_$style custom} command, the box size along each direction
+will be printed in the log file.
+
+Finally, let us create the last part of our script. The annealing procedure is
+made of four consecutive runs. First, a $50\,\text{ps}$ phase at $T = 6000\,\text{K}$
+and isotropic pressure coupling with desired pressure $p = 100\,\text{atm}$:
 {\normalsize \begin{verbatim}
 velocity all create 6000 4928459 &
     rot yes dist gaussian
@@ -2390,13 +2412,16 @@ fix npt1 all npt temp 6000 6000 0.1 &
 timestep 0.001
 run 50000
 \end{verbatim}}
-Then, a second phase during which the system is cooled down from $T = 6000\,\text{K}$ to $T = 4000\,\text{K}$. An anisotropic pressure coupling is used, allowing all three dimensions of the box to evolve independently from one another:
+Then, a second phase during which the system is cooled down from $T = 6000\,\text{K}$
+to $T = 4000\,\text{K}$. An anisotropic pressure coupling is used, allowing all
+three dimensions of the box to evolve independently from one another:
 {\normalsize \begin{verbatim}
 fix npt1 all npt temp 6000 4000 0.1 &
     aniso 100 100 1
 run 50000
 \end{verbatim}}
-Then, let us cool down the system further while also reducing the pressure, and then perform a small equilibration step at the final desired condition, $T = 300\,\text{K}$ and $p = 1\,\text{atm}$.
+Then, let us cool down the system further while also reducing the pressure, and then
+perform a small equilibration step at the final desired condition, $T = 300\,\text{K}$ and $p = 1\,\text{atm}$.
 {\normalsize \begin{verbatim}
 fix npt1 all npt temp 4000 300 0.1 &
     aniso 100 1 1
@@ -2406,33 +2431,49 @@ fix npt1 all npt temp 300 300 0.1 &
 run 50000
 write_data amorphousSiO.data
 \end{verbatim}}
-Here, an isotropic barostat is used for the melted phase at $T = 6000\,\text{K}$, and an anisotropic barostat is used for all following phases. With the anisotropic barostat, all three directions of space are adjusted independently from one another. An anisotropic barostat is usually a better choice for a solid phase. For a liquid or a gas, an isotropic barostat is usually the best choice.
+Here, an isotropic barostat is used for the melted phase at $T = 6000\,\text{K}$,
+and an anisotropic barostat is used for all following phases. With the anisotropic
+barostat, all three directions of space are adjusted independently from one another.
+An anisotropic barostat is usually a better choice for a solid phase. For a liquid
+or a gas, an isotropic barostat is usually the best choice.
 
-The simulation takes about 15-20 minutes on 4 CPU cores. Let us check the evolution of the temperature from the \textit{temperature.dat} file. Apart from an initial spike (which may be due to an initial bad configuration, probably harmless here), the temperature follows well the desired annealing procedure  (Fig.\,\ref{fig:GCMC-temperature}). Let us also make sure that the box was indeed deformed isotropically during the first stage of the simulation, and then anisotropically by plotting the evolution of the box dimensions over time (Fig.\,\ref{fig:GCMC-dimension}). After running the simulation, the final LAMMPS topology file called \textit{amorphousSiO.data} will be located in \textit{SilicaBlock/} (Fig.\,\ref{fig:GCMC-snapshot}).
+Run the simulation using LAMMPS. From the \textit{Charts} window, the temperature
+can be seen to follow well the desired annealing procedure (Fig.\,\ref{fig:GCMC-temperature}).
+The evolution of the box dimensions over time confirms that the box was indeed
+deformed isotropically during the first stage of the simulation, and then anisotropically
+(Fig.\,\ref{fig:GCMC-dimension}). After running
+the simulation, the final LAMMPS topology file called \textit{amorphousSiO.data}
+will be located in \textit{SilicaBlock/} (Fig.\,\ref{fig:GCMC-snapshot}).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GCMC-temperature}
-\caption{Temperature $T$ of the system during annealing. The vertical dashed lines mark the transition between the different phases of the simulation.}
+\caption{Temperature $T$ of the system during annealing. The vertical dashed lines
+mark the transition between the different phases of the simulation.}
 \label{fig:GCMC-temperature}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GCMC-dimension}
-\caption{Box dimensions along $x$ (blue), $y$ (orange), and $z$ (dark) during annealing. The vertical dashed lines mark the transition between the different phases of the simulation.}
+\caption{Box dimensions along $x$ (blue), $y$ (orange), and $z$ (dark) during
+annealing. The vertical dashed lines mark the transition between the different
+phases of the simulation.}
 \label{fig:GCMC-dimension}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=0.9\linewidth]{GCMC-snapshot}
-\caption{Final amorphous silica ($\text{SiO}_2$). The silicon atoms are represented in yellow, and the oxygen atoms in red.}
+\caption{Final amorphous silica ($\text{SiO}_2$). The silicon atoms are
+represented in yellow, and the oxygen atoms in red.}
 \label{fig:GCMC-snapshot}
 \end{figure}
 
 \subsubsection{Cracking the silica}
-Let us dilate the block of silica until a crack forms. Create a new folder called \textit{Cracking/} next to \textit{SilicaBlock/}, as well as a new \textit{input.lammps} file starting with familiar lines as previously:
+Let us dilate the block of silica until a crack forms. Create a new folder
+called \textit{Cracking/} next to \textit{SilicaBlock/}, as well as a new
+\textit{input.lmp} file starting with familiar lines as previously:
 {\normalsize \begin{verbatim}
 units metal
 boundary p p p
@@ -2447,7 +2488,10 @@ pair_coeff * * &
     ../Potential/SiO.1990.vashishta Si O
 dump dmp all atom 1000 dump.lammpstrj
 \end{verbatim}}
-Let us progressively increase the size of the box in the $x$ direction, thus forcing the silica to deform and eventually crack. To do so, a loop based on the jump command is used. At every step of the loop, the box dimension over $x$ will be multiplied by a scaling factor 1.005. Add the following lines into the \textit{input.lammps}:
+Let us progressively increase the size of the box in the $x$ direction, thus forcing
+the silica to deform and eventually crack. To do so, a loop based on the jump command
+is used. At every step of the loop, the box dimension over $x$ will be multiplied
+by a scaling factor 1.005. Add the following lines into the \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 fix nvt1 all nvt temp 300 300 0.1
 timestep 0.001
@@ -2457,25 +2501,42 @@ label loop
 change_box all x scale 1.005 remap
 run 2000
 next var
-jump input.lammps loop
+jump input.lmp loop
 run 20000
 write_data dilatedSiO.data
 \end{verbatim}}
-\noindent The \textit{fix nvt} is used to control the temperature of the system, while the \textit{change$\_$box} command
-imposes incremental deformations of the box. Different scaling factors or different numbers of steps can be used to generate different defects in the silica. After the expansion, a final equilibration step of a duration of 20 picoseconds is performed. If you look at the \textit{dump.lammpstrj} file using VMD, you can see the expansion occurring step-by-step, and the atoms progressively adjusting to the box dimensions. At first, the deformations are reversible (elastic regime). At some point, bonds start breaking and dislocations appear (plastic regime). The final system is shown in Fig.\,\ref{fig:GCMC-cracked}.
+The \textit{fix nvt} is used to control the temperature of the system, while the
+\textit{change$\_$box} command imposes incremental deformations of the box. Different
+scaling factors or different numbers of steps can be used to generate different
+defects in the silica. After the expansion, a final equilibration step of a duration
+of 20 picoseconds is performed. If you look at the \textit{dump.lammpstrj} file
+using VMD, you can see the expansion occurring step-by-step, and the atoms
+progressively adjusting to the box dimensions. At first, the deformations are
+reversible (elastic regime). At some point, bonds start breaking and dislocations
+appear (plastic regime). The final system is shown in Fig.\,\ref{fig:GCMC-cracked}.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GCMC-cracked}
-\caption{Block of silica after deformation. The silicon atoms are represented in yellow, and the oxygen atoms in red. Some holes are visible.}
+\caption{Block of silica after deformation. The silicon atoms are represented in
+yellow, and the oxygen atoms in red. Some holes are visible.}
 \label{fig:GCMC-cracked}
 \end{figure}
 
 \subsubsection{Adding water}
-\noindent In order to add the water molecules to the silica, we are going to use the Monte Carlo method in the grand canonical ensemble (GCMC). In short, the system is put into contact with a virtual reservoir of a given chemical potential $\mu$, and multiple attempts to insert water molecules at random positions are made. Each attempt is either accepted or rejected based on energy considerations. Find more details in classical textbooks like Ref.~\citenum{frenkel2023understanding}.
+\noindent In order to add the water molecules to the silica, we are going to use
+the Monte Carlo method in the grand canonical ensemble (GCMC). In short, the
+system is put into contact with a virtual reservoir of a given chemical potential
+$\mu$, and multiple attempts to insert water molecules at random positions are
+made. Each attempt is either accepted or rejected based on energy considerations.
+Find more details in classical textbooks like Ref.~\citenum{frenkel2023understanding}.
 
 \paragraph{Using hydrid potentials}
-\noindent Create a new folder called \textit{Addingwater/}. Download and save the water molecule template called \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/H2O.mol}{\textit{H2O.mol}} within the \textit{Addingwater/} folder. Create a new input file called \textit{input.lammps} within \textit{Addingwater/}, and copy the following lines into it:
+\noindent Create a new folder called \textit{Addingwater/}. Download and save
+the water molecule template called
+\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/H2O.mol}{\textit{H2O.mol}}
+within the \textit{Addingwater/} folder. Create a new input file called \textit{input.lmp}
+within \textit{Addingwater/}, and copy the following lines into it:
 {\normalsize \begin{verbatim}
 units metal
 boundary p p p
@@ -2488,17 +2549,28 @@ kspace_style pppm/tip4p 1.0e-4
 bond_style harmonic
 angle_style harmonic
 \end{verbatim}}
-There are several differences with the previous input files used in this tutorial. From now on, the system will combine water and silica, and therefore two force fields are combined: Vashishta for $\text{SiO}_2$, and lj/cut/tip4p/long for TIP4P water model (here
-the TIP4P/2005 model is used \cite{abascal2005general}). Combining the two force fields is done using the \textit{hybrid/overlay} pair style. The \textit{kspace} solver is used to calculate the long-range Coulomb interactions associated with \textit{tip4p/long}. Finally, the style for the bonds and angles of the water molecules are defined, although they are not important since a rigid water model is used here.
+There are several differences with the previous input files used in this tutorial.
+From now on, the system will combine water and silica, and therefore two force
+fields are combined: Vashishta for $\text{SiO}_2$, and lj/cut/tip4p/long for
+TIP4P water model (here the TIP4P/2005 model is used \cite{abascal2005general}).
+Combining the two force fields is done using the \textit{hybrid/overlay} pair
+style. The PPPM solver \cite{luty1996calculating} is set with the \textit{kspace} 
+command, and is used to calculate the long-range Coulomb interactions associated
+with \textit{tip4p/long}. Finally, the style for the bonds
+and angles of the water molecules are defined, although they are not important
+since TIP4P/2005 is a rigid water model.
 
-Before going further, we also need to make a few changes to our data file. Currently, \textit{dilatedSiO.data} only includes two atom types, but we need four. Copy the previously generated \textit{dilatedSiO.data} file within \textit{Addingwater/}. Currently, \textit{dilatedSiO.data} starts with:
+Before going further, we also need to make a few changes to our data file.
+Currently, \textit{dilatedSiO.data} only includes two atom types, but we need four.
+Copy the previously generated \textit{dilatedSiO.data} file within \textit{Addingwater/}.
+Currently, \textit{dilatedSiO.data} starts with:
 {\normalsize \begin{verbatim}
 576 atoms
 2 atom types
 
--5.512084438507452 26.09766215010596 xlo xhi
--0.12771230207837192 20.71329001367807 ylo yhi
-3.211752393088563 17.373825318513106 zlo zhi
+-3.517115256285223 24.10269296788487 xlo xhi
+0.5721674106566077 20.013410300943264 ylo yhi
+1.3237302567479095 19.261847454851658 zlo zhi
 
 Masses
 
@@ -2509,8 +2581,9 @@ Atoms # full
 
 (...)
 \end{verbatim}}
-Make the following changes to allow for the addition of water molecules. Modify the file so that it looks like the following
-(with 4 atom types, 1 bond type, 1 angle type, and four masses):
+Make the following changes to allow for the addition of water molecules. Modify
+the file so that it looks like the following (with 4 atom types, 1 bond type,
+1 angle type, and four masses):
 {\normalsize \begin{verbatim}
 576 atoms
 4 atom types
@@ -2521,9 +2594,9 @@ Make the following changes to allow for the addition of water molecules. Modify 
 1 extra angle per atom
 2 extra special per atom
 
-0.910777522101565 19.67480018949893 xlo xhi
-2.1092682236518137 18.476309487947546 ylo yhi
--4.1701120819606885 24.75568979356097 zlo zhi
+-3.517115256285223 24.10269296788487 xlo xhi
+0.5721674106566077 20.013410300943264 ylo yhi
+1.3237302567479095 19.261847454851658 zlo zhi
 
 Masses
 
@@ -2536,9 +2609,11 @@ Atoms # full
 
 (...)
 \end{verbatim}}
-Doing so, we anticipate that there will be 4 atom types in the simulations, with O and H of $\text{H}_2\text{O}$ having indexes 3 and 4,
-respectively. There will also be 1 bond type and 1 angle type. The extra bond, extra angle, and extra special lines
-are here for memory allocation. We can continue to fill in the \textit{input.lammps} file, by adding the system definition:
+Doing so, we anticipate that there will be 4 atom types in the simulations,
+with O and H of $\text{H}_2\text{O}$ having indexes 3 and 4, respectively. There
+will also be 1 bond type and 1 angle type. The extra bond, extra angle, and
+extra special lines are here for memory allocation. We can continue to fill in
+the \textit{input.lmp} file, by adding the system definition:
 {\normalsize \begin{verbatim}
 read_data dilatedSiO.data
 molecule h2omol H2O.mol
@@ -2549,7 +2624,13 @@ lattice none 1
 group SiO type 1 2
 group H2O type 3 4
 \end{verbatim}}
-After reading the data file and defining the h2omol molecule from the \textit{H2O.txt} file, the \textit{create$\_$atoms} command is used to include some water molecules in the system on a simple cubic lattice. Not adding a molecule before starting the GCMC steps usually leads to failure. Note that here, most water molecules overlap with the silica. These overlapping water molecules will have to be deleted before starting the simulation (see below). Then, add the following settings to \textit{input.lammps}:
+After reading the data file and defining the h2omol molecule from the \textit{H2O.txt}
+file, the \textit{create$\_$atoms} command is used to include some water molecules
+in the system on a simple cubic lattice. Not adding a molecule before starting
+the GCMC steps usually leads to failure. Note that here, most water molecules
+overlap with the silica. These overlapping water molecules will have to be
+deleted before starting the simulation (see below). Then, add the following
+settings to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 pair_coeff * * vashishta &
     ../Potential/SiO.1990.vashishta &
@@ -2561,28 +2642,49 @@ pair_coeff 3 3 lj/cut/tip4p/long 0.008 3.1589
 pair_coeff 4 4 lj/cut/tip4p/long 0.0 0.0
 bond_coeff 1 0 0.9572
 angle_coeff 1 0 104.52
+\end{verbatim}}
+The force field Vashishta applies only to Si (type 1) and O of $\text{SiO}_2$ (type 2),
+and not to the O and H of $\text{H}_2\text{O}$, thanks to the NULL parameters
+used for atoms of types 3 and 4. Pair coefficients for the lj/cut/tip4p/long
+potential are defined between O($\text{H}_2\text{O}$) and between H($\text{H}_2\text{O}$)
+atoms, as well as between O($\text{SiO}_2$)-O($\text{H}_2\text{O}$) and
+Si($\text{SiO}_2$)-O($\text{H}_2\text{O}$). Therefore, the fluid-fluid and the
+fluid-solid interactions will be dealt with by the lj/cut/tip4p/long potential.
 
+Add the following lines as well:
+{\normalsize \begin{verbatim}
 variable oxygen atom "type==3"
 group oxygen dynamic all var oxygen
 variable nO equal count(oxygen)
-fix myat1 all ave/time 100 10 1000 v_nO &
-    file numbermolecule.dat
+thermo_style custom step temp etotal v_nO
+thermo 1000
 
 fix shak H2O shake 1.0e-4 200 0 b 1 a 1 &
     mol h2omol
 \end{verbatim}}
-The force field Vashishta applies only to Si (type 1) and O of $\text{SiO}_2$ (type 2), and not to the O and H of $\text{H}_2\text{O}$, thanks to the NULL parameters used for atoms of types 3 and 4. Pair coefficients for the lj/cut/tip4p/long potential are defined between O($\text{H}_2\text{O}$) and between H($\text{H}_2\text{O}$) atoms, as well as between O($\text{SiO}_2$)-O($\text{H}_2\text{O}$) and Si($\text{SiO}_2$)-O($\text{H}_2\text{O}$). Therefore, the fluid-fluid and the fluid-solid interactions will be dealt with by the lj/cut/tip4p/long potential. The number of oxygen atoms from water molecules (i.e. the number of molecules) will be printed in the file \textit{numbermolecule.dat}. The SHAKE algorithm is used to maintain the shape of the water molecules over time. Some of
-these features have been seen in previous tutorials.
+The number of oxygen atoms from water molecules (i.e. the number of molecules)
+is calculated by the \textit{nO} variable, and will be printed in the log file.
+The SHAKE algorithm is used to maintain the shape of the water molecules over time,
+as seen in \hyperref[sheared-confined-label]{tutorial 4}.
 
-Finally, let us delete the overlapping water molecules, and print the
-positions of the remaining atoms in a \textit{.lammpstrj} file by adding the following lines into \textit{input.lammps}:
+Finally, let us delete the overlapping water molecules, and create images
+of the system using \textit{dump image}:
 {\normalsize \begin{verbatim}
 delete_atoms overlap 2 H2O SiO mol yes
-dump dmp all atom 1000 dump.init.lammpstrj
+
+dump mydmp all image 1000 dump.*.jpg type type &
+    shiny 0.1 box yes 0.01 view 0 0 zoom 1.2
+dump_modify mydmp backcolor white &
+    acolor 1 yellow adiam 1 2.5 &
+    acolor 2 red adiam 2 2 &
+    acolor 3 cyan adiam 3 2 &
+    acolor 4 white adiam 4 1 &
+    boxcolor black
 \end{verbatim}}
 
 \paragraph{GCMC simulation}
-To prepare for the GCMC simulation, let us make the first equilibration step by adding the following lines into \textit{input.lammps}:
+To prepare for the GCMC simulation, let us make the first equilibration step by
+adding the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 compute_modify thermo_temp dynamic yes
 compute ctH2O H2O temp
@@ -2593,58 +2695,70 @@ compute ctSiO SiO temp
 fix mynvt2 SiO nvt temp 300 300 0.1
 fix_modify mynvt2 temp ctSiO
 timestep 0.001
-thermo 1000
+
 run 5000
 \end{verbatim}}
-Two different thermostats are used for $\text{SiO}_2$ and $\text{H}_2\text{O}$, respectively. Using separate thermostats is usually better when the system contains two separate species, such as a solid and a liquid. It is particularly important to use two thermostats
-here because the number of water molecules will fluctuate with time. The \textit{compute$\_$modify} with
-\textit{dynamic yes} for water is used to specify that the number of molecules is not constant.
+Two different thermostats are used for $\text{SiO}_2$ and $\text{H}_2\text{O}$,
+respectively. Using separate thermostats is usually better when the system contains
+two separate species, such as a solid and a liquid. It is particularly important
+to use two thermostats here because the number of water molecules will fluctuate
+with time. The \textit{compute$\_$modify} with \textit{dynamic yes} for water is
+used to specify that the number of molecules is not constant.
 
-Finally, let us use the \textit{fix gcmc} and perform the grand canonical Monte Carlo steps. Add the following lines into \textit{input.lammps}:
+Finally, let us use the \textit{fix gcmc} and perform the grand canonical Monte
+Carlo steps. Add the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 variable tfac equal 5.0/3.0
-variable xlo equal xlo+0.1
-variable xhi equal xhi-0.1
-variable ylo equal ylo+0.1
-variable yhi equal yhi-0.1
-variable zlo equal zlo+0.1
-variable zhi equal zhi-0.1
-region system block ${xlo} ${xhi} &
-    ${ylo} ${yhi} ${zlo} ${zhi}
 fix fgcmc H2O gcmc 100 100 0 0 65899 300 &
     -0.5 0.1 mol h2omol tfac_insert ${tfac} &
     group H2O shake shak full_energy &
-    pressure 10000 region system
+    pressure 10000
 run 45000
-write_data SiOwithwater.data
-write_dump all atom dump.lammpstrj
 \end{verbatim}}
-The \textit{tfac$\_$insert} option ensures the correct estimate for the temperature of the inserted water molecules by taking into account the internal degrees of freedom. Running this simulation, you should see the number of molecules increasing progressively. When using the pressure argument, LAMMPS ignores the value of the chemical potential (here $\mu = -0.5\,\text{eV}$, which corresponds roughly to ambient conditions, i.e. to a relative humidity $\text{RH} \approx 50\,\%$ \cite{gravelle2020multi}.) The large pressure value of 10000 bars was chosen to ensure that some successful insertions of molecules would occur during the extremely short duration of this simulation.
+The \textit{tfac$\_$insert} option ensures the correct estimate for the temperature
+of the inserted water molecules by taking into account the internal degrees of
+freedom. Running this simulation, you should see the number of molecules increasing
+progressively. When using the pressure argument, LAMMPS ignores the value of the
+chemical potential (here $\mu = -0.5\,\text{eV}$, which corresponds roughly to
+ambient conditions, i.e. to a relative humidity $\text{RH} \approx 50\,\%$ \cite{gravelle2020multi}.)
+The large pressure value of 10000 bars was chosen to ensure that some successful
+insertions of molecules would occur during the extremely short duration of this simulation.
 
-When you run the simulation, the log file indicates that 840 atoms (i.e. 280 molecules) were added by the \textit{create$\_$atoms} command (the exact number you get may differ):
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{GCMC-number}
+\caption{Number of water molecules $N_\text{H2O}$ as a function of the time $t$.
+The dashed vertical line marks the beginning of the GCMC step.}
+\label{fig:GCMC-number}
+\end{figure}
+
+When you run the simulation, the log file indicates that 840 atoms (i.e. 280 molecules)
+were added by the \textit{create$\_$atoms} command (the exact number you get may differ):
 {\normalsize \begin{verbatim}
 Created 840 atoms
 \end{verbatim}}
-You can also see that 258 molecules were immediately deleted, leaving 24 water molecules (again, the exact number you get may differ):
+You can also see that 258 molecules were immediately deleted, leaving 24 water
+molecules (again, the exact number you get may differ):
 {\normalsize \begin{verbatim}
 Deleted 774 atoms, new total = 642
 Deleted 516 bonds, new total = 44
 Deleted 258 angles, new total = 22
 \end{verbatim}}
-After just a few GCMC steps, the number of molecules starts increasing. Once the crack is filled with water molecules, the number of molecules reaches a plateau (Figs.\,\ref{fig:GCMC-number}-\ref{fig:GCMC-solvated}). The final number of molecules depends on the imposed pressure, temperature, and the interaction between water and silica (i.e. its hydrophilicity). Note that GCMC simulations of such dense phases are usually slow to converge due to the
-very low probability of successfully inserting a molecule. Here, the short simulation duration was made possible by the use of a large pressure.
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{GCMC-number}
-\caption{Number of water molecules $N_\text{H2O}$ as a function of the time $t$. The dashed vertical line marks the beginning of the GCMC step.}
-\label{fig:GCMC-number}
-\end{figure}
+After just a few GCMC steps, the number of molecules starts increasing. Once the
+crack is filled with water molecules, the number of molecules reaches a plateau
+(Figs.\,\ref{fig:GCMC-number}-\ref{fig:GCMC-solvated}). The final number of
+molecules depends on the imposed pressure, temperature, and the interaction
+between water and silica (i.e. its hydrophilicity). Note that GCMC simulations
+of such dense phases are usually slow to converge due to the very low probability
+of successfully inserting a molecule. Here, the short simulation duration was
+made possible by the use of a large pressure.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GCMC-solvated}
-\caption{Snapshot of the silica system after the adsorption of water molecules. The oxygen atoms of the water molecules are represented in cyan, the silicon atoms in yellow, and the oxygen atoms of the solid in red.}
+\caption{Snapshot of the silica system after the adsorption of water molecules.
+The oxygen atoms of the water molecules are represented in cyan, the silicon
+atoms in yellow, and the oxygen atoms of the solid in red.}
 \label{fig:GCMC-solvated}
 \end{figure}
 
@@ -2654,22 +2768,41 @@ very low probability of successfully inserting a molecule. Here, the short simul
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{US}
-\caption{Atoms as simulated during \hyperref[umbrella-sampling-label]{Tutorial 7}. Only the atom colored in pink feels the additional force used for the umbrella sampling method.}
+\caption{Atoms as simulated during \hyperref[umbrella-sampling-label]{Tutorial 7}.
+Only the atom colored in pink feels the additional force used for the umbrella
+sampling method.}
 \label{fig:US}
 \end{figure}
 
-\noindent The objective of this tutorial is to measure the free energy profile of particles across a barrier potential using two methods: free sampling and umbrella sampling \cite{kastner2011umbrella, allen2017computer, frenkel2023understanding} (Fig.\,\ref{fig:US}). For simplicity and to reduce computation time, the barrier potential will be imposed on the atoms with an additional force, mimicking the presence of a repulsive area in the middle of the simulation box without the need to simulate extra atoms. The procedure is valid for more complex systems and can be adapted to many other situations, such as measuring the adsorption barrier near an interface, or for calculating a translocation barrier through a membrane \cite{wilson1997adsorption, makarov2009computer, gravelle2021adsorption}.
+\noindent The objective of this tutorial is to measure the free energy profile
+of particles across a barrier potential using two methods: free sampling and
+umbrella sampling \cite{kastner2011umbrella, allen2017computer, frenkel2023understanding} (Fig.\,\ref{fig:US}).
+For simplicity and to reduce computation time, the barrier potential will be
+imposed on the atoms with an additional force, mimicking the presence of a repulsive
+area in the middle of the simulation box without the need to simulate extra atoms.
+The procedure is valid for more complex systems and can be adapted to many other
+situations, such as measuring the adsorption barrier near an interface, or for
+calculating a translocation barrier through a membrane
+\cite{wilson1997adsorption, makarov2009computer, gravelle2021adsorption}.
 
 \subsubsection{Method 1: Free sampling}
-The most direct way to calculate a free energy profile is to extract the partition function from a classical (i.e. unbiased) molecular dynamics simulation, and then estimate the Gibbs free energy using
+The most direct way to calculate a free energy profile is to extract the partition
+function from a classical (i.e. unbiased) molecular dynamics simulation, and
+then estimate the Gibbs free energy using
 \begin{equation}
 \Delta G = -RT \ln(p/p_0),
 \label{eq:G}
 \end{equation}
-where $\Delta G$ is the free energy difference, $R$ is the gas constant, $T$ is the temperature, $p$ is the pressure, and $p_0$ is a reference pressure. As an illustration, let us apply this method to an extremely simple configuration that consists of a few particles diffusing in a box in the presence of a position-dependent repelling force that makes the center of the box a relatively unfavorable area to explore.
+where $\Delta G$ is the free energy difference, $R$ is the gas constant, $T$
+is the temperature, $p$ is the pressure, and $p_0$ is a reference pressure.
+As an illustration, let us apply this method to an extremely simple configuration
+that consists of a few particles diffusing in a box in the presence of a
+position-dependent repelling force that makes the center of the box a relatively
+unfavorable area to explore.
 
 \paragraph{Basic LAMMPS parameters}
-\noindent Create a folder called \textit{FreeSampling/}, and create an input script called \textit{input.lammps} in it. Copy the following lines into it:
+\noindent Create a folder called \textit{FreeSampling/}, and create an input
+script called \textit{input.lmp} in it. Copy the following lines into it:
 {\normalsize \begin{verbatim}
 variable sigma equal 3.405
 variable epsilon equal 0.238
@@ -2683,10 +2816,19 @@ pair_style lj/cut 3.822
 pair_modify shift yes
 boundary p p p
 \end{verbatim}}
-Here, we start by defining variables for the Lennard-Jones interaction $\sigma$ and $\epsilon$ and for the repulsive potential $U$: $U_0$, $\delta$, and $x_0$, see the analytical expression below. The value of 3.822 for the cut-off was chosen to create a WCA, purely repulsive, potential \cite{weeks1971role}. It was calculated as $2^{1/6} \times 3.405$ where $3.405 = \sigma$. The potential is shifted to be equal to 0 at the cut-off using the \textit{pair$\_$modify}. The system of unit \textit{real}, for which energy is in kcal/mol, distance in Ångstrom, or time in femtosecond, has been chosen for practical reasons: the WHAM algorithm used in the second part of the tutorial automatically assumes the energy to be in kcal/mol.
+Here, we start by defining variables for the Lennard-Jones interaction
+$\sigma$ and $\epsilon$ and for the repulsive potential $U$: $U_0$, $\delta$, and $x_0$,
+see the analytical expression below. The value of 3.822 for the cut-off was chosen to
+create a WCA, purely repulsive, potential \cite{weeks1971role}. It was calculated
+as $2^{1/6} \times 3.405$ where $3.405 = \sigma$. The potential is shifted to be
+equal to 0 at the cut-off using the \textit{pair$\_$modify}. The system of unit
+\textit{real}, for which energy is in kcal/mol, distance in Ångstrom, or time in
+femtosecond, has been chosen for practical reasons: the WHAM algorithm used in
+the second part of the tutorial automatically assumes the energy to be in kcal/mol.
 
 \paragraph{System creation and settings}
-\noindent Let us define the simulation box and randomly add atoms by copying the following lines into \textit{input.lammps}:
+\noindent Let us define the simulation box and randomly add atoms by copying the
+following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 region myreg block -25 25 -5 5 -25 25
 create_box 1 myreg
@@ -2697,7 +2839,9 @@ mass * 39.95
 pair_coeff * * ${epsilon} ${sigma}
 neigh_modify every 1 delay 4 check yes
 \end{verbatim}}
-The variables $U_0$, $\delta$, and $x_0$ defined in the previous subsection are used here to create the repulsive potential, restricting the atoms from exploring the center of the box:
+The variables $U_0$, $\delta$, and $x_0$ defined in the previous subsection are
+used here to create the repulsive potential, restricting the atoms from exploring
+the center of the box:
 \begin{equation}
 U = U_0 \left[ \arctan \left( \dfrac{x+x_0}{\delta} \right) - \arctan \left(\dfrac{x-x_0}{\delta} \right) \right].
 \label{eq:U}
@@ -2708,16 +2852,25 @@ for the force that will be imposed on the atoms:
 F= \dfrac{U_0}{\delta} \left[ \dfrac{1}{(x-x_0)^2/\delta^2+1} - \dfrac{1}{(x+x_0)^2/\delta^2+1} \right].
 \label{eq:F}
 \end{equation}
-Fig.\,\ref{fig:potential} shows the potential $U$ and force $F$ along the $x$ axis. With $U_0 = 1.5 \epsilon = 0.36\,\text{kcal/mol}$, $U_0$ is of the same order as the thermal energy $k_\text{B} T = 0.24\,\text{kcal/mol}$, where $k_\text{B} = 0.002\,\text{kcal/mol/K}$ is the Boltzmann constant and $T = 119.8\,\text{K}$ (see below). In this case, particles are expected to regularly overcome the energy barrier thanks to the thermal agitation.
+Fig.\,\ref{fig:potential} shows the potential $U$ and force $F$ along the $x$ axis.
+With $U_0 = 1.5 \epsilon = 0.36\,\text{kcal/mol}$, $U_0$ is of the same order as the
+thermal energy $k_\text{B} T = 0.24\,\text{kcal/mol}$, where $k_\text{B} = 0.002\,\text{kcal/mol/K}$
+is the Boltzmann constant and $T = 119.8\,\text{K}$ (see below). In this case,
+particles are expected to regularly overcome the energy barrier thanks to
+the thermal agitation.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-potential}
-\caption{Potential $U$ given in Eq.\,\eqref{eq:U} (a) and force $F$ given in Eq.\,\eqref{eq:F} (b) as a function of the coordinate $x$. Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
+\caption{Potential $U$ given in Eq.\,\eqref{eq:U} (a) and force $F$ given in
+Eq.\,\eqref{eq:F} (b) as a function of the coordinate $x$. Here,
+$U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
 \label{fig:potential}
 \end{figure}
 
-Let us apply energy minimization to the system, and then impose the force $F(x)$ to all of the atoms in the simulation using the \textit{addforce} command. Add the following lines to \textit{input.lammps}:
+Let us apply energy minimization to the system, and then impose the force $F(x)$
+to all of the atoms in the simulation using the \textit{addforce} command. Add
+the following lines to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 minimize 1e-4 1e-6 100 1000
 reset_timestep 0
@@ -2729,7 +2882,13 @@ variable F atom &
     -${U0}/((x+${x0})^2/${dlt}^2+1)/${dlt}
 fix myadf all addforce v_F 0.0 0.0 energy v_U
 \end{verbatim}}
-Finally, let us combine the \textit{fix nve} with a \textit{Langevin} thermostat and run a molecular dynamics simulation. With these two commands, the MD simulation is effectively in the NVT ensemble: constant number of atoms $N$, constant volume $V$, and constant temperature $T$. Let us perform an equilibration of 500000 steps in total, using a timestep of $2\,\text{fs}$ (i.e. a total duration of $1\,\text{ns}$). To make sure that $1\,\text{ns}$ is long enough, we will record the evolution of the number of atoms in the central (energetically unfavorable) region called \textit{mymes}:
+Finally, let us combine the \textit{fix nve} with a \textit{Langevin} thermostat
+and run a molecular dynamics simulation. With these two commands, the MD simulation
+is effectively in the NVT ensemble: constant number of atoms $N$, constant volume
+$V$, and constant temperature $T$. Let us perform an equilibration of 500000 steps
+in total, using a timestep of $2\,\text{fs}$ (i.e. a total duration of $1\,\text{ns}$).
+To make sure that $1\,\text{ns}$ is long enough, we will record the evolution of
+the number of atoms in the central (energetically unfavorable) region called \textit{mymes}:
 {\normalsize \begin{verbatim}
 fix mynve all nve
 fix mylgv all langevin 119.8 119.8 50 1530917
@@ -2745,7 +2904,11 @@ run 500000
 \end{verbatim}}
 
 \paragraph{Run and data acquisition}
-Finally, let us record the density profile of the atoms along the $x$ axis using the \textit{ave/chunk} command. A total of 10 density profiles will be printed. The step count is reset to 0 to synchronize with the output times of \textit{fix density/number}, and the \textit{fix myat} is canceled (it has to be canceled before a reset time):
+Finally, let us record the density profile of the atoms along the $x$ axis using
+the \textit{ave/chunk} command. A total of 10 density profiles will be printed.
+The step count is reset to 0 to synchronize with the output times of
+\textit{fix density/number}, and the \textit{fix myat} is canceled (it has to be
+canceled before a reset time):
 {\normalsize \begin{verbatim}
 unfix myat
 reset_timestep 0
@@ -2758,47 +2921,88 @@ dump mydmp all atom 200000 dump.lammpstrj
 thermo 100000
 run 4000000
 \end{verbatim}}
-This simulation with a total duration of $9\,\text{ns}$ needs a few minutes to complete. Feel free to increase the duration of the last run for smoother results.
+This simulation with a total duration of $9\,\text{ns}$ needs a few minutes to
+complete. Feel free to increase the duration of the last run for smoother results.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-density-evolution}
-\caption{Evolution of the number of atoms $n_\text{center}$ in the central region \textit{mymes} as a function of time $t$ during equilibration. The dark line serves as a guide for the eyes. Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
+\caption{Evolution of the number of atoms $n_\text{center}$ in the central
+region \textit{mymes} as a function of time $t$ during equilibration. The dark line
+serves as a guide for the eyes. Here, $U_0 = 0.36~\text{kcal/mol}$,
+$\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
 \label{fig:US-density-evolution}
 \end{figure}
 
 \paragraph{Data analysis}
-First, let us ensure that the initial equilibration of $1\,\text{ns}$ is long enough by examining the \textit{density$\_$evolution.dat} file. Here, we can see that the number of atoms in the central region, $n_\mathrm{centrer}$, evolves near its equilibrium value (which is close to 0) after about $0.1\,\text{ns}$ (Fig.\,\ref{fig:US-density-evolution}). See also a snapshot of the equilibrated system made using VMD in Fig.\,\ref{fig:US-system-unbiased}. One can also look at the density profile, which shows that the density in the center of the box is about two orders of magnitude lower than inside the reservoir (Fig.\,\ref{fig:US-density}). Then, let us plot $-R T \ln(\rho/\rho_\mathrm{bulk})$ (i.e. Eq.\,\eqref{eq:G} where the pressure ratio $p/p_\mathrm{bulk}$ is replaced by the density ratio $\rho/\rho_\mathrm{bulk}$ assuming the system is an ideal gas) and compare it with the imposed potential $U$ from Eq.\,\eqref{eq:U} (Fig.\,\ref{fig:US-FreeSampling}). The value for the reference density $\rho_\text{bulk} = 0.0033~\text{\AA{}}^{-3}$ was estimated by measuring the density of the reservoir from the raw density profiles. The agreement between the MD results and the imposed energy profile is reasonable, despite some noise in the central part (where fewer data points are available due to the repulsive potential).
+First, let us ensure that the initial equilibration of $1\,\text{ns}$ is long
+enough by examining the \textit{density$\_$evolution.dat} file. Here, we can see
+that the number of atoms in the central region, $n_\mathrm{centrer}$, evolves near
+its equilibrium value (which is close to 0) after about $0.1\,\text{ns}$
+(Fig.\,\ref{fig:US-density-evolution}). See also a snapshot of the equilibrated
+system made using VMD in Fig.\,\ref{fig:US-system-unbiased}. One can also look
+at the density profile, which shows that the density in the center of the box is
+about two orders of magnitude lower than inside the reservoir (Fig.\,\ref{fig:US-density}).
+Then, let us plot $-R T \ln(\rho/\rho_\mathrm{bulk})$ (i.e. Eq.\,\eqref{eq:G} where
+the pressure ratio $p/p_\mathrm{bulk}$ is replaced by the density ratio
+$\rho/\rho_\mathrm{bulk}$ assuming the system is an ideal gas) and compare it
+with the imposed potential $U$ from Eq.\,\eqref{eq:U} (Fig.\,\ref{fig:US-FreeSampling}).
+The value for the reference density $\rho_\text{bulk} = 0.0033~\text{\AA{}}^{-3}$
+was estimated by measuring the density of the reservoir from the raw density
+profiles. The agreement between the MD results and the imposed energy profile
+is reasonable, despite some noise in the central part (where fewer data points
+are available due to the repulsive potential).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-system-unbiased}
-\caption{Snapshot of the system. The density of atoms is lowest in the central part of the box, \textit{mymes}, due to the additional force $F$. Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
+\caption{Snapshot of the system. The density of atoms is lowest in the central
+part of the box, \textit{mymes}, due to the additional force $F$. Here,
+$U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
 \label{fig:US-system-unbiased}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-density}
-\caption{Fluid density $\rho$ along the $x$ direction. Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, $x_0 = 5~\mathrm{\AA{}}$, and reference density $\rho_\text{bulk} = 0.0033~\text{\AA{}}^{-3}$.}
+\caption{Fluid density $\rho$ along the $x$ direction. Here,
+$U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, $x_0 = 5~\mathrm{\AA{}}$,
+and reference density $\rho_\text{bulk} = 0.0033~\text{\AA{}}^{-3}$.}
 \label{fig:US-density}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-FreeSampling}
-\caption{Potential $U$ as a function of $x$ measured using free sampling (blue disks) compared to the imposed potential given in Eq.\,\eqref{eq:U} (dark line). Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
+\caption{Potential $U$ as a function of $x$ measured using free sampling (blue disks)
+compared to the imposed potential given in Eq.\,\eqref{eq:U} (dark line). Here,
+$U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
 \label{fig:US-FreeSampling}
 \end{figure}
 
 \paragraph{The limits of free sampling}
-If we increase the value of $U_0$, the average number of atoms in the central region will decrease, making it difficult to obtain a good resolution for the free energy profile. For instance, when we run the same simulation using $U_0 = 10 \epsilon$, which corresponds to a situation where $U_0 \approx 10 k_\text{B} T$, not a single atom explores the central part of the simulation box during the 8 ns of simulation. In this case, using an enhanced sampling method is preferred; see the next section.
+If we increase the value of $U_0$, the average number of atoms in the central
+region will decrease, making it difficult to obtain a good resolution for the free
+energy profile. For instance, when we run the same simulation using $U_0 = 10 \epsilon$,
+which corresponds to a situation where $U_0 \approx 10 k_\text{B} T$, not a single
+atom explores the central part of the simulation box during the 8 ns of simulation.
+In this case, using an enhanced sampling method is preferred; see the next section.
 
 \subsubsection{Method 2: Umbrella sampling}
-Umbrella sampling is a biased molecular dynamics method in which additional forces are added to a chosen atom to force it to explore the more unfavorable areas of the system \cite{kastner2011umbrella, allen2017computer, frenkel2023understanding}. Here, to encourage one of the atoms to explore the central region of the box, we apply a potential $V$ and force it to move along the $x$-axis. The chosen path is called the axis of reaction. Several simulations (called windows) will be conducted with varying positions for the center of the applied biasing. The results will be analyzed using the weighted histogram analysis method (WHAM) \cite{kumar1992weighted}, which allows for the removal of the biasing effect and ultimately deduces the unbiased free energy profile.
+Umbrella sampling is a biased molecular dynamics method in which additional forces
+are added to a chosen atom to force it to explore the more unfavorable areas of
+the system \cite{kastner2011umbrella, allen2017computer, frenkel2023understanding}.
+Here, to encourage one of the atoms to explore the central region of the box,
+we apply a potential $V$ and force it to move along the $x$-axis. The chosen path
+is called the axis of reaction. Several simulations (called windows) will be
+conducted with varying positions for the center of the applied biasing. The results
+will be analyzed using the weighted histogram analysis method (WHAM) \cite{kumar1992weighted},
+which allows for the removal of the biasing effect and ultimately deduces the
+unbiased free energy profile.
 
 \paragraph{LAMMPS input script}
-Create a new folder called \textit{BiasedSampling/}, and create a new input file called \textit{input.lammps} in it, and copy the following lines:
+Create a new folder called \textit{BiasedSampling/}, and create a new input file
+called \textit{input.lmp} in it, and copy the following lines:
 {\normalsize \begin{verbatim}
 variable sigma equal 3.405
 variable epsilon equal 0.238
@@ -2843,10 +3047,14 @@ reset_timestep 0
 
 dump mydmp all atom 1000000 dump.lammpstrj
 \end{verbatim}}
-So far, this code resembles that of Method 1, except for the additional particle of type 2. Particles of type 1 and 2
-are identical, having the same mass and Lennard-Jones parameters. However, the particle of type 2 will additionally be exposed to the biasing potential $V$ (Fig.\,){fig:US-system-biased}).
+So far, this code resembles that of Method 1, except for the additional particle
+of type 2. Particles of type 1 and 2
+are identical, having the same mass and Lennard-Jones parameters. However, the
+particle of type 2 will additionally be exposed to the biasing potential
+$V$ (Fig.\,){fig:US-system-biased}).
 
-Let us create a loop with 50 steps, and move progressively the center of the bias potential by an increment of 0.1 nm. Add the following lines to \textit{input.lammps}:
+Let us create a loop with 50 steps, and move progressively the center of the
+bias potential by an increment of 0.1 nm. Add the following lines to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 variable a loop 50
 label loop
@@ -2862,45 +3070,76 @@ unfix myat1
 next a
 jump SELF loop
 \end{verbatim}}
-A folder called \textit{data/} needs to be created within \textit{BiasedSampling/}. The spring command serves to impose the additional harmonic potential $V$ with the spring constant $k$. Note that the value of $k$ should be chosen with care, if $k$ is too small, the particle won't follow the biasing potential center, and if $k$ is too large, there will be no overlapping between the different windows. The center of the harmonic potential $x_\text{des}$ successively takes values from -25 to 25. For each value of $x_\text{des}$, an equilibration step of 0.4 ns is performed, followed by a step of 2 ns during which the position along $x$ of the particle is saved in data files (one data file per value of $x_\text{des}$). You can always increase the duration of the runs for better samplings. Run the \textit{input.lammps}  file using LAMMPS.
+A folder called \textit{data/} needs to be created within \textit{BiasedSampling/}.
+The spring command serves to impose the additional harmonic potential $V$ with
+the spring constant $k$. Note that the value of $k$ should be chosen with care,
+if $k$ is too small, the particle won't follow the biasing potential center,
+and if $k$ is too large, there will be no overlapping between the different windows.
+The center of the harmonic potential $x_\text{des}$ successively takes values
+from -25 to 25. For each value of $x_\text{des}$, an equilibration step of 0.4 ns
+is performed, followed by a step of 2 ns during which the position along $x$ of
+the particle is saved in data files (one data file per value of $x_\text{des}$).
+You can always increase the duration of the runs for better samplings. Run the
+\textit{input.lmp}  file using LAMMPS.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-system-biased}
-\caption{Snapshot of the system with atoms of type 1 in cyan and the single atom of type 2 in pink. Only the atom of type 2 explores the central part of the box, \textit{mymes}, due to its additional biasing potential $V$. Here, $U_0 = 2.38~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
+\caption{Snapshot of the system with atoms of type 1 in cyan and the single atom
+of type 2 in pink. Only the atom of type 2 explores the central part of the box,
+\textit{mymes}, due to its additional biasing potential $V$. Here,
+$U_0 = 2.38~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
 \label{fig:US-system-biased}
 \end{figure}
 
 \paragraph{WHAM algorithm}
-\noindent To generate the free energy profile from the density distribution, let us use the WHAM algorithm as implemented by Marc Grossfield \cite{grossfieldimplementation}. You can download it from \href{http://membrane.urmc.rochester.edu/?page_id=126}{Alan Grossfield} website, and compile it by typing in the terminal:
+\noindent To generate the free energy profile from the density distribution,
+let us use the WHAM algorithm as implemented by Marc Grossfield \cite{grossfieldimplementation}.
+You can download it from \href{http://membrane.urmc.rochester.edu/?page_id=126}{Alan Grossfield}
+website, and compile it by typing in the terminal:
 {\normalsize \begin{verbatim}
 cd wham
 make clean
 make
 \end{verbatim}}
-\noindent The compilation creates an executable called \textit{wham} that you can copy in the \textit{BiasedSampling/} folder. To apply the WHAM algorithm to our simulation, we first need to create a metadata file. This file simply contains
+\noindent The compilation creates an executable called \textit{wham} that you can
+copy in the \textit{BiasedSampling/} folder. To apply the WHAM algorithm to our
+simulation, we first need to create a metadata file. This file simply contains
 \begin{itemize}
 \item the paths to all the data files,
 \item the value of $x_\text{des}$,
 \item and the values of $k$.
 \end{itemize}
-Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial7/metadata.dat}{\textit{metadata.dat}} file I have written and save it in \textit{BiasedSampling/}. Then, simply run the following command in the terminal:
+Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial7/metadata.dat}{\textit{metadata.dat}}
+file I have written and save it in \textit{BiasedSampling/}. Then, simply run the
+following command in the terminal:
 {\normalsize \begin{verbatim}
 ./wham -25 25 50 1e-8 119.8 0 \
     metadata.dat PMF.dat
 \end{verbatim}}
-where -25 and 25 are the boundaries, 50 is the number of bins, 1e-8 is the tolerance, and 119.8 is the temperature. A file called \textit{PMF.dat} has been created, containing the free energy profile in kcal/mol. Again, one can compare the result of the PMF with the imposed potential $U$, demonstrating excellent agreement (Fig.\,\ref{fig:US-freenergy}). We can see that the agreement is quite good despite the very short calculation time and the very high value for the energy barrier. Obtaining the same results with Free Sampling would require performing extremely long and costly simulations.
+where -25 and 25 are the boundaries, 50 is the number of bins, 1e-8 is the tolerance,
+and 119.8 is the temperature. A file called \textit{PMF.dat} has been created,
+containing the free energy profile in kcal/mol. Again, one can compare the result of
+the PMF with the imposed potential $U$, demonstrating excellent agreement
+(Fig.\,\ref{fig:US-freenergy}). We can see that the agreement is quite good despite
+the very short calculation time and the very high value for the energy barrier.
+Obtaining the same results with Free Sampling would require performing extremely
+long and costly simulations.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-freenergy}
-\caption{Potential $U$ as a function of $x$ measured using umbrella sampling (blue disks) compared to the imposed potential given in Eq.\,\eqref{eq:U} (dark line). Here, $U_0 = 2.38~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
+\caption{Potential $U$ as a function of $x$ measured using umbrella sampling
+(blue disks) compared to the imposed potential given in Eq.\,\eqref{eq:U}
+(dark line). Here, $U_0 = 2.38~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$,
+and $x_0 = 5~\mathrm{\AA{}}$.}
 \label{fig:US-freenergy}
 \end{figure}
 
 \section*{Author Contributions}
 
-SG conceived and wrote all the online tutorials and underlying Sphinx documentation for \href{https://lammpstutorials.github.io}{lammpstutorials.github.io}.
+SG conceived and wrote all the online tutorials and underlying Sphinx documentation
+for \href{https://lammpstutorials.github.io}{lammpstutorials.github.io}.
 
 \section*{Potentially Conflicting Interests}
 
@@ -2908,9 +3147,10 @@ There are no conflicting interests to declare.
 
 \section*{Funding Information}
 
-S.G. acknowledges funding from the European Union's Horizon 2020 research and innovation programme under the Marie Skłodowska-Curie grant agreement N$^\circ\;101065060$.
-
-A.K. acknowledges financial support by Sandia National Laboratories under POs 2149742 and 2407526.
+S.G. acknowledges funding from the European Union's Horizon 2020 research and
+innovation programme under the Marie Skłodowska-Curie grant agreement N$^\circ\;101065060$.
+A.K. acknowledges financial support by Sandia National Laboratories under
+POs 2149742 and 2407526.
 
 \section*{Author Information}
 \makeorcid
