@@ -3036,7 +3036,7 @@ boundary p p p
 region myreg block -25 25 -5 5 -25 25
 create_box 2 myreg
 create_atoms 2 single 0 0 0
-create_atoms 59 random 5 341341 myreg &
+create_atoms 1 random 5 341341 myreg &
     overlap 1.5 maxtry 50
 
 mass * 39.948
@@ -3061,7 +3061,12 @@ thermo 100000
 run 500000
 reset_timestep 0
 
-dump mydmp all atom 1000000 dump.lammpstrj
+dump mydmp all image 1000000 dump.*.jpg type &
+type shiny 0.1 box yes 0.02 view 0 90 zoom 1.9
+dump_modify mydmp backcolor white &
+    acolor 1 cyan adiam 1 1 &
+    acolor 2 pink adiam 1 1 &
+    boxcolor black
 \end{verbatim}}
 So far, this code resembles that of Method 1, except for the additional particle
 of type 2. Particles of type 1 and 2
@@ -3153,7 +3158,7 @@ and $x_0 = 5~\mathrm{\AA{}}$.}
 \end{figure}
 
 \section*{Author Contributions}
-
+% S.G. to update
 SG conceived and wrote all the online tutorials and underlying Sphinx documentation
 for \href{https://lammpstutorials.github.io}{lammpstutorials.github.io}.
 
