@@ -439,33 +439,52 @@ of the time $t$. b) Kinetic energy ($k_\text{e}$) as a function of $t$.}
 
 \paragraph{Trajectory visualization}
 
-To visualize the trajectories of the atoms using the LAMMPS-GUI, let us use the \textit{dump image} command. Add the following command to the \textit{input.lmp} file, in the \textit{Visualization} section of \textit{PART B}:
+So far, the simulation was monitored only from the thermodynamic information.
+To better follow the evolution of the system and visualize the trajectories
+of the atoms, let us use the \textit{dump image} command. Add the following
+command to the \textit{input.lmp} file, in the \textit{Visualization} category
+of \textit{PART B}:
 {\normalsize \begin{verbatim}
 dump mydmp all image 100 dump.*.jpg type type
 \end{verbatim}}
-With this command, JPG images are generated every 100 steps. The two \text{type} keywords are for \textit{color} and \text{diameter}, respectively. Run the \textit{input.lmp} using LAMMPS again, a new window showing the system evolving will pop up.
+This command requires LAMMPS to generate JPG images every 100 steps. The two
+\textit{type} keywords are for \textit{color} and \textit{diameter}, respectively.
+Run the \textit{input.lmp} using LAMMPS again, and a new window named
+\textit{Slide show} will pop up.
 
-The rendering can be improved by taking advantage of the many options of the \textit{dump image} command Modify the previous \textit{dump} command as follows:
+The rendering of the system can be improved by taking advantage of the many
+options of the \textit{dump image} command. Modify the previous \textit{dump}
+command as follows:
 {\normalsize \begin{verbatim}
 dump mydmp all image 100 dump.*.jpg type type &
     shiny 0.1 box no 0.01 view 0 0 zoom 1.8
 \end{verbatim}}
-Here, the \textit{shiny} keyword is used to reduce the shininess of the atoms, the \textit{box} keyword removes the box, and the \textit{view} and \textit{zoom} keywords adjust the camera.
+Here, the \textit{shiny} keyword is used to reduce the shininess of the atoms,
+the \textit{box} keyword removes the box, and the \textit{view} and \textit{zoom}
+keywords adjust the camera.
 
-Further improvements can be applied using the \textit{dump$\_$modify} command:
+Further aesthetic improvements can be obtained by using the \textit{dump$\_$modify}
+command:
 {\normalsize \begin{verbatim}
 dump_modify mydmp acolor 1 darkturquoise &
     acolor 2 darkblue adiam 1 1 adiam 2 3 &
     backcolor white
 \end{verbatim}}
-The \textit{acolor} and \textit{adiam} keywords are used to adjust the color and diameters of the atoms, respectively, and the \textit{backcolor} keyword adjusts the color of the background.
+The \textit{acolor} and \textit{adiam} keywords are used to adjust the color and
+diameters of the atoms, respectively, and the \textit{backcolor} keyword adjusts
+the color of the background.
 
 \subsubsection{Improving the script}
 
-Let us improve the input script and perform slightly more advanced operations, such as imposing specific initial positions to the atoms, and restarting the simulation from a previously saved configuration.
+Let us improve the input script and perform slightly more advanced operations,
+such as imposing specific initial positions on the atoms and restarting the
+simulation from a previously saved configuration.
 
 \paragraph{Control the initial atom positions}
-\noindent Create a new folder next to \textit{my-first-input/}, and call it \textit{improved-input/}. Then, create a new input file within \textit{improved-input/} and call it \textit{input.min.lmp}. Similarly to what has been done previously, copy the following lines into \textit{input.min.lmp}:
+Create a new folder next to \textit{my-first-input/} and call it
+\textit{improved-input/}. Then, create a new input file within
+\textit{improved-input/} and call it \textit{input.min.lmp}. Similarly to what
+has been done previously, copy the following lines into \textit{input.min.lmp}:
 {\normalsize \begin{verbatim}
 # 1) Initialization
 units lj
@@ -474,7 +493,9 @@ atom_style atomic
 pair_style lj/cut 2.5
 boundary p p p
 \end{verbatim}}
-To create the atoms of types 1 and 2 in two separate regions, let us create three separate regions: A cubic region for the simulation box and two additional regions for placing the atoms:
+To create the atoms of types 1 and 2 in two separate regions, let us create
+three separate regions: a cubic region for the simulation box and two additional
+regions for placing the atoms:
 {\normalsize \begin{verbatim}
 # 2) System definition
 region simulation_box block &
@@ -487,7 +508,9 @@ region cylinder_out cylinder z 0 0 10 &
 create_atoms 1 random 1000 341341 cylinder_out
 create_atoms 2 random 150 127569 cylinder_in
 \end{verbatim}}
-The \textit{side in} and \textit{side out} keywords are used to define regions that are respectively inside and outside of the cylinder of radius 10. Then, copy similar lines as previously into \textit{input.min.lmp}:
+The \textit{side in} and \textit{side out} keywords are used to define regions
+that are respectively inside and outside of the cylinder of radius 10. Then,
+copy similar lines as previously into \textit{input.min.lmp}:
 {\normalsize \begin{verbatim}
 # 3) Settings
 mass 1 1
@@ -509,12 +532,30 @@ dump_modify mydmp acolor 1 darkturquoise &
 minimize 1.0e-4 1.0e-6 1000 10000
 write_data minimized_coordinate.data
 \end{verbatim}}
-The main novelty, compared to the previous input script, is the \textit{write$\_$data} command. This command is used to print the final state of the simulation in a file called \textit{minimized$\_$coordinate.data}. Note that the \textit{write$\_$data} command is placed after the \textit{minimize} command. This \textit{.data} file will be used later to restart the simulation from the final state of the energy minimization step.
+The main novelty, compared to the previous input script, is the \textit{write$\_$data}
+command. This command is used to print the final state of the simulation in a file
+called \textit{minimized$\_$coordinate.data}. Note that the \textit{write$\_$data}
+command is placed after the \textit{minimize} command. This \textit{.data} file
+will be used later to restart the simulation from the final state of the energy
+minimization step.
 
-Run the \textit{input.min.lmp} script using LAMMPS. At the end of the simulation, a file called \textit{minimized$\_$coordinate.data} is created by LAMMPS. If you open \textit{minimized$\_$coordinate.data} with a text editor, you can see that it contains all the information necessary to restart the simulation, such as the number of atoms, the box size, the \textit{masses}, and the \textit{pair$\_$coeffs}. The \textit{minimized$\_$coordinate.data} file also contains the final positions of the atoms within the \textit{Atoms} section. The first five columns of the \textit{Atoms} section correspond (from left to right) to the atom indexes (from 1 to the total number of atoms, 1150), the atom types (1 or 2 here), and the positions of the atoms $x$, $y$, $z$. The last three columns are image flags that keep track of which atoms crossed the periodic boundary.
+Run the \textit{input.min.lmp} script using LAMMPS. At the end of the simulation,
+a file called \textit{minimized$\_$coordinate.data} is created by LAMMPS. If you
+open \textit{minimized$\_$coordinate.data} with a text editor, you can see that
+it contains all the information necessary to restart the simulation, such as the
+number of atoms, the box size, the \textit{masses}, and the \textit{pair$\_$coeffs}.
+The \textit{minimized$\_$coordinate.data} file also contains the final positions
+of the atoms within the \textit{Atoms} section. The first five columns of the
+\textit{Atoms} section correspond (from left to right) to the atom indexes (from
+1 to the total number of atoms, 1150), the atom types (1 or 2 here), and the
+positions of the atoms $x$, $y$, $z$. The last three columns are image flags
+that keep track of which atoms crossed the periodic boundary.
 
 \paragraph{Restarting from a saved configuration}
-Let us create a new input file and start a molecular dynamics simulation directly from the previously saved configuration. Within \textit{improved-input/}, create a new file called \textit{input.md.lmp} and copy the same lines as previously:
+
+Let us create a new input file and start a molecular dynamics simulation
+directly from the previously saved configuration. Within \textit{improved-input/},
+create a new file called \textit{input.md.lmp} and copy the same lines as previously:
 {\normalsize \begin{verbatim}
 # 1) Initialization
 units lj
@@ -523,12 +564,18 @@ atom_style atomic
 pair_style lj/cut 2.5
 boundary p p p
 \end{verbatim}}
-Here, instead of creating a new region and adding atoms to it, we can simply import the previously saved configuration by adding the following command to \textit{input.md.lmp}:
+Here, instead of creating a new region and adding atoms to it, we can simply
+import the previously saved configuration by adding the following command to
+\textit{input.md.lmp}:
 {\normalsize \begin{verbatim}
 # 2) System definition
 read_data minimized_coordinate.data
 \end{verbatim}}
-By visualizing the system using the generated JPG images, you may have noticed that some atoms have moved from one region to the other during minimization. To start the simulation from a clean slate, with only atoms of type 2 within the cylinder and atoms of type 1 outside the cylinder, let us delete the misplaced atoms by adding the following commands to \textit{input.md.lmp}:
+By visualizing the system using the generated JPG images, you may have noticed
+that some atoms have moved from one region to the other during minimization.
+To start the simulation from a clean slate, with only atoms of type 2 within the
+cylinder and atoms of type 1 outside the cylinder, let us delete the misplaced
+atoms by adding the following commands to \textit{input.md.lmp}:
 {\normalsize \begin{verbatim}
 region cylinder_in cylinder z 0 0 10 &
     INF INF side in
@@ -545,14 +592,48 @@ group group_type_2_out &
 delete_atoms group group_type_1_in
 delete_atoms group group_type_2_out
 \end{verbatim}}
-The two first \textit{region} commands recreate the previously defined regions, which is necessary since regions are not saved by the \textit{write$\_$data} command. The first two \textit{group} commands are used to create groups containing all the atoms of type 1 and all the atoms of type 2, respectively. The next two \textit{group} commands create atom groups based on their positions at the beginning of the simulation, i.e. when the commands are being read by LAMMPS. The last two \textit{group} commands create atom groups based on the intersection between the previously defined groups. Finally, the two \textit{delete$\_$atoms} commands delete the atoms of type 1 that are located within the cylinder and the atoms of type 2 that are located outside the cylinder, respectively.
+The two first \textit{region} commands recreate the previously defined regions,
+which is necessary since regions are not saved by the \textit{write$\_$data}
+command. The first two \textit{group} commands are used to create groups containing
+all the atoms of type 1 and all the atoms of type 2, respectively. The next two
+\textit{group} commands create atom groups based on their positions at the beginning
+of the simulation, i.e. when the commands are being read by LAMMPS. The last two
+\textit{group} commands create atom groups based on the intersection between the
+previously defined groups. Finally, the two \textit{delete$\_$atoms} commands delete
+the atoms of type 1 that are located within the cylinder and the atoms of type 2
+that are located outside the cylinder, respectively.
 
-Add the following lines into \textit{input.md.lmp}. Note the absence of \textit{Settings} section, because the settings are taken from the \textit{.data} file.
+Let us measure the number of atoms of each type inside the cylinder as a function
+of time, by creating the following variables:
+{\normalsize \begin{verbatim}
+variable n1_in &
+    equal count(group_type_1,cylinder_in)
+variable n2_in &
+    equal count(group_type_2,cylinder_in)
+\end{verbatim}}
+The two \textit{variables} are used to count the number of atoms of a specific group in the \textit{cylinder$\_$in} region. 
+
+In addition to counting the atoms in each region, let us also extract the
+coordination number per atom between atoms of types 1 and 2. The coordination
+number is a measure of the average number of type 2 atoms in the vicinity of
+type 1 atoms, which serves as a good indicator of the degree of mixing in a
+binary mixture. Add the following lines into \textit{input.md.lmp}:
+{\normalsize \begin{verbatim}
+compute coor12 group_type_1 coord/atom &
+    cutoff 2.0 group group_type_2
+compute sumcoor12 all reduce ave c_coor12
+\end{verbatim}}
+The \textit{compute ave} is used to average the per atom coordination number
+that is calculated by the \textit{coord/atom} compute.
+
+Add the following lines into \textit{input.md.lmp}. Note the absence of
+\textit{Settings} section, because the settings are taken from the \textit{.data} file.
 {\normalsize \begin{verbatim}
 # 4) Visualization
 thermo 1000
-thermo_style custom step temp pe ke &
-    etotal press
+thermo_style custom step temp pe ke etotal &
+    press v_n1_in v_n2_in c_sumcoor12
+
 dump mydmp all image 100 dump.md.*.jpg &
     type type shiny 0.1 box no 0.01 &
     view 0 0 zoom 1.8
@@ -560,35 +641,20 @@ dump_modify mydmp acolor 1 darkturquoise &
     acolor 2 darkblue adiam 1 1 adiam 2 3 &
     backcolor white
 \end{verbatim}}
-Let us extract the number of atoms of each type inside the cylinder as a function of time, by adding the following commands to \textit{input.md.lmp}:
-{\normalsize \begin{verbatim}
-variable n_type1_in &
-    equal count(group_type_1,cylinder_in)
-variable n_type2_in &
-    equal count(group_type_2,cylinder_in)
-fix myat1 all ave/time 10 200 2000 &
-    v_n_type1_in file population1vstime.dat
-fix myat2 all ave/time 10 200 2000 &
-    v_n_type2_in file population2vstime.dat
-\end{verbatim}}
-The two \textit{variables} are used to count the number of atoms of a specific group in the \textit{cylinder$\_$in} region. The two \textit{fix ave/time} are calling the previously defined variables and are printing their values into text files. By using \textit{10 200 2000}, variables are evaluated every 10 steps, averaged 200 times, and printed in the \textit{.dat} files every 2000 steps.
+The two variables, \textit{n1$\_$in}, \textit{n2$\_$in}, and the
+compute \textit{sumcoor12}, were added to the list of information printed during
+the simulation.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{LJ-evolution}
-\caption{Evolution of the system during mixing. The three snapshots show respectively the system at $t=0$ (left panel), $t=75$ (middle panel), and $t=1500$ (right panel).}
+\caption{Evolution of the system during mixing. The three snapshots show
+respectively the system at $t=0$ (left panel), $t=75$ (middle panel), and $t=1500$
+(right panel).}
 \label{fig:evolution-population}
 \end{figure}
 
-In addition to counting the atoms in each region, let us also extract the coordination number per atom between atoms of types 1 and 2. The coordination number is a measure of the average number of type 2 atoms in the vicinity of type 1 atoms, which serves as a good indicator of the degree of mixing in a binary mixture. Add the following lines into \textit{input.md.lmp}:
-{\normalsize \begin{verbatim}
-compute coor12 group_type_1 coord/atom &
-    cutoff 2.0 group group_type_2
-compute sumcoor12 all reduce ave c_coor12
-fix myat3 all ave/time 10 200 2000 &
-    c_sumcoor12 file coordinationnumber12.dat
-\end{verbatim}}
-The \textit{compute ave} is used to average the per atom coordination number that is calculated by the \textit{coord/atom} compute. This averaging is necessary as \textit{coord/atom} returns an array where each value corresponds to a certain couple of atoms i-j. Such an array can't be printed by \textit{fix ave/time}. Finally, let us complete the script by adding the following lines into \textit{input.md.lmp}:
+Finally, let us complete the script by adding the following lines into \textit{input.md.lmp}:
 {\normalsize \begin{verbatim}
 # 5) Run
 velocity all create 1.0 4928459 &
@@ -600,7 +666,23 @@ timestep 0.005
 run 300000
 write_data mixed.data
 \end{verbatim}}
-There are a few differences from the previous simulation. First, the \textit{velocity create} command attributes an initial velocity to each atom. The initial velocity is chosen so that the average initial temperature is equal to 1 (unitless). The additional keywords ensure that no linear momentum (\textit{mom yes}) and no angular momentum (\textit{rot yes}) are given to the system and that the generated velocities are distributed as a Gaussian. Another improvement is the \textit{zero yes} keyword in the Langevin thermostat, which ensures that the total random force applied to the atoms is equal to zero. Run \textit{input.md.lmp} using LAMMPS, and observe the mixing of the two populations over time (see also Fig.\,\ref{fig:evolution-population}). From the generated \textit{.dat} file, one can plot the number of atoms in each region as a function of time (Fig.\,\ref{fig:mixing}\,a). In addition, as the mixing progresses, the coordination number between atoms of types 1 and 2 increases from about $0.01$ to $0.35$ (Fig.\,\ref{fig:mixing}\,b). This indicates that, as time progresses, more and more particles of type 1 get into contact with particles of type 2, as expected during mixing.
+There are a few differences from the previous simulation. First, the
+\textit{velocity create} command attributes an initial velocity to each atom.
+The initial velocity is chosen so that the average initial temperature is equal
+to 1 (unitless). The additional keywords ensure that no linear momentum
+(\textit{mom yes}) and no angular momentum (\textit{rot yes}) are given to the
+system and that the generated velocities are distributed as a Gaussian. Another
+improvement is the \textit{zero yes} keyword in the Langevin thermostat, which
+ensures that the total random force applied to the atoms is equal to zero.
+
+Run \textit{input.md.lmp} using LAMMPS, and observe the mixing of the two
+populations over time (see also Fig.\,\ref{fig:evolution-population}). From the
+variables \textit{n1$\_$in} and \textit{n2$\_$in}, one can follow the number of
+atoms in each region as a function of time (Fig.\,\ref{fig:mixing}\,a). In addition,
+as the mixing progresses, the coordination number between atoms of types 1 and 2 increases
+from about $0.01$ to $0.35$ (Fig.\,\ref{fig:mixing}\,b). This indicates that,
+over time, more and more particles of type 1 come into contact with
+particles of type 2, as expected during mixing.
 
 \begin{figure}
 \centering
