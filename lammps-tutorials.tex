@@ -832,9 +832,8 @@ and correspond respectively to: $x < x_\text{min}$, (\textit{rbot}, for region
 bottom) $x_\text{min} > x > x_\text{max}$ (\textit{rmid}, for region middle),
 and $x > x_\text{max}$ (\textit{rtop}, for region top).
 
-Finally, let us define
-3 groups of atoms corresponding to the atoms located in each of the 3 regions,
-respectively, by adding to \textit{input.lmp}:
+Finally, let us define 3 groups of atoms corresponding to the atoms located
+in each of the 3 regions, respectively, by adding to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 group carbon_top region rtop
 group carbon_bot region rbot
@@ -869,7 +868,7 @@ that starts $2\,\text{\AA{}}$ from the CNT edges.
 {\normalsize \begin{verbatim}
 variable xmax_del equal ${xmax}-2
 variable xmin_del equal ${xmin}+2
-region rdel block ${zmin_del} ${zmax_del} &
+region rdel block ${xmin_del} ${xmax_del} &
     INF INF INF INF
 group rdel region rdel
 delete_atoms random fraction 0.02 no rdel &
@@ -902,7 +901,7 @@ fix_modify myber temp Tmid
 Re-setting the atom IDs is necessary before using the \textit{velocity} command,
 this is done by the \textit{reset$\_$atoms} command. The \textit{velocity}
 command gives initial velocities to the atoms of the middle group \textit{carbon$\_$mid},
-ensuring an initial temperature of 300 K for these atoms. The \textit{fix nve}
+ensuring an initial temperature of $300\,\text{K}$ for these atoms. The \textit{fix nve}
 is applied to all atoms so that all atom positions are recalculated at every step,
 and a \textit{Berendsen} thermostat is applied to the atoms of the group
 \textit{carbon$\_$mid} only \cite{berendsen1984molecular}. The
@@ -942,7 +941,7 @@ for the force applied on the edges:
 {\normalsize \begin{verbatim}
 variable L equal &
     xcm(carbon_top,x)-xcm(carbon_bot,x)
-variable F equal f_mysf1[1]-f_mysf2[1]
+variable F equal f_mysf2[1]-f_mysf1[1]
 \end{verbatim}}
 Here, the force is extracted from the fixes \textit{mysf1} and \textit{mysf2}
 using \textit{f$\_$}, similarly to the use of \textit{v$\_$} to call variable,
@@ -952,7 +951,7 @@ Let us also add a \textit{dump image} command to visualize the system
 every 500 steps:
 {\normalsize \begin{verbatim}
 dump mydmp all image 500 dump.*.jpg type type &
-    shiny 0.1 box no 0.01 view 0 0 zoom 1.8
+    shiny 0.1 box no 0.01 view 0 90 zoom 1.8
 dump_modify mydmp acolor 1 pink &
     adiam 1 1 backcolor white
 \end{verbatim}}
@@ -984,7 +983,7 @@ velocity carbon_bot set -0.0005 0 0
 run 10000
 \end{verbatim}}
 The chosen velocity for the deformation is $100\,\text{m/s}$, or
-$0.001\,\text{\AA{}/fs}$. Run the simulation using LAMMPS.
+$0.001\,\text{\AA{}/fs}$.
 
 \begin{figure}
 \centering
@@ -1018,50 +1017,33 @@ The CNT starts deforming at $t = 5\,\text{ps}$. Here, the force field is OPLS-AA
 \label{fig:CNT-unbreakable-energy}
 \end{figure}
 
-\paragraph{Importing YAML log file into Python (OPTIONAL)}
-\textcolor{blue}{Right click inside the \textit{Output} window, and select
-\textit{Export YAML data to file}.}
-To import the YAML log file into Python and plot the total energy
-as a function of the number of steps, create a new file within
-\textit{unbreakable-bonds/} called \textit{read-log.py}. Copy the following
-lines into it:
-{\normalsize \begin{verbatim}
-import numpy as np
-import re, yaml
+\paragraph{Importing YAML log file into Python}
 
-docs = ""
-with open("log.lammps") as f:
-    for line in f:
-        pattern = (
-            r"^(keywords:.*$|"
-            r"data:$|"
-            r"---$|"
-            r"\.\.\.$|"
-            r"  - \[.*\]$)"
-        )
-        m = re.search(pattern, line)
-        if m:
-            docs += m.group(0) + '\n'
-thermo = list(yaml.load_all(docs,
-                Loader=yaml.CSafeLoader))
-
-Etot_vs_step = []
-for line in thermo[0]['data']:
-    Etot_vs_step.append([line[0], line[4]])
-for line in thermo[1]['data']:
-    Etot_vs_step.append([line[0], line[4]])
-np.savetxt("etot_vs_step.dat", Etot_vs_step)
-\end{verbatim}}
-The \textit{log} file is first open, and a certain pattern is
+Right click inside the \textit{Output} window, and select
+\textit{Export YAML data to file}. Call the output \textit{log.yaml}.
+To import the YAML log file into Python and plot the force $F$ as a function
+of the CNT length $L$, download this script
+\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial2/yaml-reader.py}{\textit{yaml-reader.py}} and save it within \textit{unbreakable-bonds/} 
+The \textit{yaml-reader.py} first imports the \textit{log.yaml} file, and a certain pattern is
 identified and stored as a string character named \textit{docs}. The string is
-then converted into a list, and the number of steps as well as the total
-energy $E_\text{tot}$ are extracted into the list named \textit{Etot$\_$vs$\_$step},
-which is saved in the data file named \textit{etot$\_$vs$\_$step.dat} using the
+then converted into a list, and $F$ and $L$ are extracted into the list named \textit{F$\_$vs$\_$L},
+which is saved in the data file named \textit{F$\_$vs$\_$L.dat} using the
 NumPy \textit{savetxt} function. \textit{thermo[0]} can be used to access the
 informations from the first minimization run, and  \textit{thermo[1]} from
-the second MD run.
+the second MD run. The data extracted from the \textit{log.yaml} file can
+then be used to plot the force $F$ as a function of the CNT length $L$, see
+Fig.\,\ref{fig:CNT-stress-strai-unbreakable}.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{CNT-stress-strain-unbreakable}
+\caption{Force applied on the CNT during deformation, $F$, as a function of the
+CNT length $L$.}
+\label{fig:CNT-stress-strai-unbreakable}
+\end{figure}
 
 \subsubsection{Breakable bonds}
+
 When using a classical force field, as we just did, the bonds between the atoms
 are non-breakable. Let us perform a similar simulation and deform a small
 CNT again, but this time using a reactive force field that allows for the bonds
