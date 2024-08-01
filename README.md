@@ -33,5 +33,5 @@ make
 ## Funding Information
 
 S.G. acknowledges funding from the European Union's Horizon 2020 research and innovation
-programme under the Marie Skłodowska-Curie grant agreement N$^\circ\;101065060$. A.K. acknowledges
+programme under the Marie Skłodowska-Curie grant agreement N° 101065060$. A.K. acknowledges
 financial support by Sandia National Laboratories under POs 2149742 and 2407526.
