@@ -1,7 +1,7 @@
 LAMMPS data file.
  700 atoms
  1 atom types
- -40 40 xlo xhi
+ -60 60 xlo xhi
  -40 40 ylo yhi
  -40 40 zlo zhi
 

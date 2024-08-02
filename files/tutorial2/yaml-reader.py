@@ -17,8 +17,18 @@ print("Number of runs: ", len(thermo))
 print("All info:", thermo[1]['keywords'])
 
 # Read the data from the second run, and save it. 
-F_vs_L = []
+Force = []
+Length = []
 for line in thermo[1]["data"]:
     _, _, _, _, L, F = line
-    F_vs_L.append([L, F])
-np.savetxt("F_vs_L.dat", F_vs_L)
+    Force.append(F)
+    Length.append(L)
+Force = np.array(Force)
+Length = np.array(Length)
+
+# Calculate the stress and the strain from the Force and Length
+Area = np.pi*5.2**2 # Angstrom^2
+Stress = Force/Area # Kcal/mol/Angstrom^3
+Strain = 100*(Length-Length[0])/Length[0] # in percents
+
+np.savetxt("stress-strain.dat", np.vstack([Strain, Stress]).T)
