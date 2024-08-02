@@ -66,6 +66,8 @@
 % Do not add a newline in the next command, no matter how long the repository name is, as it will break the link in the PDF.
 \newcommand{\githubrepository}{\url{https://github.com/lammpstutorials/lammpstutorials-article}}  %this should be the main github repository for this article
 
+\newcommand{\filepath}{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% ARTICLE SETUP
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -352,7 +354,7 @@ and the pressure (\textit{press}). Finally, the \textit{minimize} command instru
 LAMMPS to perform an energy minimization of the system. By default, LAMMPS uses
 the conjugate gradient (CG) algorithm \cite{hestenes1952methods}.
 
-Before running the simulation, let us decrease the update interval of the GUI
+Before running the simulation, let us decrease the update interval of the LAMMPS-GUI
 by clicking on \textit{Edit}, then \textit{Preferences}, and reducing the
 \textit{GUI update interval} from $10\,\text{ms}$ to $1\,\text{ms}$.
 Then, run the simulation by selecting \textit{Run LAMMPS from Editor Buffer}
@@ -718,24 +720,24 @@ strong deformation.
 \subsubsection{Unbreakable bonds}
 With most classical molecular dynamics force fields, the chemical
 bonds between the atoms are set at the start of the simulation. Regardless
-of the forces applied to the atoms, the bonds remain intact during the
+of the forces applied to the atoms, the bonds remain unchanged during the
 simulation. The bonds between neighbor atoms typically consist of springs
 with given equilibrium distances $r_0$ and a constant
-$k_b$: $U_b = k_b \left( r - r_0 \right)^2$. Additionally, angular and dihedral
+$k_\text{b}$: $U_\text{b} = k_\text{b} \left( r - r_0 \right)^2$. Additionally, angular and dihedral
 constraints are usually applied to maintain the relative orientations of
 neighboring atoms.
 
 First, download the CNT topology
-\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial2/cnt_molecular.data}{\textit{cnt$\_$molecular.data}}. It was created using VMD and
-TopoTools \cite{kohlmeyer2017topotools}, and contains information about the
-positions of the carbon atoms, as well as the identity of the atoms that are
-linked by \textit{bonds}, \textit{angles}, \textit{dihedrals},
+\href{\filepath tutorial2/cnt_molecular.data}{\textit{cnt$\_$molecular.data}}.
+It was created using VMD and TopoTools \cite{kohlmeyer2017topotools}, and contains
+information about the positions of the carbon atoms, as well as the identity of
+the atoms that are linked by \textit{bonds}, \textit{angles}, \textit{dihedrals},
 and \textit{impropers} constraints. Save the \textit{cnt$\_$molecular.data} file
 in a folder called \textit{unbreakable-bonds/}.
 
 \paragraph{The LAMMPS input}
 Create a new text file within \textit{unbreakable-bonds/} and name
-it \textit{input.lmp}. Open \textit{input.lmp} using the GUI, and copy
+it \textit{input.lmp}. Open \textit{input.lmp} using the LAMMPS-GUI, and copy
 the following lines into it:
 {\normalsize \begin{verbatim}
 variable T equal 300
@@ -789,9 +791,9 @@ Lennard-Jones interaction $\epsilon_{11} = 0.066 \, \text{kcal/mol}$ and
 $\sigma_{11} = 3.4 \, \text{\AA{}}$ for the only type of atom of the simulation;
 the carbon atom of type 1.  The \textit{bond$\_$coeff} provides the equilibrium
 distance $r_0= 1.4 \, \text{\AA{}}$ as well as the spring constant
-$k_b = 469 \, \text{kcal/mol/\AA{}}^2$ for the harmonic potential imposed
+$k_\text{b} = 469 \, \text{kcal/mol/\AA{}}^2$ for the harmonic potential imposed
 between two neighboring carbon atoms, where the potential is
-$U_b = k_b ( r - r_0)^2$. The
+$U_\text{b} = k_\text{b} ( r - r_0)^2$. The
 \textit{angle$\_$coeff} gives the equilibrium angle $\theta_0$ and constant for
 the potential between three neighbor atoms :
 $U_\theta = k_\theta ( \theta - \theta_0)^2$. The \textit{dihedral$\_$coeff}
@@ -816,10 +818,8 @@ variable xmax equal &
     bound(carbon_atoms,xmax)-0.5
 variable xmin equal &
     bound(carbon_atoms,xmin)+0.5
-region rtop block &
-    ${xmax} INF INF INF INF INF
-region rbot block &
-    INF ${xmin} INF INF INF INF
+region rtop block ${xmax} INF INF INF INF INF
+region rbot block INF ${xmin} INF INF INF INF
 region rmid block &
     ${xmin} ${xmax} INF INF INF INF
 \end{verbatim}}
@@ -829,7 +829,7 @@ The variable $x_\text{max}$ corresponds to the coordinate of the
 last atoms along $x$ minus 0.5 Ångstroms, and $x_\text{min}$ to the coordinate
 of the first atoms along $x$ plus 0.5 Ångstroms. Then, three regions are defined
 and correspond respectively to: $x < x_\text{min}$, (\textit{rbot}, for region
-bottom) $x_\text{min} > x > x_\text{max}$ (\textit{rmid}, for region middle),
+bottom), $x_\text{min} > x > x_\text{max}$ (\textit{rmid}, for region middle),
 and $x > x_\text{max}$ (\textit{rtop}, for region top).
 
 Finally, let us define 3 groups of atoms corresponding to the atoms located
@@ -886,22 +886,29 @@ The 10 deleted atoms were chosen randomly from the central part of the CNT.}
 \end{figure}
 
 \paragraph{The molecular dynamics}
-Let us specify the thermalization and the dynamics of the system. Add the following
-lines into \textit{input.lmp}:
+
+Let us give an initial temperature to the atoms of \textit{carbon$\_$mid}:
 {\normalsize \begin{verbatim}
 reset_atoms id sort yes
 velocity carbon_mid create ${T} 48455 &
     mom yes rot yes
+\end{verbatim}}
+Re-setting the atom IDs is necessary before using the \textit{velocity} command
+when atoms were deleted, which is done here with the \textit{reset$\_$atoms} command.
+The \textit{velocity} command gives initial velocities to the atoms of the middle
+group \textit{carbon$\_$mid}, ensuring an initial temperature of $300\,\text{K}$
+for these atoms.
+
+Let us specify the thermalization and the dynamics of the system. Add the following
+lines into \textit{input.lmp}:
+{\normalsize \begin{verbatim}
 fix mynve all nve
 compute Tmid carbon_mid temp
 fix myber carbon_mid temp/berendsen &
     ${T} ${T} 100
 fix_modify myber temp Tmid
 \end{verbatim}}
-Re-setting the atom IDs is necessary before using the \textit{velocity} command,
-this is done by the \textit{reset$\_$atoms} command. The \textit{velocity}
-command gives initial velocities to the atoms of the middle group \textit{carbon$\_$mid},
-ensuring an initial temperature of $300\,\text{K}$ for these atoms. The \textit{fix nve}
+ The \textit{fix nve}
 is applied to all atoms so that all atom positions are recalculated at every step,
 and a \textit{Berendsen} thermostat is applied to the atoms of the group
 \textit{carbon$\_$mid} only \cite{berendsen1984molecular}. The
@@ -926,7 +933,9 @@ and along all 3 directions of space, $x$, $y$, and $z$, due to the use of
 along $x$, $y$, and $z$ to 0 for the atoms of \textit{carbon$\_$top} and
 \textit{carbon$\_$bot}, respectively. As a consequence of these last four commands,
 the atoms of the edges will remain immobile during the simulation (or at least
-they would if no other command was applied to them). The \textit{velocity set}
+they would if no other command was applied to them).
+
+On a side note, the \textit{velocity set}
 commands impose the velocity of a group of atoms at the start of a run but do
 not enforce the velocity during the entire simulation. When \textit{velocity set}
 is used in combination with \textit{setforce 0 0 0}, as is the case here, the
@@ -935,17 +944,17 @@ equation, no force means no acceleration, meaning that the initial velocity
 will persist during the entire simulation, thus producing a constant velocity motion.
 
 \paragraph{Outputs}
-Next, to measure the strain and stress suffered by the CNT, let us create a
+Next, to measure the strain and stress applied to the CNT, let us create a
 variable for the distance $L$ between the two edges, as well as  a variable $F$
 for the force applied on the edges:
 {\normalsize \begin{verbatim}
 variable L equal &
     xcm(carbon_top,x)-xcm(carbon_bot,x)
-variable F equal f_mysf2[1]-f_mysf1[1]
+variable F equal f_mysf1[1]-f_mysf2[1]
 \end{verbatim}}
 Here, the force is extracted from the fixes \textit{mysf1} and \textit{mysf2}
-using \textit{f$\_$}, similarly to the use of \textit{v$\_$} to call variable,
-and \textit{c$\_$} to call compute, as seen in \hyperref[lennard-jones-label]{tutorial 1}.
+using \textit{f$\_$}, similarly to the use of \textit{v$\_$} to call a variable,
+and \textit{c$\_$} to call a compute, as seen in \hyperref[lennard-jones-label]{Tutorial 1}.
 
 Let us also add a \textit{dump image} command to visualize the system
 every 500 steps:
@@ -959,7 +968,7 @@ Let us run a small equilibration step to bring the system to the required
 temperature before applying any deformation:
 {\normalsize \begin{verbatim}
 thermo 100
-thermo_style custom step temp pe ke v_L v_F
+thermo_style custom step temp etotal v_L v_F
 thermo_modify temp Tmid line yaml
 
 timestep 1.0
@@ -999,7 +1008,7 @@ as expected from the imposed constant velocity. What you observe in the \textit{
 windows should resembles Fig.\,\ref{fig:CNT-deformed-unbreakable}. The total energy of the system
 shows a non-linear increase with $t$ once the deformation starts, which is expected
 from the typical dependency of bond energy with bond distance,
-$U_b = k_b \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-energy}).
+$U_\text{b} = k_\text{b} \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-energy}).
 
 \begin{figure}
 \centering
@@ -1012,34 +1021,39 @@ $U_b = k_b \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-energy}).
 \centering
 \includegraphics[width=\linewidth]{CNT-energy-unbreakable}
 \caption{Evolution of the total energy $E_\text{tot}$ of the system with time $t$.
-The CNT starts deforming at $t = 5\,\text{ps}$. Here, the force field is OPLS-AA
-(i.e. the bonds are unbreakable).}
+The CNT starts deforming at $t = 5\,\text{ps}$. The potential is OPLS-AA.}
 \label{fig:CNT-unbreakable-energy}
 \end{figure}
 
 \paragraph{Importing YAML log file into Python}
 
-Right click inside the \textit{Output} window, and select
-\textit{Export YAML data to file}. Call the output \textit{log.yaml}.
-To import the YAML log file into Python and plot the force $F$ as a function
-of the CNT length $L$, download this script
-\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial2/yaml-reader.py}{\textit{yaml-reader.py}} and save it within \textit{unbreakable-bonds/} 
-The \textit{yaml-reader.py} first imports the \textit{log.yaml} file, and a certain pattern is
+Let us import the simulation data into Python, and generate the stress-strain curve.
+Here, the stress is defined as $F/A$, where $A = \pi r^2$ is the surface area of the
+CNT, and $r=5.2$\,\AA{} the CNT radius. The strain is defined as $(L-L_0)/L_0$,
+where $L_0$ is the initial CNT length.
+
+Right-click inside the \textit{Output} window, and select
+\textit{Export YAML data to file}. Call the output \textit{log.yaml}, and save
+it within \textit{unbreakable-bonds}. Download this script
+\href{\filepath tutorial2/yaml-reader.py}{\textit{yaml-reader.py}} as well, and save it
+within \textit{unbreakable-bonds/}. The \textit{yaml-reader.py} first imports
+the \textit{log.yaml} file. Then, a certain pattern is
 identified and stored as a string character named \textit{docs}. The string is
-then converted into a list, and $F$ and $L$ are extracted into the list named \textit{F$\_$vs$\_$L},
-which is saved in the data file named \textit{F$\_$vs$\_$L.dat} using the
+then converted into a list, and $F$ and $L$ are extracted. The stress and strain
+are then calculated, and the result is saved in a data file using the
 NumPy \textit{savetxt} function. \textit{thermo[0]} can be used to access the
-informations from the first minimization run, and  \textit{thermo[1]} from
+information from the first minimization run, and \textit{thermo[1]} from
 the second MD run. The data extracted from the \textit{log.yaml} file can
-then be used to plot the force $F$ as a function of the CNT length $L$, see
-Fig.\,\ref{fig:CNT-stress-strai-unbreakable}.
+then be used to plot the stress-strain curve, see
+Fig.\,\ref{fig:CNT-stress-strain-unbreakable}.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-stress-strain-unbreakable}
-\caption{Force applied on the CNT during deformation, $F$, as a function of the
-CNT length $L$.}
-\label{fig:CNT-stress-strai-unbreakable}
+\caption{Stress applied on the CNT during deformation $F/A$, where $F$ is the force
+and $A$ the CNT surface area, as a function of the strain $(L-L_0/L_0)$, where 
+$L$ is the CNT length and $L_0$ the CNT initial length. The potential is OPLS-AA.}
+\label{fig:CNT-stress-strain-unbreakable}
 \end{figure}
 
 \subsubsection{Breakable bonds}
@@ -1069,14 +1083,20 @@ AIREBO force field. A second difference is the use of the
 bond information is required with AIREBO.
 
 \paragraph{Adapt the topology file}
+
 Since \textit{bond}, \textit{angle}, and \textit{dihedral} do not need to be
 explicitly set when using AIREBO, some simplification must be made to the
-previously generated \textit{.data} file. Download the new \textit{.data}
-file named \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial2/cnt_atom.data}{\textit{cnt$\_$atom.data}}, and place it within \textit{unbreakable-bonds/}.
-The \textit{cnt$\_$atom.data} file only contains the informations required
-for placing the atoms, but no information related to the connection between these atoms.
+\textit{.data} file. Download the new \textit{.data}
+file named \href{\filepath tutorial2/cnt_atom.data}{\textit{cnt$\_$atom.data}},
+and place it within \textit{unbreakable-bonds/}. Just like \textit{cnt$\_$molecular.data},
+the \textit{cnt$\_$atom.data} contains the information
+required for placing the atoms in the box, but no bond/angle/dihedral information.
+Another difference between \textit{cnt$\_$molecular.data} and \textit{cnt$\_$atom.data}
+is that, here, a larger distance of 120 Ångstroms was used for the box size along
+the \textit{x} axis, to allow for larger deformation.
 
 \paragraph{Use of AIREBO potential}
+
 Then, let us import the LAMMPS data file, and set the pair coefficients by adding
 the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
@@ -1084,42 +1104,32 @@ the following lines into \textit{input.lmp}:
 read_data cnt_atom.data
 pair_coeff * * CH.airebo C
 \end{verbatim}}
-Here, there is one single atom type. We impose this type to be carbon by using
-the letter \textit{C}. Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial2/CH.airebo}{\textit{CH.airebo}} file and place it within
-the \textit{breakable-bonds/} folder. The rest of the \textit{input.lmp} is
-very similar to the previous one:
+Here, there is one atom type, which we impose to be `carbon' by using
+the letter \textit{C}. Download the \href{\filepath tutorial2/CH.airebo}{\textit{CH.airebo}}
+file and place it within the \textit{breakable-bonds/} folder. The rest of the
+\textit{input.lmp} is very similar to the previous one:
 
 {\normalsize \begin{verbatim}
-change_box all x final -40 40 y &
-    final -40 40 z final -60 60
-
 group carbon_atoms type 1
-variable carbon_xcm &
-    equal -1*xcm(carbon_atoms,x)
-variable carbon_ycm &
-    equal -1*xcm(carbon_atoms,y)
-variable carbon_zcm &
-    equal -1*xcm(carbon_atoms,z)
-displace_atoms carbon_atoms move &
-    ${carbon_xcm} ${carbon_ycm} ${carbon_zcm}
 
-variable zmax equal &
-    bound(carbon_atoms,zmax)-0.5
-variable zmin equal &
-    bound(carbon_atoms,zmin)+0.5
-region rtop block INF INF INF INF ${zmax} INF
-region rbot block INF INF INF INF INF ${zmin}
+variable xmax equal &
+    bound(carbon_atoms,xmax)-0.5
+variable xmin equal &
+    bound(carbon_atoms,xmin)+0.5
+region rtop block ${xmax} INF INF INF INF INF
+region rbot block INF ${xmin} INF INF INF INF
 region rmid block &
-    INF INF INF INF ${zmin} ${zmax}
+    ${xmin} ${xmax} INF INF INF INF
 
 group carbon_top region rtop
 group carbon_bot region rbot
 group carbon_mid region rmid
 
-variable zmax_del equal ${zmax}-2
-variable zmin_del equal ${zmin}+2
-region rdel block INF INF INF INF &
-    ${zmin_del} ${zmax_del}
+variable xmax_del equal ${xmax}-2
+variable xmin_del equal ${xmin}+2
+region rdel block ${xmin_del} ${xmax_del}&
+    INF INF INF INF
+    
 group rdel region rdel
 delete_atoms random fraction 0.02 no rdel &
     NULL 482793
@@ -1133,10 +1143,6 @@ fix myber carbon_mid temp/berendsen &
     ${T} ${T} 0.1
 fix_modify myber temp Tmid
 \end{verbatim}}
-Note that a large distance of 120 Ångstroms was used for the box size along
-the \textit{z} axis, to allow for larger deformation. In addition, the
-\textit{change$\_$box} command was placed before the \textit{displace$\_$atoms}
-to avoid having the CNT crossing the edge of the box.
 
 \paragraph{Start the simulation}
 Here, let us impose a constant velocity deformation using the atoms of one
@@ -1151,19 +1157,17 @@ velocity carbon_bot set 0 0 0
 velocity carbon_top set 0 0 0
 
 variable L equal &
-    xcm(carbon_top,z)-xcm(carbon_bot,z)
-fix at1 all ave/time 10 10 100 v_L file &
-    cnt_length.dat
-fix at2 all ave/time 10 10 100 f_mysf1[1] &
-    f_mysf2[1] file edge_force.dat
+    xcm(carbon_top,x)-xcm(carbon_bot,x)
+variable F equal f_mysf1[1]-f_mysf2[1]
 
 dump mydmp all image 500 dump.*.jpg type type &
-    shiny 0.1 box no 0.01 view 90 0 zoom 1.8
+    shiny 0.1 box no 0.01 view 0 90 zoom 1.8
 dump_modify mydmp acolor 1 pink &
     adiam 1 1 backcolor white
 
 thermo 100
-thermo_modify temp Tmid
+thermo_style custom step temp etotal v_L v_F
+thermo_modify temp Tmid line yaml
 
 timestep 0.0005
 run 5000
@@ -1179,11 +1183,11 @@ After equilibration, let us set the velocity of one of the edges equal to
 $15~\text{m/s}$ and run for a longer duration than previously. Add the following
 lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
-velocity carbon_top set 0 0 0.15
+velocity carbon_top set  0.15 0 0
 run 280000
 \end{verbatim}}
 Run the simulation. Some bonds are expected to break at approximately
-two-thirds of the simulation (Fig.\,\ref{fig:CNT-deformed-breakable}).
+two-thirds of the simulation (Fig.\,\ref{fig:CNT-deformed-breakable}).  
 
 \begin{figure}
 \centering
@@ -1193,18 +1197,29 @@ of VMD is used to properly visualize the bond breaking.}
 \label{fig:CNT-deformed-breakable}
 \end{figure}
 
-Looking at the evolution of energy, one can see that it is initially
+Looking at the evolution of the energy, one can see that it is initially
 increasing with the deformation. When bonds break, the energy relaxes abruptly,
 as can be seen near $t=110~\text{ps}$ and again near $t=130~\text{ps}$ in
-Fig.\,\ref{fig:CNT-breakable-energy}.
+Fig.\,\ref{fig:CNT-breakable-energy}. Using the same script as previously to
+import the data into Python, the stress-strain
+curve can be generated, see Fig.\,\ref{fig:CNT-stress-strain-breakable}.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-energy-breakable}
 \caption{Evolution of the total energy $E_\text{tot}$ of the CNT with time $t$.
-Here, the potential is AIREBO (i.e. the bonds are breakable).}
+The potential is AIREBO.}
 \label{fig:CNT-breakable-energy}
 \end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{CNT-stress-strain-breakable}
+    \caption{Stress applied on the CNT during deformation $F/A$, where $F$ is the force
+    and $A$ the CNT surface area, as a function of the strain $(L-L_0/L_0)$, where 
+    $L$ is the CNT length and $L_0$ the CNT initial length. The potential is AIREBO.}
+    \label{fig:CNT-stress-strain-breakable}
+    \end{figure}
 
 \subsection{Tutorial 3: Polymer in water}
 \label{all-atoms-label}
