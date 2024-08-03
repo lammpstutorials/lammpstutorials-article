@@ -15,6 +15,16 @@ more accessible to new users.
     </a>
 </p>
 
+## Tutorials
+
+- Tutorial 1: Lennard-Jones ﬂuid
+- Tutorial 2: Pulling on a carbon nanotube
+- Tutorial 3: Polymer in water
+- Tutorial 4: Nanosheared electrolyte
+- Tutorial 5: Reactive silicon dioxide
+- Tutorial 6: Water adsorption in silica
+- Tutorial 7: Free energy calculation
+
 ## Link
 
 Access the pdf from [this link](lammps-tutorials.pdf), or clone this repository and compile it
@@ -33,5 +43,5 @@ make
 ## Funding Information
 
 S.G. acknowledges funding from the European Union's Horizon 2020 research and innovation
-programme under the Marie Skłodowska-Curie grant agreement N$^\circ\;101065060$. A.K. acknowledges
+programme under the Marie Skłodowska-Curie grant agreement N° 101065060$. A.K. acknowledges
 financial support by Sandia National Laboratories under POs 2149742 and 2407526.
