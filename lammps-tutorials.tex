@@ -559,6 +559,8 @@ the conjugate gradient (CG) algorithm \cite{hestenes1952methods}.
 Before running the simulation, let us decrease the update interval of the LAMMPS-GUI
 by clicking on \textit{Edit}, then \textit{Preferences}, and reducing the
 \textit{GUI update interval} from $10\,\text{ms}$ to $1\,\text{ms}$.
+% S.G. Should we also tell the user to reduce the number of CPU-cores? I've noticed that
+% by default the lammps-gui tries to use as many CPU-cores as possible.
 Then, run the simulation by selecting \textit{Run LAMMPS from Editor Buffer}
 from the \textit{Run} menu.
 
@@ -869,7 +871,6 @@ fix mylgv all langevin 1.0 1.0 0.1 &
     1530917 zero yes
 timestep 0.005
 run 300000
-write_data mixed.data
 \end{verbatim}}
 There are a few differences from the previous simulation. First, the
 \textit{velocity create} command attributes an initial velocity to each atom.
