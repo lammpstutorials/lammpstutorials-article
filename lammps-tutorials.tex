@@ -1049,7 +1049,7 @@ constraints are usually applied to maintain the relative orientations of
 neighboring atoms.
 
 First, download the CNT topology
-\href{\filepath tutorial2/cnt_molecular.data}{\textit{cnt\_molecular.data}}.
+\href{\filepath tutorial2/unbreakable-bonds/cnt_molecular.data}{\textit{cnt\_molecular.data}}.
 It was created using VMD and TopoTools \cite{kohlmeyer2017topotools}, and contains
 information about the positions of the carbon atoms, as well as the identity of
 the atoms that are linked by \textit{bonds}, \textit{angles}, \textit{dihedrals},
@@ -1356,7 +1356,7 @@ where $L_0$ is the initial CNT length.
 Right-click inside the \textit{Output} window, and select
 \textit{Export YAML data to file}. Call the output \textit{log.yaml}, and save
 it within \textit{unbreakable-bonds}. Download this script
-\href{\filepath tutorial2/yaml-reader.py}{\textit{yaml-reader.py}} as well, and save it
+\href{\filepath tutorial2/unbreakable-bonds/yaml-reader.py}{\textit{yaml-reader.py}} as well, and save it
 within \textit{unbreakable-bonds/}. The \textit{yaml-reader.py} first imports
 the \textit{log.yaml} file. Then, a certain pattern is
 identified and stored as a string character named \textit{docs}. The string is
@@ -1408,8 +1408,8 @@ bond information is required with AIREBO.
 Since \textit{bond}, \textit{angle}, and \textit{dihedral} do not need to be
 explicitly set when using AIREBO, some simplification must be made to the
 \textit{.data} file. Download the new \textit{.data}
-file named \href{\filepath tutorial2/cnt_atom.data}{\textit{cnt\_atom.data}},
-and place it within \textit{unbreakable-bonds/}. Just like \textit{cnt\_molecular.data},
+file named \href{\filepath tutorial2/breakable-bonds/cnt_atom.data}{\textit{cnt\_atom.data}},
+and place it within \textit{breakable-bonds/}. Just like \textit{cnt\_molecular.data},
 the \textit{cnt\_atom.data} contains the information
 required for placing the atoms in the box, but no bond/angle/dihedral information.
 Another difference between \textit{cnt\_molecular.data} and \textit{cnt\_atom.data}
@@ -1426,7 +1426,7 @@ read_data cnt_atom.data
 pair_coeff * * CH.airebo C
 \end{verbatim}}
 Here, there is one atom type, which we impose to be `carbon' by using
-the letter \textit{C}. Download the \href{\filepath tutorial2/CH.airebo}{\textit{CH.airebo}}
+the letter \textit{C}. Download the \href{\filepath tutorial2/breakable-bonds/CH.airebo}{\textit{CH.airebo}}
 file and place it within the \textit{breakable-bonds/} folder. The rest of the
 \textit{input.lmp} is very similar to the previous one:
 
@@ -1481,7 +1481,7 @@ variable L equal &
     xcm(carbon_top,x)-xcm(carbon_bot,x)
 variable F equal f_mysf1[1]-f_mysf2[1]
 
-dump mydmp all image 500 dump.*.jpg type type &
+dump mydmp all image 5000 dump.*.jpg type type &
     shiny 0.1 box no 0.01 view 0 90 zoom 1.8
 dump_modify mydmp acolor 1 pink &
     adiam 1 1 backcolor white
@@ -1504,7 +1504,7 @@ After equilibration, let us set the velocity of one of the edges equal to
 $15~\text{m/s}$ and run for a longer duration than previously. Add the following
 lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
-velocity carbon_top set  0.15 0 0
+velocity carbon_top set 0.15 0 0
 run 280000
 \end{verbatim}}
 Run the simulation. Some bonds are expected to break at approximately
