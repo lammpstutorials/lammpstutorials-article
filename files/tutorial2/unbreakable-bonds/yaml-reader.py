@@ -20,7 +20,7 @@ print("All info:", thermo[1]['keywords'])
 Force = []
 Length = []
 for line in thermo[1]["data"]:
-    _, _, _, _, L, F = line
+    _, _, _, L, F = line
     Force.append(F)
     Length.append(L)
 Force = np.array(Force)
