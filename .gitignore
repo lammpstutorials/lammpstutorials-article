@@ -22,3 +22,5 @@ __pycache__
 _region_.tex
 /auto
 *~
+*.orig
+*.rej
