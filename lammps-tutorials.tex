@@ -229,9 +229,9 @@ input files is illustrated through creation of a simple, atomic
 Lennard-Jones fluid system.  Basic LAMMPS commands are used to set up
 interactions between atoms, perform an energy minimization, and finally
 a simple MD simulation in the microcanonical (NVE) and canonical (NVT)
-ensembles.  This tutorial also illustrates the basic use of the LAMMPS
-graphical user interface (LAMMPS--GUI) for writing input files, running
-simulations, and visualizing results.
+ensembles.  This tutorial also introduce the LAMMPS graphical user
+interface (LAMMPS--GUI) for writing input files, running simulations,
+and visualizing results.
 
 In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system
 is introduced where atoms are connected by bonds: a small carbon
@@ -244,7 +244,7 @@ of an external visualization tool to visualize breaking bonds.
 % also illustrates the use of LAMMPS from the command line using the
 % YAML thermo format to easily import data from the \textit{log} file
 % into Python.
-
+%
 % AK: when using LAMMPS-GUI, analyzing thermo data should be even easier
 % since the data can be exported from the chart window to a
 % gnuplot/xmgrace compatible .dat file or a .csv file that can be easily
@@ -420,94 +420,129 @@ dedicated GitHub account,
 \href{https://github.com/lammpstutorials}{github.com/lammpstutorials}. In
 the following, all the commands that must be copied and pasted into
 LAMMPS input files or the terminal are written in a \verb+verbatim+
-environment, and the file and folder names are written in
-\textit{italic}.
+style, and the file and folder names are written in \textit{italic}.
 
 \subsection{Tutorial 1: Lennard-Jones fluid}
 \label{lennard-jones-label}
 
-The objective of this tutorial is to perform a simple MD simulation using LAMMPS.
-The system is a Lennard-Jones fluid composed of neutral particles with two
-different diameters, contained within a cubic box with periodic boundary
-conditions (Fig.\,\ref{fig:LJ}). In this tutorial, the temperature of the system
-is maintained using a Langevin thermostat \cite{schneider1978molecular}, and
-basic quantities, including the potential and kinetic energies, are extracted
-from the system.
-
-\begin{figure}
-\centering
-\includegraphics[width=0.55\linewidth]{LJ}
-\caption{The binary mixture simulated during \hyperref[lennard-jones-label]{Tutorial 1}.
-The atoms of type 1 are represented as small green spheres and the atoms of type 2
-as large blue spheres.}
-\label{fig:LJ}
-\end{figure}
+The objective of this tutorial is to perform a simple MD simulation
+using LAMMPS.  The system is a Lennard-Jones fluid composed of neutral
+particles with two different effective diameters, contained within a
+cubic box with periodic boundary conditions (Fig.\,\ref{fig:LJ}).  In
+this tutorial, the temperature of the system is maintained using a
+Langevin thermostat \cite{schneider1978molecular}, and basic quantities,
+including the potential and kinetic energies, are extracted from the
+system.
 
 \subsubsection{My first input}
 
-To run a simulation using LAMMPS, you need to write a series of commands in an
-input script. For clarity, the input scripts for this tutorial will be divided
-into five categories, which we will fill out one by one. First, create a folder
-named \textit{my-first-input/}, and then create a blank text file in it called
-\textit{input.lmp}. Open \textit{input.lmp} using the LAMMPS-GUI. An empty
-buffer should open, into which you can copy-paste the following lines:
-{\normalsize \begin{verbatim}
-# PART A - ENERGY MINIMIZATION
-# 1) Initialization
-# 2) System definition
-# 3) Settings
-# 4) Visualization
-# 5) Run
-\end{verbatim}}
-A line starting with a hash symbol ($\#$) is a comment ignored by LAMMPS. These
-five categories are not required in every input script and do not necessarily
-need to be in that exact order. For instance, parts 3 and 4 could be inverted,
-or part 4 could be omitted. Note, however, that LAMMPS reads input files from
-top to bottom. Therefore, the \textit{Initialization} and \textit{System
-definition} categories must appear at the top of the input, and the \textit{Run}
-category at the bottom.
+To run a simulation using LAMMPS, you need to write an input script with
+series of commands of commands that LAMMPS will then execute.  For
+clarity, the input scripts for this tutorial will be divided into five
+categories, which we will fill out step by step.  First, create a folder
+named \textit{my-first-input/} for all files of this tutorial, then
+launch LAMMPS--GUI, copy-n-paste the text below into the editor window,
+and save it to the folder as a file called \textit{input.lmp}.
+{\normalsize
+\begin{verbatim}
+ # PART A - ENERGY MINIMIZATION
+ # 1) Initialization
+ # 2) System definition
+ # 3) Settings
+ # 4) Visualization
+ # 5) Run
+\end{verbatim}
+}
+
+A line or part of a line starting with a hash symbol ($\#$) is a
+comment ignored by LAMMPS.  LAMMPS--GUI will color such comments in red.
+These five categories are not required in every input script and do not
+necessarily need to be in that exact order.  For instance, parts 3 and 4
+could be inverted, or part 4 could be omitted.  Note, however, that
+LAMMPS reads input files from top to bottom and processes each command
+in it \emph{immediately}.  Therefore, the \textit{Initialization} and
+\textit{System definition} categories must appear at the top of the
+input, and the \textit{Run} category at the bottom.  Also, the specifics
+of some commands can change after global settings are changed, so the
+order of commands in the input script matters for such cases.
 
 \paragraph{Initialization}
-In the first section of the script, called \textit{Initialization}, let us
-indicate to LAMMPS the most basic information about the simulation, such as the
-conditions at the boundaries of the box (e.g., periodic or non-periodic) or the
-type of atoms (e.g., uncharged single dots or spheres with angular velocities).
-Enter the following lines into \textit{input.lmp}:
-{\normalsize \begin{verbatim}
-# 1) Initialization
-units lj
-dimension 3
-atom_style atomic
-pair_style lj/cut 2.5
-boundary p p p
-\end{verbatim}}
-The first line, \textit{units lj}, indicates that we want to use the unit system
-called \textit{LJ} Lennard-Jones, in which all quantities are unitless. The
-second line, \textit{dimension 3}, indicates that the simulation is in 3D. The
-third line, \textit{atom$\_$style atomic}, indicates that the \textit{atomic}
-style will be used, therefore each atom is just a dot with a mass. The fourth
-line, \textit{pair$\_$style lj/cut 2.5}, indicates that atoms will be interacting
-through a Lennard-Jones potential with a cut-off equal to $r_c = 2.5$ (unitless)
-\cite{wang2020lennard,fischer2023history}:
-$$E_{ij} (r) = 4 \epsilon_{ij} \left[ \left( \dfrac{\sigma_{ij}}{r} \right)^{12}
-- \left( \dfrac{\sigma_{ij}}{r} \right)^{6} \right], ~ \text{for} ~ r < r_c,$$
-where $r$ is the inter-particle distance, $\epsilon_{ij}$ is the depth of the
-potential well that sets the interaction strength, and $\sigma_{ij}$ is the
-distance parameter or particle effective size. Here, the indexes \textit{ij}
-refer to the particle types \textit{i} and \textit{j}. The last line,
-\textit{boundary p p p}, indicates that the periodic boundary conditions will be
-used along all three directions of space (the 3 \textit{p} stand for \textit{x},
-\textit{y}, and \textit{z}, respectively).
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\linewidth]{GUI-1.png}
+\caption{A screenshot of the LAMMPS-GUI editor window during
+  \hyperref[lennard-jones-label]{Tutorial 1}. The coloring of the text
+  is based on the syntax for LAMMPS input files.  The pop-up menu is the
+  context menu for right-clicking on the ``atom\_style'' line.}
+\label{fig:GUI-1}
+\end{figure}
+
+In the first section of the script, called \textit{Initialization}, we
+enter global setting for the simulation, such as choice of units, the
+behavior at the boundaries of the box (e.g., periodic or non-periodic)
+or the type of atoms (e.g., uncharged point particles or extended
+spheres with a radius and angular velocities).  Most of these settings
+may only be changed \emph{before} the simulation box is created and the
+corresponding commands will cause an error if entered later.  Similarly,
+many LAMMPS commands may only be entered \emph{after} the simulation box
+is defined.  Enter the following lines into \textit{input.lmp}:
+{\normalsize
+\begin{verbatim}
+ # 1) Initialization
+ units lj
+ dimension 3
+ atom_style atomic
+ boundary p p p
+\end{verbatim}
+}
+% AK: I am moving the pair_style command away from this section
+% since is the odd one out here and the others are all defaults
+
+The first line, \textit{units lj}, indicates that we want to use
+so-called ``reduced units'' in which all quantities are unitless.  This
+is a popular choice for simulations investigating general statistical
+mechanical principles where only relative differences between
+parameters matter and that are not aimed to represent any specific
+material.
+
+The second line, \textit{dimension 3}, indicates that the
+simulation is in 3D as opposed to a 2D system where atoms can only
+move in the xy-plane.  The third line, \textit{atom$\_$style atomic},
+indicates that the \textit{atomic} style will be used for particles,
+therefore each particle is just a point with a mass.  This is the
+minimal atom style; other atom styles allow to associate more properties
+with atoms like charges, bonds, molecule IDs and much more.  The
+choice of atom style is generally determined by the model being
+simulated.  Using a different atom style is possible for as long
+as it is a superset of the atom style with the required properties.
+For example, it would be possible to use atom style ``charge'' instead
+of ``atomic''.  It will not affect the simulation, only it requires
+more memory to store the (otherwise unused) per-atom properties.
+
+The last line, \textit{boundary p p p}, indicates that periodic boundary
+conditions will be used along all three directions of space (the 3
+\textit{p} stand for \textit{x}, \textit{y}, and \textit{z},
+respectively).  Alternatives are fixed non-periodic, \textit{f},
+shrinkwrapped non-periodic \textit{s}, and shrinkwrapped non-periodic
+with minimum, \textit{m}.  For non-periodic boundaries, there can be a
+different choice for each side, so something like \textit{boundary p p
+  fm} is valid input and suitable for slab geometry systems.
 
 Each LAMMPS command is associated with extensive online documentation
-detailing the different options for that command. From the LAMMPS-GUI buffer,
-the LAMMPS documentation can be accessed by right-clicking a command, such as
-\textit{units lj}, and selecting \textit{View documentation for units}.
+detailing the different options for that command.  From the LAMMPS-GUI
+editor buffer, the LAMMPS documentation can be accessed by
+right-clicking the line with a command, such as \textit{units lj}, and
+selecting \textit{View documentation for (\dots)}\,.  LAMMPS--GUI will
+ask your web browser to open the corresponding URL in the online manual.
+See figure \ref{fig:GUI-1} for a screenshot demonstrating this.
 
 \paragraph{System definition}
+
 Here, let us create the simulation box and place atoms in it. Modify the
 \textit{System definition} category of \textit{input.lmp} as follows:
-{\normalsize \begin{verbatim}
+{\normalsize
+\begin{verbatim}
 # 2) System definition
 region simulation_box block &
     -20 20 -20 20 -20 20
@@ -516,16 +551,29 @@ create_atoms 1 random 1500 &
     341341 simulation_box overlap 0.3
 create_atoms 2 random 100 &
     127569 simulation_box overlap 0.3
-\end{verbatim}}
-The first line, \textit{region simulation$\_$box (...)}, creates a region named
-\textit{simulation$\_$box} that is a block (i.e. a rectangular cuboid) that extends
-from -20 to 20 (no unit) along all 3 directions of space. The second line,
-\textit{create$\_$box 2 simulation$\_$box}, creates a simulation box based on the
-region \textit{simulation$\_$box} with \textit{2} types of atoms. The third line,
-\textit{create$\_$atoms (...)}, creates 1500 atoms of type 1 randomly within the
-region \textit{simulation$\_$box}. The integer \textit{341341} is a seed that can
-be changed to create different initial conditions for the simulation. The fourth
-line creates 100 atoms of type 2.
+\end{verbatim}
+}
+
+The first line, \textit{region simulation$\_$box (...)}, creates a
+region named \textit{simulation$\_$box} that is a block (i.e. a
+rectangular cuboid) that extends from -20 to 20 (no unit) along all 3
+directions of space. The second line, \textit{create$\_$box 2
+  simulation$\_$box}, creates a simulation box based on the region
+\textit{simulation$\_$box} with \textit{2} types of atoms. The third
+line, \textit{create$\_$atoms (...)}, creates 1500 atoms of type 1
+randomly within the region \textit{simulation$\_$box}. The integer
+\textit{341341} is a seed that can be changed to create different
+initial conditions for the simulation. The fourth line creates 100 atoms
+of type 2.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{LJ}
+\caption{The binary mixture simulated during \hyperref[lennard-jones-label]{Tutorial 1}.
+  The atoms of type 1 are represented as small red spheres, the atoms of type 2 as large
+  green spheres, and the edges of the simulation box are represented a blue sticks}
+\label{fig:LJ}
+\end{figure}
 
 \paragraph{Settings}
 Let us provide the settings for the two types of atoms.  Modify the
@@ -534,9 +582,20 @@ Let us provide the settings for the two types of atoms.  Modify the
 # 3) Settings
 mass 1 1
 mass 2 1
+pair_style lj/cut 2.5
 pair_coeff 1 1 1.0 1.0
 pair_coeff 2 2 0.5 3.0
 \end{verbatim}}
+The fourth line, \textit{pair$\_$style
+  lj/cut 2.5}, indicates that atoms will be interacting through a
+Lennard-Jones potential with a cut-off equal to $r_c = 2.5$ (unitless)
+\cite{wang2020lennard,fischer2023history}:
+$$E_{ij} (r) = 4 \epsilon_{ij} \left[ \left( \dfrac{\sigma_{ij}}{r} \right)^{12}
+- \left( \dfrac{\sigma_{ij}}{r} \right)^{6} \right], ~ \text{for} ~ r < r_c,$$
+where $r$ is the inter-particle distance, $\epsilon_{ij}$ is the depth of the
+potential well that sets the interaction strength, and $\sigma_{ij}$ is the
+distance parameter or particle effective size. Here, the indexes \textit{ij}
+refer to the particle types \textit{i} and \textit{j}.
 The two \textit{mass} commands attribute a mass equal to 1 (unitless)
 to both atoms of type 1 and 2, respectively. The third line,
 \textit{pair$\_$coeff 1 1 1.0 1.0}, sets the Lennard-Jones coefficients for the
