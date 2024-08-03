@@ -87,7 +87,10 @@
 \affil[3]{Institute for Computational Molecular Science, Temple University, Philadelphia, PA 19122, USA}
 \orcid{Axel Kohlmeyer}{0000-0001-6204-6475}
 
-\blurb{This LiveCoMS document is maintained online on GitHub at \githubrepository; to provide feedback, suggestions, or help improve it, please visit the GitHub repository and participate via the issue tracker.}
+\blurb{This LiveCoMS document is maintained online on GitHub at
+  \githubrepository; to provide feedback, suggestions, or help improve
+  it, please visit the GitHub repository and participate via the issue
+  tracker.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% PUBLICATION INFORMATION
@@ -111,36 +114,39 @@
 \begin{frontmatter}
 \maketitle
 
+
 \begin{abstract}
   The availability of open-source molecular simulation software packages
   allows scientists and engineers to focus on running and analyzing
   simulations without having to write, parallelize, and validate their
   own simulation software.  While molecular simulations thus become
   accessible to a larger audience, the ``black box'' nature of such
-  software packages and wide array of options and features as well as
-  possible pitfalls can make it challenging to use them correctly,
-  particularly for beginners in the topic of simulations.  LAMMPS is one
-  such versatile molecular simulation code designed for modeling
-  particle-based systems for a broad range of materials science and
-  computational chemistry applications, including atomistic,
-  coarse--grained, mesoscale, grid-free continuum, and discrete element
-  models.  LAMMPS is capable of efficiently running simulations of
-  varying sizes from small desktop computers to large-scale
-  supercomputing environments. Its flexibility and extensibility make it
-  ideal for complex and extensive simulations of atomic and molecular
-  systems and beyond.  This article introduces a suite of tutorials
-  designed to make learning LAMMPS more accessible to new users.  The
-  first four tutorials cover the basics of running molecular simulations
-  in LAMMPS with systems of varying complexities, including a simple
-  fluid and a carbon nanotube.  The last three tutorials address more
-  advanced molecular simulation techniques, specifically the use of a
-  reactive force field, enhanced sampling, and grand canonical Monte
-  Carlo.
-  % AK: not sure how detailed this should be. I went for the max. Feel free to reduce.
+  software packages and wide array of options and features can make it
+  challenging to use them correctly, particularly for beginners in the
+  topic of MD simulations.  LAMMPS is one such versatile molecular
+  simulation code, designed for modeling particle-based systems for a
+  broad range of materials science and computational chemistry
+  applications, including atomistic, coarse--grained, mesoscale,
+  grid-free continuum, and discrete element models.  LAMMPS is capable
+  of efficiently running simulations of varying sizes from small desktop
+  computers to large-scale supercomputing environments.  Its flexibility
+  and extensibility make it ideal for complex and extensive simulations
+  of atomic and molecular systems and beyond.  This article introduces a
+  suite of tutorials designed to make learning LAMMPS more accessible to
+  new users.  The first four tutorials cover the basics of running
+  molecular simulations in LAMMPS with systems of varying complexities,
+  including a simple fluid and a carbon nanotube.  The last three
+  tutorials address more advanced molecular simulation techniques,
+  specifically the use of a reactive force field, enhanced sampling, and
+  grand canonical Monte Carlo.
+  % AK: ideally, there would be an eigth tutorial showcasing both
+  % fix bond/react and how to benefit from type labels in its use.
   In addition, we introduce LAMMPS--GUI, an enhanced graphical text
   editor with syntax highlighting, command completion, context help,
   plus built--in visualization and plotting facilities, and the ability
   to run LAMMPS directly on the input file while tracking its progress.
+  LAMMPS--GUI is used as the primary tool in the tutorials to edit
+  inputs, run LAMMPS, extract data, and visualize the simulated systems.
 \end{abstract}
 
 \end{frontmatter}
@@ -156,111 +162,120 @@
 %Additionally, for well-formatted manuscripts, we recommend that you let LaTeX handle figure/table placement for you as much as possible, so please avoid specifying strenuous float instructions like `[h!]` and `[H]` as much as possible.
 
 Molecular simulations (MS) can be used to model a large variety of
-atomic and coarse-grained systems, including solids, fluids, polymers,
-and biomolecules, as well as complex interfaces and multicomponent
-systems. Various MS methods exist, molecular dynamics (MD) and Monte
-Carlo (MC) being among the most commonly used. MD is the preferred
-method for obtaining the accurate dynamics of a system, as it relies on
-solving Newton's equations of motion. For systems with many degrees of
-freedom or complex energy landscapes, the MC method can be a better
-choice than MD because it allows for efficiently exploring a
-configuration space. MC involves performing random changes to the system
-configuration that are either accepted or rejected based on energy
-criteria \cite{frenkel2023understanding, allen2017computer}. MS allow
-for measuring a broad variety of properties, including structural
-properties (e.g. bond length distribution, coordination numbers, radial
+atomic, coarse-grained systems, including solids, fluids, polymers, and
+biomolecules, as well as complex interfaces and multicomponent systems.
+Various MS methods exist, molecular dynamics (MD) and Monte Carlo (MC)
+being among the most commonly used.  MD is the preferred method for
+obtaining the accurate dynamics of a system, as it relies on solving
+Newton's equations of motion.  For systems with many degrees of freedom
+or complex energy landscapes, the MC method can be a better choice than
+MD because it allows for efficiently exploring a configuration space
+without being confined by the accessible time scale.  MC involves
+performing random changes to the system configuration that are either
+accepted or rejected based on energy criteria
+\cite{frenkel2023understanding, allen2017computer}.  MS allow for
+measuring a broad variety of properties, including structural properties
+(e.g. bond length distribution, coordination numbers, radial
 distribution functions), thermodynamic properties (e.g. temperature,
 pressure, volume), dynamic behaviors (e.g. diffusion coefficient,
 viscosity), and mechanical responses (e.g. elastic constant, Poisson
-ratio). Some of these quantities can be directly compared with
+ratio).  Some of these quantities can be directly compared with
 experimental data, enabling the validation of the simulated system,
 while others, available only through simulations, are often useful for
 interpreting experimental data \cite{van2008molecular}.
 
 LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator)
-\cite{lammps_home} is a highly flexible open-source MS tool. Over the
-years, a broad variety of particle interaction models have been
-implemented in LAMMPS, enabling it to model, among others, atomic,
-polymeric, biological, metallic, reactive, granular, mesoscale,
+\cite{lammps_home} is a highly flexible and parallel open-source MS
+tool.  Over the years, a broad variety of particle interaction models
+have been implemented in LAMMPS, enabling it to model -- among others --
+atomic, polymeric, biological, metallic, reactive, granular, mesoscale,
 grid--free continuum, and coarse-grained systems
-\cite{thompson2022lammps}. LAMMPS can be used on a single CPU core or a
-supercomputing system, it can handle complex and large-scale simulations
-efficiently, including GPU acceleration for a subset of its
-functionality.
-% AK: Particularly popular features that make LAMMPS attractive in recent times are:
-% support for ReaxFF for chemical reactions, machine learning potentials
-% (to use and to add to LAMMPS), hybrid force fields, hybrid MD plus MC,
-% "empirical" chemical reactions (fix bond/react), multi-physics simulations (using LAMMPS as
-% a library to handle one of the multiple physics levels).
-% The list above could be expanded, but it already feels long and thus more confusing than helping.
-% I've added "reactive" to cover both, ReaxFF and fix bond/react. Not sure what else would fit.
+\cite{thompson2022lammps}.  LAMMPS can be used on a single CPU core, a
+multi-socket and multi-core server, an HPC cluster, or a high-end
+supercomputing system.  It can handle complex and large-scale
+simulations efficiently, including hybrid MPI--OpenMP parallelization
+and MPI + GPU acceleration (for a subset of its functionality).
+
 However, LAMMPS requires users to provide detailed input files that can
-be complex to write, particularly given the overwhelming number of
-options offered by LAMMPS, all contained in extensive documentation that
-can sometimes be difficult for new users to navigate. In addition to the
-intrinsic complexity of LAMMPS, performing accurate MS involves making
-several complex and system-specific decisions related to the physics to
-be modeled, such as selecting the thermodynamic ensemble
-(e.g. micro-canonical, grand-canonical), determining the simulation
-duration, and choosing the sets of parameters describing the
+be challenging to write correctly, considering the overwhelming number
+of features and options offered by LAMMPS.  While LAMMPS has an
+extensive and detailed documentation, it can be difficult for new users
+to navigate since it focuses on describing \emph{all} available
+features, but expects that users already know which to choose.  Many of
+the advanced features are not relevant to most users and the defaults
+usually adequate and thus the level of detail in the manual can become
+distracting.
+
+In addition to the intrinsic complexity of LAMMPS, performing accurate
+MS involves making several complex and system-specific decisions related
+to the physics to be modeled, such as selecting the thermodynamic
+ensemble (e.g. micro-canonical, grand-canonical), determining the
+simulation duration, and choosing the sets of parameters describing the
 interactions between the atoms (the so-called force field)
-\cite{van2018validation}. The tutorials presented in this article aim to
-flatten the learning curve and help users perform accurate and reliable
-MS using LAMMPS.
+\cite{van2018validation}.  These choices are independend from the chosen
+simulation software, although sometimes limited by the availability of
+features in a given software package.  The tutorials presented in this
+article aim to flatten the learning curve, and help users perform
+accurate and reliable MS using LAMMPS.
 
 \subsection{Scope}
 
 This set of tutorials consists of seven tutorials arranged in order of
-increasing difficulty. The novelties associated with each tutorial are
+increasing difficulty.  The novelties associated with each tutorial are
 briefly described below.
 
 In \hyperref[lennard-jones-label]{tutorial 1}, the structure of LAMMPS
-input files is illustrated through the creation of a simple
-Lennard-Jones fluid system. Basic LAMMPS commands are used to set the
-interaction between the atoms, perform an energy minimization, and
-finally a simple MD simulation in the canonical (NVT) ensemble. This
-tutorial also illustrates the basic use of the LAMMPS graphical user
-interface (LAMMPS--GUI) for writing input files and running simulations.
+input files is illustrated through the creation of a simple, atomic
+Lennard-Jones fluid system.  Basic LAMMPS commands are used to set up
+interactions between atoms, perform an energy minimization, and finally
+a simple MD simulation in the canonical (NVT) ensemble.  This tutorial
+also illustrates the basic use of the LAMMPS graphical user interface
+(LAMMPS--GUI) for writing input files, running simulations, and
+visualizing results.
 
 In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system
-where atoms are connected by bonds is used: a small carbon nanotube. The
-use of both classical and reactive force fields (here, AIREBO) is
-illustrated. An external deformation is applied to the CNT, and its
-deformation is measured. This tutorial also illustrates the use of an
-external visualization tool to visualize breaking bonds.
+is introduced where atoms are connected by bonds: a small carbon
+nanotube. The use of both classical and reactive force fields (here,
+AIREBO) is illustrated.  An external deformation is applied to the CNT,
+and its deformation is measured.  This tutorial also illustrates the use
+of an external visualization tool to visualize breaking bonds.
 
-% AK: this is still useful stuff to be shown somewhere.
-% This tutorial also illustrates the use of LAMMPS from the command line
-% using the YAML thermo format to easily import data from the \textit{log} file into Python.
+% AK: this is still useful stuff to be shown somewhere.  This tutorial
+% also illustrates the use of LAMMPS from the command line using the
+% YAML thermo format to easily import data from the \textit{log} file
+% into Python.
 
-% AK: when using LAMMPS-GUI, analyzing thermo data should be even easier since the data can
-% be exported from the chart window to a gnuplot/xmgrace compatible .dat file or a .csv file that
-% can be easily imported into Excel or OOCalc or by pandas into python. It would be straightforward
-% to add an YAML export for consistency with processing the log.
-% LAMMPS GUI will by default not create a log file, but instead capture the screen output.
-% This can be stored to a file and then the YAML content extracted.
-% Also, this could be automated by adding a "export thermo data to YAML" feature to the log
-% window of the GUI.
+% AK: when using LAMMPS-GUI, analyzing thermo data should be even easier
+% since the data can be exported from the chart window to a
+% gnuplot/xmgrace compatible .dat file or a .csv file that can be easily
+% imported into Excel or OOCalc or by pandas into python. It would be
+% straightforward to add an YAML export for consistency with processing
+% the log.  LAMMPS GUI will by default not create a log file, but
+% instead capture the screen output.  This can be stored to a file and
+% then the YAML content extracted.  Also, this could be automated by
+% adding a "export thermo data to YAML" feature to the log window of the
+% GUI.
 
 In \hyperref[all-atoms-label]{tutorial 3}, two components, liquid water
-and a polymer molecule, are merged and equilibrated. A long-range solver
-is used to handle the electrostatic interactions, and the system is
-equilibrated in the isothermal-isobaric (NPT) ensemble. A stretching
-force is then applied to the polymer.  This tutorial also demonstrates
-the use of molecule files and typelabels \cite{typelabel_paper} to
-make molecule files more generic.
+and a polymer molecule, are merged and equilibrated.  A long-range
+solver is used to handle the electrostatic interactions accurately, and
+the system is equilibrated in the isothermal-isobaric (NPT) ensemble. A
+stretching force is then applied to the polymer.  This tutorial also
+demonstrates the use of molecule files and typelabels
+\cite{typelabel_paper} to make molecule files more generic.
 
 In \hyperref[sheared-confined-label]{tutorial 4}, a fluid confined by
 two walls is simulated, illustrating the specifics of simulating systems
-with fluid-solid interfaces. This tutorial involves a slightly more
+with fluid-solid interfaces.  This tutorial involves a slightly more
 complex water model than \hyperref[all-atoms-label]{tutorial 3}: the
-four-point TIP4P model. In this tutorial, non-equilibrium MD is
+four-point TIP4P model.  In this tutorial, non-equilibrium MD is
 performed through the imposed shearing of the fluid by the moving walls.
 
-In \hyperref[reactive-silicon-dioxide-label]{tutorial 5}, the reactive
-force field called ReaxFF is used in conjunction with the charge
-equilibration method QEq. This tutorial describes a situation where the
-partial charges of the atoms adapt to their local environment.
+In \hyperref[reactive-silicon-dioxide-label]{tutorial 5}, the ReaxFF
+reactive force field is used.  ReaxFF includes charge equilibration
+(QEq).  This tutorial describes a situation where the partial charges of
+the atoms adapt to their local environment and demonstrates how to
+visualize it.
 
 In \hyperref[gcmc-silica-label]{tutorial 6}, a Monte Carlo simulation in
 the Grand Canonical ensemble is implemented to illustrate the use of
@@ -273,8 +288,9 @@ calculation of an energy barrier, this tutorial describes a protocol
 that can be used to deal with energy landscapes that prevent their
 sampling through classical MD or MC methods.
 
-% AK: As an additional justification for type labels, there could be an 8th tutorial added
-% showcasing fix bond/react, possibly based on one of examples bundled with LAMMPS. Jake?
+% AK: As an additional justification for type labels, there could be an
+% 8th tutorial added showcasing fix bond/react, possibly based on one of
+% examples bundled with LAMMPS. Jake?
 
 \section{Prerequisites}
 
