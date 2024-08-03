@@ -1,6 +1,7 @@
 # To be remove when final version is published
 lammps-tutorials.pdf
 
+# LaTex files for the manuscript
 lammps-tutorials.aux
 lammps-tutorials.log
 lammps-tutorials.out
@@ -11,12 +12,15 @@ lammps-tutorials.fls
 lammps-tutorials.synctex*
 lammps-tutorials.fdb*
 
+# LaTex files for the presubmission letter
 presubmission-letter/*.log
 presubmission-letter/*.pdf
 presubmission-letter/*.aux
 presubmission-letter/*.out
 
+# Python files
 __pycache__
 **/__pycache__
 
-
+# LAMMPS output files
+dump.*.jpg
