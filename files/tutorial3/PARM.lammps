@@ -25,15 +25,14 @@ labelmap atom 1 OE 2 C 3 HC 4 H 5 CPos 6 OAlc 7 OW 8 HW
 labelmap bond 7 OW-HW
 labelmap angle 8 HW-OW-HW
 
-pair_coeff 1 1 0.2526 2.8492 # PEG O (GROMOS 54A7)
-pair_coeff 2 2 0.0663 3.5812 # PEG C (GROMOS 54A7)
-pair_coeff 3 3 0.0283 2.3734 # PEG H (GROMOS 54A7)
-pair_coeff 4 4 0.0 0.0 # PEG H (GROMOS 54A7)
-pair_coeff 5 5 0.2450 2.8114 # PEG C (GROMOS 54A7)
-pair_coeff 6 6 0.1195 3.1000 # PEG O (GROMOS 54A7)
-pair_coeff 7 7 0.1195 3.1000 # PEG O (GROMOS 54A7)
-pair_coeff 8 8 0.155 3.165  # H2O O (SPC/Fw)
-pair_coeff 9 9 0.0 0.0 # H2O H (SPC/Fw)
+mass OE 15.9994 # PEG O (GROMOS 54A7)
+mass C 12.011 # PEG C (GROMOS 54A7)
+mass HC 1.008 # PEG H (GROMOS 54A7)
+mass H 1.008 # PEG H (GROMOS 54A7)
+mass CPos 12.011 # PEG C (GROMOS 54A7)
+mass OAlc 15.9994 # PEG O (GROMOS 54A7)
+mass OW 15.9994 # H2O O (SPC/Fw)
+mass HW 1.008 # H2O H (SPC/Fw)
 
 pair_coeff OE OE 0.2526 2.8492
 pair_coeff C C 0.0663 3.5812
