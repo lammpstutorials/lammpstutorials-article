@@ -450,13 +450,13 @@ system.
 \subsubsection{My first input}
 
 To run a simulation using LAMMPS, you need to write an input script with
-series of commands that LAMMPS will then execute.  For
-clarity, the input scripts for this tutorial will be divided into five
-categories, which we will fill out step by step.  First, create a folder
-named \textit{my-first-input/} for all files of this tutorial, then
-launch LAMMPS--GUI, copy-n-paste the text below into the \textit{Editor}
-window, and save it to the folder as a file called \textit{input.lmp}.
-{\normalsize
+a series of commands that LAMMPS will then execute.  For clarity, the
+input scripts for this tutorial will be divided into five categories,
+which we will fill out step by step.  First, create a folder named
+\textit{my-first-input/} to hold the files (input and outputs) for the
+first part of this tutorial, then launch LAMMPS--GUI, copy-n-paste the
+text below into the \textit{Editor} window, and save it to the folder as
+a file called \textit{input.lmp}.  {\normalsize
 \begin{verbatim}
  # PART A - ENERGY MINIMIZATION
  # 1) Initialization
@@ -751,7 +751,7 @@ energy decreases -- first rapidly -- then more slowly and plateaus at
 a negative value, indicating that the atoms have been displaced to
 reasonable distances from each other.
 
-Since the \textit{thermo\_style} command also included the output of the
+Since the \textit{thermo\_style} command also includes the output of the
 pressure, it is possible to switch from plotting the total energy to
 showing the pressure by choosing \textit{Press} in \textit{Select data}
 drop down menu.
