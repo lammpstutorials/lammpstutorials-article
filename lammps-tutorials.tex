@@ -138,13 +138,13 @@
   of efficiently running simulations of varying sizes from small desktop
   computers to large-scale supercomputing environments.  Its flexibility
   and extensibility make it ideal for complex and extensive simulations
-  of atomic and molecular systems and beyond.  This article introduces a
+  of atomic and molecular systems, and beyond.  This article introduces a
   suite of tutorials designed to make learning LAMMPS more accessible to
   new users.  The first four tutorials cover the basics of running
   molecular simulations in LAMMPS with systems of varying complexities,
   including a simple fluid and a carbon nanotube.  The last three
   tutorials address more advanced molecular simulation techniques,
-  specifically the use of a reactive force field, enhanced sampling, and
+  specifically, the use of a reactive force field, enhanced sampling, and
   grand canonical Monte Carlo.
   % AK: ideally, there would be an eigth tutorial showcasing both
   % fix bond/react and how to benefit from type labels in its use.
@@ -205,7 +205,7 @@ and MPI + GPU acceleration (for a subset of its functionality).
 
 However, LAMMPS requires users to provide detailed input files that can
 be challenging to write correctly, considering the overwhelming number
-of features and options offered by LAMMPS.  While LAMMPS has an
+of features and options offered by LAMMPS.  While LAMMPS has
 extensive and detailed documentation, it can be difficult for new users
 to navigate since it focuses on describing \emph{all} available
 features, but expects that users already know which to choose.  Many of
@@ -219,7 +219,7 @@ to the physics to be modeled, such as selecting the thermodynamic
 ensemble (e.g. micro-canonical, grand-canonical), determining the
 simulation duration, and choosing the sets of parameters describing the
 interactions between the atoms (the so-called force field)
-\cite{van2018validation}.  These choices are independend from the chosen
+\cite{van2018validation}.  These choices are independent of the chosen
 simulation software, although sometimes limited by the availability of
 features in a given software package.  The tutorials presented in this
 article aim to flatten the learning curve, and help users perform
@@ -232,11 +232,11 @@ increasing difficulty.  The novelties associated with each tutorial are
 briefly described below.
 
 In \hyperref[lennard-jones-label]{tutorial 1}, the structure of LAMMPS
-input files is illustrated through creation of a simple, atomic
+input files is illustrated through the creation of a simple atomic
 Lennard-Jones fluid system.  Basic LAMMPS commands are used to set up
 interactions between atoms, perform an energy minimization, and finally
-a simple MD simulation in the microcanonical (NVE) and canonical (NVT)
-ensembles.  This tutorial also introduce the LAMMPS graphical user
+run a simple MD simulation in the microcanonical (NVE) and canonical (NVT)
+ensembles.  This tutorial also introduces the LAMMPS graphical user
 interface (LAMMPS--GUI) for writing input files, running simulations,
 and visualizing results.
 
@@ -309,7 +309,7 @@ sampling through classical MD or MC methods.
 This set of tutorials assumes no prior knowledge of the LAMMPS software
 itself.  Performing the tutorials requires the use of a text editor.  We
 use the LAMMPS--GUI \cite{lammps_gui_docs} here, but other console or
-graphical text editors like GNU nano, vi/vim, emacs, notepad, Gedit,
+graphical text editors like GNU nano, vi/vim, Emacs, Notepad, Gedit,
 Visual Studio Code, and many more can be used for this purpose.  LAMMPS
 can be executed directly from LAMMPS--GUI or from the command line,
 which requires some familiarity with executing commands from a
@@ -317,7 +317,7 @@ command--line prompt.
 
 In addition, prior knowledge of the theoretical basics of molecular
 simulations and statistical physics are highly beneficial.  The user may
-refer to text books like \textit{Understanding Molecular Simulation} by
+refer to textbooks like \textit{Understanding Molecular Simulation} by
 Daan Frenkel and Berend Smit \cite{frenkel2023understanding}, as well as
 \textit{Computer Simulation of Liquids} by Michael Allen and Dominic
 Tildesley \cite{allen2017computer}.  Additionally, to better understand
@@ -347,7 +347,7 @@ tutorials.
 LAMMPS versions generally have good backward compatibility (that is, old
 inputs work with newer LAMMPS versions) but are not as good in forward
 compatibility (i.e. newer inputs are not as likely to work with older
-LAMMPS versions).  Thus it generally be possible to follow this tutorial
+LAMMPS versions).  Thus, it is generally possible to follow this tutorial
 with more recent releases of LAMMPS and to some degree with older
 versions of LAMMPS.  This tutorial shall nevertheless be occasionally
 revised to remain compatible with and take advantage of new features in
@@ -358,10 +358,10 @@ the console version of LAMMPS and a text editor plus some external tools
 for plotting and visualization.  For advanced simulations, those
 external tools may be required, anyway, since the visualization and
 plotting facilities in LAMMPS--GUI have limited functionality and
-flexibility.  Suitable external tools for plotting are, for example:
+flexibility.  Suitable external tools for plotting include
 Python with Pandas/Matplotlib \cite{van1995python,hunter2007Matplotlib},
 XmGrace, Gnuplot, Microsoft Excel, LibreOffice Calc.  Suitable external
-tools for visualization are, for example: VMD
+tools for visualization include VMD
 \cite{vmd_home,humphrey1996vmd} and OVITO \cite{ovito_home,ovito_paper}.
 % AK: Hopefully VMD 2.0 will be released before the article is submitted
 % VMD 1.9.3 is horribly outdated and missing a lot of LAMMPS support goodies
@@ -369,7 +369,7 @@ tools for visualization are, for example: VMD
 \hyperref[compiling-lammps-label]{Appendix B} has instructions for
 compiling LAMMPS from source for use with this tutorial.
 
-\hyperref[parallel-lammps-label]{Appendix C} instructions for running
+\hyperref[parallel-lammps-label]{Appendix C} provides instructions for running
 LAMMPS in parallel using MPI when using LAMMPS executables compiled
 with MPI enabled, for example on HPC clusters.
 
@@ -390,21 +390,21 @@ with MPI enabled, for example on HPC clusters.
 \subsection{About LAMMPS--GUI}
 
 LAMMPS--GUI is a graphical text editor enhanced for editing LAMMPS input
-files and linked to the LAMMPS library and thus capable of running
-LAMMPS directly.  The text editor behaves similar to other graphical
+files and is linked to the LAMMPS library and thus capable of running
+LAMMPS directly.  The text editor behaves similarly to other graphical
 text editors like Notepad or Gedit, but has the following enhancements
 specifically for working with LAMMPS:
 \begin{itemize}
 \item Line numbers
 \item Syntax highlighting for LAMMPS input files
 \item Auto-completion for LAMMPS commands and options
-\item Syntax aware indentation of lines
-\item Context sensitive online help through right click
+\item Syntax-aware indentation of lines
+\item Context-sensitive online help through right click
 \item Start and stop of simulations with a mouse click
 \item Monitoring of simulation progress
 \item Visualization using the renderer built into LAMMPS
 \item Capture of output to text window
-\item Automatic plot of thermodynamic data during run
+\item Automatic plotting of thermodynamic data during run
 \item Capture of ``dump image'' outputs for animations
 \item Viewer for plain text files
 \item Export of thermodynamic data for plotting
@@ -450,7 +450,7 @@ system.
 \subsubsection{My first input}
 
 To run a simulation using LAMMPS, you need to write an input script with
-series of commands of commands that LAMMPS will then execute.  For
+series of commands that LAMMPS will then execute.  For
 clarity, the input scripts for this tutorial will be divided into five
 categories, which we will fill out step by step.  First, create a folder
 named \textit{my-first-input/} for all files of this tutorial, then
@@ -731,13 +731,13 @@ evolution of the total energy and an \textit{Output} window with the
 output LAMMPS writes to the console during a simulation. This includes
 the thermodynamic data in text form that is plotted in the \textit{Chart} window.
 
-If the plot in your \textit{Chart} window is missing data, then your
+If the plot in your \textit{Chart} window is missing data, your
 computer is running the simulation too fast for LAMMPS--GUI to collect
 all the data.  You can adjust the settings in the
 \textit{Edit~$\to$~Preferences} dialog to collect data more frequently
-by reducing the \textit{GUI update interval} value.  At values lower
-than 10ms the time the GUI spends on collecting the data becomes
-significant and thus those should only be used for fast tutorials like
+by reducing the \textit{GUI update interval}.  At values lower
+than 10\,ms, the time the GUI spends on collecting the data becomes
+significant and thus such settings should only be used for fast tutorials like
 this one.  You can also make your simulation slower by selecting
 \textit{None} in the \textit{Accelerators} tab.
 
@@ -759,8 +759,8 @@ drop down menu.
 \paragraph{Snapshot Image}
 
 At this point it is also possible to create a snapshot image of the
-current system using \textit{Image Viewer} window.  To open it, use
-either \textit{Create Image} from the \textit{Run} menu, using the
+current system using the \textit{Image Viewer} window.  To open it, use
+either \textit{Create Image} from the \textit{Run} menu, the
 \texttt{Ctrl-I} keyboard shortcut, or by clicking on the (right) palette
 button in the status bar.  The image viewer works by telling LAMMPS to
 render an image of the current system using its own render library
@@ -769,14 +769,14 @@ displaying the created image.  The various buttons can be used to change
 what is shown and how it is rendered.  The image of figure \ref{fig:LJ}
 was created this way.  To see a snapshot of the system at the beginning
 of the run, you can temporarily replace the \textit{minimize} command
-with \textit{run 0}.  This will do one force iteration in LAMMPS without
+with \textit{run 0}.  This will perform one force iteration in LAMMPS without
 moving atoms to initialize the system.
 
 \paragraph{Molecular dynamics}
 
-After the energy minimization, any overlapping atoms have been displaced
+After the energy minimization, any overlapping atoms have been displaced,
 and the system is now ready to perform a molecular dynamics simulation
-using the minimized geometry.  Since we want to start from the result
+using the minimized geometry.  Since we want to start from the result of
 the energy minimization step, we can append commands for the MD simulation
 to the same input script, \textit{input.lmp}. After the
 \textit{minimize} command, add the following lines:
@@ -826,8 +826,8 @@ simulation will be performed in the microcanonical or NVE ensemble.
 This means the system has no exchange of energy outside the simulation
 box and the number of particles and the box volume are constant.  We can
 see that there is no equilibrium between potential and kinetic energy
-yes, as the former is falling while the latter is rising.  If you extend
-the run to run for many more steps, the values for both kinetic and
+yet, as the former is falling while the latter is rising.  If you extend
+the run for many more steps, the values for both kinetic and
 potential energy will plateau (indicating equilibrium) and the total
 energy should fluctuate around some constant value.  To achieve the
 latter, we have to reduce errors by increasing the cutoff to 5 length
@@ -847,12 +847,12 @@ run 10000
 
 The new command adds a ``Langevin thermostat'' to the atoms in the group
 \textit{all}, with a desired target temperature of 1.0 temperature units
-throughout the run (the two numbers stand for he target at the beginning
-and at the end of the run and which allow to have a temperature ramp, if
+throughout the run (the two numbers stand for the target at the beginning
+and at the end of the run, which allows for a temperature ramp if
 they differ) \cite{schneider1978molecular}.  A \textit{damping}
 parameter of 0.1 is used.  The \textit{damping} parameter determines how
 rapidly the temperature is relaxed to its desired value.  In a Langevin
-thermostat the atoms are subject friction and random noise (in the form
+thermostat the atoms are subject to friction and random noise (in the form
 of randomly added velocities).  Since a constant friction term removes
 more kinetic energy from fast atoms and less from slow atoms, the system
 will eventually reach a dynamic equilibrium where the kinetic energy
@@ -867,7 +867,7 @@ printed in the \textit{Output} window, one can see that the temperature
 \textit{Temp} starts from 0, but rapidly reaches the requested value and
 stabilizes itself near $T=1$ temperature units.  One can also see that
 the potential energy, $p_\text{e}$, rapidly decreases during energy
-minimization (see also Fig.\,\ref{fig:evolution-energy}\,a). Then, after
+minimization (see also Fig.\,\ref{fig:evolution-energy}\,a). After
 the molecular dynamics simulation starts, $p_\text{e}$ increases until
 it reaches a plateau value of about -0.25. The kinetic energy,
 $k_\text{e}$, is equal to zero during energy minimization and then
