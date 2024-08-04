@@ -32,10 +32,12 @@
 \usepackage{times}
 \usepackage{subcaption}
 \usepackage{mathtools}
+\usepackage{menukeys}
 \usepackage{microtype}
 \usepackage{tcolorbox}
 \usepackage{newverbs}
 \usepackage{listings}
+\usepackage[title]{appendix}
 
 \usepackage[
     type={CC},
@@ -58,6 +60,12 @@
 \definecolor{graytitle}{gray}{0.5}
 \definecolor{cverbbg}{gray}{0.93}
 
+\newtcolorbox{note}{
+    boxrule = 1.5pt,
+    rounded corners,
+    arc = 5pt   % corners roundness
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% IMPORTANT USER CONFIGURATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -78,13 +86,18 @@
 \corr{simon.gravelle@cnrs.fr}{SG}
 \orcid{Simon Gravelle}{0000-0003-2149-6706}
 
-% AK: TODO Jake, I suggest you add your name and affiliation here
+\author[2]{Jacob R.~Gissinger}
+\affil[2]{Stevens Institute of Technology, Hoboken, NJ 07030, USA}
+\orcid{Jacob R.~Gissinger}{0000-0003-0031-044X}
 
 \author[3]{Axel Kohlmeyer}
 \affil[3]{Institute for Computational Molecular Science, Temple University, Philadelphia, PA 19122, USA}
 \orcid{Axel Kohlmeyer}{0000-0001-6204-6475}
 
-\blurb{This LiveCoMS document is maintained online on GitHub at \githubrepository; to provide feedback, suggestions, or help improve it, please visit the GitHub repository and participate via the issue tracker.}
+\blurb{This LiveCoMS document is maintained online on GitHub at
+  \githubrepository; to provide feedback, suggestions, or help improve
+  it, please visit the GitHub repository and participate via the issue
+  tracker.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% PUBLICATION INFORMATION
@@ -108,36 +121,39 @@
 \begin{frontmatter}
 \maketitle
 
+
 \begin{abstract}
   The availability of open-source molecular simulation software packages
   allows scientists and engineers to focus on running and analyzing
   simulations without having to write, parallelize, and validate their
   own simulation software.  While molecular simulations thus become
   accessible to a larger audience, the ``black box'' nature of such
-  software packages and wide array of options and features as well as
-  possible pitfalls can make it challenging to use them correctly,
-  particularly for beginners in the topic of simulations.  LAMMPS is one
-  such versatile molecular simulation code designed for modeling
-  particle-based systems for a broad range of materials science and
-  computational chemistry applications, including atomistic,
-  coarse--grained, mesoscale, grid-free continuum, and discrete element
-  models.  LAMMPS is capable of efficiently running simulations of
-  varying sizes from small desktop computers to large-scale
-  supercomputing environments. Its flexibility and extensibility make it
-  ideal for complex and extensive simulations of atomic and molecular
-  systems and beyond.  This article introduces a suite of tutorials
-  designed to make learning LAMMPS more accessible to new users.  The
-  first four tutorials cover the basics of running molecular simulations
-  in LAMMPS with systems of varying complexities, including a simple
-  fluid and a carbon nanotube.  The last three tutorials address more
-  advanced molecular simulation techniques, specifically the use of a
-  reactive force field, enhanced sampling, and grand canonical Monte
-  Carlo.
-  % AK: not sure how detailed this should be. I went for the max. Feel free to reduce.
-  In addition, we introduce the LAMMPS GUI, an enhanced graphical text
-  editor with syntax highlighting, command completion, and context help
+  software packages and wide array of options and features can make it
+  challenging to use them correctly, particularly for beginners in the
+  topic of MD simulations.  LAMMPS is one such versatile molecular
+  simulation code, designed for modeling particle-based systems for a
+  broad range of materials science and computational chemistry
+  applications, including atomistic, coarse--grained, mesoscale,
+  grid-free continuum, and discrete element models.  LAMMPS is capable
+  of efficiently running simulations of varying sizes from small desktop
+  computers to large-scale supercomputing environments.  Its flexibility
+  and extensibility make it ideal for complex and extensive simulations
+  of atomic and molecular systems, and beyond.  This article introduces a
+  suite of tutorials designed to make learning LAMMPS more accessible to
+  new users.  The first four tutorials cover the basics of running
+  molecular simulations in LAMMPS with systems of varying complexities,
+  including a simple fluid and a carbon nanotube.  The last three
+  tutorials address more advanced molecular simulation techniques,
+  specifically, the use of a reactive force field, enhanced sampling, and
+  grand canonical Monte Carlo.
+  % AK: ideally, there would be an eighth tutorial showcasing both
+  % fix bond/react and how to benefit from type labels in its use.
+  In addition, we introduce LAMMPS--GUI, an enhanced graphical text
+  editor with syntax highlighting, command completion, context help,
   plus built--in visualization and plotting facilities, and the ability
   to run LAMMPS directly on the input file while tracking its progress.
+  LAMMPS--GUI is used as the primary tool in the tutorials to edit
+  inputs, run LAMMPS, extract data, and visualize the simulated systems.
 \end{abstract}
 
 \end{frontmatter}
@@ -152,27 +168,136 @@
 
 %Additionally, for well-formatted manuscripts, we recommend that you let LaTeX handle figure/table placement for you as much as possible, so please avoid specifying strenuous float instructions like `[h!]` and `[H]` as much as possible.
 
-Molecular simulations (MS) can be used to model a large variety of atomic and coarse-grained systems, including solids, fluids, polymers, and biomolecules, as well as complex interfaces and multicomponent systems. Various MS methods exist, molecular dynamics (MD) and Monte Carlo (MC) being among the most commonly used. MD is the preferred method for obtaining the accurate dynamics of a system, as it relies on solving Newton's equations of motion. For systems with many degrees of freedom or complex energy landscapes, the MC method can be a better choice than MD because it allows for efficiently exploring a configuration space. MC involves performing random changes to the system configuration that are either accepted or rejected based on energy criteria \cite{frenkel2023understanding, allen2017computer}. MS allow for measuring a broad variety of properties, including structural properties (e.g. bond length, inter-atomic distances), thermodynamic properties (e.g. temperature, pressure, volume), dynamic behaviors (e.g. diffusion coefficient, viscosity), and mechanical responses (e.g. elastic constant, Poisson ratio). Some of these quantities can be directly compared with experimental data, enabling the validation of the simulated system, while others, available only through simulations, are often useful for interpreting experimental data  \cite{van2008molecular}.
+Molecular simulations (MS) can be used to model a large variety of
+atomic, coarse-grained systems, including solids, fluids, polymers, and
+biomolecules, as well as complex interfaces and multi-component systems.
+Various MS methods exist, molecular dynamics (MD) and Monte Carlo (MC)
+being among the most commonly used.  MD is the preferred method for
+obtaining the accurate dynamics of a system, as it relies on solving
+Newton's equations of motion.  For systems with many degrees of freedom
+or complex energy landscapes, the MC method can be a better choice than
+MD because it allows for efficiently exploring a configuration space
+without being confined by the accessible time scale.  MC involves
+performing random changes to the system configuration that are either
+accepted or rejected based on energy criteria
+\cite{frenkel2023understanding, allen2017computer}.  MS allow for
+measuring a broad variety of properties, including structural properties
+(e.g. bond length distribution, coordination numbers, radial
+distribution functions), thermodynamic properties (e.g. temperature,
+pressure, volume), dynamic behaviors (e.g. diffusion coefficient,
+viscosity), and mechanical responses (e.g. elastic constant, Poisson
+ratio).  Some of these quantities can be directly compared with
+experimental data, enabling the validation of the simulated system,
+while others, available only through simulations, are often useful for
+interpreting experimental data \cite{van2008molecular}.
 
-LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator) is a highly flexible open-source MS tool \cite{thompson2022lammps}. Over the years, a broad variety of particle interaction models have been implemented in LAMMPS, enabling it to model, among others, atomic, polymeric, biological, metallic, granular, and coarse-grained systems. LAMMPS can be used on a single CPU core or a supercomputing system, and it can handle complex and large-scale simulations efficiently. However, LAMMPS requires users to provide detailed input files that can be complex to write, particularly given the overwhelming number of options offered by LAMMPS, all contained in extensive documentation that can sometimes be difficult for new users to navigate. In addition to the intrinsic complexity of LAMMPS, performing accurate MS involves making several complex and system-specific decisions, such as selecting the thermodynamic ensemble (e.g. micro-canonical, grand-canonical), determining the simulation duration, and choosing the sets of parameters describing the interactions between the atoms (the so-called force field) \cite{van2018validation}. The tutorials presented in this article aim to shorten the learning curve and help users perform accurate and reliable MS using LAMMPS.
+LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator)
+\cite{lammps_home} is a highly flexible and parallel open-source MS
+tool.  Over the years, a broad variety of particle interaction models
+have been implemented in LAMMPS, enabling it to model -- among others --
+atomic, polymeric, biological, metallic, reactive, granular, mesoscale,
+grid--free continuum, and coarse-grained systems
+\cite{thompson2022lammps}.  LAMMPS can be used on a single CPU core, a
+multi-socket and multi-core server, an HPC cluster, or a high-end
+supercomputing system.  It can handle complex and large-scale
+simulations efficiently, including hybrid MPI--OpenMP parallelization
+and MPI + GPU acceleration (for a subset of its functionality).
+
+However, LAMMPS requires users to provide detailed input files that can
+be challenging to write correctly, considering the overwhelming number
+of features and options offered by LAMMPS.  While LAMMPS has
+extensive and detailed documentation, it can be difficult for new users
+to navigate since it focuses on describing \emph{all} available
+features, but expects that users already know which to choose.  Many of
+the advanced features are not relevant to most users and the defaults
+usually adequate and thus the level of detail in the manual can become
+distracting.
+
+In addition to the intrinsic complexity of LAMMPS, performing accurate
+MS involves making several complex and system-specific decisions related
+to the physics to be modeled, such as selecting the thermodynamic
+ensemble (e.g. micro-canonical, grand-canonical), determining the
+simulation duration, and choosing the sets of parameters describing the
+interactions between the atoms (the so-called force field)
+\cite{van2018validation}.  These choices are independent of the chosen
+simulation software, although sometimes limited by the availability of
+features in a given software package.  The tutorials presented in this
+article aim to flatten the learning curve, and help users perform
+accurate and reliable MS using LAMMPS.
 
 \subsection{Scope}
 
-This set of tutorials consists of seven tutorials arranged in order of increasing difficulty. The novelties associated with each tutorial are briefly described below.
+This set of tutorials consists of seven tutorials arranged in order of
+increasing difficulty.  The novelties associated with each tutorial are
+briefly described below.
 
-In \hyperref[lennard-jones-label]{tutorial 1}, the structure of LAMMPS input files is illustrated through the creation of a simple Lennard-Jones fluid system. Basic LAMMPS commands are used to set the interaction between the atoms, perform an energy minimization, and finally a simple MD simulation in the canonical (NVT) ensemble. This tutorial also illustrates the use of the LAMMPS graphical user interface (GUI).
+In \hyperref[lennard-jones-label]{tutorial 1}, the structure of LAMMPS
+input files is illustrated through the creation of a simple atomic
+Lennard-Jones fluid system.  Basic LAMMPS commands are used to set up
+interactions between atoms, perform an energy minimization, and finally
+run a simple MD simulation in the microcanonical (NVE) and canonical (NVT)
+ensembles.  This tutorial also introduces the LAMMPS graphical user
+interface (LAMMPS--GUI) for writing input files, running simulations,
+and visualizing results.
 
-In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system where atoms are connected by bonds is used: a small carbon nanotube. The use of both classical and reactive force fields (here, AIREBO) is illustrated. An external deformation is applied to the CNT, and its deformation is measured. This tutorial also illustrates the use of LAMMPS from the terminal, as well as the use of the YAML format to import data from the \textit{log} file into Python.
+In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system
+is introduced where atoms are connected by bonds: a small carbon
+nanotube. The use of both classical and reactive force fields (here,
+AIREBO) is illustrated.  An external deformation is applied to the CNT,
+and its deformation is measured.  This tutorial also illustrates the use
+of an external visualization tool to visualize breaking bonds.
 
-In \hyperref[all-atoms-label]{tutorial 3}, two components, liquid water and a polymer molecule, are merged and equilibrated. A long-range solver is used to handle the electrostatic interactions, and the system is equilibrated in the isothermal-isobaric (NPT) ensemble. A stretching force is then applied to the polymer.
+% AK: this is still useful stuff to be shown somewhere.  This tutorial
+% also illustrates the use of LAMMPS from the command line using the
+% YAML thermo format to easily import data from the \textit{log} file
+% into Python.
+%
+% AK: when using LAMMPS-GUI, analyzing thermo data should be even easier
+% since the data can be exported from the chart window to a
+% gnuplot/xmgrace compatible .dat file or a .csv file that can be easily
+% imported into Excel or OOCalc or by pandas into python. It would be
+% straightforward to add an YAML export for consistency with processing
+% the log.  LAMMPS GUI will by default not create a log file, but
+% instead capture the screen output.  This can be stored to a file and
+% then the YAML content extracted.  Also, this could be automated by
+% adding a "export thermo data to YAML" feature to the log window of the
+% GUI.
 
-In \hyperref[sheared-confined-label]{tutorial 4}, a fluid confined by two walls is simulated, illustrating the specifics of simulating systems with fluid-solid interfaces. This tutorial involves a slightly more complex water model than \hyperref[all-atoms-label]{tutorial 3}: the four-point TIP4P model. In this tutorial, non-equilibrium MD is performed through the imposed shearing of the fluid by the moving walls.
+In \hyperref[all-atoms-label]{tutorial 3}, two components, liquid water
+and a polymer molecule, are merged and equilibrated.  A long-range
+solver is used to handle the electrostatic interactions accurately, and
+the system is equilibrated in the isothermal-isobaric (NPT) ensemble. A
+stretching force is then applied to the polymer.  This tutorial also
+demonstrates the use of molecule files and type labels
+\cite{typelabel_paper} to make molecule files more generic.
 
-In \hyperref[reactive-silicon-dioxide-label]{tutorial 5}, the reactive force field called ReaxFF is used in conjunction with the charge equilibration method QEq. This tutorial describes a situation where the partial charges of the atoms adapt to their local environment.
+In \hyperref[sheared-confined-label]{tutorial 4}, a fluid confined by
+two walls is simulated, illustrating the specifics of simulating systems
+with fluid-solid interfaces.  This tutorial involves a slightly more
+complex water model than \hyperref[all-atoms-label]{tutorial 3}: the
+four-point TIP4P model.  In this tutorial, non-equilibrium MD is
+performed through the imposed shearing of the fluid by the moving walls.
 
-In \hyperref[gcmc-silica-label]{tutorial 6}, a Monte Carlo simulation in the Grand Canonical ensemble is implemented to illustrate the use of LAMMPS for simulating an open system that can exchange particles with a reservoir.
+In \hyperref[reactive-silicon-dioxide-label]{tutorial 5}, the ReaxFF
+reactive force field is used.  ReaxFF includes charge equilibration
+(QEq) and thus this tutorial describes a situation where the partial
+charges of the atoms adapt to their local environment and demonstrates
+how to visualize that.
 
-In \hyperref[umbrella-sampling-label]{tutorial 7}, an advanced free energy method named umbrella sampling is implemented. Through the calculation of an energy barrier, this tutorial describes a protocol that can be used to deal with energy landscapes that prevent their sampling through classical MD or MC methods.
+In \hyperref[gcmc-silica-label]{tutorial 6}, a Monte Carlo simulation in
+the Grand Canonical ensemble is implemented to illustrate the use of
+LAMMPS for simulating an open system that can exchange particles with a
+reservoir.
+
+In \hyperref[umbrella-sampling-label]{tutorial 7}, an advanced free
+energy method called umbrella sampling is implemented.  Through the
+calculation of an energy barrier, this tutorial describes a protocol
+that can be used to deal with energy landscapes that prevent their
+sampling through classical MD or MC methods.
+
+% AK: As an additional justification for type labels, there could be an
+% 8th tutorial added showcasing fix bond/react, possibly based on one of
+% examples bundled with LAMMPS. Jake?
 
 \section{Prerequisites}
 
@@ -181,257 +306,574 @@ In \hyperref[umbrella-sampling-label]{tutorial 7}, an advanced free energy metho
 \subsection{Background knowledge}
 % Tutorials should clearly define what concepts or abilities researchers will need to complete the tutorial (e.g., some proficiency in Python; experience with Jupyter notebooks; knowledge of classical MD; etc).
 
-This set of tutorials requires no prior knowledge of LAMMPS. The tutorials assume that the user is familiar with the use of a plain-text editor such as VIM or Emacs, as well as with the most basic Unix/Linux command-line interactions. In addition, prior knowledge of the basics of molecular simulations and statistical physics would be beneficial. The user may refer to \textit{Understanding molecular simulation} by Daan Frenkel and Berend Smit \cite{frenkel2023understanding}, as well as \textit{Computer simulation of liquids} by Michael Allen and Dominic Tildesley \cite{allen2017computer}. Additionally, to better understand the fundamental concepts behind the soft matter systems simulated in these tutorials, the user can refer to \textit{Basic concepts for simple and complex liquids} by Jean-Louis Barrat and Jean-Pierre Hansen \cite{barrat2003basic}, as well as \textit{Theory of simple liquids: with applications to soft matter} by Jean-Pierre Hansen and Ian Ranald McDonald \cite{hansen2013theory}.
+This set of tutorials assumes no prior knowledge of the LAMMPS software
+itself.  Performing the tutorials requires the use of a text editor.  We
+use the LAMMPS--GUI \cite{lammps_gui_docs} here, but other console or
+graphical text editors like GNU nano, vi/vim, Emacs, Notepad, Gedit,
+Visual Studio Code, and many more can be used for this purpose.  LAMMPS
+can be executed directly from LAMMPS--GUI or from the command line,
+which requires some familiarity with executing commands from a
+command--line prompt.
+
+In addition, prior knowledge of the theoretical basics of molecular
+simulations and statistical physics are highly beneficial.  The user may
+refer to textbooks like \textit{Understanding Molecular Simulation} by
+Daan Frenkel and Berend Smit \cite{frenkel2023understanding}, as well as
+\textit{Computer Simulation of Liquids} by Michael Allen and Dominic
+Tildesley \cite{allen2017computer}.  Additionally, to better understand
+the fundamental concepts behind soft matter systems simulated in these
+tutorials, the user can refer to \textit{Basic Concepts for Simple and
+  Complex Liquids} by Jean-Louis Barrat and Jean-Pierre Hansen
+\cite{barrat2003basic}, as well as \textit{Theory of Simple Liquids:
+  with Applications to Soft Matter} by Jean-Pierre Hansen and Ian Ranald
+McDonald \cite{hansen2013theory}.
 
 \subsection{Software/system requirements}
+% AK: FIXME fill in the version dates and numbers for the next stable version
 
-The LAMMPS version 2Aug2023 is required to follow the tutorials \cite{thompson2022lammps}. Download a pre-compiled LAMMPS package that matches your operating system (i.e. Linux, macOS, or Windows) from the LAMMPS website (\href{https://docs.lammps.org}{docs.lammps.org}). Choose a package that was compiled with the LAMMPS-GUI.
-%Depending on your operating system (i.e. Linux, macOS, or Windows), the procedure may differ. LAMMPS must be compiled with the following packages:
-%\begin{itemize}
-%\item MANYBODY
-%\item MOLECULE
-%\item KSPACE
-%\item RIGID
-%\item REAXFF
-%\item EXTRA-DUMP
-%\end{itemize}
-\textcolor{blue}{(To remove/adapt if we go GUI-only: To write and edit the LAMMPS input files, a text editor such as VIM or Emacs is required. Additionally, to visualize the trajectories of the atoms, VMD version 1.9.3 will be used \cite{humphrey1996vmd}. Feel free to use an alternative visualization software like Ovito. Finally, a graph plotting tool is required. To plot the results from the simulations, Matplotlib Pyplot version 3.5.2 is used together with Python version 3.11.4 \cite{van1995python, hunter2007Matplotlib}, but any plotting tool can be used, such as XmGrace or Gnuplot.}
+The LAMMPS release version XXXAug2024 \cite{lammps_code} and the
+matching LAMMPS--GUI software version 1.6.XXX are recommended to follow
+the tutorials.  For Linux (with x86\_64 CPU), macOS (BigSur or later),
+and Windows (10 and 11) you can download a pre-compiled LAMMPS package
+from the LAMMPS release page on GitHub
+(\href{https://github.com/lammps/lammps/releases}{github.com/lammps/lammps/releases}).
+Choose a package that has GUI in the file name (it will contain
+LAMMPS--GUI and a LAMMPS executable for the console).  These
+pre--compiled packages aim to be portable and therefore omit support for
+running in parallel with MPI. \hyperref[using-lammps-gui]{Appendix A}
+has instructions for using LAMMPS-GUI features that are relevant to the
+tutorials.
+
+LAMMPS versions generally have good backward compatibility (that is, old
+inputs work with newer LAMMPS versions) but are not as good in forward
+compatibility (i.e. newer inputs are not as likely to work with older
+LAMMPS versions).  Thus, it is generally possible to follow this tutorial
+with more recent releases of LAMMPS and to some degree with older
+versions of LAMMPS.  This tutorial shall nevertheless be occasionally
+revised to remain compatible with and take advantage of new features in
+the latest stable version of LAMMPS.
+
+It is also possible to follow the tutorials without LAMMPS--GUI by using
+the console version of LAMMPS and a text editor plus some external tools
+for plotting and visualization.  For advanced simulations, those
+external tools may be required, anyway, since the visualization and
+plotting facilities in LAMMPS--GUI have limited functionality and
+flexibility.  Suitable external tools for plotting include
+Python with Pandas/Matplotlib \cite{van1995python,hunter2007Matplotlib},
+XmGrace, Gnuplot, Microsoft Excel, LibreOffice Calc.  Suitable external
+tools for visualization include VMD
+\cite{vmd_home,humphrey1996vmd} and OVITO \cite{ovito_home,ovito_paper}.
+% AK: Hopefully VMD 2.0 will be released before the article is submitted
+% VMD 1.9.3 is horribly outdated and missing a lot of LAMMPS support goodies
+
+\hyperref[compiling-lammps-label]{Appendix B} has instructions for
+compiling LAMMPS from source for use with this tutorial.
+
+\hyperref[parallel-lammps-label]{Appendix C} provides instructions for running
+LAMMPS in parallel using MPI when using LAMMPS executables compiled
+with MPI enabled, for example on HPC clusters.
+
+% AK: we should introduce advanced visualization/plotting when
+% beneficial and then use the LAMMPS GUI only to edit the input, run
+% LAMMPS and visually validate initial geometry.
+%
+% SG: \textcolor{blue}{(To remove/adapt if we go GUI-only: To write and
+% edit the LAMMPS input files, a text editor such as VIM or Emacs is
+% required. Additionally, to visualize the trajectories of the atoms,
+% VMD version 1.9.3 will be used . Feel free to use an alternative
+% visualization software like Ovito. Finally, a graph plotting tool is
+% required. To plot the results from the simulations, Matplotlib Pyplot
+% version 3.5.2 is used together with Python version 3.11.4
+% \cite{van1995python, hunter2007Matplotlib}, but any plotting tool can
+% be used, such as XmGrace or Gnuplot.}
+
+\subsection{About LAMMPS--GUI}
+
+LAMMPS--GUI is a graphical text editor enhanced for editing LAMMPS input
+files and is linked to the LAMMPS library and thus capable of running
+LAMMPS directly.  The text editor behaves similarly to other graphical
+text editors like Notepad or Gedit, but has the following enhancements
+specifically for working with LAMMPS:
+\begin{itemize}
+\item Line numbers
+\item Syntax highlighting for LAMMPS input files
+\item Auto-completion for LAMMPS commands and options
+\item Syntax-aware indentation of lines
+\item Context-sensitive online help through right click
+\item Start and stop of simulations with a mouse click
+\item Monitoring of simulation progress
+\item Visualization using the renderer built into LAMMPS
+\item Capture of output to text window
+\item Automatic plotting of thermodynamic data during run
+\item Capture of ``dump image'' outputs for animations
+\item Viewer for plain text files
+\item Export of thermodynamic data for plotting
+\item Use of OpenMP threading or GPU acceleration
+\item Customization through preferences dialog
+\end{itemize}
+
+\hyperref[using-lammps-gui]{Appendix A} contains instructions for using
+LAMMPS--GUI with the tutorials presented here.  A complete description
+of all LAMMPS--GUI features is in the LAMMPS manual\cite{lammps_gui_docs}.
+
+\begin{note}
+  For the sake of simplicity we will refer during the tutorials to
+  keyboard shortcuts using the assignments from Linux and Windows. Users
+  of macOS have to use the ``Command'' key (\cmd) instead of the
+  ``Ctrl'' key.
+\end{note}
 
 \section{Content and links}
 
 The tutorials described in this article can be accessed at
-\href{https://lammpstutorials.github.io}{lammpstutorials.github.io}, where
-additional exercises with solutions are also provided. All files and inputs
-required to follow the tutorials are available from a dedicated GitHub account,
-\href{https://github.com/lammpstutorials}{github.com/lammpstutorials}. In the
-following, all the commands that must be copied and pasted into LAMMPS input files
-or the terminal are written in a \verb+verbatim+ environment, and the file and
-folder names are written in \textit{italic}.
+\href{https://lammpstutorials.github.io}{lammpstutorials.github.io},
+where additional exercises with solutions are also provided. All files
+and inputs required to follow the tutorials are available from a
+dedicated GitHub account,
+\href{https://github.com/lammpstutorials}{github.com/lammpstutorials}. In
+the following, all the commands that must be copied and pasted into
+LAMMPS input files or the terminal are written in a \verb+verbatim+
+style, and the file and folder names are written in \textit{italic}.
 
 \subsection{Tutorial 1: Lennard-Jones fluid}
 \label{lennard-jones-label}
 
-The objective of this tutorial is to perform a simple MD simulation using LAMMPS.
-The system is a Lennard-Jones fluid composed of neutral particles with two
-different diameters, contained within a cubic box with periodic boundary
-conditions (Fig.\,\ref{fig:LJ}). In this tutorial, the temperature of the system
-is maintained using a Langevin thermostat \cite{schneider1978molecular}, and
-basic quantities, including the potential and kinetic energies, are extracted
-from the system.
+The objective of this tutorial is to perform a simple MD simulation
+using LAMMPS.  The system is a Lennard-Jones fluid composed of neutral
+particles with two different effective diameters, contained within a
+cubic box with periodic boundary conditions (Fig.\,\ref{fig:LJ}).  In
+this tutorial, the temperature of the system is maintained using a
+Langevin thermostat \cite{schneider1978molecular}, and basic quantities,
+including the potential and kinetic energies, are extracted from the
+system.
+
+\subsubsection{My first input}
+
+To run a simulation using LAMMPS, you need to write an input script with
+a series of commands that LAMMPS will then execute.  For clarity, the
+input scripts for this tutorial will be divided into five categories,
+which we will fill out step by step.  First, create a folder named
+\textit{my-first-input/} to hold the files (input and outputs) for the
+first part of this tutorial, then launch LAMMPS--GUI, copy-n-paste the
+text below into the \textit{Editor} window, and save it to the folder as
+a file called \textit{input.lmp}.
+{\normalsize
+\begin{verbatim}
+ # PART A - ENERGY MINIMIZATION
+ # 1) Initialization
+ # 2) System definition
+ # 3) Settings
+ # 4) Visualization
+ # 5) Run
+\end{verbatim}
+}
+
+A line or part of a line starting with a hash symbol ($\#$) is a
+comment ignored by LAMMPS.  LAMMPS--GUI will color such comments in red.
+These five categories are not required in every input script and do not
+necessarily need to be in that exact order.  For instance, parts 3 and 4
+could be inverted, or part 4 could be omitted.  Note, however, that
+LAMMPS reads input files from top to bottom and processes each command
+in it \emph{immediately}.  Therefore, the \textit{Initialization} and
+\textit{System definition} categories must appear at the top of the
+input, and the \textit{Run} category at the bottom.  Also, the specifics
+of some commands can change after global settings are changed, so the
+order of commands in the input script matters for such cases.
+
+The contents of the \textit{Editor} window can be saved by either using
+the ``Save'' or ``Save As'' entry in the ``File'' menu, using the
+\texttt{Ctrl--S} keyboard shortcut or by clicking on the ``Save'' icon
+at the bottom left of the \textit{Editor} window status bar.  For
+running LAMMPS in LAMMPS--GUI it is not required to save the buffer.
+The current contents of the buffer will be passed on to LAMMPS.
+
+\paragraph{Initialization}
+
+In the first section of the script, called \textit{Initialization}, we
+enter global setting for the simulation, such as choice of units, the
+behavior at the boundaries of the box (e.g., periodic or non-periodic)
+or the type of atoms (e.g., uncharged point particles or extended
+spheres with a radius and angular velocities).  These commands must be
+executed \emph{before} the simulation box is created, and they will
+cause an error if entered later.  Similarly, many LAMMPS commands may
+only be entered \emph{after} the simulation box is defined.  Only a
+very small number of commands may be used in both cases.  Enter the
+following lines into \textit{input.lmp}:
+{\normalsize
+\begin{verbatim}
+ # 1) Initialization
+ units lj
+ dimension 3
+ atom_style atomic
+ boundary p p p
+\end{verbatim}
+}
+% AK: I am moving the pair_style command away from this section
+% since is the odd one out here and the others are all defaults
+
+The first line, \textit{units lj}, indicates that we want to use
+so-called ``reduced units'' in which all quantities are unitless.  This
+is a popular choice for simulations investigating general statistical
+mechanical principles where only relative differences between
+parameters matter and that are not aimed to represent any specific
+material.
+
+The second line, \textit{dimension 3}, indicates that the
+simulation is in 3D as opposed to a 2D system where atoms can only
+move in the xy-plane.  The third line, \textit{atom\_style atomic},
+indicates that the \textit{atomic} style will be used for particles,
+therefore each particle is just a point with a mass.  This is the
+minimal atom style; other atom styles allow to associate more properties
+with atoms like charges, bonds, molecule IDs and much more.  The
+choice of atom style is generally determined by the model being
+simulated.  Using a different atom style is possible for as long
+as it is a superset of the atom style with the required properties.
+For example, it would be possible to use atom style ``charge'' instead
+of ``atomic''.  It will not affect the simulation, only it requires
+more memory to store the (otherwise unused) per-atom properties.
+
+The last line, \textit{boundary p p p}, indicates that periodic boundary
+conditions will be used along all three directions of space (the 3
+\textit{p} stand for \textit{x}, \textit{y}, and \textit{z},
+respectively).  Alternatives are fixed non-periodic, \textit{f},
+shrink-wrapped non-periodic \textit{s}, and shrink-wrapped non-periodic
+with minimum, \textit{m}.  For non-periodic boundaries, there can be a
+different choice for each side, so something like \textit{boundary p p
+  fm} is valid input and suitable for slab geometry systems.
+
+Strictly speaking, neither of these three commands are required, because
+all three settings are the default settings for the respective global
+properties.  It is, however, good practice to make such defaults
+explicit so that there is no confusion when sharing the input with other
+LAMMPS users.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\linewidth]{GUI-1.png}
+\caption{A screenshot of the LAMMPS-GUI \textit{Editor} window during
+  \hyperref[lennard-jones-label]{Tutorial 1}. The coloring of the text
+  is based on the syntax for LAMMPS input files.  The pop-up menu is the
+  context menu for right-clicking on the ``atom\_style'' line.}
+\label{fig:GUI-1}
+\end{figure}
+
+Each LAMMPS command is associated with extensive online documentation
+detailing the different options for that command.  From the LAMMPS-GUI
+editor buffer, the LAMMPS documentation can be accessed by
+right-clicking the line with a command, such as \textit{units lj}, and
+selecting \textit{View documentation for (\dots)}\,.  LAMMPS--GUI will
+ask your web browser to open the corresponding URL in the online manual.
+See figure \ref{fig:GUI-1} for a screenshot with such a context menu.
+
+\paragraph{System definition}
+
+The next step is to create the simulation box and put some atoms into it.
+Modify the \textit{System definition} category of \textit{input.lmp} as follows:
+{\normalsize
+\begin{verbatim}
+# 2) System definition
+region simulation_box block &
+    -20.0 20.0 -20.0 20.0 -20.0 20.0 units box
+create_box 2 simulation_box
+create_atoms 1 random 1500 &
+    341341 simulation_box overlap 0.3
+create_atoms 2 random 100 &
+    127569 simulation_box overlap 0.3
+\end{verbatim}
+}
+
+The first line, \textit{region simulation\_box (...)}, creates a region
+named \textit{simulation\_box} that is a block (i.e. a rectangular
+cuboid) that extends from -20 to 20 length units along all 3 directions
+of space.  The \textit{units box} option requests that the region dimensions
+are computed as multiples of the length unit and not as multiples of the
+lattice spacing (\textit{units lattice}).  In this specific case there is
+no difference, since we did not use the \textit{lattice} command and the
+default lattice spacing is 1.0 in x-, y-, or z-direction.
+
+The second line, \textit{create\_box 2 simulation\_box}, creates a
+simulation box based on the region \textit{simulation\_box} with two
+types of atoms.  From this point on, any command referencing an atom
+type larger than \textit{2} will trigger an error.  You may specify more
+atom types than what are necessary, but for each atom type you must set
+the mass and provide force field parameters for all of them. Not doing
+so will cause LAMMPS to abort with an error at the beginning of a
+minimization or an MD run.
+
+The third line, \textit{create\_atoms (\dots)}, creates 1500 atoms of type
+\textit{1} at random positions within the region
+\textit{simulation\_box}.  The integer \textit{341341} is a seed for the
+internal random number generator that can be changed to create different
+sequences of random numbers and thus different initial geometries for
+the simulation.  The fourth line creates 100 atoms of type \textit{2}.
+Both \textit{create\_atoms} commands use the optional argument
+\textit{overlap 0.3} to add a constraint to the randomly placed atoms
+that they much have at least 0.3 length units distance.  This step is to
+avoid so-called ``close contacts'' between atoms which can cause
+problems due to causing large forces.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{LJ}
 \caption{The binary mixture simulated during \hyperref[lennard-jones-label]{Tutorial 1}.
-The atoms of type 1 are represented as small green spheres and the atoms of type 2
-as large blue spheres.}
+  The atoms of type 1 are represented as small red spheres, the atoms of type 2 as large
+  green spheres, and the edges of the simulation box are represented a blue sticks}
 \label{fig:LJ}
 \end{figure}
 
-\subsubsection{My first input}
-
-To run a simulation using LAMMPS, you need to write a series of commands in an
-input script. For clarity, the input scripts for this tutorial will be divided
-into five categories, which we will fill out one by one. First, create a folder
-named \textit{my-first-input/}, and then create a blank text file in it called
-\textit{input.lmp}. Open \textit{input.lmp} using the LAMMPS-GUI. An empty
-buffer should open, into which you can copy-paste the following lines:
-{\normalsize \begin{verbatim}
-# PART A - ENERGY MINIMIZATION
-# 1) Initialization
-# 2) System definition
-# 3) Settings
-# 4) Visualization
-# 5) Run
-\end{verbatim}}
-A line starting with a hash symbol ($\#$) is a comment ignored by LAMMPS. These
-five categories are not required in every input script and do not necessarily
-need to be in that exact order. For instance, parts 3 and 4 could be inverted,
-or part 4 could be omitted. Note, however, that LAMMPS reads input files from
-top to bottom. Therefore, the \textit{Initialization} and \textit{System
-definition} categories must appear at the top of the input, and the \textit{Run}
-category at the bottom.
-
-\paragraph{Initialization}
-In the first section of the script, called \textit{Initialization}, let us
-indicate to LAMMPS the most basic information about the simulation, such as the
-conditions at the boundaries of the box (e.g., periodic or non-periodic) or the
-type of atoms (e.g., uncharged single dots or spheres with angular velocities).
-Enter the following lines into \textit{input.lmp}:
-{\normalsize \begin{verbatim}
-# 1) Initialization
-units lj
-dimension 3
-atom_style atomic
-pair_style lj/cut 2.5
-boundary p p p
-\end{verbatim}}
-The first line, \textit{units lj}, indicates that we want to use the unit system
-called \textit{LJ} Lennard-Jones, in which all quantities are unitless. The
-second line, \textit{dimension 3}, indicates that the simulation is in 3D. The
-third line, \textit{atom$\_$style atomic}, indicates that the \textit{atomic}
-style will be used, therefore each atom is just a dot with a mass. The fourth
-line, \textit{pair$\_$style lj/cut 2.5}, indicates that atoms will be interacting
-through a Lennard-Jones potential with a cut-off equal to $r_c = 2.5$ (unitless)
-\cite{wang2020lennard,fischer2023history}:
-$$E_{ij} (r) = 4 \epsilon_{ij} \left[ \left( \dfrac{\sigma_{ij}}{r} \right)^{12}
-- \left( \dfrac{\sigma_{ij}}{r} \right)^{6} \right], ~ \text{for} ~ r < r_c,$$
-where $r$ is the inter-particle distance, $\epsilon_{ij}$ is the depth of the
-potential well that sets the interaction strength, and $\sigma_{ij}$ is the
-distance parameter or particle effective size. Here, the indexes \textit{ij}
-refer to the particle types \textit{i} and \textit{j}. The last line,
-\textit{boundary p p p}, indicates that the periodic boundary conditions will be
-used along all three directions of space (the 3 \textit{p} stand for \textit{x},
-\textit{y}, and \textit{z}, respectively).
-
-Each LAMMPS command is associated with extensive online documentation
-detailing the different options for that command. From the LAMMPS-GUI buffer,
-the LAMMPS documentation can be accessed by right-clicking a command, such as
-\textit{units lj}, and selecting \textit{View documentation for units}.
-
-\paragraph{System definition}
-Here, let us create the simulation box and place atoms in it. Modify the
-\textit{System definition} category of \textit{input.lmp} as follows:
-{\normalsize \begin{verbatim}
-# 2) System definition
-region simulation_box block &
-    -20 20 -20 20 -20 20
-create_box 2 simulation_box
-create_atoms 1 random 1500 &
-    341341 simulation_box
-create_atoms 2 random 100 &
-    127569 simulation_box
-\end{verbatim}}
-The first line, \textit{region simulation$\_$box (...)}, creates a region named
-\textit{simulation$\_$box} that is a block (i.e. a rectangular cuboid) that extends
-from -20 to 20 (no unit) along all 3 directions of space. The second line,
-\textit{create$\_$box 2 simulation$\_$box}, creates a simulation box based on the
-region \textit{simulation$\_$box} with \textit{2} types of atoms. The third line,
-\textit{create$\_$atoms (...)}, creates 1500 atoms of type 1 randomly within the
-region \textit{simulation$\_$box}. The integer \textit{341341} is a seed that can
-be changed to create different initial conditions for the simulation. The fourth
-line creates 100 atoms of type 2.
-
 \paragraph{Settings}
-Let us provide the settings for the two types of atoms.  Modify the
+Now we provide the settings for the two types of atoms.  Modify the
 \textit{Settings} category of \textit{input.lmp} as follows:
-{\normalsize \begin{verbatim}
+{\normalsize
+\begin{verbatim}
 # 3) Settings
-mass 1 1
-mass 2 1
+mass 1 1.0
+mass 2 1.0
+pair_style lj/cut 2.5
 pair_coeff 1 1 1.0 1.0
 pair_coeff 2 2 0.5 3.0
-\end{verbatim}}
-The two \textit{mass} commands attribute a mass equal to 1 (unitless)
-to both atoms of type 1 and 2, respectively. The third line,
-\textit{pair$\_$coeff 1 1 1.0 1.0}, sets the Lennard-Jones coefficients for the
-interactions between atoms of type 1, respectively the energy parameter
-$\epsilon_{11} = 1.0$ and the distance parameter $\sigma_{11} = 1.0$. Similarly,
-the last line sets the Lennard-Jones coefficients for the interactions between
-atoms of type 2, $\epsilon_{22} = 0.5$, and $\sigma_{22} = 3.0$. By default,
-LAMMPS calculates the cross coefficients between the different atom types using
-geometric average: $\epsilon_{ij} = \sqrt{\epsilon_{ii} \epsilon_{jj}}$,
-$\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$. In the present case, we thus
-have: $\epsilon_{12} = \sqrt{1.0 \times 0.5} = 0.707$, and
+\end{verbatim}
+}
+
+The two \textit{mass} commands assign a mass of 1.0 mass unit
+to both atoms of type 1 and 2, respectively.  The same effect could be
+achieved with a single \textit{mass * 1.0} command. The star (*) character
+is a wild card representing all atom types.
+
+The third line, \textit{pair\_style lj/cut 2.5}, requests that the atoms will
+be interacting through a Lennard-Jones (LJ) potential with a cut-off equal to
+$r_c = 2.5$ length units \cite{wang2020lennard,fischer2023history}:
+$$E_{ij} (r) = 4 \epsilon_{ij} \left[ \left( \dfrac{\sigma_{ij}}{r} \right)^{12}
+  - \left( \dfrac{\sigma_{ij}}{r} \right)^{6} \right], ~ \text{for} ~ r
+< r_c,$$ where $r$ is the inter-particle distance, $\epsilon_{ij}$ is
+the depth of the potential well that sets the interaction strength, and
+$\sigma_{ij}$ represents the distance where the potential energy of the
+LJ potential is zero.  Here, the indexes \textit{ij} refer to the
+particle types \textit{i} and \textit{j}.  The minimum of the LJ
+potential in this formulation is at
+$\bar{\sigma} = 2^{\frac{1}{6}}\sigma$.  Sometimes people use an
+alternate formulation of the LJ potential which uses $\bar{\sigma}$,
+i.e. the minimum of the potential.  By substituting
+$\sigma = \frac{\bar{\sigma}}{2^{\frac{1}{6}}}$ in the formulation above
+we get the alternate but equivalent expression:
+$$E_{ij} (r) = \epsilon_{ij} \left[ \left( \dfrac{\bar{\sigma}_{ij}}{r} \right)^{12}
+  - 2\left( \dfrac{\bar{\sigma}_{ij}}{r} \right)^{6} \right], ~
+\text{for} ~ r < r_c,$$ LAMMPS can run simulations for both formulations
+with the same \textit{lj/cut} pair style, only the parameters for $\bar{\sigma}$
+of the second formulation must be divided by $2^{\frac{1}{6}}$ to get the $\sigma$
+needed for the first formulation for the LJ potential.
+
+The fourth line, \textit{pair\_coeff 1 1 1.0 1.0}, sets the
+Lennard-Jones coefficients for the interactions between pairs of atoms
+of type 1, respectively the energy parameter $\epsilon_{11} = 1.0$ and
+the distance parameter $\sigma_{11} = 1.0$.  Similarly, the last line
+sets the Lennard-Jones coefficients for the interactions between atoms
+of type 2, $\epsilon_{22} = 0.5$, and $\sigma_{22} = 3.0$.  By default,
+LAMMPS calculates the cross coefficients between the different atom
+types using geometric average:
+$\epsilon_{ij} = \sqrt{\epsilon_{ii} \epsilon_{jj}}$,
+$\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$.  In the present case, we
+thus have: $\epsilon_{12} = \sqrt{1.0 \times 0.5} = 0.707$, and
 $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
 
 \paragraph{Energy minimization}
-The system is now fully parametrized. Let us fill in the two last remaining categories,
-\textit{Visualization}, and \textit{Run}, by adding the following lines into
-\textit{input.lmp}:
-{\normalsize \begin{verbatim}
+The system is now fully parameterized and the input ready to compute
+forces.  Let us fill in the two last remaining categories,
+\textit{Visualization}, and \textit{Run}, by adding the following lines
+into \textit{input.lmp}:
+{\normalsize
+\begin{verbatim}
 # 4) Visualization
 thermo 10
 thermo_style custom step etotal press
 
 # 5) Run
 minimize 1.0e-6 1.0e-6 1000 10000
-\end{verbatim}}
-The \textit{thermo} command asks LAMMPS to print thermodynamic information in the
-terminal every given number of steps, here 10 steps. The \textit{thermo$\_$style custom}
-requires LAMMPS to print the step (\textit{step}), the total energy (\textit{etotal}),
-and the pressure (\textit{press}). Finally, the \textit{minimize} command instructs
-LAMMPS to perform an energy minimization of the system. By default, LAMMPS uses
-the conjugate gradient (CG) algorithm \cite{hestenes1952methods}.
+\end{verbatim}
+}
+The \textit{thermo} command asks LAMMPS to print thermodynamic
+information to the console every given number of steps, in this
+input every 10 simulation steps.  The \textit{thermo\_style custom} determines
+\emph{which} output LAMMPS should print.  This selection prints the
+the step number (\textit{step}), the total energy (\textit{etotal}), and the
+pressure (\textit{press}).
 
-Before running the simulation, let us decrease the update interval of the LAMMPS-GUI
-by clicking on \textit{Edit}, then \textit{Preferences}, and reducing the
-\textit{GUI update interval} from $10\,\text{ms}$ to $1\,\text{ms}$.
-% S.G. Should we also tell the user to reduce the number of CPU-cores? I've noticed that
-% by default the lammps-gui tries to use as many CPU-cores as possible.
-Then, run the simulation by selecting \textit{Run LAMMPS from Editor Buffer}
-from the \textit{Run} menu.
+Finally, the \textit{minimize} command tells LAMMPS to perform an energy
+minimization of the system.  That is, LAMMPS will compute the forces on
+all atoms and then update the positions according to a selected
+algorithm so that the potential energy will decrease.  By default,
+LAMMPS uses the conjugate gradient (CG) algorithm
+\cite{hestenes1952methods}.  The simulation will stop as soon at the
+minimizer algorithm cannot find a way to to lower the potential energy.
+Except for trivial systems, minimization algorithms will find the
+``next'' minimum, which may not be the global minimum.
 
-As the simulation progresses, a \textit{Charts} window showing the evolution of the total energy
-over time pops up. The value of the potential energy can also be read from the log
-file that appears in a second pop-up window. The potential energy can be seen to
-decrease from a large positive value to a negative value (orange symbols in
-Fig.\,\ref{fig:evolution-energy}\,a). The initially large and positive value of
-the potential energy was expected because the atoms have been created at random
-positions within the simulation box and some of them are probably overlapping,
-resulting in a large initial energy which is the consequence of the repulsive
-part of the Lennard-Jones interaction potential. As the energy minimization
-progresses, the energy rapidly decreases and reaches a negative value, indicating
-that the atoms have been displaced at reasonable distances from each other. It
-is possible to switch from the total energy to the pressure by choosing
-\textit{Press} in \textit{Select data} of the \textit{Charts} window.
+Now you can run the simulation by selecting \textit{Run LAMMPS from Editor
+  Buffer} from the \textit{Run} menu, or by using the
+\texttt{Ctrl-Enter} keyboard shortcut or by clicking on the green ``Run
+LAMMPS'' button (second from left) in the status bar.  The simulation
+can be stopped at any time by using \textit{Stop LAMMPS} from the
+\textit{Run} menu, the \texttt{Ctrl-/} keyboard shortcut or by clicking
+on the red stop button in the status bar.  A new run will always
+``forget'' the current system and start over from the top.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.45\linewidth]{chart-1}
+\includegraphics[width=0.45\linewidth]{output-1}
+\caption{\textit{Chart} (left) and \textit{Output} (right) window of LAMMPS-GUI after performing
+  the minimization simulation of \hyperref[lennard-jones-label]{Tutorial 1}.}
+\label{fig:chart-log}
+\end{figure}
+
+As the simulation launches, two additional windows will show up as shown
+in figure \ref{fig:chart-log}: a \textit{Charts} window showing the
+evolution of the total energy and an \textit{Output} window with the
+output LAMMPS writes to the console during a simulation. This includes
+the thermodynamic data in text form that is plotted in the \textit{Chart} window.
+
+If the plot in your \textit{Chart} window is missing data, your
+computer is running the simulation too fast for LAMMPS--GUI to collect
+all the data.  You can adjust the settings in the
+\textit{Edit~$\to$~Preferences} dialog to collect data more frequently
+by reducing the \textit{GUI update interval}.  At values lower
+than 10\,ms, the time the GUI spends on collecting the data becomes
+significant and thus such settings should only be used for fast tutorials like
+this one.  You can also make your simulation slower by selecting
+\textit{None} in the \textit{Accelerators} tab.
+
+The potential energy can be seen to decrease from a positive value to a
+negative value.  The initially positive value of the potential energy is
+expected because the atoms have been created at random positions within
+the simulation box and some of them are very close, resulting in a large
+initial potential energy due to the repulsive branch of the
+Lennard-Jones potential.  As the energy minimization progresses, the
+energy decreases -- first rapidly -- then more slowly and plateaus at
+a negative value, indicating that the atoms have been displaced to
+reasonable distances from each other.
+
+Since the \textit{thermo\_style} command also includes the output of the
+pressure, it is possible to switch from plotting the total energy to
+showing the pressure by choosing \textit{Press} in \textit{Select data}
+drop down menu.
+
+\paragraph{Snapshot Image}
+
+At this point it is also possible to create a snapshot image of the
+current system using the \textit{Image Viewer} window.  To open it, use
+either \textit{Create Image} from the \textit{Run} menu, the
+\texttt{Ctrl-I} keyboard shortcut, or by clicking on the (right) palette
+button in the status bar.  The image viewer works by telling LAMMPS to
+render an image of the current system using its own render library
+through the \textit{dump image} command and then reading in and
+displaying the created image.  The various buttons can be used to change
+what is shown and how it is rendered.  The image of figure \ref{fig:LJ}
+was created this way.  To see a snapshot of the system at the beginning
+of the run, you can temporarily replace the \textit{minimize} command
+with \textit{run 0}.  This will perform one force iteration in LAMMPS without
+moving atoms to initialize the system.
 
 \paragraph{Molecular dynamics}
 
-After the energy minimization, any overlapping atoms have been displaced and the
-system is now ready. Let us now perform a molecular dynamics simulation starting
-from the final state of the previous energy minimization step. In the same input
-script, \textit{input.lmp}, right after the \textit{minimization} command, add the
-following lines:
-{\normalsize \begin{verbatim}
+After the energy minimization, any overlapping atoms have been displaced,
+and the system is now ready to perform a molecular dynamics simulation
+using the minimized geometry.  Since we want to start from the result of
+the energy minimization step, we can append commands for the MD simulation
+to the same input script, \textit{input.lmp}. After the
+\textit{minimize} command, add the following lines:
+{\normalsize
+\begin{verbatim}
 # PART B - MOLECULAR DYNAMICS
 # 4) Visualization
 thermo 50
 thermo_style custom step temp etotal &
     pe ke press
-\end{verbatim}}
-Since LAMMPS reads the input from top to bottom, these lines will be executed
-after the energy minimization. There is no need to re-initialize or re-define
-the system. The \textit{thermo} command is called a second time within the same
-input, so the previously entered value of 10 will be replaced by the value of
-50 as soon as \textit{PART B} starts. In addition, the \textit{thermo$\_$style}
-command imposes that the thermodynamic information to be printed by LAMMPS
-during \textit{PART B} is different from that of \textit{PART A}. This is done
-because, during molecular dynamics, the system will have a non-zero temperature
-(\textit{temp}) and kinetic energy (\textit{ke}). Here, \textit{pe} is the
-potential energy of the system, such that \textit{pe + ke = etotal}.
+\end{verbatim}
+}
 
-Then, let us add a second \textit{Run} category by adding the following lines
-to \textit{PART B} of \textit{input.lmp}:
-{\normalsize \begin{verbatim}
+Since LAMMPS reads the input from top to bottom and acts on each line
+immediately, these lines will be executed \emph{after} the energy
+minimization.  There is no need to re-initialize or re-define the
+system.  The \textit{thermo} command is called a second time to change
+the previous value of 10 to a value of 50 as soon as \textit{PART B} of
+the simulation starts.  In addition, a new \textit{thermo\_style}
+command changes which thermodynamic information to be printed by LAMMPS
+during \textit{PART B}.  This is done because, during molecular
+dynamics, the system will have a non-zero temperature (\textit{temp})
+and kinetic energy (\textit{ke}) and it is useful to monitor those.
+Here, \textit{pe} is the potential energy of the system, such that
+\textit{pe + ke = etotal}.
+
+Then, let us add a second \textit{Run} category by adding the following
+lines to \textit{PART B} of \textit{input.lmp}:
+{\normalsize
+\begin{verbatim}
+# 5) Run
+fix mynve all nve
+timestep 0.005
+run 10000
+\end{verbatim}
+}
+The \textit{fix nve} command is used to update the positions and the
+velocities of the atoms in the group \textit{all} at every step.  The
+group \textit{all} is a default group that contains every atom.  The
+last two lines set the value of the \textit{timestep} and the number of
+steps for the \textit{run}, respectively, corresponding to a total
+duration of 50 time units.
+
+Since there are no other fix commands that change forces or velocities,
+and since we have periodic boundary conditions in all directions, the MD
+simulation will be performed in the microcanonical or NVE ensemble.
+This means the system has no exchange of energy outside the simulation
+box and the number of particles and the box volume are constant.  We can
+see that there is no equilibrium between potential and kinetic energy
+yet, as the former is falling while the latter is rising.  If you extend
+the run for many more steps, the values for both kinetic and
+potential energy will plateau (indicating equilibrium) and the total
+energy should fluctuate around some constant value.  To achieve the
+latter, we have to reduce errors by increasing the cutoff to 5 length
+units and reducing the timestep to 0.0025 time units since the choices
+of 2.5 and 0.005 are quite aggressive.
+
+Now we change the \textit{Run} section to:
+{\normalsize
+\begin{verbatim}
 # 5) Run
 fix mynve all nve
 fix mylgv all langevin 1.0 1.0 0.1 1530917
 timestep 0.005
 run 10000
-\end{verbatim}}
-The \textit{fix nve} is used to update the positions and the velocities of the
-atoms in the group \textit{all} at every step. The group \textit{all} is a
-default group that contains every atom. The second fix applies a Langevin thermostat
-to the atoms in the group \textit{all}, with a desired initial temperature of 1.0
-(unitless), and a final temperature of 1.0 as well \cite{schneider1978molecular}.
-A \textit{damping} parameter of 0.1 is used. The \textit{damping} parameter
-determines how rapidly the temperature is relaxed to its desired value. The number
-\textit{1530917} is a seed, you can change it to perform statistically independent
-simulations. Finally, the last two lines set the value of the \textit{timestep}
-and the number of steps for the \textit{run}, respectively, corresponding to a
-total duration of 50 (unitless).
+\end{verbatim}
+}
 
-Run the simulation again using LAMMPS. Open the \textit{Output} window by
-selecting \textit{View}, and \textit{Output}. From the information printed in the
-\textit{Output} window, one can see that the temperature \textit{Temp} starts from 0, but
-rapidly reaches the requested value and stabilizes itself near $T=1$ (unitless).
-One can also see that the potential energy, $p_\text{e}$, rapidly decreases
-during energy minimization (see also Fig.\,\ref{fig:evolution-energy}\,a). Then, after
-the molecular dynamics simulation starts, $p_\text{e}$ increases until it reaches
-a plateau value of about -0.25. The kinetic energy, $k_\text{e}$, is equal to
-zero during energy minimization and then increases during molecular dynamics until
-it reaches a plateau value of about 1.5 (Fig.\,\ref{fig:evolution-energy}\,b).
+The new command adds a ``Langevin thermostat'' to the atoms in the group
+\textit{all}, with a desired target temperature of 1.0 temperature units
+throughout the run (the two numbers stand for the target at the beginning
+and at the end of the run, which allows for a temperature ramp if
+they differ) \cite{schneider1978molecular}.  A \textit{damping}
+parameter of 0.1 is used.  The \textit{damping} parameter determines how
+rapidly the temperature is relaxed to its desired value.  In a Langevin
+thermostat the atoms are subject to friction and random noise (in the form
+of randomly added velocities).  Since a constant friction term removes
+more kinetic energy from fast atoms and less from slow atoms, the system
+will eventually reach a dynamic equilibrium where the kinetic energy
+removed and added are about the same.  The number \textit{1530917} is a
+seed used to initialize the random number generator used inside of
+\textit{fix langevin}, you can change it to perform statistically
+independent simulations.
+
+Run the simulation again using LAMMPS. Open the \textit{Output} window
+by selecting \textit{View}, and \textit{Output}. From the information
+printed in the \textit{Output} window, one can see that the temperature
+\textit{Temp} starts from 0, but rapidly reaches the requested value and
+stabilizes itself near $T=1$ temperature units.  One can also see that
+the potential energy, $p_\text{e}$, rapidly decreases during energy
+minimization (see also Fig.\,\ref{fig:evolution-energy}\,a). After
+the molecular dynamics simulation starts, $p_\text{e}$ increases until
+it reaches a plateau value of about -0.25. The kinetic energy,
+$k_\text{e}$, is equal to zero during energy minimization and then
+increases during molecular dynamics until it reaches a plateau value of
+about 1.5 (Fig.\,\ref{fig:evolution-energy}\,b).
 
 \begin{figure}
 \centering
@@ -443,40 +885,45 @@ of the time $t$. b) Kinetic energy ($k_\text{e}$) as a function of $t$.}
 
 \paragraph{Trajectory visualization}
 
-So far, the simulation was monitored only from the thermodynamic information.
-To better follow the evolution of the system and visualize the trajectories
-of the atoms, let us use the \textit{dump image} command. Add the following
-command to the \textit{input.lmp} file, in the \textit{Visualization} category
-of \textit{PART B}:
-{\normalsize \begin{verbatim}
-dump mydmp all image 100 dump.*.jpg type type
-\end{verbatim}}
-This command requires LAMMPS to generate JPG images every 100 steps. The two
-\textit{type} keywords are for \textit{color} and \textit{diameter}, respectively.
-Run the \textit{input.lmp} using LAMMPS again, and a new window named
-\textit{Slide show} will pop up.
+So far, the simulation was monitored only from the thermodynamic
+information.  To better follow the evolution of the system and visualize
+the trajectories of the atoms, we use the \textit{dump image} command to
+create snapshot images during the simulation.  We have already explored
+the \textit{Image Viewer} window.  Open it (again) and adjust the
+visualization to your liking using the various buttons.  Now you can
+copy the command line used to create this visualization to the clipboard
+by either using the \texttt{Ctrl-D} keyboard shortcut or select
+\textit{Copy dump image command} from the \textit{File} menu.  This text
+can be pasted into the into the \textit{Visualization} section of
+\textit{PART B:} of the \textit{input.lmp} file.
 
-The rendering of the system can be improved by taking advantage of the many
-options of the \textit{dump image} command. Modify the previous \textit{dump}
-command as follows:
-{\normalsize \begin{verbatim}
-dump mydmp all image 100 dump.*.jpg type type &
-    shiny 0.1 box no 0.01 view 0 0 zoom 1.8
-\end{verbatim}}
-Here, the \textit{shiny} keyword is used to reduce the shininess of the atoms,
-the \textit{box} keyword removes the box, and the \textit{view} and \textit{zoom}
-keywords adjust the camera.
+This may look like the following:
+{\normalsize
+\begin{verbatim}
+dump viz all image 100 myimage-*.ppm type type size 800 800 &
+    zoom 1.452 shiny 0.5  fsaa yes view 80 10 box yes 0.025 &
+    axes no 0.0 0.0 center s 0.483725 0.510373 0.510373
+dump_modify viz pad 9 boxcolor darkblue backcolor white &
+    adiam 1 1.6 adiam 2 4.8  
+\end{verbatim}
+}
+This command tells LAMMPS to generate NetPBM format images every 100
+steps. The two \textit{type} keywords are for \textit{color} and
+\textit{diameter}, respectively.  Run the \textit{input.lmp} using
+LAMMPS again, and a new window named \textit{Slide Show} will pop up.
+It will show each image created by the \textit {dump image} as it is
+created and after the simulation is finished (or stopped), the slide
+show viewer allows to animate the trajectory by cycling through the
+images.  The window also allows to export the animation to a movie
+(provided the FFMpeg program is installed) and to bulk delete those
+image files.
 
-Further aesthetic improvements can be obtained by using the \textit{dump$\_$modify}
-command:
-{\normalsize \begin{verbatim}
-dump_modify mydmp acolor 1 darkturquoise &
-    acolor 2 darkblue adiam 1 1 adiam 2 3 &
-    backcolor white
-\end{verbatim}}
-The \textit{acolor} and \textit{adiam} keywords are used to adjust the color and
-diameters of the atoms, respectively, and the \textit{backcolor} keyword adjusts
-the color of the background.
+The rendering of the system can be further adjusted using the many
+options of the \textit{dump image} command.  The value for the
+\textit{shiny} keyword is used to adjust the shininess of the atoms, the
+\textit{box} keyword adds or removes a representation of the box, and
+the \textit{view} and \textit{zoom} keywords adjust the camera and so
+on.
 
 \subsubsection{Improving the script}
 
@@ -489,14 +936,16 @@ Create a new folder next to \textit{my-first-input/} and call it
 \textit{improved-input/}. Then, create a new input file within
 \textit{improved-input/} and call it \textit{input.min.lmp}. Similarly to what
 has been done previously, copy the following lines into \textit{input.min.lmp}:
-{\normalsize \begin{verbatim}
+{\normalsize
+\begin{verbatim}
 # 1) Initialization
 units lj
 dimension 3
 atom_style atomic
 pair_style lj/cut 2.5
 boundary p p p
-\end{verbatim}}
+\end{verbatim}
+}
 To create the atoms of types 1 and 2 in two separate regions, let us create
 three separate regions: a cubic region for the simulation box and two additional
 regions for placing the atoms:
@@ -536,19 +985,19 @@ dump_modify mydmp acolor 1 darkturquoise &
 minimize 1.0e-4 1.0e-6 1000 10000
 write_data minimized_coordinate.data
 \end{verbatim}}
-The main novelty, compared to the previous input script, is the \textit{write$\_$data}
+The main novelty, compared to the previous input script, is the \textit{write\_data}
 command. This command is used to print the final state of the simulation in a file
-called \textit{minimized$\_$coordinate.data}. Note that the \textit{write$\_$data}
+called \textit{minimized\_coordinate.data}. Note that the \textit{write\_data}
 command is placed after the \textit{minimize} command. This \textit{.data} file
 will be used later to restart the simulation from the final state of the energy
 minimization step.
 
 Run the \textit{input.min.lmp} script using LAMMPS. At the end of the simulation,
-a file called \textit{minimized$\_$coordinate.data} is created by LAMMPS. If you
-open \textit{minimized$\_$coordinate.data} with a text editor, you can see that
+a file called \textit{minimized\_coordinate.data} is created by LAMMPS. If you
+open \textit{minimized\_coordinate.data} with a text editor, you can see that
 it contains all the information necessary to restart the simulation, such as the
-number of atoms, the box size, the \textit{masses}, and the \textit{pair$\_$coeffs}.
-The \textit{minimized$\_$coordinate.data} file also contains the final positions
+number of atoms, the box size, the \textit{masses}, and the \textit{pair\_coeffs}.
+The \textit{minimized\_coordinate.data} file also contains the final positions
 of the atoms within the \textit{Atoms} section. The first five columns of the
 \textit{Atoms} section correspond (from left to right) to the atom indexes (from
 1 to the total number of atoms, 1150), the atom types (1 or 2 here), and the
@@ -597,13 +1046,13 @@ delete_atoms group group_type_1_in
 delete_atoms group group_type_2_out
 \end{verbatim}}
 The two first \textit{region} commands recreate the previously defined regions,
-which is necessary since regions are not saved by the \textit{write$\_$data}
+which is necessary since regions are not saved by the \textit{write\_data}
 command. The first two \textit{group} commands are used to create groups containing
 all the atoms of type 1 and all the atoms of type 2, respectively. The next two
 \textit{group} commands create atom groups based on their positions at the beginning
 of the simulation, i.e. when the commands are being read by LAMMPS. The last two
 \textit{group} commands create atom groups based on the intersection between the
-previously defined groups. Finally, the two \textit{delete$\_$atoms} commands delete
+previously defined groups. Finally, the two \textit{delete\_atoms} commands delete
 the atoms of type 1 that are located within the cylinder and the atoms of type 2
 that are located outside the cylinder, respectively.
 
@@ -616,7 +1065,7 @@ variable n2_in &
     equal count(group_type_2,cylinder_in)
 \end{verbatim}}
 The two \textit{variables} are used to count the number of atoms of a specific
-group in the \textit{cylinder$\_$in} region. 
+group in the \textit{cylinder\_in} region.
 
 In addition to counting the atoms in each region, let us also extract the
 coordination number per atom between atoms of types 1 and 2. The coordination
@@ -646,7 +1095,7 @@ dump_modify mydmp acolor 1 darkturquoise &
     acolor 2 darkblue adiam 1 1 adiam 2 3 &
     backcolor white
 \end{verbatim}}
-The two variables, \textit{n1$\_$in}, \textit{n2$\_$in}, and the
+The two variables, \textit{n1\_in}, \textit{n2\_in}, and the
 compute \textit{sumcoor12}, were added to the list of information printed during
 the simulation.
 
@@ -681,7 +1130,7 @@ ensures that the total random force applied to the atoms is equal to zero.
 
 Run \textit{input.md.lmp} using LAMMPS, and observe the mixing of the two
 populations over time (see also Fig.\,\ref{fig:evolution-population}). From the
-variables \textit{n1$\_$in} and \textit{n2$\_$in}, one can follow the number of
+variables \textit{n1\_in} and \textit{n2\_in}, one can follow the number of
 atoms in each region as a function of time (Fig.\,\ref{fig:mixing}\,a). In addition,
 as the mixing progresses, the coordination number between atoms of types 1 and 2 increases
 from about $0.01$ to $0.35$ (Fig.\,\ref{fig:mixing}\,b). This indicates that,
@@ -692,7 +1141,7 @@ particles of type 2, as expected during mixing.
 \centering
 \includegraphics[width=\linewidth]{LJ-mixing}
 \caption{a) Evolution of the number $N_\text{in}$ of atoms within the
-\textit{cylinder$\_$in} region as a function of the time $t$. b) Evolution of
+\textit{cylinder\_in} region as a function of the time $t$. b) Evolution of
 the coordination number $C_{1-2}$ between atoms of types 1 and 2.}
 \label{fig:mixing}
 \end{figure}
@@ -729,11 +1178,11 @@ constraints are usually applied to maintain the relative orientations of
 neighboring atoms.
 
 First, download the CNT topology
-\href{\filepath tutorial2/unbreakable-bonds/cnt_molecular.data}{\textit{cnt$\_$molecular.data}}.
+\href{\filepath tutorial2/unbreakable-bonds/cnt_molecular.data}{\textit{cnt\_molecular.data}}.
 It was created using VMD and TopoTools \cite{kohlmeyer2017topotools}, and contains
 information about the positions of the carbon atoms, as well as the identity of
 the atoms that are linked by \textit{bonds}, \textit{angles}, \textit{dihedrals},
-and \textit{impropers} constraints. Save the \textit{cnt$\_$molecular.data} file
+and \textit{impropers} constraints. Save the \textit{cnt\_molecular.data} file
 in a folder called \textit{unbreakable-bonds/}.
 
 \paragraph{The LAMMPS input}
@@ -758,7 +1207,7 @@ special_bonds lj 0.0 0.0 0.5
 read_data cnt_molecular.data
 \end{verbatim}}
 The chosen unit system is \textit{real} (therefore distances are in Ångstrom
-and time in femtosecond), the \textit{atom$\_$style} is molecular (therefore
+and time in femtosecond), the \textit{atom\_style} is molecular (therefore
 atoms are dots that can be bonded with each other), and the boundary conditions
 are fixed. The boundary conditions do not matter here, as the box boundaries
 were placed far from the CNT. Just like in the previous tutorial,
@@ -766,13 +1215,13 @@ were placed far from the CNT. Just like in the previous tutorial,
 is \textit{lj/cut} (i.e. a Lennard-Jones potential with a short-range cutoff)
 with parameter 14, which means that only the atoms closer than 14 Ångstroms
 from each other interact through a Lennard-Jones potential.
-The \textit{bond$\_$style}, \textit{angle$\_$style}, \textit{dihedral$\_$style},
-and \textit{improper$\_$style} commands specify the different potentials used
-to restrain the relative positions of the atoms. The \textit{special$\_$bonds}
+The \textit{bond\_style}, \textit{angle\_style}, \textit{dihedral\_style},
+and \textit{improper\_style} commands specify the different potentials used
+to restrain the relative positions of the atoms. The \textit{special\_bonds}
 command sets the weighting factors for the Lennard-Jones interaction between
 atoms directly connected by one bond, two bonds, and three bonds, respectively.
-The last command, \textit{read$\_$data}, imports the
-\textit{cnt$\_$molecular.data} file which contains information about the box
+The last command, \textit{read\_data}, imports the
+\textit{cnt\_molecular.data} file which contains information about the box
 size, atom positions, etc.
 
 We need to specify the parameters of both bonded and non-bonded potentials.
@@ -787,18 +1236,18 @@ angle_coeff 1 63 120
 dihedral_coeff 1 0 7.25 0 0
 improper_coeff 1 5 180
 \end{verbatim}}
-The \textit{pair$\_$coeff} command sets the parameters for the non-bonded
+The \textit{pair\_coeff} command sets the parameters for the non-bonded
 Lennard-Jones interaction $\epsilon_{11} = 0.066 \, \text{kcal/mol}$ and
 $\sigma_{11} = 3.4 \, \text{\AA{}}$ for the only type of atom of the simulation;
-the carbon atom of type 1.  The \textit{bond$\_$coeff} provides the equilibrium
+the carbon atom of type 1.  The \textit{bond\_coeff} provides the equilibrium
 distance $r_0= 1.4 \, \text{\AA{}}$ as well as the spring constant
 $k_\text{b} = 469 \, \text{kcal/mol/\AA{}}^2$ for the harmonic potential imposed
 between two neighboring carbon atoms, where the potential is
 $U_\text{b} = k_\text{b} ( r - r_0)^2$. The
-\textit{angle$\_$coeff} gives the equilibrium angle $\theta_0$ and constant for
+\textit{angle\_coeff} gives the equilibrium angle $\theta_0$ and constant for
 the potential between three neighbor atoms :
-$U_\theta = k_\theta ( \theta - \theta_0)^2$. The \textit{dihedral$\_$coeff}
-and \textit{improper$\_$coeff} give the potential for the constraints between 4
+$U_\theta = k_\theta ( \theta - \theta_0)^2$. The \textit{dihedral\_coeff}
+and \textit{improper\_coeff} give the potential for the constraints between 4
 atoms.
 
 Let us include the file \textit{parm.lmp} in the simulation by adding
@@ -825,7 +1274,7 @@ region rmid block &
     ${xmin} ${xmax} INF INF INF INF
 \end{verbatim}}
 The first command includes all the atoms of type 1 (i.e. all the atoms here)
-in a group named \textit{carbon$\_$atoms}.
+in a group named \textit{carbon\_atoms}.
 The variable $x_\text{max}$ corresponds to the coordinate of the
 last atoms along $x$ minus 0.5 Ångstroms, and $x_\text{min}$ to the coordinate
 of the first atoms along $x$ plus 0.5 Ångstroms. Then, three regions are defined
@@ -844,13 +1293,13 @@ group carbon_mid region rmid
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-underformed}
-\caption{CNT with the atoms from the \textit{carbon$\_$mid} group in pink,
-and the atoms from the \textit{carbon$\_$top} and the \textit{carbon$\_$bot}
+\caption{CNT with the atoms from the \textit{carbon\_mid} group in pink,
+and the atoms from the \textit{carbon\_top} and the \textit{carbon\_bot}
 groups in white.}
 \label{fig:CNT-underformed}
 \end{figure}
 
-Run the simulation using LAMMPS. The number of atoms in each group is given in 
+Run the simulation using LAMMPS. The number of atoms in each group is given in
 the \textit{Output} window. Always make sure that the number
 of atoms in each group corresponds to what is expected, just like here:
 {\normalsize \begin{verbatim}
@@ -858,9 +1307,9 @@ of atoms in each group corresponds to what is expected, just like here:
 10 atoms in group carbon_bot
 680 atoms in group carbon_mid
 \end{verbatim}}
-The atoms from the \textit{carbon$\_$top} and \textit{carbon$\_$bot} groups are
+The atoms from the \textit{carbon\_top} and \textit{carbon\_bot} groups are
 represented in white in Fig.\,\ref{fig:CNT-underformed}, and the atoms from
-the \textit{carbon$\_$mid} group in pink.
+the \textit{carbon\_mid} group in pink.
 
 Finally, to start from a less ideal state and create a system with some defects,
 let us randomly delete a small fraction of the carbon atoms. To avoid deleting
@@ -875,7 +1324,7 @@ group rdel region rdel
 delete_atoms random fraction 0.02 no rdel &
     NULL 482793 bond yes
 \end{verbatim}}
-The \textit{delete$\_$atoms} command randomly deletes $2\,\%$ of the atoms from
+The \textit{delete\_atoms} command randomly deletes $2\,\%$ of the atoms from
 the \textit{rdel} group (i.e. about 10 atoms) (Fig.\,\ref{fig:CNT-underformed-deleted}).
 
 \begin{figure}
@@ -888,16 +1337,16 @@ The 10 deleted atoms were chosen randomly from the central part of the CNT.}
 
 \paragraph{The molecular dynamics}
 
-Let us give an initial temperature to the atoms of \textit{carbon$\_$mid}:
+Let us give an initial temperature to the atoms of \textit{carbon\_mid}:
 {\normalsize \begin{verbatim}
 reset_atoms id sort yes
 velocity carbon_mid create ${T} 48455 &
     mom yes rot yes
 \end{verbatim}}
 Re-setting the atom IDs is necessary before using the \textit{velocity} command
-when atoms were deleted, which is done here with the \textit{reset$\_$atoms} command.
+when atoms were deleted, which is done here with the \textit{reset\_atoms} command.
 The \textit{velocity} command gives initial velocities to the atoms of the middle
-group \textit{carbon$\_$mid}, ensuring an initial temperature of $300\,\text{K}$
+group \textit{carbon\_mid}, ensuring an initial temperature of $300\,\text{K}$
 for these atoms.
 
 Let us specify the thermalization and the dynamics of the system. Add the following
@@ -912,9 +1361,9 @@ fix_modify myber temp Tmid
  The \textit{fix nve}
 is applied to all atoms so that all atom positions are recalculated at every step,
 and a \textit{Berendsen} thermostat is applied to the atoms of the group
-\textit{carbon$\_$mid} only \cite{berendsen1984molecular}. The
-\textit{fix$\_$modify myber} ensures that the \textit{fix Berendsen} uses the
-temperature of the group \textit{carbon$\_$mid} as an input, instead of the
+\textit{carbon\_mid} only \cite{berendsen1984molecular}. The
+\textit{fix\_modify myber} ensures that the \textit{fix Berendsen} uses the
+temperature of the group \textit{carbon\_mid} as an input, instead of the
 temperature of the whole system. This is necessary to make sure that the frozen
 edges won't bias the temperature. Note that the atoms of the edges do not need
 a thermostat because their motion will be restrained, see below.
@@ -931,8 +1380,8 @@ The two \textit{setforce} commands cancel the forces applied on the atoms of the
 two edges, respectively. The cancellation of the forces is done at every step,
 and along all 3 directions of space, $x$, $y$, and $z$, due to the use of
 \textit{0 0 0}. The two \textit{velocity} commands set the initial velocities
-along $x$, $y$, and $z$ to 0 for the atoms of \textit{carbon$\_$top} and
-\textit{carbon$\_$bot}, respectively. As a consequence of these last four commands,
+along $x$, $y$, and $z$ to 0 for the atoms of \textit{carbon\_top} and
+\textit{carbon\_bot}, respectively. As a consequence of these last four commands,
 the atoms of the edges will remain immobile during the simulation (or at least
 they would if no other command was applied to them).
 
@@ -954,8 +1403,8 @@ variable L equal &
 variable F equal f_mysf1[1]-f_mysf2[1]
 \end{verbatim}}
 Here, the force is extracted from the fixes \textit{mysf1} and \textit{mysf2}
-using \textit{f$\_$}, similarly to the use of \textit{v$\_$} to call a variable,
-and \textit{c$\_$} to call a compute, as seen in \hyperref[lennard-jones-label]{Tutorial 1}.
+using \textit{f\_}, similarly to the use of \textit{v\_} to call a variable,
+and \textit{c\_} to call a compute, as seen in \hyperref[lennard-jones-label]{Tutorial 1}.
 
 Let us also add a \textit{dump image} command to visualize the system
 every 500 steps:
@@ -975,11 +1424,11 @@ thermo_modify temp Tmid line yaml
 timestep 1.0
 run 5000
 \end{verbatim}}
-With the \textit{thermo$\_$modify} command, we specify to LAMMPS that the
+With the \textit{thermo\_modify} command, we specify to LAMMPS that the
 temperature $T_\mathrm{mid}$ must be outputted, instead of the
 temperature of the entire system. This choice is motivated by the presence of
 frozen parts with an effective temperature of 0\,K, which makes the average
-temperature of the entire system less relevant. The \textit{thermo$\_$modify}
+temperature of the entire system less relevant. The \textit{thermo\_modify}
 command also imposes the use of the YAML format that can easily be read by
 Python (see below).
 
@@ -1052,7 +1501,7 @@ Fig.\,\ref{fig:CNT-stress-strain-unbreakable}.
 \centering
 \includegraphics[width=\linewidth]{CNT-stress-strain-unbreakable}
 \caption{Stress applied on the CNT during deformation $F/A$, where $F$ is the force
-and $A$ the CNT surface area, as a function of the strain $(L-L_0/L_0)$, where 
+and $A$ the CNT surface area, as a function of the strain $(L-L_0/L_0)$, where
 $L$ is the CNT length and $L_0$ the CNT initial length. The potential is OPLS-AA.}
 \label{fig:CNT-stress-strain-unbreakable}
 \end{figure}
@@ -1080,7 +1529,7 @@ pair_style airebo 2.5 1 1
 The first difference with the previous part is the unit system, here
 \textit{metal} instead of \textit{real}, a choice that is imposed by the
 AIREBO force field. A second difference is the use of the
-\textit{atom$\_$style atomic} instead of \textit{molecular}, since no explicit
+\textit{atom\_style atomic} instead of \textit{molecular}, since no explicit
 bond information is required with AIREBO.
 
 \paragraph{Adapt the topology file}
@@ -1088,11 +1537,11 @@ bond information is required with AIREBO.
 Since \textit{bond}, \textit{angle}, and \textit{dihedral} do not need to be
 explicitly set when using AIREBO, some simplification must be made to the
 \textit{.data} file. Download the new \textit{.data}
-file named \href{\filepath tutorial2/breakable-bonds/cnt_atom.data}{\textit{cnt$\_$atom.data}},
-and place it within \textit{breakable-bonds/}. Just like \textit{cnt$\_$molecular.data},
-the \textit{cnt$\_$atom.data} contains the information
+file named \href{\filepath tutorial2/breakable-bonds/cnt_atom.data}{\textit{cnt\_atom.data}},
+and place it within \textit{breakable-bonds/}. Just like \textit{cnt\_molecular.data},
+the \textit{cnt\_atom.data} contains the information
 required for placing the atoms in the box, but no bond/angle/dihedral information.
-Another difference between \textit{cnt$\_$molecular.data} and \textit{cnt$\_$atom.data}
+Another difference between \textit{cnt\_molecular.data} and \textit{cnt\_atom.data}
 is that, here, a larger distance of 120 Ångstroms was used for the box size along
 the \textit{x} axis, to allow for larger deformation.
 
@@ -1130,7 +1579,7 @@ variable xmax_del equal ${xmax}-2
 variable xmin_del equal ${xmin}+2
 region rdel block ${xmin_del} ${xmax_del}&
     INF INF INF INF
-    
+
 group rdel region rdel
 delete_atoms random fraction 0.02 no rdel &
     NULL 482793
@@ -1188,7 +1637,7 @@ velocity carbon_top set 0.15 0 0
 run 280000
 \end{verbatim}}
 Run the simulation. Some bonds are expected to break at approximately
-two-thirds of the simulation (Fig.\,\ref{fig:CNT-deformed-breakable}).  
+two-thirds of the simulation (Fig.\,\ref{fig:CNT-deformed-breakable}).
 
 \begin{figure}
 \centering
@@ -1217,7 +1666,7 @@ The potential is AIREBO.}
     \centering
     \includegraphics[width=\linewidth]{CNT-stress-strain-breakable}
     \caption{Stress applied on the CNT during deformation $F/A$, where $F$ is the force
-    and $A$ the CNT surface area, as a function of the strain $(L-L_0/L_0)$, where 
+    and $A$ the CNT surface area, as a function of the strain $(L-L_0/L_0)$, where
     $L$ is the CNT length and $L_0$ the CNT initial length. The potential is AIREBO.}
     \label{fig:CNT-stress-strain-breakable}
     \end{figure}
@@ -1265,12 +1714,12 @@ special_bonds lj 0.0 0.0 0.5 &
     coul 0.0 0.0 1.0 angle yes
 \end{verbatim}}
 With the unit style \textit{real}, masses are in grams per mole, distances in
-Ångstroms, time in femtoseconds, and energies in kcal/mole. With the \textit{atom$\_$style full}, each atom is a dot with a mass and a charge that can be linked by bonds, angles, dihedrals, and/or impropers. The \textit{bond$\_$style},
-\textit{angle$\_$style}, and \textit{dihedral$\_$style} commands define the potentials
+Ångstroms, time in femtoseconds, and energies in kcal/mole. With the \textit{atom\_style full}, each atom is a dot with a mass and a charge that can be linked by bonds, angles, dihedrals, and/or impropers. The \textit{bond\_style},
+\textit{angle\_style}, and \textit{dihedral\_style} commands define the potentials
 for the bonds, angles, and dihedrals used in the simulation, here \textit{harmonic}.
-Finally, the \textit{special$\_$bonds} command, which was already seen in
+Finally, the \textit{special\_bonds} command, which was already seen in
 \hyperref[carbon-nanotube-label]{tutorial 2}, sets the LJ and Coulomb weighting
-factors for the interaction between neighboring atoms. With the \textit{pair$\_$style}
+factors for the interaction between neighboring atoms. With the \textit{pair\_style}
 named \textit{lj/cut/coul/long}, atoms interact through both a Lennard-Jones (LJ)
 potential and Coulomb interactions. The value of $10\,\text{\AA{}}$ is the cutoff.
 Finally, the \textit{kspace} command defines the long-range solver for the Coulomb
@@ -1306,9 +1755,9 @@ are strings that map to each of the numeric atom types, bond types, angles types
 etc. in the simulation. Type labels can be any string defined by the user, and we
 will use the atom types from the GROMOS 54A7 force field. In this example, the atom
 types are defined in the data file. Within \textit{PARM.lmp}, the \textit{mass}
-and \textit{pair$\_$coeff} of atoms of types OW and HW are for water and the remaining
-atom types are for the polymer molecule. Similarly, the \textit{bond$\_$coeff HW-OW}
-and \textit{angle$\_$coeff HW-OW-HW} are for water, while all the other parameters
+and \textit{pair\_coeff} of atoms of types OW and HW are for water and the remaining
+atom types are for the polymer molecule. Similarly, the \textit{bond\_coeff HW-OW}
+and \textit{angle\_coeff HW-OW-HW} are for water, while all the other parameters
 are for the polymer.
 
 Let us create water molecules. To do so, let us import a molecule template called
@@ -1319,7 +1768,7 @@ molecule h2omol H2O-SPCFw.mol
 create_atoms 0 random 1050 87910 NULL mol &
     h2omol 454756 overlap 1.0 maxtry 50
 \end{verbatim}}
-The \textit{overlap 1} option of the \textit{create$\_$atoms} command ensures
+The \textit{overlap 1} option of the \textit{create\_atoms} command ensures
 that no atoms are placed exactly in the same position, as this would cause the
 simulation to crash. The \textit{maxtry 50} asks LAMMPS to try at most 50 times
 to insert the molecules, which is useful in case some insertion attempts are
@@ -1340,14 +1789,14 @@ atoms, or the IDs of the atoms that are connected by bonds, angles, etc.
 Then, let us organize the atoms of types OW and HW of the water molecules in a
 group named \textit{H2O} and perform a small energy minimization. The energy
 minimization is mandatory here given the small \textit{overlap} value of 1 Ångstrom
-chosen in the \textit{create$\_$atoms} command. Add the following lines into \textit{input.lmp}:
+chosen in the \textit{create\_atoms} command. Add the following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 group H2O type OW HW
 minimize 1.0e-4 1.0e-6 100 1000
 reset_timestep 0
 \end{verbatim}}
 In general, resetting the step of the simulation to 0 using the
-\textit{reset$\_$timestep} command is optional.
+\textit{reset\_timestep} command is optional.
 It is used here because the number of iterations performed by the \textit{minimize}
 command is usually not a round number (since the minimization stops when one of
 four criteria is reached). Let us use the \textit{fix npt} to control the temperature
@@ -1606,7 +2055,7 @@ run 30000
 \end{verbatim}}
 This first run will serve as a benchmark to quantify later the changes induced
 by the forcing. Then, let us apply a forcing on the 2 oxygen atoms using two
-\textit{add$\_$force} commands, and run for an extra 30 ps:
+\textit{add\_force} commands, and run for an extra 30 ps:
 {\normalsize \begin{verbatim}
 fix myaf1 topull1 addforce ${f0} 0 0
 fix myaf2 topull2 addforce -${f0} 0 0
@@ -1697,7 +2146,7 @@ TIP4P water molecule does not have to be defined explicitly, and the value of
 $0.1546\,\text{$\text{\AA{}}$}$ corresponds to the \textit{O-M} distance of the
 TIP4P-2005 water model \cite{abascal2005general}. All the other atoms in the simulation
 are treated normally with long-range Coulomb interactions. Another novelty, here, is
-the use of \textit{kspace$\_$modify slab 3.0} that is combined with the non-periodic
+the use of \textit{kspace\_modify slab 3.0} that is combined with the non-periodic
 boundaries along the $z$ coordinate: \textit{boundary p p f}. With the \textit{slab}
 option, the system is treated as periodical along $z$, but with an empty volume inserted
 between the periodic images of the slab, and the interactions along $z$ effectively turned off.
@@ -1719,9 +2168,9 @@ with a scale factor of 4.04 has been chosen for the future positioning of the at
 of the walls. The \textit{region} command defines a geometric region of space. By choosing
 \textit{xlo=-3} and \textit{xhi=3}, and because we have previously chosen a lattice with a scale
 factor of 4.04, the region box extends from $-12.12~\text{\AA{}}$ to $12.12~\text{\AA{}}$
-along the $x$ direction. The \textit{create$\_$box} command creates a simulation box with
+along the $x$ direction. The \textit{create\_box} command creates a simulation box with
 5 types of atoms: the oxygen and hydrogen of the water molecules, the two ions ($\text{Na}^+$,
-$\text{Cl}^-$), and the atom of the walls. The \textit{create$\_$box} command extends over 6
+$\text{Cl}^-$), and the atom of the walls. The \textit{create\_box} command extends over 6
 lines thanks to the $\&$ character. The second and third lines are used to indicate that the
 simulation contains 1 type of bond and 1 type of angle (both required by the water molecule).
 The parameters for these bond and angle constraints will be given later. The three last
@@ -1753,7 +2202,7 @@ created based on the last defined lattice, \textit{fcc 4.04}. \textit{rliquid}
 will be used for depositing the water molecules. The \textit{molecule} command
 opens up the molecule template called \textit{RigidH2O.txt}, and names the
 associated molecule \textit{h2omol}. The new molecules are placed on the
-\textit{fcc 4.04} lattice by the \textit{create$\_$atoms} command. The first
+\textit{fcc 4.04} lattice by the \textit{create\_atoms} command. The first
 parameter is 0, meaning that the atom IDs from the \textit{RigidH2O.txt} file
 will be used. The number \textit{482793} is a seed that is required by LAMMPS,
 it can be any positive integer.
@@ -1768,7 +2217,7 @@ create_atoms Cl- random 15 90182 rliquid &
 set type Na+ charge 1
 set type Cl- charge -1
 \end{verbatim}}
-Each \textit{create$\_$atoms} command will add 15 ions at random positions
+Each \textit{create\_atoms} command will add 15 ions at random positions
 within the \textit{rliquid} region, ensuring that there is no \textit{overlap}
 with existing molecules. Feel free to increase or decrease the salt concentration
 by changing the number of desired ions. To keep the system charge neutral,
@@ -1802,12 +2251,12 @@ pair_coeff WALL WALL 11.697 2.574
 pair_coeff O WALL 0.4 2.86645
 \end{verbatim}}
 Each \textit{mass} command assigns a mass in grams/mole to an atom type.
-Each \textit{pair$\_$coeff} assigns respectively the depth of the LJ potential
+Each \textit{pair\_coeff} assigns respectively the depth of the LJ potential
 (in kcal/mole), and the distance (in Ångstrom) at which the particle-particle
 potential energy is 0.
 
 As already seen in previous tutorials and with the important exception of
-\textit{pair$\_$coeff O WALL}, only pairwise interactions between atoms of identical
+\textit{pair\_coeff O WALL}, only pairwise interactions between atoms of identical
 types was assigned. By default, LAMMPS calculates the pair coefficients for the
 interactions between atoms of different types (i and j) by using geometrical average:
 $\epsilon_{ij} = (\epsilon_{ii} + \epsilon_{jj})/2$,  $\sigma_{ij} = (\sigma_{ii} + \sigma_{jj})/2$.
@@ -1821,7 +2270,7 @@ Copy the following lines into \textit{PARM.lmp} as well:
 bond_coeff O-H 0 0.9572
 angle_coeff H-O-H 0 104.52
 \end{verbatim}}
-The \textit{bond$\_$coeff} command, used here for the O-H bond of the water
+The \textit{bond\_coeff} command, used here for the O-H bond of the water
 molecule, sets both the spring constant of the harmonic potential and the
 equilibrium distance of $0.9572~\text{\AA{}}$. The constant can be 0 for a
 rigid water molecule because the shape of the molecule will be preserved by
@@ -1862,11 +2311,11 @@ write_data system.data nocoeff
 write_dump all image dump.jpg type type
 \end{verbatim}}
 With \textit{run 0}, the simulation will run for 0 steps, which is enough for
-creating the system and saving the final state. The \textit{write$\_$data}
+creating the system and saving the final state. The \textit{write\_data}
 creates a file called \textit{system.data} containing the information required
 to restart the simulation from the final configuration generated by this input
 file. With the \textit{nocoeff} option, the parameters from the force field are
-not written in the \textit{.data} file. The \textit{write$\_$dump} command creates 
+not written in the \textit{.data} file. The \textit{write\_dump} command creates
 an image of the system (see also Fig.\,\ref{fig:NANOSHEAR-system}).
 Run the \textit{input.lmp} file using LAMMPS.
 
@@ -1979,7 +2428,7 @@ the temperature reaches the desired value of $300\,\text{K}$. The generated file
 \centering
 \includegraphics[width=\linewidth]{NANOSHEAR-minimization}
 \caption{Total energy of the system $E_\text{tot}$ as a function of time $t$
-extracted from the log file using \textit{Python} and \textit{lammps$\_$logfile}
+extracted from the log file using \textit{Python} and \textit{lammps\_logfile}
 \cite{sveinsson2021logfile}. The vertical dashed lines demarcate the three
 consecutive steps.}
 \label{fig:NANOSHEAR-minimization}
@@ -2012,7 +2461,7 @@ fix myshk H2O shake 1.0e-4 200 0 b O-H a H-O-H
 fix myrct all recenter NULL NULL 0
 timestep 1.0
 \end{verbatim}}
-The fix \textit{recenter} does not influence the dynamics but will keep the 
+The fix \textit{recenter} does not influence the dynamics but will keep the
 system in the center of the box, which makes the
 visualization easier. Then, add the following lines into \textit{input.lmp}
 for the trajectory visualization and output:
@@ -2095,7 +2544,7 @@ fix myrct all recenter NULL NULL 0
 \end{verbatim}}
 One difference with the previous input is that, here, two thermostats are used,
 one for the fluid (\textit{myber1}) and one for the solid (\textit{myber2}).
-The use of \textit{fix$\_$modify} together with \textit{compute temp} ensures
+The use of \textit{fix\_modify} together with \textit{compute temp} ensures
 that the right temperature value is used by the thermostats. The use of
 temperature \textit{compute} with \textit{temp/partial 0 1 1} is meant to exclude
 the \textit{x} coordinate from the thermalization, which is important since a
@@ -2234,8 +2683,8 @@ mass 1 28.0855 # Si
 mass 2 15.999 # O
 \end{verbatim}}
 So far, the input is very similar to what was seen in the previous tutorials.
-Some basic parameters are defined (\textit{units}, \textit{atom$\_$style} and \textit{masses}),
-and the \textit{.data} file is imported by the \textit{read$\_$data} command.
+Some basic parameters are defined (\textit{units}, \textit{atom\_style} and \textit{masses}),
+and the \textit{.data} file is imported by the \textit{read\_data} command.
 
 Now, let us copy three crucial lines into the \textit{input.lmp} file:
 {\normalsize \begin{verbatim}
@@ -2244,10 +2693,10 @@ pair_coeff * * reaxCHOFe.ff Si O
 fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 &
     reaxff maxiter 400
 \end{verbatim}}
-Here, the \textit{pair$\_$style reaxff} is used with no control file. The
+Here, the \textit{pair\_style reaxff} is used with no control file. The
 \textit{safezone} and \textit{mincap} keywords have been added to avoid memory
 allocation issues, which sometimes can trigger the segmentation faults and
-\textit{bondchk} failed errors. The \textit{pair$\_$coeff} uses the
+\textit{bondchk} failed errors. The \textit{pair\_coeff} uses the
 \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/reaxCHOFe.ff}{\textit{reaxCHOFe.ff}}
 file, which must be downloaded and saved within \textit{RelaxSilica/}. For
 consistency with the masses and the \textit{silica.data} file, the atoms of type 1
@@ -2266,7 +2715,7 @@ group grpO type 2
 variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
 \end{verbatim}}
-Let us also print the charge in the \textit{.log} file by using \textit{thermo$\_$style},
+Let us also print the charge in the \textit{.log} file by using \textit{thermo\_style},
 and create images of the system. Add the following lines into the \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 thermo 200
@@ -2279,7 +2728,7 @@ dump_modify mydmp backcolor white &
     acolor 2 red adiam 2 2
 \end{verbatim}}
 
-In order to also visualize the system using an external tool, VMD, let us also 
+In order to also visualize the system using an external tool, VMD, let us also
 create a \textit{.lammpstrj} file for visualization:
 {\normalsize \begin{verbatim}
 dump dmp all custom 200 dump.lammpstrj &
@@ -2312,7 +2761,7 @@ write_data silica-relaxed.data
 Run the \textit{input.lmp} file using LAMMPS. As seen from \textit{species.log},
 only one species is detected, called O384Si192, representing the entire system.
 The value of the charge of the atoms can be extracted from the \textit{dump.lammpstrj}
-file using Python. You can use this 
+file using Python. You can use this
 \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/dump-reader.py}{\textit{dump-reader}}
 script to import the charge values into Python.
 As the simulation progresses, the charge of every atom fluctuates
@@ -2327,7 +2776,7 @@ expected to quickly change (Fig.\,\ref{fig:SIO-volume}).
 \includegraphics[width=\linewidth]{SIO-charge}
 \caption{Average charge per atom of the silicon $q_\text{Si}$ (a) and oxygen
 $q_\text{O}$ (b) atoms as a function of time $t$ during equilibration.  $q_\text{Si}$
-and $q_\text{O}$ are given by the \textit{v$\_$qSi} and \textit{v$\_$qO} variables,
+and $q_\text{O}$ are given by the \textit{v\_qSi} and \textit{v\_qO} variables,
 respectively.}
 \label{fig:SIO-charge}
 \end{figure}
@@ -2525,11 +2974,11 @@ pair_coeff * * ../RelaxSilica/reaxCHOFe.ff &
 fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 &
     reaxff maxiter 400
 \end{verbatim}}
-Here, the \textit{displace$\_$atoms} command was used to move the center of the
+Here, the \textit{displace\_atoms} command was used to move the center of the
 crack near the center of the box. This step is optional but makes the visualization
 of the interface in VMD easier. A different value for the shift may be needed in
 your case, depending on the location of the crack. A difference with the previous
-input is that three atom types are specified in the \textit{pair$\_$coeff} command,
+input is that three atom types are specified in the \textit{pair\_coeff} command,
 \textit{Si O H}, instead of two.
 
 Then, let us adapt some familiar commands to measure the charges of all three
@@ -2546,7 +2995,7 @@ variable qH equal &
 thermo 5
 thermo_style custom step temp etotal press &
     vol v_qSi v_qO v_qH
-fix myspec all reaxff/species 5 1 5 & 
+fix myspec all reaxff/species 5 1 5 &
     species.log element Si O H
 \end{verbatim}}
 Here, the $+1\text{e}-10$ was added to the denominator of the \textit{variable qH}
@@ -2668,10 +3117,10 @@ dump_modify mydmp backcolor white &
     acolor 1 yellow adiam 1 2.5 &
     acolor 2 red adiam 2 2
 thermo 1000
-thermo_style custom step temp etotal & 
+thermo_style custom step temp etotal &
     vol lx ly lz
 \end{verbatim}}
-Thanks to the \textit{thermo$\_$style custom} command, the box size along each direction
+Thanks to the \textit{thermo\_style custom} command, the box size along each direction
 will be printed in the log file.
 
 Finally, let us create the last part of our script. The annealing procedure is
@@ -2779,7 +3228,7 @@ run 20000
 write_data dilatedSiO.data
 \end{verbatim}}
 The \textit{fix nvt} is used to control the temperature of the system, while the
-\textit{change$\_$box} command imposes incremental deformations of the box. Different
+\textit{change\_box} command imposes incremental deformations of the box. Different
 scaling factors or different numbers of steps can be used to generate different
 defects in the silica. After the expansion, a final equilibration step of a duration
 of 20 picoseconds is performed. If you look at the \textit{dump.lammpstrj} file
@@ -2827,7 +3276,7 @@ From now on, the system will combine water and silica, and therefore two force
 fields are combined: Vashishta for $\text{SiO}_2$, and lj/cut/tip4p/long for
 TIP4P water model (here the TIP4P/2005 model is used \cite{abascal2005general}).
 Combining the two force fields is done using the \textit{hybrid/overlay} pair
-style. The PPPM solver \cite{luty1996calculating} is set with the \textit{kspace} 
+style. The PPPM solver \cite{luty1996calculating} is set with the \textit{kspace}
 command, and is used to calculate the long-range Coulomb interactions associated
 with \textit{tip4p/long}. Finally, the style for the bonds
 and angles of the water molecules are defined, although they are not important
@@ -2898,7 +3347,7 @@ group SiO type 1 2
 group H2O type 3 4
 \end{verbatim}}
 After reading the data file and defining the h2omol molecule from the \textit{H2O.txt}
-file, the \textit{create$\_$atoms} command is used to include some water molecules
+file, the \textit{create\_atoms} command is used to include some water molecules
 in the system on a simple cubic lattice. Not adding a molecule before starting
 the GCMC steps usually leads to failure. Note that here, most water molecules
 overlap with the silica. These overlapping water molecules will have to be
@@ -2975,7 +3424,7 @@ Two different thermostats are used for $\text{SiO}_2$ and $\text{H}_2\text{O}$,
 respectively. Using separate thermostats is usually better when the system contains
 two separate species, such as a solid and a liquid. It is particularly important
 to use two thermostats here because the number of water molecules will fluctuate
-with time. The \textit{compute$\_$modify} with \textit{dynamic yes} for water is
+with time. The \textit{compute\_modify} with \textit{dynamic yes} for water is
 used to specify that the number of molecules is not constant.
 
 Finally, let us use the \textit{fix gcmc} and perform the grand canonical Monte
@@ -2988,7 +3437,7 @@ fix fgcmc H2O gcmc 100 100 0 0 65899 300 &
     pressure 10000
 run 45000
 \end{verbatim}}
-The \textit{tfac$\_$insert} option ensures the correct estimate for the temperature
+The \textit{tfac\_insert} option ensures the correct estimate for the temperature
 of the inserted water molecules by taking into account the internal degrees of
 freedom. Running this simulation, you should see the number of molecules increasing
 progressively. When using the pressure argument, LAMMPS ignores the value of the
@@ -3006,7 +3455,7 @@ The dashed vertical line marks the beginning of the GCMC step.}
 \end{figure}
 
 When you run the simulation, the log file indicates that 840 atoms (i.e. 280 molecules)
-were added by the \textit{create$\_$atoms} command (the exact number you get may differ):
+were added by the \textit{create\_atoms} command (the exact number you get may differ):
 {\normalsize \begin{verbatim}
 Created 840 atoms
 \end{verbatim}}
@@ -3094,7 +3543,7 @@ $\sigma$ and $\epsilon$ and for the repulsive potential $U$: $U_0$, $\delta$, an
 see the analytical expression below. The value of 3.822 for the cut-off was chosen to
 create a WCA, purely repulsive, potential \cite{weeks1971role}. It was calculated
 as $2^{1/6} \times 3.405$ where $3.405 = \sigma$. The potential is shifted to be
-equal to 0 at the cut-off using the \textit{pair$\_$modify}. The system of unit
+equal to 0 at the cut-off using the \textit{pair\_modify}. The system of unit
 \textit{real}, for which energy is in kcal/mol, distance in Ångstrom, or time in
 femtosecond, has been chosen for practical reasons: the WHAM algorithm used in
 the second part of the tutorial automatically assumes the energy to be in kcal/mol.
@@ -3159,7 +3608,7 @@ variable F atom &
 fix myadf all addforce v_F 0.0 0.0 energy v_U
 \end{verbatim}}
 Finally, let us combine the \textit{fix nve} with a \textit{Langevin} thermostat
-and run a molecular dynamics simulation: 
+and run a molecular dynamics simulation:
 {\normalsize \begin{verbatim}
 fix mynve all nve
 fix mylgv all langevin 119.8 119.8 50 1530917
@@ -3170,7 +3619,7 @@ $V$, and constant temperature $T$.
 
 To make sure that $1\,\text{ns}$ is long enough, we will record the evolution of
 the number of atoms in the central (energetically unfavorable) region called \textit{mymes}
-using the \textit{n$\_$center} variable:
+using the \textit{n\_center} variable:
 {\normalsize \begin{verbatim}
 region mymes block -${x0} ${x0} INF INF INF INF
 variable n_center equal count(all,mymes)
@@ -3195,7 +3644,7 @@ enough, let us have a look at the evolution of the number of atoms in the centra
 $n_\mathrm{center}$. We can see that $n_\mathrm{center}$ reaches
 its equilibrium value (which is close to 0) after about $0.1\,\text{ns}$
 (Fig.\,\ref{fig:US-density-evolution}). See also a snapshot of the equilibrated
-system in Fig.\,\ref{fig:US-system-unbiased}. 
+system in Fig.\,\ref{fig:US-system-unbiased}.
 
 \paragraph{Run and data acquisition}
 Once the system is equilibrated, let us record the density profile of
@@ -3215,7 +3664,7 @@ dump mydmp all atom 200000 dump.lammpstrj
 thermo 100000
 run 4000000
 \end{verbatim}}
-The step count is reset to 0 using \textit{reset$\_$timestep} to synchronize
+The step count is reset to 0 using \textit{reset\_timestep} to synchronize
 with the output times of \textit{fix density/number}. Feel free to increase the
 duration of the last run for a better resolved density profile.
 
@@ -3392,11 +3841,13 @@ $U_0 = 2.38~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathr
 let us use the WHAM algorithm as implemented by Marc Grossfield \cite{grossfieldimplementation}.
 You can download it from \href{http://membrane.urmc.rochester.edu/?page_id=126}{Alan Grossfield}
 website, and compile it by typing in the terminal:
-{\normalsize \begin{verbatim}
+{\normalsize
+\begin{verbatim}
 cd wham
 make clean
 make
-\end{verbatim}}
+\end{verbatim}
+}
 \noindent The compilation creates an executable called \textit{wham} that you can
 copy in the \textit{BiasedSampling/} folder. To apply the WHAM algorithm to our
 simulation, we first need to create a metadata file. This file simply contains
@@ -3408,10 +3859,12 @@ simulation, we first need to create a metadata file. This file simply contains
 Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial7/metadata.dat}{\textit{metadata.dat}}
 file I have written and save it in \textit{BiasedSampling/}. Then, simply run the
 following command in the terminal:
-{\normalsize \begin{verbatim}
+{\normalsize
+\begin{verbatim}
 ./wham -25 25 50 1e-8 119.8 0 \
     metadata.dat PMF.dat
-\end{verbatim}}
+\end{verbatim}
+}
 where -25 and 25 are the boundaries, 50 is the number of bins, 1e-8 is the tolerance,
 and 119.8 is the temperature. A file called \textit{PMF.dat} has been created,
 containing the free energy profile in kcal/mol. Again, one can compare the result of
@@ -3433,8 +3886,15 @@ and $x_0 = 5~\mathrm{\AA{}}$.}
 
 \section*{Author Contributions}
 % S.G. to update
-SG conceived and wrote all the online tutorials and underlying Sphinx documentation
+S.G. conceived and wrote all the online tutorials and underlying Sphinx documentation
 for \href{https://lammpstutorials.github.io}{lammpstutorials.github.io}.
+
+\noindent A.K. wrote the LAMMPS GUI software and helped revise the
+tutorials for use with it.
+
+\noindent J.G. is the principal author of fix bond/react and type label
+support in LAMMPS.  He revised tutorials to use type labels.
+% and contributed the eighth tutorial using fix bond/react (?).
 
 \section*{Potentially Conflicting Interests}
 
@@ -3444,7 +3904,8 @@ There are no conflicting interests to declare.
 
 S.G. acknowledges funding from the European Union's Horizon 2020 research and
 innovation programme under the Marie Skłodowska-Curie grant agreement N$^\circ\;101065060$.
-A.K. acknowledges financial support by Sandia National Laboratories under
+
+\noindent A.K. acknowledges financial support by Sandia National Laboratories under
 POs 2149742 and 2407526.
 
 \section*{Author Information}
@@ -3456,8 +3917,42 @@ POs 2149742 and 2407526.
 %%% APPENDICES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%\appendix
+\begin{appendices}
+  \section{Using LAMMPS-GUI}
+  \label{using-lammps-gui}
 
+  { \normalsize
+\begin{verbatim}
+  lammps-gui input.lmp
+\end{verbatim}
+  }
+
+  \section{Compiling LAMMPS from Source on Linux}
+  \label{compiling-lammps-label}
+  FIXME: add section
+
+  % AK: For beginner we recommend CMake and a current Linux OS (at least Ubuntu 22.04LTS, RHEL 9 (and Alma, or Rocky), Fedora 39)
+  % The Linux system must support packages for software development installed and the corresponding development packages for compiling with MPI
+
+  % AK: a mostly complete list of packages for different Linux flavors can be inferred from singularity/apptainer container definition files in "tools/singularity"
+
+%Depending on your operating system (i.e. Linux, macOS, or Windows), the procedure may differ. LAMMPS must be compiled with the following packages:
+%\begin{itemize}
+%\item MANYBODY
+%\item MOLECULE
+%\item KSPACE
+%\item RIGID
+%\item REAXFF
+%\item EXTRA-DUMP
+%\end{itemize}
+
+% AK: for non-Linux OS please refer to LAMMPS Manual.
+
+
+  \section{Running LAMMPS in Parallel with MPI}
+  \label{parallel-lammps-label}
+  FIXME: add section
+\end{appendices}
 
 \end{document}
 
