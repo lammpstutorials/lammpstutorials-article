@@ -21,6 +21,14 @@ presubmission-letter/*.out
 # Python files
 __pycache__
 **/__pycache__
+*.pyc
+
+_region_.*
+/auto
+*~
+*.orig
+*.rej
 
 # LAMMPS output files
 dump.*.jpg
+dump.*.ppn
