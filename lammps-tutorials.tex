@@ -32,6 +32,7 @@
 \usepackage{times}
 \usepackage{subcaption}
 \usepackage{mathtools}
+\usepackage{menukeys}
 \usepackage{microtype}
 \usepackage{tcolorbox}
 \usepackage{newverbs}
@@ -58,6 +59,12 @@
 \definecolor{myorange}{RGB}{255.0,173.91,72.93}
 \definecolor{graytitle}{gray}{0.5}
 \definecolor{cverbbg}{gray}{0.93}
+
+\newtcolorbox{note}{
+    boxrule = 1.5pt,
+    rounded corners,
+    arc = 5pt   % corners roundness
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% IMPORTANT USER CONFIGURATION
@@ -407,8 +414,14 @@ specifically for working with LAMMPS:
 
 \hyperref[using-lammps-gui]{Appendix A} contains instructions for using
 LAMMPS--GUI with the tutorials presented here.  A complete description
-of all LAMMPS--GUI features is in the LAMMPS manual
-\cite{lammps_gui_docs}.
+of all LAMMPS--GUI features is in the LAMMPS manual\cite{lammps_gui_docs}.
+
+\begin{note}
+  For the sake of simplicy we will refer during the tutorials to
+  keyboard shortcuts using the assignments from Linux and Windows. Users
+  of macOS have to use the ``Command'' key (\cmd) instead of the
+  ``Ctrl'' key.
+\end{note}
 
 \section{Content and links}
 
@@ -441,8 +454,8 @@ series of commands of commands that LAMMPS will then execute.  For
 clarity, the input scripts for this tutorial will be divided into five
 categories, which we will fill out step by step.  First, create a folder
 named \textit{my-first-input/} for all files of this tutorial, then
-launch LAMMPS--GUI, copy-n-paste the text below into the editor window,
-and save it to the folder as a file called \textit{input.lmp}.
+launch LAMMPS--GUI, copy-n-paste the text below into the \textit{Editor}
+window, and save it to the folder as a file called \textit{input.lmp}.
 {\normalsize
 \begin{verbatim}
  # PART A - ENERGY MINIMIZATION
@@ -465,6 +478,13 @@ in it \emph{immediately}.  Therefore, the \textit{Initialization} and
 input, and the \textit{Run} category at the bottom.  Also, the specifics
 of some commands can change after global settings are changed, so the
 order of commands in the input script matters for such cases.
+
+The contents of the \textit{Editor} window can be saved by either using
+the ``Save'' or ``Save As'' entry in the ``File'' menu, using the
+\textsf{Ctrl--S} keyboard shortcut or by clicking on the ``Save'' icon
+at the bottom left of the \textit{Editor} window status bar.  For
+running LAMMPS in LAMMPS--GUI it is not required to save the buffer.
+The current contents of the buffer will be passed on to LAMMPS.
 
 \paragraph{Initialization}
 
@@ -529,7 +549,7 @@ LAMMPS users.
 \begin{figure}
 \centering
 \includegraphics[width=0.75\linewidth]{GUI-1.png}
-\caption{A screenshot of the LAMMPS-GUI editor window during
+\caption{A screenshot of the LAMMPS-GUI \textit{Editor} window during
   \hyperref[lennard-jones-label]{Tutorial 1}. The coloring of the text
   is based on the syntax for LAMMPS input files.  The pop-up menu is the
   context menu for right-clicking on the ``atom\_style'' line.}
@@ -656,45 +676,85 @@ thus have: $\epsilon_{12} = \sqrt{1.0 \times 0.5} = 0.707$, and
 $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
 
 \paragraph{Energy minimization}
-The system is now fully parametrized. Let us fill in the two last remaining categories,
-\textit{Visualization}, and \textit{Run}, by adding the following lines into
-\textit{input.lmp}:
-{\normalsize \begin{verbatim}
+The system is now fully parametrized and ready to compute forces. Let us
+fill in the two last remaining categories, \textit{Visualization}, and
+\textit{Run}, by adding the following lines into \textit{input.lmp}:
+{\normalsize
+\begin{verbatim}
 # 4) Visualization
 thermo 10
 thermo_style custom step etotal press
 
 # 5) Run
 minimize 1.0e-6 1.0e-6 1000 10000
-\end{verbatim}}
-The \textit{thermo} command asks LAMMPS to print thermodynamic information in the
-terminal every given number of steps, here 10 steps. The \textit{thermo\_style custom}
-requires LAMMPS to print the step (\textit{step}), the total energy (\textit{etotal}),
-and the pressure (\textit{press}). Finally, the \textit{minimize} command instructs
-LAMMPS to perform an energy minimization of the system. By default, LAMMPS uses
-the conjugate gradient (CG) algorithm \cite{hestenes1952methods}.
+\end{verbatim}
+}
+The \textit{thermo} command asks LAMMPS to print thermodynamic
+information to the console every given number of steps, in this
+input every 10 simulation steps.  The \textit{thermo\_style custom} determines
+\emph{which} output LAMMPS should print.  This selection prints the
+the step number (\textit{step}), the total energy (\textit{etotal}), and the
+pressure (\textit{press}).
 
-Before running the simulation, let us decrease the update interval of the LAMMPS-GUI
-by clicking on \textit{Edit}, then \textit{Preferences}, and reducing the
-\textit{GUI update interval} from $10\,\text{ms}$ to $1\,\text{ms}$.
-% S.G. Should we also tell the user to reduce the number of CPU-cores? I've noticed that
-% by default the lammps-gui tries to use as many CPU-cores as possible.
-Then, run the simulation by selecting \textit{Run LAMMPS from Editor Buffer}
-from the \textit{Run} menu.
+Finally, the \textit{minimize} command tells LAMMPS to perform an energy
+minimization of the system.  That is, LAMMPS will compute the forces on
+all atoms and then update the positions according to a selected
+algorithm so that the potential energy will decrease.  By default,
+LAMMPS uses the conjugate gradient (CG) algorithm
+\cite{hestenes1952methods}.  The simulation will stop as soon at the
+minimizer algorithm cannot find a way to to lower the potential energy.
+Except for trivial systems, minimization algorithms will find the
+``next'' minimum, which may not be the global minimum.
 
-As the simulation progresses, a \textit{Charts} window showing the evolution of the total energy
-over time pops up. The value of the potential energy can also be read from the log
-file that appears in a second pop-up window. The potential energy can be seen to
-decrease from a large positive value to a negative value (orange symbols in
-Fig.\,\ref{fig:evolution-energy}\,a). The initially large and positive value of
-the potential energy was expected because the atoms have been created at random
-positions within the simulation box and some of them are probably overlapping,
-resulting in a large initial energy which is the consequence of the repulsive
-part of the Lennard-Jones interaction potential. As the energy minimization
-progresses, the energy rapidly decreases and reaches a negative value, indicating
-that the atoms have been displaced at reasonable distances from each other. It
-is possible to switch from the total energy to the pressure by choosing
-\textit{Press} in \textit{Select data} of the \textit{Charts} window.
+Now you can run the simulation by selecting \textit{Run LAMMPS from Editor
+  Buffer} from the \textit{Run} menu, or by using the
+\textsf{Ctrl-Enter} keyboard shortcut or by clicking on the green ``Run
+LAMMPS'' button (second from left) in the status bar.  The simulation
+can be stopped at any time by using \textit{Stop LAMMPS} from the
+\textit{Run} menu, the \textsf{Ctrl-/} keyboard shortcut or by clicking
+on the red stop button in the status bar.  A new run will always
+``forget'' the current system and start over from the top.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.45\linewidth]{chart-1}
+\includegraphics[width=0.45\linewidth]{output-1}
+\caption{\textit{Chart} (left) and \textit{Output} (right) window of LAMMPS-GUI after performing
+  the minimization simulation of \hyperref[lennard-jones-label]{Tutorial 1}.}
+\label{fig:chart-log}
+\end{figure}
+
+As the simulation launches, two additional windows will show up as shown
+in figure \ref{fig:chart-log}: a \textit{Charts} window showing the
+evolution of the total energy and an \textit{Output} window with the
+output LAMMPS writes to the console during a simulation. This includes
+the thermodynamic data in text form that is plotted in the \textit{Chart} window.
+
+If the plot in your \textit{Chart} window is missing data, then your
+computer is running the simulation too fast for LAMMPS--GUI to collect
+all the data.  You can adjust the settings in the \textit{Edit ->
+  Preferences} dialog to collect data more frequently by reducing the
+\textit{GUI update interval} value.  At values lower than 10ms the time
+the GUI spends on collecting the data becomes significant and thus those
+should only be used for fast tutorials like this one.  You can also make
+your simulation slower by slecting \textit{None} in the
+\textit{Accelerators} tab.
+
+The potential energy can be seen to decrease from a positive value to a
+negative value.  The initially positive value of the potential energy is
+expected because the atoms have been created at random positions within
+the simulation box and some of them are very close, resulting in a large
+initial potential energy due to the repulsive branch of the
+Lennard-Jones potential.  As the energy minimization progresses, the
+energy rapidly decreases and reaches a negative value, indicating that
+the atoms have been displaced at reasonable distances from each other.
+
+Since the \textit{thermo\_style} command also included the output of the
+pressure, it is possible to switch from plotting the total energy to
+showing the pressure by choosing \textit{Press} in \textit{Select data}
+drop down menu.
+
+
 
 \paragraph{Molecular dynamics}
 
@@ -3647,9 +3707,12 @@ and $x_0 = 5~\mathrm{\AA{}}$.}
 S.G. conceived and wrote all the online tutorials and underlying Sphinx documentation
 for \href{https://lammpstutorials.github.io}{lammpstutorials.github.io}.
 
-A.K. wrote the LAMMPS GUI software and helped revise the tutorials for use with it.
+\noindent A.K. wrote the LAMMPS GUI software and helped revise the
+tutorials for use with it.
 
-% TODO: add J.G.'s contributions
+\noindent J.G. is the principal author of fix bond/react and type label
+support in LAMMPS.  He revised tutorials to use type labels.
+% and contributed the eighth tutorial using fix bond/react (?).
 
 \section*{Potentially Conflicting Interests}
 

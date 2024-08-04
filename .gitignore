@@ -23,7 +23,7 @@ __pycache__
 **/__pycache__
 *.pyc
 
-_region_.tex
+_region_.*
 /auto
 *~
 *.orig
