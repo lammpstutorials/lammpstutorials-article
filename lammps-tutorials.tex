@@ -146,7 +146,7 @@
   tutorials address more advanced molecular simulation techniques,
   specifically, the use of a reactive force field, enhanced sampling, and
   grand canonical Monte Carlo.
-  % AK: ideally, there would be an eigth tutorial showcasing both
+  % AK: ideally, there would be an eighth tutorial showcasing both
   % fix bond/react and how to benefit from type labels in its use.
   In addition, we introduce LAMMPS--GUI, an enhanced graphical text
   editor with syntax highlighting, command completion, context help,
@@ -170,7 +170,7 @@
 
 Molecular simulations (MS) can be used to model a large variety of
 atomic, coarse-grained systems, including solids, fluids, polymers, and
-biomolecules, as well as complex interfaces and multicomponent systems.
+biomolecules, as well as complex interfaces and multi-component systems.
 Various MS methods exist, molecular dynamics (MD) and Monte Carlo (MC)
 being among the most commonly used.  MD is the preferred method for
 obtaining the accurate dynamics of a system, as it relies on solving
@@ -268,7 +268,7 @@ and a polymer molecule, are merged and equilibrated.  A long-range
 solver is used to handle the electrostatic interactions accurately, and
 the system is equilibrated in the isothermal-isobaric (NPT) ensemble. A
 stretching force is then applied to the polymer.  This tutorial also
-demonstrates the use of molecule files and typelabels
+demonstrates the use of molecule files and type labels
 \cite{typelabel_paper} to make molecule files more generic.
 
 In \hyperref[sheared-confined-label]{tutorial 4}, a fluid confined by
@@ -409,7 +409,7 @@ specifically for working with LAMMPS:
 \item Viewer for plain text files
 \item Export of thermodynamic data for plotting
 \item Use of OpenMP threading or GPU acceleration
-\item Customization through preferences dialogs
+\item Customization through preferences dialog
 \end{itemize}
 
 \hyperref[using-lammps-gui]{Appendix A} contains instructions for using
@@ -417,7 +417,7 @@ LAMMPS--GUI with the tutorials presented here.  A complete description
 of all LAMMPS--GUI features is in the LAMMPS manual\cite{lammps_gui_docs}.
 
 \begin{note}
-  For the sake of simplicy we will refer during the tutorials to
+  For the sake of simplicity we will refer during the tutorials to
   keyboard shortcuts using the assignments from Linux and Windows. Users
   of macOS have to use the ``Command'' key (\cmd) instead of the
   ``Ctrl'' key.
@@ -456,7 +456,8 @@ which we will fill out step by step.  First, create a folder named
 \textit{my-first-input/} to hold the files (input and outputs) for the
 first part of this tutorial, then launch LAMMPS--GUI, copy-n-paste the
 text below into the \textit{Editor} window, and save it to the folder as
-a file called \textit{input.lmp}.  {\normalsize
+a file called \textit{input.lmp}.
+{\normalsize
 \begin{verbatim}
  # PART A - ENERGY MINIMIZATION
  # 1) Initialization
@@ -535,7 +536,7 @@ The last line, \textit{boundary p p p}, indicates that periodic boundary
 conditions will be used along all three directions of space (the 3
 \textit{p} stand for \textit{x}, \textit{y}, and \textit{z},
 respectively).  Alternatives are fixed non-periodic, \textit{f},
-shrinkwrapped non-periodic \textit{s}, and shrinkwrapped non-periodic
+shrink-wrapped non-periodic \textit{s}, and shrink-wrapped non-periodic
 with minimum, \textit{m}.  For non-periodic boundaries, there can be a
 different choice for each side, so something like \textit{boundary p p
   fm} is valid input and suitable for slab geometry systems.
@@ -597,7 +598,7 @@ type larger than \textit{2} will trigger an error.  You may specify more
 atom types than what are necessary, but for each atom type you must set
 the mass and provide force field parameters for all of them. Not doing
 so will cause LAMMPS to abort with an error at the beginning of a
-minmimization or an MD run.
+minimization or an MD run.
 
 The third line, \textit{create\_atoms (\dots)}, creates 1500 atoms of type
 \textit{1} at random positions within the region
@@ -676,7 +677,7 @@ thus have: $\epsilon_{12} = \sqrt{1.0 \times 0.5} = 0.707$, and
 $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
 
 \paragraph{Energy minimization}
-The system is now fully parametrized and the input ready to compute
+The system is now fully parameterized and the input ready to compute
 forces.  Let us fill in the two last remaining categories,
 \textit{Visualization}, and \textit{Run}, by adding the following lines
 into \textit{input.lmp}:
@@ -906,7 +907,7 @@ dump_modify viz pad 9 boxcolor darkblue backcolor white &
     adiam 1 1.6 adiam 2 4.8  
 \end{verbatim}
 }
-This command tells LAMMPS to generate NetPMB format images every 100
+This command tells LAMMPS to generate NetPBM format images every 100
 steps. The two \textit{type} keywords are for \textit{color} and
 \textit{diameter}, respectively.  Run the \textit{input.lmp} using
 LAMMPS again, and a new window named \textit{Slide Show} will pop up.
@@ -935,14 +936,16 @@ Create a new folder next to \textit{my-first-input/} and call it
 \textit{improved-input/}. Then, create a new input file within
 \textit{improved-input/} and call it \textit{input.min.lmp}. Similarly to what
 has been done previously, copy the following lines into \textit{input.min.lmp}:
-{\normalsize \begin{verbatim}
+{\normalsize
+\begin{verbatim}
 # 1) Initialization
 units lj
 dimension 3
 atom_style atomic
 pair_style lj/cut 2.5
 boundary p p p
-\end{verbatim}}
+\end{verbatim}
+}
 To create the atoms of types 1 and 2 in two separate regions, let us create
 three separate regions: a cubic region for the simulation box and two additional
 regions for placing the atoms:
