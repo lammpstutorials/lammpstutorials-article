@@ -2237,6 +2237,10 @@ include ../GROUP.lmp
 Create a new text file called \textit{PARM.lmp} next to the \textit{systemcreation/}
 folder. Copy the following lines into \textit{PARM.lmp}:
 {\normalsize \begin{verbatim}
+labelmap atom 1 O 2 H 3 Na+ 4 Cl- 5 WALL
+labelmap bond 1 O-H
+labelmap angle 1 H-O-H
+
 mass O 15.9994
 mass H 1.008
 mass Na+ 22.990
