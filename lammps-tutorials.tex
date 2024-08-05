@@ -2683,8 +2683,8 @@ atom_style full
 
 read_data silica.data
 
-mass 1 28.0855 # Si
-mass 2 15.999 # O
+mass Si 28.0855
+mass O 15.999
 \end{verbatim}}
 So far, the input is very similar to what was seen in the previous tutorials.
 Some basic parameters are defined (\textit{units}, \textit{atom\_style} and \textit{masses}),
@@ -2702,9 +2702,7 @@ Here, the \textit{pair\_style reaxff} is used with no control file. The
 allocation issues, which sometimes can trigger the segmentation faults and
 \textit{bondchk} failed errors. The \textit{pair\_coeff} uses the
 \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/reaxCHOFe.ff}{\textit{reaxCHOFe.ff}}
-file, which must be downloaded and saved within \textit{RelaxSilica/}. For
-consistency with the masses and the \textit{silica.data} file, the atoms of type 1
-are set as silicon (Si), and the atoms of type 2 as oxygen (O). Finally, the
+file, which must be downloaded and saved within \textit{RelaxSilica/}. Finally, the
 \textit{fix qeq/reaxff} is used to perform charge equilibration \cite{rappe1991charge}.
 The charge equilibration occurs at every step. The values 0.0 and 10.0 are the
 low and the high cutoffs, respectively, and $1.0 \text{e} -6$ is a tolerance.
@@ -2714,8 +2712,8 @@ equilibrate the charge.
 Then, let us add some commands to the \textit{input.lmp} file  to measure the
 evolution of the charges during the simulation:
 {\normalsize \begin{verbatim}
-group grpSi type 1
-group grpO type 2
+group grpSi type Si
+group grpO type O
 variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
 \end{verbatim}}
@@ -2728,8 +2726,8 @@ thermo_style custom step temp etotal press &
 dump mydmp all image 200 dump.*.jpg type type &
     shiny 0.1 box no 0.01 view 0 0 zoom 1.8
 dump_modify mydmp backcolor white &
-    acolor 1 yellow adiam 1 2.5 &
-    acolor 2 red adiam 2 2
+    acolor Si yellow adiam Si 2.5 &
+    acolor O red adiam O 2
 \end{verbatim}}
 
 In order to also visualize the system using an external tool, VMD, let us also
@@ -2827,8 +2825,8 @@ atom_style full
 
 read_data ../RelaxSilica/silica-relaxed.data
 
-mass 1 28.0855 # Si
-mass 2 15.999 # O
+mass Si 28.0855
+mass O 15.999
 
 pair_style reaxff NULL safezone 3.0 mincap 150
 pair_coeff * * ../RelaxSilica/reaxCHOFe.ff Si O
@@ -2839,8 +2837,8 @@ The only differences with the previous \textit{input.lmp} file are the paths to
 the \textit{.data} and \textit{.ff} files located within \textit{RelaxSilica/}.
 Copy the following lines as well:
 {\normalsize \begin{verbatim}
-group grpSi type 1
-group grpO type 2
+group grpSi type Si
+group grpO type O
 variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
 
@@ -2851,8 +2849,8 @@ thermo_style custom step temp etotal &
 dump mydmp all image 200 dump.*.jpg type type &
     shiny 0.1 box no 0.01 view 0 0 zoom 1.8
 dump_modify mydmp backcolor white &
-    acolor 1 yellow adiam 1 2.5 &
-    acolor 2 red adiam 2 2
+    acolor Si yellow adiam Si 2.5 &
+    acolor O red adiam O 2
 
 dump dmp all custom 200 dump.lammpstrj &
     id type q x y z
