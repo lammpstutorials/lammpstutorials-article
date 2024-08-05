@@ -2734,7 +2734,7 @@ In order to also visualize the system using an external tool, VMD, let us also
 create a \textit{.lammpstrj} file for visualization:
 {\normalsize \begin{verbatim}
 dump dmp all custom 200 dump.lammpstrj &
-    id type q x y z
+    id typelabel q x y z
 \end{verbatim}}
 The \textit{.lammpstrj} that will be created when running lammps will contain
 6 columns with respectively the atom IDs, the atom types, the atom charges ($q$),
@@ -2955,9 +2955,9 @@ the first lines as follows:
 
 Masses
 
-1 28.0855
-2 15.999
-3 1.008
+Si 28.0855
+O 15.999
+H 1.008
 
 (...)
 \end{verbatim}}
@@ -2986,9 +2986,9 @@ input is that three atom types are specified in the \textit{pair\_coeff} command
 Then, let us adapt some familiar commands to measure the charges of all three
 types of atoms, and output the charge values into log files:
 {\normalsize \begin{verbatim}
-group grpSi type 1
-group grpO type 2
-group grpH type 3
+group grpSi type Si
+group grpO type O
+group grpH type H
 variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
 variable qH equal &
@@ -3018,7 +3018,7 @@ group grpH type 3
 
 run 2000
 write_dump all custom dump.${a}.lammpstrj &
-    id type q x y z
+    id typelabel q x y z
 undump mydmp
 
 next a
