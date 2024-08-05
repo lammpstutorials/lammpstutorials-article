@@ -2162,6 +2162,9 @@ angle/types 1 &
 extra/bond/per/atom 2 &
 extra/angle/per/atom 1 &
 extra/special/per/atom 2
+labelmap atom 1 O 2 H 3 Na+ 4 Cl- 5 WALL
+labelmap bond 1 O-H
+labelmap angle 1 H-O-H
 \end{verbatim}}
 The \textit{lattice} command defines the unit cell. Here, the face-centered cubic (fcc) lattice
 with a scale factor of 4.04 has been chosen for the future positioning of the atoms
@@ -2174,7 +2177,8 @@ $\text{Cl}^-$), and the atom of the walls. The \textit{create\_box} command exte
 lines thanks to the $\&$ character. The second and third lines are used to indicate that the
 simulation contains 1 type of bond and 1 type of angle (both required by the water molecule).
 The parameters for these bond and angle constraints will be given later. The three last
-lines are for memory allocation.
+lines are for memory allocation. The \textit{labelmap} command assings alphanumeric type labels
+to each numeric atom type, bond type and angle type.
 
 Now, we can add atoms to the system. First, let us create two sub-regions corresponding
 respectively to the two solid walls, and create a larger region from the union of the
@@ -2237,10 +2241,6 @@ include ../GROUP.lmp
 Create a new text file called \textit{PARM.lmp} next to the \textit{systemcreation/}
 folder. Copy the following lines into \textit{PARM.lmp}:
 {\normalsize \begin{verbatim}
-labelmap atom 1 O 2 H 3 Na+ 4 Cl- 5 WALL
-labelmap bond 1 O-H
-labelmap angle 1 H-O-H
-
 mass O 15.9994
 mass H 1.008
 mass Na+ 22.990
