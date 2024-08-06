@@ -486,9 +486,9 @@ the ``Save'' or ``Save As'' entry in the ``File'' menu, using the
 at the bottom left of the \textit{Editor} window status bar.  For
 running LAMMPS in LAMMPS--GUI it is not required to save the buffer.
 The current contents of the buffer will be passed on to LAMMPS.
-However, if you prefer to have you editor buffer automatically saved
-before launching a run or exiting LAMMPS-GUI, there is a setting in the
-\textit{Preferences} dialog for it.
+However, if you prefer to have your editor buffer automatically saved
+before launching a run or exiting the LAMMPS-GUI, there is a setting for this
+in the \textit{Preferences} dialog.
 
 \paragraph{Initialization}
 
@@ -993,7 +993,7 @@ copy similar lines as previously into \textit{input.min.lmp}:
 \end{verbatim}
 }
 
-The main novelty of this input compared to the previous input script,
+The main novelty of this input compared to the previous input script
 is the \textit{write\_data} command.  This command is used to write the
 final state of the minimization into a text format file called
 \textit{minimized\_coordinates.data}.  Note that the \textit{write\_data}
@@ -1105,7 +1105,7 @@ between the previously defined groups.  Finally, the two
 located within the cylinder and the atoms of type 2 that are located
 outside the cylinder, respectively.  LAMMPS has a limited number of
 custom groups (30), so it is good practice to delete groups that are
-no longer needed, which is done with the last four lines.
+no longer needed. This is done in the last four lines.
 
 Let us monitor the number of atoms of each type inside the cylinder as a
 function of time, by creating the following variables:
@@ -1203,14 +1203,13 @@ ensures that the total random force applied to the atoms is equal to
 zero.
 
 The steps to have no initial linear momentum and no net random force are
-important to avoid that the system will start to drift or move as a
+important to prevent the system from starting to drift or move as a
 whole.  For a bulk system with periodic boundary conditions, it is
-expected to stay in place and thus when computing the temperature from
+expected to stay in place. Thus, when computing the temperature from
 the kinetic energy, we use $3N-3$ degrees of freedom since there is no
 global translation.  In a drifting system, some of the kinetic energy is
-due to the drift, which means the system itself becomes cooler.  In the
-extreme case it can freeze and drift very fast and thus people sometimes
-refer to this as the ``flying ice cube syndrome''.
+due to the drift, which means the system itself cools down.  In the
+extreme case it can freeze and drift very fast. This phenomenon is sometimes referred to as the ``flying ice cube syndrome'' \cite{wong2016good}.
 
 Run \textit{input.md.lmp} and observe the mixing of the two populations
 over time (see also Fig.\,\ref{fig:evolution-population}).  From the
