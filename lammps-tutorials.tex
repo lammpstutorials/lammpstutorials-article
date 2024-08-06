@@ -1155,9 +1155,9 @@ Add the following lines into \textit{input.md.lmp}. Note the absence of
  thermo_style custom step temp pe ke etotal &
     press v_n1_in v_n2_in c_sumcoor12
 
- dump mydmp all image 100 dump.md.*.jpg &
-    type type shiny 0.1 box no 0.01 &
-    view 0 0 zoom 1.8
+ dump mydmp all image 100 dump.md.*.ppn &
+    type c_coor12 shiny 0.1 box no 0.01 &
+    view 0 0 zoom 1.8 fsaa yes
  dump_modify mydmp acolor 1 darkturquoise &
     acolor 2 darkblue adiam 1 1 adiam 2 3 &
     backcolor white
