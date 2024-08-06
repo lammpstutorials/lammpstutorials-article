@@ -511,8 +511,6 @@ following lines into \textit{input.lmp}:
  boundary p p p
 \end{verbatim}
 }
-% AK: I am moving the pair_style command away from this section
-% since is the odd one out here and the others are all defaults
 
 The first line, \textit{units lj}, indicates that we want to use
 so-called ``reduced units'' in which all quantities are unitless.  This
@@ -574,14 +572,14 @@ The next step is to create the simulation box and put some atoms into it.
 Modify the \textit{System definition} category of \textit{input.lmp} as follows:
 {\normalsize
 \begin{verbatim}
-# 2) System definition
-region simulation_box block &
-    -20.0 20.0 -20.0 20.0 -20.0 20.0 units box
-create_box 2 simulation_box
-create_atoms 1 random 1500 &
-    341341 simulation_box overlap 0.3
-create_atoms 2 random 100 &
-    127569 simulation_box overlap 0.3
+ # 2) System definition
+ region simulation_box block &
+     -20.0 20.0 -20.0 20.0 -20.0 20.0 units box
+ create_box 2 simulation_box
+ create_atoms 1 random 1500 &
+     341341 simulation_box overlap 0.3
+ create_atoms 2 random 100 &
+     127569 simulation_box overlap 0.3
 \end{verbatim}
 }
 
@@ -629,12 +627,12 @@ Now we provide the settings for the two types of atoms.  Modify the
 \textit{Settings} category of \textit{input.lmp} as follows:
 {\normalsize
 \begin{verbatim}
-# 3) Settings
-mass 1 1.0
-mass 2 1.0
-pair_style lj/cut 2.5
-pair_coeff 1 1 1.0 1.0
-pair_coeff 2 2 0.5 3.0
+ # 3) Settings
+ mass 1 1.0
+ mass 2 1.0
+ pair_style lj/cut 2.5
+ pair_coeff 1 1 1.0 1.0
+ pair_coeff 2 2 0.5 3.0
 \end{verbatim}
 }
 
@@ -686,12 +684,12 @@ forces.  Let us fill in the two last remaining categories,
 into \textit{input.lmp}:
 {\normalsize
 \begin{verbatim}
-# 4) Visualization
-thermo 10
-thermo_style custom step etotal press
+ # 4) Visualization
+ thermo 10
+ thermo_style custom step etotal press
 
-# 5) Run
-minimize 1.0e-6 1.0e-6 1000 10000
+ # 5) Run
+ minimize 1.0e-6 1.0e-6 1000 10000
 \end{verbatim}
 }
 The \textit{thermo} command asks LAMMPS to print thermodynamic
@@ -786,11 +784,11 @@ to the same input script, \textit{input.lmp}. After the
 \textit{minimize} command, add the following lines:
 {\normalsize
 \begin{verbatim}
-# PART B - MOLECULAR DYNAMICS
-# 4) Visualization
-thermo 50
-thermo_style custom step temp etotal &
-    pe ke press
+ # PART B - MOLECULAR DYNAMICS
+ # 4) Visualization
+ thermo 50
+ thermo_style custom step temp etotal &
+     pe ke press
 \end{verbatim}
 }
 
@@ -811,10 +809,10 @@ Then, let us add a second \textit{Run} category by adding the following
 lines to \textit{PART B} of \textit{input.lmp}:
 {\normalsize
 \begin{verbatim}
-# 5) Run
-fix mynve all nve
-timestep 0.005
-run 10000
+ # 5) Run
+ fix mynve all nve
+ timestep 0.005
+ run 10000
 \end{verbatim}
 }
 The \textit{fix nve} command is used to update the positions and the
@@ -841,11 +839,11 @@ of 2.5 and 0.005 are quite aggressive.
 Now we change the \textit{Run} section to:
 {\normalsize
 \begin{verbatim}
-# 5) Run
-fix mynve all nve
-fix mylgv all langevin 1.0 1.0 0.1 1530917
-timestep 0.005
-run 10000
+ # 5) Run
+ fix mynve all nve
+ fix mylgv all langevin 1.0 1.0 0.1 1530917
+ timestep 0.005
+ run 10000
 \end{verbatim}
 }
 
@@ -903,12 +901,12 @@ can be pasted into the into the \textit{Visualization} section of
 This may look like the following:
 {\normalsize
 \begin{verbatim}
-dump viz all image 100 myimage-*.ppm &
+ dump viz all image 100 myimage-*.ppm &
     type type size 800 800 zoom 1.452 &
     shiny 0.7 fsaa yes view 80 10 &
     box yes 0.025 axes no 0.0 0.0 &
     center s 0.483725 0.510373 0.510373
-dump_modify viz pad 9 boxcolor darkblue &
+ dump_modify viz pad 9 boxcolor darkblue &
     backcolor white adiam 1 1.6 adiam 2 4.8
 \end{verbatim}
 }
@@ -943,11 +941,11 @@ Create a new folder next to \textit{my-first-input/} and call it
 has been done previously, copy the following lines into \textit{input.min.lmp}:
 {\normalsize
 \begin{verbatim}
-# 1) Initialization
-units lj
-dimension 3
-atom_style atomic
-boundary p p p
+ # 1) Initialization
+ units lj
+ dimension 3
+ atom_style atomic
+ boundary p p p
 \end{verbatim}
 }
 To create the atoms of types 1 and 2 in two separate regions, let us create
@@ -955,16 +953,16 @@ three separate regions: a cubic region for the simulation box and two additional
 regions for placing the atoms:
 {\normalsize
 \begin{verbatim}
-# 2) System definition
-region simulation_box block &
-    -20 20 -20 20 -20 20
-create_box 2 simulation_box
-region cylinder_in cylinder z 0 0 10 &
-    INF INF side in
-region cylinder_out cylinder z 0 0 10 &
-    INF INF side out
-create_atoms 1 random 1000 341341 cylinder_out
-create_atoms 2 random 150 127569 cylinder_in
+ # 2) System definition
+ region simulation_box block &
+     -20 20 -20 20 -20 20
+ create_box 2 simulation_box
+ region cylinder_in cylinder z 0 0 10 &
+     INF INF side in
+ region cylinder_out cylinder z 0 0 10 &
+     INF INF side out
+ create_atoms 1 random 1000 341341 cylinder_out
+ create_atoms 2 random 150 127569 cylinder_in
 \end{verbatim}
 }
 The \textit{side in} and \textit{side out} keywords are used to define regions
@@ -972,26 +970,26 @@ that are respectively inside and outside of the cylinder of radius 10. Then,
 copy similar lines as previously into \textit{input.min.lmp}:
 {\normalsize
 \begin{verbatim}
-# 3) Settings
-mass 1 1
-mass 2 1
-pair_style lj/cut 2.5
-pair_coeff 1 1 1.0 1.0
-pair_coeff 2 2 0.5 3.0
+ # 3) Settings
+ mass 1 1
+ mass 2 1
+ pair_style lj/cut 2.5
+ pair_coeff 1 1 1.0 1.0
+ pair_coeff 2 2 0.5 3.0
 
-# 4) Visualization
-thermo 10
-thermo_style custom step etotal press
-dump mydmp all image 100 dump.min.*.ppn &
+ # 4) Visualization
+ thermo 10
+ thermo_style custom step etotal press
+ dump mydmp all image 100 dump.min.*.ppn &
     type type shiny 0.1 box no 0.01 &
     view 0 0 zoom 1.8
-dump_modify mydmp acolor 1 darkturquoise &
+ dump_modify mydmp acolor 1 darkturquoise &
     acolor 2 darkblue adiam 1 1 adiam 2 3 &
     backcolor white
 
-# 5) Run
-minimize 1.0e-4 1.0e-6 1000 10000
-write_data minimized_coordinates.data
+ # 5) Run
+ minimize 1.0e-4 1.0e-6 1000 10000
+ write_data minimized_coordinates.data
 \end{verbatim}
 }
 
@@ -1021,8 +1019,8 @@ the atom indexes (from 1 to the total number of atoms, 1150), the atom
 types (1 or 2 here), and the positions of the atoms $x$, $y$, $z$. The
 last three columns are image flags that keep track of which atoms
 crossed the periodic boundary.  The exact format of each line in the
-\textit{Atoms} section depends on the choice of \textit{atom\_style}
-and thus which per-atom data is set and stored internally in LAMMPS.
+\textit{Atoms} section depends on the choice of \textit{atom\_style} and
+thus which per-atom data is set and stored internally in LAMMPS.
 
 As an alternative to the \textit{write\_data} command, you can also use
 the command \textit{write\_restart minimized\_coordinates.restart} to
@@ -1042,11 +1040,11 @@ directly from the previously saved configuration. Within
 and copy the same lines as previously:
 {\normalsize
 \begin{verbatim}
-# 1) Initialization
-units lj
-dimension 3
-atom_style atomic
-boundary p p p
+ # 1) Initialization
+ units lj
+ dimension 3
+ atom_style atomic
+ boundary p p p
 \end{verbatim}
 }
 Here, instead of creating a new region and adding atoms to it, we can
@@ -1054,38 +1052,38 @@ simply import the previously saved configuration by adding the following
 command to \textit{input.md.lmp}:
 {\normalsize
 \begin{verbatim}
-# 2) System definition
-pair_style lj/cut 2.5
-read_data minimized_coordinates.data
+ # 2) System definition
+ pair_style lj/cut 2.5
+ read_data minimized_coordinates.data
 \end{verbatim}
 }
 Since the data file contains the \textit{pair\_coeff} settings, it is
 required to issue the \textit{pair\_style} command \emph{before} the
 \textit{read\_data} command.
 
-By visualizing the system using the generated JPG images, you may have
-noticed that some atoms have moved from one region to the other during
-minimization.  To start the simulation from a clean slate, with only
-atoms of type 2 within the cylinder and atoms of type 1 outside the
+By visualizing the system using the generated NetPBM images, you may
+have noticed that some atoms have moved from one region to the other
+during minimization.  To start the simulation from a clean slate, with
+only atoms of type 2 within the cylinder and atoms of type 1 outside the
 cylinder, let us delete the misplaced atoms by adding the following
 commands to \textit{input.md.lmp}:
 
 {\normalsize
 \begin{verbatim}
-region cylinder_in cylinder z 0 0 10 &
+ region cylinder_in cylinder z 0 0 10 &
     INF INF side in
-region cylinder_out cylinder z 0 0 10 &
+ region cylinder_out cylinder z 0 0 10 &
     INF INF side out
-group group_type_1 type 1
-group group_type_2 type 2
-group group_region_in region cylinder_in
-group group_region_out region cylinder_out
-group group_type_1_in &
+ group group_type_1 type 1
+ group group_type_2 type 2
+ group group_region_in region cylinder_in
+ group group_region_out region cylinder_out
+ group group_type_1_in &
     intersect group_type_1 group_region_in
-group group_type_2_out &
+ group group_type_2_out &
     intersect group_type_2 group_region_out
-delete_atoms group group_type_1_in
-delete_atoms group group_type_2_out
+ delete_atoms group group_type_1_in
+ delete_atoms group group_type_2_out
 \end{verbatim}
 }
 
@@ -1106,9 +1104,9 @@ Let us monitor the number of atoms of each type inside the cylinder as a
 function of time, by creating the following variables:
 {\normalsize
 \begin{verbatim}
-variable n1_in &
+ variable n1_in &
     equal count(group_type_1,cylinder_in)
-variable n2_in &
+ variable n2_in &
     equal count(group_type_2,cylinder_in)
 \end{verbatim}
 }
@@ -1123,9 +1121,9 @@ degree of mixing in a binary mixture.  Add the following lines into
 \textit{input.md.lmp}:
 {\normalsize
 \begin{verbatim}
-compute coor12 group_type_1 coord/atom &
+ compute coor12 group_type_1 coord/atom &
     cutoff 2.0 group group_type_2
-compute sumcoor12 all reduce ave c_coor12
+ compute sumcoor12 all reduce ave c_coor12
 \end{verbatim}
 }
 The \textit{compute ave} is used to average the per atom coordination
@@ -1145,15 +1143,15 @@ Add the following lines into \textit{input.md.lmp}. Note the absence of
 \textit{.data} file.
 {\normalsize
 \begin{verbatim}
-# 4) Visualization
-thermo 1000
-thermo_style custom step temp pe ke etotal &
+ # 4) Visualization
+ thermo 1000
+ thermo_style custom step temp pe ke etotal &
     press v_n1_in v_n2_in c_sumcoor12
 
-dump mydmp all image 100 dump.md.*.jpg &
+ dump mydmp all image 100 dump.md.*.jpg &
     type type shiny 0.1 box no 0.01 &
     view 0 0 zoom 1.8
-dump_modify mydmp acolor 1 darkturquoise &
+ dump_modify mydmp acolor 1 darkturquoise &
     acolor 2 darkblue adiam 1 1 adiam 2 3 &
     backcolor white
 \end{verbatim}
@@ -1166,14 +1164,14 @@ Finally, let us complete the script by adding the following lines into
 \textit{input.md.lmp}:
 {\normalsize
 \begin{verbatim}
-# 5) Run
-velocity all create 1.0 4928459 &
+ # 5) Run
+ velocity all create 1.0 4928459 &
     mom yes rot yes dist gaussian
-fix mynve all nve
-fix mylgv all langevin 1.0 1.0 0.1 &
+ fix mynve all nve
+ fix mylgv all langevin 1.0 1.0 0.1 &
     1530917 zero yes
-timestep 0.005
-run 300000
+ timestep 0.005
+ run 300000
 \end{verbatim}
 }
 There are a few more differences from the previous simulation.  First,
