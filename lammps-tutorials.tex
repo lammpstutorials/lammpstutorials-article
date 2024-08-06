@@ -1181,6 +1181,16 @@ Finally, let us complete the script by adding the following lines into
  run 300000
 \end{verbatim}
 }
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{LJ-mixing}
+\caption{a) Evolution of the number $N_\text{in}$ of atoms within the
+\textit{cylinder\_in} region as a function of the time $t$. b) Evolution of
+the coordination number $C_{1-2}$ between atoms of types 1 and 2.}
+\label{fig:mixing}
+\end{figure}
+
 There are a few more differences from the previous simulation.  First,
 the \textit{velocity create} command assigns an initial velocity to each
 atom.  The initial velocity is chosen so that the average initial
@@ -1192,15 +1202,6 @@ is the \textit{zero yes} keyword in the Langevin thermostat, which
 ensures that the total random force applied to the atoms is equal to
 zero.
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{LJ-mixing}
-\caption{a) Evolution of the number $N_\text{in}$ of atoms within the
-\textit{cylinder\_in} region as a function of the time $t$. b) Evolution of
-the coordination number $C_{1-2}$ between atoms of types 1 and 2.}
-\label{fig:mixing}
-\end{figure}
-
 The steps to have no initial linear momentum and no net random force are
 important to avoid that the system will start to drift or move as a
 whole.  For a bulk system with periodic boundary conditions, it is
@@ -1211,16 +1212,47 @@ due to the drift, which means the system itself becomes cooler.  In the
 extreme case it can freeze and drift very fast and thus people sometimes
 refer to this as the ``flying ice cube syndrome''.
 
-Run \textit{input.md.lmp} using LAMMPS, and observe the mixing of the
-two populations over time (see also
-Fig.\,\ref{fig:evolution-population}).  From the variables
-\textit{n1\_in} and \textit{n2\_in}, one can follow the number of atoms
-in each region as a function of time (Fig.\,\ref{fig:mixing}\,a). In
-addition, as the mixing progresses, the coordination number between
-atoms of types 1 and 2 increases from about $0.01$ to $0.35$
+Run \textit{input.md.lmp} and observe the mixing of the two populations
+over time (see also Fig.\,\ref{fig:evolution-population}).  From the
+variables \textit{n1\_in} and \textit{n2\_in}, one can follow the number
+of atoms in each region as a function of time
+(Fig.\,\ref{fig:mixing}\,a).  To view their evolution, select the entries
+\textit{v\_n1\_in} or \textit{v\_n2\_in} in the \textit{Select data} drop
+down menu in the \textit{Charts} window of LAMMPS-GUI.
+
+In addition, as the mixing progresses, the coordination number between
+atoms of types 1 and 2 increases from about $0.01$ to $0.035$
 (Fig.\,\ref{fig:mixing}\,b).  This indicates that, over time, more and
 more particles of type 1 come into contact with particles of type 2, as
-expected during mixing.
+expected during mixing.  This can be seen using the entry
+\textit{c\_sumcoor12} in the \textit{Charts} dropdown menu.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.66\linewidth]{LJ-coords}
+\caption{Snapshot image with atoms colored by the computed 1-2 coordination
+  number: turquoise = 0, yellow = 1, red = 2}
+\label{fig:coords-viz}
+\end{figure}
+
+It is also possible to color the atoms in the \textit{Slide Show} according
+to their coordination number. For that purpose, replace the \textit{dump}
+and \textit{dump\_modify} commands with the following commands:
+{\normalsize
+\begin{verbatim}
+dump mydmp all image 100 dump.md.*.ppn &
+    c_coor12 type shiny 0.1 box no 0.01 &
+    view 0 0 zoom 1.8 fsaa yes
+ dump_modify mydmp amap 0.0 3.0 ca 1.0 3 &
+    min darkturquoise 0.9 yellow max red &
+    adiam 1 1 adiam 2 3 backcolor white
+\end{verbatim}
+}
+
+Now atoms of type 2 and atoms of type 1 without type 2 neighbors
+within 2.0 length units are colored in turquoise, atoms of type 1 with
+one type 2 neighbor in yellow, and atoms of type 1 with two type 2
+neighbors in red.  Figure \ref{fig:coords-viz} shows an example.
 
 \subsection{Tutorial 2: Pulling on a carbon nanotube}
 \label{carbon-nanotube-label}
