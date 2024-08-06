@@ -1084,6 +1084,11 @@ commands to \textit{input.md.lmp}:
     intersect group_type_2 group_region_out
  delete_atoms group group_type_1_in
  delete_atoms group group_type_2_out
+ # we don't need these four groups anymore
+ group group_region_in delete
+ group group_region_out delete
+ group group_type_1_in delete
+ group group_type_2_out delete
 \end{verbatim}
 }
 
@@ -1098,7 +1103,9 @@ two \textit{group} commands create atom groups based on the intersection
 between the previously defined groups.  Finally, the two
 \textit{delete\_atoms} commands delete the atoms of type 1 that are
 located within the cylinder and the atoms of type 2 that are located
-outside the cylinder, respectively.
+outside the cylinder, respectively.  LAMMPS has a limited number of
+custom groups (30), so it is good practice to delete groups that are
+no longer needed, which is done with the last four lines.
 
 Let us monitor the number of atoms of each type inside the cylinder as a
 function of time, by creating the following variables:
