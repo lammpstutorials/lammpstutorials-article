@@ -1,0 +1,4 @@
+[submodule "files/pyplot-perso"]
+	path = files/pyplot-perso
+	url = git@github.com:simongravelle/pyplot-perso.git
+	branch = LAMMPS-livecom
