@@ -3,18 +3,6 @@
 This article introduces a suite of tutorials designed to make learning LAMMPS
 more accessible to new users.
 
-<p float="left">
-    <a href="https://lammpstutorials.github.io/sphinx/build/html/tutorials/level1/lennard-jones-fluid.html">
-        <img src="https://raw.githubusercontent.com/lammpstutorials/lammpstutorials.github.io/2Aug2023/docs/avatars/level1/lennard-jones-fluid/avatar-LJ-LAMMPS.png" width="32%" />
-    </a>
-    <a href="https://lammpstutorials.github.io/sphinx/build/html/tutorials/level1/breaking-a-carbon-nanotube.html">
-        <img src="https://raw.githubusercontent.com/lammpstutorials/lammpstutorials.github.io/2Aug2023/docs/avatars/level1/breaking-a-carbon-nanotube/CNT.png" width="32%" />
-    </a>
-    <a href="https://lammpstutorials.github.io/sphinx/build/html/tutorials/level3/water-adsorption-in-silica.html">
-        <img src="https://raw.githubusercontent.com/lammpstutorials/lammpstutorials.github.io/2Aug2023/docs/avatars/level3/water-adsorption-in-silica/water-adsorption.png" width="32%" />
-    </a>
-</p>
-
 ## Tutorials
 
 - Tutorial 1: Lennard-Jones ﬂuid
@@ -24,10 +12,16 @@ more accessible to new users.
 - Tutorial 5: Reactive silicon dioxide
 - Tutorial 6: Water adsorption in silica
 - Tutorial 7: Free energy calculation
+- Tutorial 8: ?
+
+## Files
+
+All the files corresponding to the tutorials can be found in the [files/](files/) folder. The Python scripts
+used to generate the plots are also provided.
 
 ## Link
 
-Access the pdf from [this link](lammps-tutorials.pdf), or clone this repository and compile it
+Access the pdf from [this link](lammps-tutorials.pdf), or clone this repository and compile the tex file
 yourself by typing in a terminal:
 
 ```
