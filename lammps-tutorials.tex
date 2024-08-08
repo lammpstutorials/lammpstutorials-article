@@ -3679,7 +3679,8 @@ following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 region myreg block -25 25 -5 5 -25 25
 create_box 1 myreg
-create_atoms 1 random 60 341341 myreg &
+labelmap atom 1 A1
+create_atoms A1 random 60 341341 myreg &
     overlap 1.5 maxtry 50
 
 mass * 39.95
@@ -3754,7 +3755,7 @@ thermo 10000
 dump mydmp all image 5000 dump.*.jpg type type &
     shiny 0.1 box yes 0.02 view 0 90 zoom 1.9
 dump_modify mydmp backcolor white &
-    acolor 1 cyan adiam 1 1 boxcolor black
+    acolor A1 cyan adiam A1 1 boxcolor black
 \end{verbatim}}
 A \textit{dump image} was also added for system visualization.
 
@@ -3883,8 +3884,9 @@ boundary p p p
 
 region myreg block -25 25 -5 5 -25 25
 create_box 2 myreg
-create_atoms 2 single 0 0 0
-create_atoms 1 random 5 341341 myreg &
+labelmap atom 1 A1 2 A2
+create_atoms A2 single 0 0 0
+create_atoms A1 random 5 341341 myreg &
     overlap 1.5 maxtry 50
 
 mass * 39.948
@@ -3912,14 +3914,14 @@ reset_timestep 0
 dump mydmp all image 1000000 dump.*.jpg type &
 type shiny 0.1 box yes 0.02 view 0 90 zoom 1.9
 dump_modify mydmp backcolor white &
-    acolor 1 cyan adiam 1 1 &
-    acolor 2 pink adiam 1 1 &
+    acolor A1 cyan adiam A1 1 &
+    acolor A2 pink adiam A2 1 &
     boxcolor black
 \end{verbatim}}
 So far, this code resembles that of Method 1, except for the additional particle
-of type 2. Particles of type 1 and 2
+of type A2. Particles of type A1 and A2
 are identical, having the same mass and Lennard-Jones parameters. However, the
-particle of type 2 will additionally be exposed to the biasing potential
+particle of type A2 will additionally be exposed to the biasing potential
 $V$ (Fig.\,){fig:US-system-biased}).
 
 Let us create a loop with 50 steps, and move progressively the center of the
