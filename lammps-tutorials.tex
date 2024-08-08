@@ -1863,7 +1863,7 @@ etc. in the simulation. Type labels can be any string defined by the user, and w
 will use the atom types from the GROMOS 54A7 force field. In this example, the atom
 types are defined in \textit{PARM.lmp}, within which the \textit{mass}
 and \textit{pair\_coeff} of atoms of types OW and HW are for water and the remaining
-atom types are for the polymer molecule. Similarly, the \textit{bond\_coeff HW-OW}
+atom types are for the polymer molecule. Similarly, the \textit{bond\_coeff OW-HW}
 and \textit{angle\_coeff HW-OW-HW} are for water, while all the other parameters
 are for the polymer.
 
@@ -3375,7 +3375,7 @@ atom_style full
 neighbor 1.0 bin
 neigh_modify delay 1
 pair_style hybrid/overlay vashishta &
-    lj/cut/tip4p/long OW HW HW-OW HW-OW-HW &
+    lj/cut/tip4p/long OW HW OW-HW HW-OW-HW &
     0.1546 10
 kspace_style pppm/tip4p 1.0e-4
 bond_style harmonic
@@ -3439,7 +3439,7 @@ Atom Type Labels
 
 Bond Type Labels
 
-1 HW-OW
+1 OW-HW
 
 Angle Type Labels
 
@@ -3487,7 +3487,7 @@ pair_coeff Si OW lj/cut/tip4p/long 0.0057 4.42
 pair_coeff O OW lj/cut/tip4p/long 0.0043 3.12
 pair_coeff OW OW lj/cut/tip4p/long 0.008 3.1589
 pair_coeff HW HW lj/cut/tip4p/long 0.0 0.0
-bond_coeff HW-OW 0 0.9572
+bond_coeff OW-HW 0 0.9572
 angle_coeff HW-OW-HW 0 104.52
 \end{verbatim}}
 The force field Vashishta applies only to Si and O of $\text{SiO}_2$,
@@ -3506,7 +3506,7 @@ variable nO equal count(oxygen)
 thermo_style custom step temp etotal v_nO
 thermo 1000
 
-fix shak H2O shake 1.0e-4 200 0 b HW-OW &
+fix shak H2O shake 1.0e-4 200 0 b OW-HW &
     a HW-OW-HW mol h2omol
 \end{verbatim}}
 The number of oxygen atoms from water molecules (i.e. the number of molecules)
