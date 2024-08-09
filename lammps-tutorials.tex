@@ -332,8 +332,9 @@ McDonald \cite{hansen2013theory}.
 % AK: FIXME fill in the version dates and numbers for the next stable version
 
 The LAMMPS release version XXXAug2024 \cite{lammps_code} and the
-matching LAMMPS--GUI software version 1.6.XXX are recommended to follow
-the tutorials.  For Linux (with x86\_64 CPU), macOS (BigSur or later),
+matching LAMMPS--GUI software version 1.6.XXX are required to follow
+the tutorials since they use features that first appeared in those
+versions.  For Linux (with x86\_64 CPU), macOS (BigSur or later),
 and Windows (10 and 11) you can download a pre-compiled LAMMPS package
 from the LAMMPS release page on GitHub
 (\href{https://github.com/lammps/lammps/releases}{github.com/lammps/lammps/releases}).
@@ -347,11 +348,12 @@ tutorials.
 LAMMPS versions generally have good backward compatibility (that is, old
 inputs work with newer LAMMPS versions) but are not as good in forward
 compatibility (i.e. newer inputs are not as likely to work with older
-LAMMPS versions).  Thus, it is generally possible to follow this tutorial
-with more recent releases of LAMMPS and to some degree with older
-versions of LAMMPS.  This tutorial shall nevertheless be occasionally
-revised to remain compatible with and take advantage of new features in
-the latest stable version of LAMMPS.
+LAMMPS versions).  Thus, it is generally possible to follow this
+tutorial with more recent releases of LAMMPS and to some degree with
+older versions of LAMMPS, possibly after some minor adjustments.  This
+tutorial shall nevertheless be occasionally revised to remain compatible
+with and take advantage of new features in the latest stable version of
+LAMMPS.
 
 It is also possible to follow the tutorials without LAMMPS--GUI by using
 the console version of LAMMPS and a text editor plus some external tools
@@ -407,14 +409,17 @@ specifically for working with LAMMPS:
 \item Automatic plotting of thermodynamic data during run
 \item Capture of ``dump image'' outputs for animations
 \item Viewer for plain text files
+\item Inspection of binary restart files
 \item Export of thermodynamic data for plotting
 \item Use of OpenMP threading or GPU acceleration
 \item Customization through preferences dialog
+\item Wizard dialogs to set up these tutorials
 \end{itemize}
 
-\hyperref[using-lammps-gui]{Appendix A} contains instructions for using
-LAMMPS--GUI with the tutorials presented here.  A complete description
-of all LAMMPS--GUI features is in the LAMMPS manual\cite{lammps_gui_docs}.
+\hyperref[using-lammps-gui]{Appendix A} contains basic instructions for
+using LAMMPS--GUI with the tutorials presented here.  A complete
+description of all LAMMPS--GUI features is in the LAMMPS manual
+\cite{lammps_gui_docs}.
 
 \begin{note}
   For the sake of simplicity we will refer during the tutorials to
