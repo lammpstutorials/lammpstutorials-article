@@ -1856,7 +1856,7 @@ distances, etc). In \textit{input.lmp}, add the following line:
 \end{verbatim}}
 
 Download and save the
-\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial3/PARM.lmp}{\textit{PARM.lmp}}
+\href{\filepath tutorial3/PARM.lmp}{\textit{PARM.lmp}}
 file next to the \textit{pureH2O/} folder. This example uses type labels, which
 are strings that map to each of the numeric atom types, bond types, angles types,
 etc. in the simulation. Type labels can be any string defined by the user, and we
@@ -1888,7 +1888,7 @@ after starting the simulation:
 \end{verbatim}}
 When LAMMPS fails to create the desired number of molecules, a WARNING appears
 in the \textit{log} file. The molecule template called
-\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial3/H2O-SPCFw.mol}{\textit{H2O-SPCFw.mol}}
+\href{\filepath tutorial3/pureH2O/H2O-SPCFw.mol}{\textit{H2O-SPCFw.mol}}
 must be downloaded and saved in the \textit{pureH2O/} folder. This template contains
 the necessary structural information of a water molecule, such as the number of
 atoms, or the IDs of the atoms that are connected by bonds, angles, etc.
@@ -1921,8 +1921,9 @@ the three dimensions of the box will be re-scaled simultaneously.
 
 Let us output the system into images by adding the following commands to \textit{input.lmp}:
 {\normalsize \begin{verbatim}
- dump mydmp all image 1000 dump.*.ppn type type &
- shiny 0.1 box no 0.01 view 0 90 zoom 1.8
+ dump mydmp all image 1000 dump.*.ppn type &
+     type shiny 0.1 box no 0.01 &
+     view 0 90 zoom 1.8
  dump_modify mydmp backcolor white &
    acolor OW red acolor HW white &
    adiam OW 3 adiam HW 1.5
@@ -1933,7 +1934,8 @@ Let us also extract the volume and density in the terminal every 1000 steps:
  variable myoxy equal count(H2O)/3
  variable myrho equal ${myoxy}/v_myvol
  thermo 1000
- thermo_style custom step temp etotal v_myvol v_myrho
+ thermo_style custom step temp etotal &
+     v_myvol v_myrho
 \end{verbatim}}
 The variable \textit{myoxy} corresponds to the number of atoms divided by 3, i.e.
 the number of molecules, and the variable \textit{myrho} is the number of molecules
@@ -1964,8 +1966,8 @@ atoms are in white.}
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-density}
-\caption{Evolution of the density $\rho$ of water with time $t$. The density $\rho$
-reaches a plateau after $t \approx 10\,\text{ps}$.}
+\caption{Evolution of the density $\rho$ of water with time $t$. The density
+quickly reaches a plateau.}
 \label{fig:PEG-density}
 \end{figure}
 
@@ -1988,81 +1990,80 @@ Create a second folder alongside \textit{pureH2O/} and call it \textit{mergePEGH
 Create a new blank file in it, call it \textit{input.lmp}. Within \textit{input.lmp},
 copy the same first lines as previously:
 {\normalsize \begin{verbatim}
-units real
-atom_style full
-bond_style harmonic
-angle_style harmonic
-dihedral_style harmonic
-pair_style lj/cut/coul/long 10
-kspace_style pppm 1e-5
-special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 &
-    angle yes dihedral yes
+ units real
+ atom_style full
+ bond_style harmonic
+ angle_style harmonic
+ dihedral_style harmonic
+ pair_style lj/cut/coul/long 10
+ kspace_style pppm 1e-5
+ special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 &
+     angle yes dihedral yes
 \end{verbatim}}
 Then, import the previously generated data file \textit{H2O.data} as well as the \textit{PARM.lmp} file:
 {\normalsize \begin{verbatim}
-read_data ../pureH2O/H2O.data &
-    extra/bond/per/atom 3 &
-    extra/angle/per/atom 6 &
-    extra/dihedral/per/atom 10 &
-    extra/special/per/atom 14
-include ../PARM.lmp
+ read_data ../pureH2O/H2O.data &
+     extra/bond/per/atom 3 &
+     extra/angle/per/atom 6 &
+     extra/dihedral/per/atom 10 &
+     extra/special/per/atom 14
+ include ../PARM.lmp
 \end{verbatim}}
 Download the template called
-\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial3/PEG-GROMOS.mol}{\textit{PEG-GROMOS.mol}}
+\href{\filepath tutorial3/mergePEGH2O/PEG-GROMOS.mol}{\textit{PEG-GROMOS.mol}}
 for the PEG molecule, and then create a single molecule in the middle of the box:
 {\normalsize \begin{verbatim}
-molecule pegmol PEG-GROMOS.mol
-create_atoms 0 single 0 0 0 mol pegmol 454756
+ molecule pegmol PEG-GROMOS.mol
+ create_atoms 0 single 0 0 0 mol pegmol 454756
 \end{verbatim}}
 Let us create 2 groups to differentiate the PEG from the H2O, by adding the following
 lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
-group H2O type OW HW
-group PEG type C CPos H HC OAlc OE
+ group H2O type OW HW
+ group PEG type C CPos H HC OAlc OE
 \end{verbatim}}
 Water molecules that are overlapping with the PEG must be deleted to avoid future crashing.
 Add the following line into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
-delete_atoms overlap 2.0 H2O PEG mol yes
+ delete_atoms overlap 2.0 H2O PEG mol yes
 \end{verbatim}}
 Here the value of 2 Ångstroms for the overlap cutoff was fixed arbitrarily and can
 be chosen through trial and error. If the cutoff is too small, the simulation will
 crash. If the cutoff is too large, too many water molecules will unnecessarily be
-deleted. Finally, let us use the \textit{fix npt} to control the temperature, as
+deleted. 
+
+Finally, let us use the \textit{fix npt} to control the temperature, as
 well as the pressure by allowing the box size to be rescaled along the \textit{x} axis:
 {\normalsize \begin{verbatim}
-fix mynpt all npt temp 300 300 100 x 1 1 1000
-timestep 1.0
+ fix mynpt all npt temp 300 300 100 x 1 1 1000
+ timestep 1.0
 \end{verbatim}}
-Once more, let us dump the atom positions as well as the system temperature and volume:
+Once more, let us create images of the systems:
 {\normalsize \begin{verbatim}
-dump mydmp all atom 100 dump.lammpstrj
-thermo 100
-variable mytemp equal temp
-variable myvol equal vol
-fix myat1 all ave/time 10 10 100 &
-    v_mytemp file temperature.dat
-fix myat2 all ave/time 10 10 100 &
-    v_myvol file volume.dat
-\end{verbatim}}
-Let us also print the total enthalpy:
-{\normalsize \begin{verbatim}
-variable myenthalpy equal enthalpy
-fix myat3 all ave/time 10 10 100 &
-    v_myenthalpy file enthalpy.dat
+ dump mydmp all image 1000 dump.*.ppn type &
+     type shiny 0.1 box no 0.01 &
+     view 0 90 zoom 1.8  fsaa yes bond atom 0.8 
+ dump_modify mydmp backcolor white &
+     acolor OW red acolor HW white &
+     acolor OE red acolor OAlc red &
+     acolor C gray acolor CPos gray &
+     acolor H white acolor HC white &
+     adiam OW 0.2 adiam HW 0.2 &
+     adiam C 3 adiam CPos 3 adiam OAlc 2.8 &
+     adiam H 1 adiam HC 1 adiam OE 2.8
+ thermo 1000
 \end{verbatim}}
 Finally, let us perform a short equilibration and print the
 final state in a data file. Add the following lines to the data file:
 {\normalsize \begin{verbatim}
-run 30000
-write_data mix.data
+ run 30000
+ write_data mix.data
 \end{verbatim}}
-If you open the \textit{dump.lammpstrj} file using VMD or have a look at the
-evolution of the volume in \textit{volume.dat}, you should see that the box
-dimensions slightly evolve along \textit{x} to accommodate the new configuration.
-In addition, the temperature remains close to the target value of $300~\text{K}$
-throughout the entire simulation, and the enthalpy is almost constant, suggesting
-that the system was close to equilibrium from the start.
+From the outputs, you can make sure that the temperature remains close to the
+target value of $300~\text{K}$ throughout the entire simulation, and the that 
+the volume and total energy are almost constant, suggesting
+that the system was close to equilibrium from the start. See a snapshot of the
+system in Fig.\,\ref{fig:PEG-solvated}.
 
 \begin{figure}
 \centering
