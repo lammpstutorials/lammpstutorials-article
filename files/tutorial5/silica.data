@@ -7,6 +7,11 @@ LAMMPS data file via write_data, version 3 Nov 2022, timestep = 5720000
 2.439729779730601 18.145847931862118 ylo yhi
 1.5469184683713184 19.038659243222867 zlo zhi
 
+Atom Type Labels
+
+1 Si
+2 O
+
 Masses
 
 1 28.0855

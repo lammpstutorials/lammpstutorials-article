@@ -1861,9 +1861,9 @@ file next to the \textit{pureH2O/} folder. This example uses type labels, which
 are strings that map to each of the numeric atom types, bond types, angles types,
 etc. in the simulation. Type labels can be any string defined by the user, and we
 will use the atom types from the GROMOS 54A7 force field. In this example, the atom
-types are defined in the data file. Within \textit{PARM.lmp}, the \textit{mass}
+types are defined in \textit{PARM.lmp}, within which the \textit{mass}
 and \textit{pair\_coeff} of atoms of types OW and HW are for water and the remaining
-atom types are for the polymer molecule. Similarly, the \textit{bond\_coeff HW-OW}
+atom types are for the polymer molecule. Similarly, the \textit{bond\_coeff OW-HW}
 and \textit{angle\_coeff HW-OW-HW} are for water, while all the other parameters
 are for the polymer.
 
@@ -2230,7 +2230,7 @@ units real
 atom_style full
 bond_style harmonic
 angle_style harmonic
-pair_style lj/cut/tip4p/long 1 2 1 1 &
+pair_style lj/cut/tip4p/long O H O-H H-O-H &
     0.1546 12.0
 kspace_style pppm/tip4p 1.0e-4
 kspace_modify slab 3.0
@@ -2269,6 +2269,9 @@ angle/types 1 &
 extra/bond/per/atom 2 &
 extra/angle/per/atom 1 &
 extra/special/per/atom 2
+labelmap atom 1 O 2 H 3 Na+ 4 Cl- 5 WALL
+labelmap bond 1 O-H
+labelmap angle 1 H-O-H
 \end{verbatim}}
 The \textit{lattice} command defines the unit cell. Here, the face-centered cubic (fcc) lattice
 with a scale factor of 4.04 has been chosen for the future positioning of the atoms
@@ -2281,7 +2284,8 @@ $\text{Cl}^-$), and the atom of the walls. The \textit{create\_box} command exte
 lines thanks to the $\&$ character. The second and third lines are used to indicate that the
 simulation contains 1 type of bond and 1 type of angle (both required by the water molecule).
 The parameters for these bond and angle constraints will be given later. The three last
-lines are for memory allocation.
+lines are for memory allocation. The \textit{labelmap} command assigns alphanumeric type labels
+to each numeric atom type, bond type, and angle type.
 
 Now, we can add atoms to the system. First, let us create two sub-regions corresponding
 respectively to the two solid walls, and create a larger region from the union of the
@@ -2453,7 +2457,7 @@ units real
 atom_style full
 bond_style harmonic
 angle_style harmonic
-pair_style lj/cut/tip4p/long 1 2 1 1 &
+pair_style lj/cut/tip4p/long O H O-H H-O-H &
     0.1546 12.0
 kspace_style pppm/tip4p 1.0e-4
 kspace_modify slab 3.0
@@ -2492,11 +2496,11 @@ the printing of thermodynamic outputs by adding the following lines to \textit{i
 dump mydmp all image 200 dump.*.jpg type type &
     shiny 0.1 box no 0.01 view 90 0 zoom 1.8
 dump_modify mydmp backcolor white &
-    acolor 1 red adiam 1 2 &
-    acolor 2 white adiam 2 1 &
-    acolor 3 blue adiam 3 2.5 &
-    acolor 4 cyan adiam 4 3 &
-    acolor 5 gray adiam 5 3
+    acolor O red adiam O 2 &
+    acolor H white adiam H 1 &
+    acolor Na+ blue adiam Na+ 2.5 &
+    acolor Cl- cyan adiam Cl- 3 &
+    acolor WALL gray adiam WALL 3
 thermo 200
 \end{verbatim}}
 Finally, let us run for 4000 steps. Add the following lines into \textit{input.lmp}:
@@ -2552,7 +2556,7 @@ units real
 atom_style full
 bond_style harmonic
 angle_style harmonic
-pair_style lj/cut/tip4p/long 1 2 1 1 &
+pair_style lj/cut/tip4p/long O H O-H H-O-H &
     0.1546 12.0
 kspace_style pppm/tip4p 1.0e-4
 kspace_modify slab 3.0
@@ -2577,11 +2581,11 @@ for the trajectory visualization and output:
 dump mydmp all image 200 dump.*.jpg type type &
     shiny 0.1 box no 0.01 view 90 0 zoom 1.8
 dump_modify mydmp backcolor white &
-    acolor 1 red adiam 1 2 &
-    acolor 2 white adiam 2 1 &
-    acolor 3 blue adiam 3 2.5 &
-    acolor 4 cyan adiam 4 3 &
-    acolor 5 gray adiam 5 3
+    acolor O red adiam O 2 &
+    acolor H white adiam H 1 &
+    acolor Na+ blue adiam Na+ 2.5 &
+    acolor Cl- cyan adiam Cl- 3 &
+    acolor WALL gray adiam WALL 3
 thermo 500
 variable walltopz equal xcm(walltop,z)
 variable wallbotz equal xcm(wallbot,z)
@@ -2626,7 +2630,7 @@ units real
 atom_style full
 bond_style harmonic
 angle_style harmonic
-pair_style lj/cut/tip4p/long 1 2 1 1 &
+pair_style lj/cut/tip4p/long O H O-H H-O-H &
     0.1546 12.0
 kspace_style pppm/tip4p 1.0e-4
 kspace_modify slab 3.0
@@ -2679,11 +2683,11 @@ then run for $200\,\text{ps}$ Add the following lines into \textit{input.lmp}:
 dump mydmp all image 200 dump.*.jpg type type &
     shiny 0.1 box no 0.01 view 90 0 zoom 1.8
 dump_modify mydmp backcolor white &
-    acolor 1 red adiam 1 2 &
-    acolor 2 white adiam 2 1 &
-    acolor 3 blue adiam 3 2.5 &
-    acolor 4 cyan adiam 4 3 &
-    acolor 5 gray adiam 5 3
+    acolor O red adiam O 2 &
+    acolor H white adiam H 1 &
+    acolor Na+ blue adiam Na+ 2.5 &
+    acolor Cl- cyan adiam Cl- 3 &
+    acolor WALL gray adiam WALL 3
 
 thermo 500
 thermo_modify temp Tfluid
@@ -2786,8 +2790,8 @@ atom_style full
 
 read_data silica.data
 
-mass 1 28.0855 # Si
-mass 2 15.999 # O
+mass Si 28.0855
+mass O 15.999
 \end{verbatim}}
 So far, the input is very similar to what was seen in the previous tutorials.
 Some basic parameters are defined (\textit{units}, \textit{atom\_style} and \textit{masses}),
@@ -2805,9 +2809,7 @@ Here, the \textit{pair\_style reaxff} is used with no control file. The
 allocation issues, which sometimes can trigger the segmentation faults and
 \textit{bondchk} failed errors. The \textit{pair\_coeff} uses the
 \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/reaxCHOFe.ff}{\textit{reaxCHOFe.ff}}
-file, which must be downloaded and saved within \textit{RelaxSilica/}. For
-consistency with the masses and the \textit{silica.data} file, the atoms of type 1
-are set as silicon (Si), and the atoms of type 2 as oxygen (O). Finally, the
+file, which must be downloaded and saved within \textit{RelaxSilica/}. Finally, the
 \textit{fix qeq/reaxff} is used to perform charge equilibration \cite{rappe1991charge}.
 The charge equilibration occurs at every step. The values 0.0 and 10.0 are the
 low and the high cutoffs, respectively, and $1.0 \text{e} -6$ is a tolerance.
@@ -2817,8 +2819,8 @@ equilibrate the charge.
 Then, let us add some commands to the \textit{input.lmp} file  to measure the
 evolution of the charges during the simulation:
 {\normalsize \begin{verbatim}
-group grpSi type 1
-group grpO type 2
+group grpSi type Si
+group grpO type O
 variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
 \end{verbatim}}
@@ -2831,15 +2833,15 @@ thermo_style custom step temp etotal press &
 dump mydmp all image 200 dump.*.jpg type type &
     shiny 0.1 box no 0.01 view 0 0 zoom 1.8
 dump_modify mydmp backcolor white &
-    acolor 1 yellow adiam 1 2.5 &
-    acolor 2 red adiam 2 2
+    acolor Si yellow adiam Si 2.5 &
+    acolor O red adiam O 2
 \end{verbatim}}
 
 In order to also visualize the system using an external tool, VMD, let us also
 create a \textit{.lammpstrj} file for visualization:
 {\normalsize \begin{verbatim}
 dump dmp all custom 200 dump.lammpstrj &
-    id type q x y z
+    id typelabel q x y z
 \end{verbatim}}
 The \textit{.lammpstrj} that will be created when running lammps will contain
 6 columns with respectively the atom IDs, the atom types, the atom charges ($q$),
@@ -2930,8 +2932,8 @@ atom_style full
 
 read_data ../RelaxSilica/silica-relaxed.data
 
-mass 1 28.0855 # Si
-mass 2 15.999 # O
+mass Si 28.0855
+mass O 15.999
 
 pair_style reaxff NULL safezone 3.0 mincap 150
 pair_coeff * * ../RelaxSilica/reaxCHOFe.ff Si O
@@ -2942,8 +2944,8 @@ The only differences with the previous \textit{input.lmp} file are the paths to
 the \textit{.data} and \textit{.ff} files located within \textit{RelaxSilica/}.
 Copy the following lines as well:
 {\normalsize \begin{verbatim}
-group grpSi type 1
-group grpO type 2
+group grpSi type Si
+group grpO type O
 variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
 
@@ -2954,11 +2956,11 @@ thermo_style custom step temp etotal &
 dump mydmp all image 200 dump.*.jpg type type &
     shiny 0.1 box no 0.01 view 0 0 zoom 1.8
 dump_modify mydmp backcolor white &
-    acolor 1 yellow adiam 1 2.5 &
-    acolor 2 red adiam 2 2
+    acolor Si yellow adiam Si 2.5 &
+    acolor O red adiam O 2
 
 dump dmp all custom 200 dump.lammpstrj &
-    id type q x y z
+    id typelabel q x y z
 
 fix myspec all reaxff/species 5 1 5 species.log &
     element Si O
@@ -3060,9 +3062,9 @@ the first lines as follows:
 
 Masses
 
-1 28.0855
-2 15.999
-3 1.008
+Si 28.0855
+O 15.999
+H 1.008
 
 (...)
 \end{verbatim}}
@@ -3091,9 +3093,9 @@ input is that three atom types are specified in the \textit{pair\_coeff} command
 Then, let us adapt some familiar commands to measure the charges of all three
 types of atoms, and output the charge values into log files:
 {\normalsize \begin{verbatim}
-group grpSi type 1
-group grpO type 2
-group grpH type 3
+group grpSi type Si
+group grpO type O
+group grpH type H
 variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
 variable qH equal &
@@ -3119,11 +3121,11 @@ variable a loop 10
 variable seed equal 35672+${a}
 create_atoms 3 random 2 ${seed} NULL &
     overlap 2.6 maxtry 50
-group grpH type 3
+group grpH type H
 
 run 2000
 write_dump all custom dump.${a}.lammpstrj &
-    id type q x y z
+    id typelabel q x y z
 undump mydmp
 
 next a
@@ -3221,8 +3223,8 @@ evolution of the system with time:
 dump mydmp all image 200 dump.*.jpg type type &
     shiny 0.1 box no 0.01 view 0 0 zoom 1.2
 dump_modify mydmp backcolor white &
-    acolor 1 yellow adiam 1 2.5 &
-    acolor 2 red adiam 2 2
+    acolor Si yellow adiam Si 2.5 &
+    acolor O red adiam O 2
 thermo 1000
 thermo_style custom step temp etotal &
     vol lx ly lz
@@ -3373,7 +3375,8 @@ atom_style full
 neighbor 1.0 bin
 neigh_modify delay 1
 pair_style hybrid/overlay vashishta &
-    lj/cut/tip4p/long 3 4 1 1 0.1546 10
+    lj/cut/tip4p/long OW HW OW-HW HW-OW-HW &
+    0.1546 10
 kspace_style pppm/tip4p 1.0e-4
 bond_style harmonic
 angle_style harmonic
@@ -3403,8 +3406,8 @@ Currently, \textit{dilatedSiO.data} starts with:
 
 Masses
 
-1 28.0855
-2 15.9994
+Si 28.0855
+O 15.9994
 
 Atoms # full
 
@@ -3427,19 +3430,34 @@ the file so that it looks like the following (with 4 atom types, 1 bond type,
 0.5721674106566077 20.013410300943264 ylo yhi
 1.3237302567479095 19.261847454851658 zlo zhi
 
+Atom Type Labels
+
+1 Si
+2 O
+3 OW
+4 HW
+
+Bond Type Labels
+
+1 OW-HW
+
+Angle Type Labels
+
+1 HW-OW-HW
+
 Masses
 
-1 28.0855
-2 15.9994
-3 15.9994
-4 1.008
+Si 28.0855
+O 15.9994
+OW 15.9994
+HW 1.008
 
 Atoms # full
 
 (...)
 \end{verbatim}}
 Doing so, we anticipate that there will be 4 atom types in the simulations,
-with O and H of $\text{H}_2\text{O}$ having indexes 3 and 4, respectively. There
+with O and H of $\text{H}_2\text{O}$ having types OW and HW, respectively. There
 will also be 1 bond type and 1 angle type. The extra bond, extra angle, and
 extra special lines are here for memory allocation. We can continue to fill in
 the \textit{input.lmp} file, by adding the system definition:
@@ -3450,8 +3468,8 @@ lattice sc 3
 create_atoms 0 box mol h2omol 45585
 lattice none 1
 
-group SiO type 1 2
-group H2O type 3 4
+group SiO type Si O
+group H2O type OW HW
 \end{verbatim}}
 After reading the data file and defining the h2omol molecule from the \textit{H2O.txt}
 file, the \textit{create\_atoms} command is used to include some water molecules
@@ -3465,16 +3483,16 @@ pair_coeff * * vashishta &
     ../Potential/SiO.1990.vashishta &
     Si O NULL NULL
 pair_coeff * * lj/cut/tip4p/long 0 0
-pair_coeff 1 3 lj/cut/tip4p/long 0.0057 4.42
-pair_coeff 2 3 lj/cut/tip4p/long 0.0043 3.12
-pair_coeff 3 3 lj/cut/tip4p/long 0.008 3.1589
-pair_coeff 4 4 lj/cut/tip4p/long 0.0 0.0
-bond_coeff 1 0 0.9572
-angle_coeff 1 0 104.52
+pair_coeff Si OW lj/cut/tip4p/long 0.0057 4.42
+pair_coeff O OW lj/cut/tip4p/long 0.0043 3.12
+pair_coeff OW OW lj/cut/tip4p/long 0.008 3.1589
+pair_coeff HW HW lj/cut/tip4p/long 0.0 0.0
+bond_coeff OW-HW 0 0.9572
+angle_coeff HW-OW-HW 0 104.52
 \end{verbatim}}
-The force field Vashishta applies only to Si (type 1) and O of $\text{SiO}_2$ (type 2),
+The force field Vashishta applies only to Si and O of $\text{SiO}_2$,
 and not to the O and H of $\text{H}_2\text{O}$, thanks to the NULL parameters
-used for atoms of types 3 and 4. Pair coefficients for the lj/cut/tip4p/long
+used for atoms of types OW and HW. Pair coefficients for the lj/cut/tip4p/long
 potential are defined between O($\text{H}_2\text{O}$) and between H($\text{H}_2\text{O}$)
 atoms, as well as between O($\text{SiO}_2$)-O($\text{H}_2\text{O}$) and
 Si($\text{SiO}_2$)-O($\text{H}_2\text{O}$). Therefore, the fluid-fluid and the
@@ -3482,14 +3500,14 @@ fluid-solid interactions will be dealt with by the lj/cut/tip4p/long potential.
 
 Add the following lines as well:
 {\normalsize \begin{verbatim}
-variable oxygen atom "type==3"
+variable oxygen atom type==label2type(atom,OW)
 group oxygen dynamic all var oxygen
 variable nO equal count(oxygen)
 thermo_style custom step temp etotal v_nO
 thermo 1000
 
-fix shak H2O shake 1.0e-4 200 0 b 1 a 1 &
-    mol h2omol
+fix shak H2O shake 1.0e-4 200 0 b OW-HW &
+    a HW-OW-HW mol h2omol
 \end{verbatim}}
 The number of oxygen atoms from water molecules (i.e. the number of molecules)
 is calculated by the \textit{nO} variable, and will be printed in the log file.
@@ -3504,10 +3522,10 @@ delete_atoms overlap 2 H2O SiO mol yes
 dump mydmp all image 1000 dump.*.jpg type type &
     shiny 0.1 box yes 0.01 view 0 0 zoom 1.2
 dump_modify mydmp backcolor white &
-    acolor 1 yellow adiam 1 2.5 &
-    acolor 2 red adiam 2 2 &
-    acolor 3 cyan adiam 3 2 &
-    acolor 4 white adiam 4 1 &
+    acolor Si yellow adiam Si 2.5 &
+    acolor O red adiam O 2 &
+    acolor OW cyan adiam OW 2 &
+    acolor HW white adiam HW 1 &
     boxcolor black
 \end{verbatim}}
 
@@ -3661,7 +3679,8 @@ following lines into \textit{input.lmp}:
 {\normalsize \begin{verbatim}
 region myreg block -25 25 -5 5 -25 25
 create_box 1 myreg
-create_atoms 1 random 60 341341 myreg &
+labelmap atom 1 A1
+create_atoms A1 random 60 341341 myreg &
     overlap 1.5 maxtry 50
 
 mass * 39.95
@@ -3736,7 +3755,7 @@ thermo 10000
 dump mydmp all image 5000 dump.*.jpg type type &
     shiny 0.1 box yes 0.02 view 0 90 zoom 1.9
 dump_modify mydmp backcolor white &
-    acolor 1 cyan adiam 1 1 boxcolor black
+    acolor A1 cyan adiam A1 1 boxcolor black
 \end{verbatim}}
 A \textit{dump image} was also added for system visualization.
 
@@ -3865,8 +3884,9 @@ boundary p p p
 
 region myreg block -25 25 -5 5 -25 25
 create_box 2 myreg
-create_atoms 2 single 0 0 0
-create_atoms 1 random 5 341341 myreg &
+labelmap atom 1 A1 2 A2
+create_atoms A2 single 0 0 0
+create_atoms A1 random 5 341341 myreg &
     overlap 1.5 maxtry 50
 
 mass * 39.948
@@ -3894,14 +3914,14 @@ reset_timestep 0
 dump mydmp all image 1000000 dump.*.jpg type &
 type shiny 0.1 box yes 0.02 view 0 90 zoom 1.9
 dump_modify mydmp backcolor white &
-    acolor 1 cyan adiam 1 1 &
-    acolor 2 pink adiam 1 1 &
+    acolor A1 cyan adiam A1 1 &
+    acolor A2 pink adiam A2 1 &
     boxcolor black
 \end{verbatim}}
 So far, this code resembles that of Method 1, except for the additional particle
-of type 2. Particles of type 1 and 2
+of type A2. Particles of type A1 and A2
 are identical, having the same mass and Lennard-Jones parameters. However, the
-particle of type 2 will additionally be exposed to the biasing potential
+particle of type A2 will additionally be exposed to the biasing potential
 $V$ (Fig.\,){fig:US-system-biased}).
 
 Let us create a loop with 50 steps, and move progressively the center of the
