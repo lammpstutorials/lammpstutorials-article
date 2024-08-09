@@ -2087,22 +2087,22 @@ and was chosen to be large enough to overcome the thermal agitation and the entr
 contribution from both water and PEG molecules (it was chosen by trial and error).
 Then, copy the same lines as previously:
 {\normalsize \begin{verbatim}
-units real
-atom_style full
-bond_style harmonic
-angle_style harmonic
-dihedral_style harmonic
-pair_style lj/cut/coul/long 10
-kspace_style pppm 1e-5
-special_bonds lj 0.0 0.0 0.5 &
-    coul 0.0 0.0 1.0 &
-    angle yes dihedral yes
+ units real
+ atom_style full
+ bond_style harmonic
+ angle_style harmonic
+ dihedral_style harmonic
+ pair_style lj/cut/coul/long 10
+ kspace_style pppm 1e-5
+ special_bonds lj 0.0 0.0 0.5 &
+     coul 0.0 0.0 1.0 &
+     angle yes dihedral yes
 \end{verbatim}}
 Start the simulation from the equilibrated PEG-water system and include again the
 parameter file by adding the following lines to the \textit{input.lmp}:
 {\normalsize \begin{verbatim}
-read_data ../mergePEGH2O/mix.data
-include ../PARM.lmp
+ read_data ../mergePEGH2O/mix.data
+ include ../PARM.lmp
 \end{verbatim}}
 Next, let us create some useful atom groups, including H2O and PEG (as previously),
 as well as 2 groups containing a single atom each, the oxygen atoms at the ends
@@ -2110,20 +2110,29 @@ of the chain. Atoms of types OAlc correspond to the hydroxy (alcohol) group oxyg
 atoms located at the ends of the PEG molecule, which we are going to use to pull
 on the PEG molecule. Add the following lines to the \textit{input.lmp}:
 {\normalsize \begin{verbatim}
-group H2O type OW HW
-group PEG type C CPos H HC OAlc OE
-group ends type OAlc
-variable xcm equal xcm(ends,x)
-variable oxies atom type==label2type(atom,OAlc)
-variable end1 atom v_oxies*(x>v_xcm)
-variable end2 atom v_oxies*(x<v_xcm)
-group topull1 variable end1
-group topull2 variable end2
+ group H2O type OW HW
+ group PEG type C CPos H HC OAlc OE
+ group ends type OAlc
+ variable xcm equal xcm(ends,x)
+ variable oxies atom type==label2type(atom,OAlc)
+ variable end1 atom v_oxies*(x>v_xcm)
+ variable end2 atom v_oxies*(x<v_xcm)
+ group topull1 variable end1
+ group topull2 variable end2
 \end{verbatim}}
-Add the following \textit{dump} command to the input to print the atom positions
-every 1000 steps:
+Add the following \textit{dump} command to create images of the system:
 {\normalsize \begin{verbatim}
-dump mydmp all atom 1000 dump.lammpstrj
+ dump mydmp all image 1000 dump.*.ppn type &
+     type shiny 0.1 box no 0.01 &
+     view 0 90 zoom 1.8 fsaa yes bond atom 0.8
+ dump_modify mydmp backcolor white &
+     acolor OW red acolor HW white &
+     acolor OE red acolor OAlc red &
+     acolor C gray acolor CPos gray &
+     acolor H white acolor HC white &
+     adiam OW 0.2 adiam HW 0.2 &
+     adiam C 3 adiam CPos 3 adiam OAlc 2.8 &
+     adiam H 1 adiam HC 1 adiam OE 2.8
 \end{verbatim}}
 Let us use a single Nosé-Hoover thermostat applied to all the atoms by adding the
 following lines to \textit{input.lmp}:
@@ -2133,44 +2142,37 @@ fix mynvt all nvt temp 300 300 100
 \end{verbatim}}
 Let us also print the end-to-end distance of the PEG,
 here defined as the distance between the groups \textit{topull1}
-and \textit{topull2}, as well as the temperature of the system and the gyration
+and \textit{topull2}, as well as the gyration
 radius of the molecule \cite{fixmanRadiusGyrationPolymer1962a}
 by adding the following lines to \textit{input.lmp}:
-% S.G.: should we keep the data file, or just use thermo custom as its better for LAMMPS-GUI?
 {\normalsize \begin{verbatim}
-variable mytemp equal temp
-fix myat1 all ave/time 10 10 100 &
-    v_mytemp file temperature.dat
-variable x1 equal xcm(topull1,x)
-variable x2 equal xcm(topull2,x)
-variable y1 equal xcm(topull1,y)
+ variable x1 equal xcm(topull1,x)
+ variable x2 equal xcm(topull2,x)
+ variable y1 equal xcm(topull1,y)
 variable y2 equal xcm(topull2,y)
-variable z1 equal xcm(topull1,z)
-variable z2 equal xcm(topull2,z)
-variable delta_r equal &
-    sqrt((v_x1-v_x2)^2+(v_y1-v_y2)^2 &
-    +(v_z1-v_z2)^2)
-fix myat2 all ave/time 10 10 100 v_delta_r &
-    file end-to-end-distance.dat
-compute rgyr PEG gyration
-fix myat3 all ave/time 10 10 100 c_rgyr &
-    file gyration-radius.dat
-thermo 1000
+ variable z1 equal xcm(topull1,z)
+ variable z2 equal xcm(topull2,z)
+ variable delta_r equal &
+     sqrt((v_x1-v_x2)^2+(v_y1-v_y2)^2 &
+     +(v_z1-v_z2)^2) 
+ compute rgyr PEG gyration
+ thermo_style custom step temp etotal v_delta_r c_rgyr
+ thermo 1000
 \end{verbatim}}
 Finally, let us simulate 30 picoseconds without any external forcing:
 {\normalsize \begin{verbatim}
-run 30000
+ run 30000
 \end{verbatim}}
 This first run will serve as a benchmark to quantify later the changes induced
-by the forcing. Then, let us apply a forcing on the 2 oxygen atoms using two
+by the forcing. Then, let us apply a forcing on the 2 selected oxygen atoms using two
 \textit{add\_force} commands, and run for an extra 30 ps:
 {\normalsize \begin{verbatim}
-fix myaf1 topull1 addforce ${f0} 0 0
-fix myaf2 topull2 addforce -${f0} 0 0
-run 30000
+ fix myaf1 topull1 addforce ${f0} 0 0
+ fix myaf2 topull2 addforce -${f0} 0 0
+ run 30000
 \end{verbatim}}
-Run the \textit{input.lmp} file using LAMMPS. If you open the \textit{dump.lammpstrj}
-file using \textit{VMD}, you should see that the PEG molecule eventually aligns
+Run the \textit{input.lmp} file using LAMMPS. From the generated images of the system,
+you should see that the PEG molecule eventually aligns
 in the direction of the force (as seen in Fig.\,\ref{fig:PEG-in-water}).
 The evolutions of the end-to-end distance and of the gyration radius over
 time show that the PEG is adjusting to the external forcing in less than
