@@ -1,0 +1,45 @@
+
+units real
+atom_style full
+bond_style harmonic
+angle_style harmonic
+dihedral_style harmonic
+pair_style lj/cut/coul/long 10
+kspace_style pppm 1e-5
+special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 &
+angle yes dihedral yes
+
+read_data ../pureH2O/H2O.data &
+    extra/bond/per/atom 3 &
+    extra/angle/per/atom 6 &
+    extra/dihedral/per/atom 10 &
+    extra/special/per/atom 14
+include ../PARM.lmp
+
+molecule pegmol PEG-GROMOS.mol
+create_atoms 0 single 0 0 0 mol pegmol 454756
+
+group H2O type OW HW
+group PEG type C CPos H HC OAlc OE
+
+delete_atoms overlap 2.0 H2O PEG mol yes
+
+fix mynpt all npt temp 300 300 100 x 1 1 1000
+timestep 1.0
+
+dump mydmp all image 1000 dump.*.ppn type &
+ type shiny 0.1 box no 0.01 &
+ view 0 90 zoom 1.8  fsaa yes bond atom 0.8 
+dump_modify mydmp backcolor white &
+ acolor OW red acolor HW white &
+ acolor OE red acolor OAlc red &
+ acolor C gray acolor CPos gray &
+ acolor H white acolor HC white &
+ adiam OW 0.2 adiam HW 0.2 &
+ adiam C 3 adiam CPos 3 adiam OAlc 2.8 &
+ adiam H 1 adiam HC 1 adiam OE 2.8
+
+thermo 1000
+
+run 30000
+write_data mix.data
