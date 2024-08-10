@@ -423,9 +423,10 @@ description of all LAMMPS--GUI features is in the LAMMPS manual
 
 \begin{note}
   For the sake of simplicity we will refer during the tutorials to
-  keyboard shortcuts using the assignments from Linux and Windows. Users
-  of macOS have to use the ``Command'' key (\cmd) instead of the
-  ``Ctrl'' key.
+  keyboard shortcuts using the assignments from Linux and Windows.
+
+  Users of macOS have to use the ``Command'' key (\cmd) instead of the
+  ``Ctrl'' key for keyboard shortcuts.
 \end{note}
 
 \section{Content and links}
@@ -2035,7 +2036,7 @@ Add the following line into \textit{input.lmp}:
 Here the value of 2 Ångstroms for the overlap cutoff was fixed arbitrarily and can
 be chosen through trial and error. If the cutoff is too small, the simulation will
 crash. If the cutoff is too large, too many water molecules will unnecessarily be
-deleted. 
+deleted.
 
 Finally, let us use the \textit{fix npt} to control the temperature, as
 well as the pressure by allowing the box size to be rescaled along the \textit{x} axis:
@@ -2047,7 +2048,7 @@ Once more, let us create images of the systems:
 {\normalsize \begin{verbatim}
  dump mydmp all image 1000 dump.*.ppn type &
      type shiny 0.1 box no 0.01 &
-     view 0 90 zoom 1.8  fsaa yes bond atom 0.8 
+     view 0 90 zoom 1.8  fsaa yes bond atom 0.8
  dump_modify mydmp backcolor white &
      acolor OW red acolor HW white &
      acolor OE red acolor OAlc red &
@@ -2065,7 +2066,7 @@ final state in a data file. Add the following lines to the data file:
  write_data mix.data
 \end{verbatim}}
 From the outputs, you can make sure that the temperature remains close to the
-target value of $300~\text{K}$ throughout the entire simulation, and the that 
+target value of $300~\text{K}$ throughout the entire simulation, and the that
 the volume and total energy are almost constant, suggesting
 that the system was close to equilibrium from the start. See a snapshot of the
 system in Fig.\,\ref{fig:PEG-solvated}.
@@ -2159,7 +2160,7 @@ variable y2 equal xcm(topull2,y)
  variable z2 equal xcm(topull2,z)
  variable delta_r equal &
      sqrt((v_x1-v_x2)^2+(v_y1-v_y2)^2 &
-     +(v_z1-v_z2)^2) 
+     +(v_z1-v_z2)^2)
  compute rgyr PEG gyration
  thermo_style custom step temp etotal v_delta_r c_rgyr
  thermo 1000
@@ -3948,7 +3949,8 @@ run 1000000
 unfix myat1
 next a
 jump SELF loop
-\end{verbatim}}
+\end{verbatim}
+}
 A folder called \textit{data/} needs to be created within \textit{BiasedSampling/}.
 The spring command serves to impose the additional harmonic potential $V$ with
 the spring constant $k$. Note that the value of $k$ should be chosen with care,
