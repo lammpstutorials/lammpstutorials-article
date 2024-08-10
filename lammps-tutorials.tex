@@ -544,7 +544,7 @@ See figure \ref{fig:GUI-1} for a screenshot with such a context menu.
 \paragraph{System definition}
 
 The next step is to create the simulation box and put some atoms into it.
-Modify the \textit{System definition} category of \textit{input.lmp} as follows:
+Modify the \textit{System definition} category of \textit{initial.lmp} as follows:
 {\normalsize
 \begin{verbatim}
  # 2) System definition
@@ -599,7 +599,7 @@ problems due to causing large forces.
 
 \paragraph{Settings}
 Now we provide the settings for the two types of atoms.  Modify the
-\textit{Settings} category of \textit{input.lmp} as follows:
+\textit{Settings} category of \textit{initial.lmp} as follows:
 {\normalsize
 \begin{verbatim}
  # 3) Settings
@@ -656,7 +656,7 @@ $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
 The system is now fully parameterized and the input ready to compute
 forces.  Let us fill in the two last remaining categories,
 \textit{Visualization}, and \textit{Run}, by adding the following lines
-into \textit{input.lmp}:
+into \textit{initial.lmp}:
 {\normalsize
 \begin{verbatim}
  # 4) Visualization
@@ -755,7 +755,7 @@ After the energy minimization, any overlapping atoms have been displaced,
 and the system is now ready to perform a molecular dynamics simulation
 using the minimized geometry.  Since we want to start from the result of
 the energy minimization step, we can append commands for the MD simulation
-to the same input script, \textit{input.lmp}. After the
+to the same input script, \textit{initial.lmp}. After the
 \textit{minimize} command, add the following lines:
 {\normalsize
 \begin{verbatim}
@@ -781,7 +781,7 @@ Here, \textit{pe} is the potential energy of the system, such that
 \textit{pe + ke = etotal}.
 
 Then, let us add a second \textit{Run} category by adding the following
-lines to \textit{PART B} of \textit{input.lmp}:
+lines to \textit{PART B} of \textit{initial.lmp}:
 {\normalsize
 \begin{verbatim}
  # 5) Run
@@ -871,7 +871,7 @@ copy the command line used to create this visualization to the clipboard
 by either using the \texttt{Ctrl-D} keyboard shortcut or select
 \textit{Copy dump image command} from the \textit{File} menu.  This text
 can be pasted into the into the \textit{Visualization} section of
-\textit{PART B:} of the \textit{input.lmp} file.
+\textit{PART B:} of the \textit{initial.lmp} file.
 
 This may look like the following:
 {\normalsize
@@ -887,7 +887,7 @@ This may look like the following:
 }
 This command tells LAMMPS to generate NetPBM format images every 100
 steps. The two \textit{type} keywords are for \textit{color} and
-\textit{diameter}, respectively.  Run the \textit{input.lmp} using
+\textit{diameter}, respectively.  Run the \textit{initial.lmp} using
 LAMMPS again, and a new window named \textit{Slide Show} will pop up.
 It will show each image created by the \textit {dump image} as it is
 created and after the simulation is finished (or stopped), the slide
@@ -912,8 +912,8 @@ simulation from a previously saved configuration.
 \paragraph{Control the initial atom positions}
 Create a new folder next to \textit{my-first-input/} and call it
 \textit{improved-input/}. Then, create a new input file within
-\textit{improved-input/} and call it \textit{input.min.lmp}. Similarly to what
-has been done previously, copy the following lines into \textit{input.min.lmp}:
+\textit{improved-input/} and call it \textit{improved.min.lmp}. Similarly to what
+has been done previously, copy the following lines into \textit{improved.min.lmp}:
 {\normalsize
 \begin{verbatim}
  # 1) Initialization
@@ -942,7 +942,7 @@ regions for placing the atoms:
 }
 The \textit{side in} and \textit{side out} keywords are used to define regions
 that are respectively inside and outside of the cylinder of radius 10. Then,
-copy similar lines as previously into \textit{input.min.lmp}:
+copy similar lines as previously into \textit{improved.min.lmp}:
 {\normalsize
 \begin{verbatim}
  # 3) Settings
@@ -976,7 +976,7 @@ command is placed \emph{after} the \textit{minimize} command.  This
 \textit{.data} file will be used later to restart the simulation from
 the final state of the energy minimization step.
 
-Run the \textit{input.min.lmp} script.  At the end of the simulation, a
+Run the \textit{improved.min.lmp} script.  At the end of the simulation, a
 file called \textit{minimized\_coordinates.data} is created.  You can
 view the contents of the file either using \textit{View} entry in the
 \textit{File} menu, by using the keyboard shortcut
@@ -1011,7 +1011,7 @@ platform.
 
 Let us create a new input file and start a molecular dynamics simulation
 directly from the previously saved configuration. Within
-\textit{improved-input/}, create a new file called \textit{input.md.lmp}
+\textit{improved-input/}, create a new file called \textit{improved.md.lmp}
 and copy the same lines as previously:
 {\normalsize
 \begin{verbatim}
@@ -1024,7 +1024,7 @@ and copy the same lines as previously:
 }
 Here, instead of creating a new region and adding atoms to it, we can
 simply import the previously saved configuration by adding the following
-command to \textit{input.md.lmp}:
+command to \textit{improved.md.lmp}:
 {\normalsize
 \begin{verbatim}
  # 2) System definition
@@ -1041,7 +1041,7 @@ have noticed that some atoms have moved from one region to the other
 during minimization.  To start the simulation from a clean slate, with
 only atoms of type 2 within the cylinder and atoms of type 1 outside the
 cylinder, let us delete the misplaced atoms by adding the following
-commands to \textit{input.md.lmp}:
+commands to \textit{improved.md.lmp}:
 
 {\normalsize
 \begin{verbatim}
@@ -1100,7 +1100,7 @@ the coordination number per atom between atoms of types 1 and 2.  The
 coordination number is a measure of the average number of type 2 atoms
 in the vicinity of type 1 atoms, which serves as a good indicator of the
 degree of mixing in a binary mixture.  Add the following lines into
-\textit{input.md.lmp}:
+\textit{improved.md.lmp}:
 {\normalsize
 \begin{verbatim}
  compute coor12 group_type_1 coord/atom &
@@ -1120,7 +1120,7 @@ respectively the system at $t=0$ (left panel), $t=75$ (middle panel), and $t=150
 \label{fig:evolution-population}
 \end{figure}
 
-Add the following lines into \textit{input.md.lmp}. Note the absence of
+Add the following lines into \textit{improved.md.lmp}. Note the absence of
 \textit{Settings} section, because the settings are taken from the
 \textit{.data} file.
 {\normalsize
@@ -1143,7 +1143,7 @@ The two variables, \textit{n1\_in}, \textit{n2\_in}, and the compute
 the simulation.
 
 Finally, let us complete the script by adding the following lines into
-\textit{input.md.lmp}:
+\textit{improved.md.lmp}:
 {\normalsize
 \begin{verbatim}
  # 5) Run
@@ -1186,7 +1186,7 @@ global translation.  In a drifting system, some of the kinetic energy is
 due to the drift, which means the system itself cools down.  In the
 extreme case it can freeze and drift very fast. This phenomenon is sometimes referred to as the ``flying ice cube syndrome'' \cite{wong2016good}.
 
-Run \textit{input.md.lmp} and observe the mixing of the two populations
+Run \textit{improved.md.lmp} and observe the mixing of the two populations
 over time (see also Fig.\,\ref{fig:evolution-population}).  From the
 variables \textit{n1\_in} and \textit{n2\_in}, one can follow the number
 of atoms in each region as a function of time
