@@ -442,7 +442,7 @@ which we will fill out step by step.  To set up the tutorial, select
 follow the instructions.  This will select, and -- if needed -- create,
 a folder, place the initial input file \textit{initial.lmp} into it, and
 open it in the LAMMPS--GUI editor.  The editor should have the following
-content.
+content afterwards.
 {\normalsize
 \begin{verbatim}
 # PART A - ENERGY MINIMIZATION
@@ -475,39 +475,38 @@ or the type of atoms (e.g., uncharged point particles or extended
 spheres with a radius and angular velocities).  These commands must be
 executed \emph{before} the simulation box is created, and they will
 cause an error if entered later.  Similarly, many LAMMPS commands may
-only be entered \emph{after} the simulation box is defined.  Only a
-very small number of commands may be used in both cases.  Enter the
-following lines into \textit{input.lmp}:
+only be entered \emph{after} the simulation box is defined.  Only a very
+small number of commands may be used in both cases.  Edit
+\textit{initial.lmp} so that the section looks like this:
 {\normalsize
 \begin{verbatim}
- # 1) Initialization
- units lj
- dimension 3
- atom_style atomic
- boundary p p p
+# 1) Initialization
+units           lj
+dimension       3
+atom_style      atomic
+boundary        p p p
 \end{verbatim}
 }
 
 The first line, \textit{units lj}, indicates that we want to use
 so-called ``reduced units'' in which all quantities are unitless.  This
 is a popular choice for simulations investigating general statistical
-mechanical principles where only relative differences between
-parameters matter and that are not aimed to represent any specific
-material.
+mechanical principles where only relative differences between parameters
+matter and that are not aimed to represent any specific material.
 
-The second line, \textit{dimension 3}, indicates that the
-simulation is in 3D as opposed to a 2D system where atoms can only
-move in the xy-plane.  The third line, \textit{atom\_style atomic},
-indicates that the \textit{atomic} style will be used for particles,
-therefore each particle is just a point with a mass.  This is the
-minimal atom style; other atom styles allow to associate more properties
-with atoms like charges, bonds, molecule IDs and much more.  The
-choice of atom style is generally determined by the model being
-simulated.  Using a different atom style is possible for as long
-as it is a superset of the atom style with the required properties.
-For example, it would be possible to use atom style ``charge'' instead
-of ``atomic''.  It will not affect the simulation, only it requires
-more memory to store the (otherwise unused) per-atom properties.
+The second line, \textit{dimension 3}, indicates that the simulation is
+in 3D as opposed to a 2D system where atoms can only move in the
+xy-plane.  The third line, \textit{atom\_style atomic}, indicates that
+the \textit{atomic} style will be used for particles, therefore each
+particle is just a point with a mass.  This is the minimal atom style;
+other atom styles allow to associate more properties with atoms like
+charges, bonds, molecule IDs and much more.  The choice of atom style is
+generally determined by the model being simulated.  Using a different
+atom style is possible for as long as it is a superset of the atom style
+with the required properties.  For example, it would be possible to use
+atom style ``charge'' instead of ``atomic''.  It will not affect the
+simulation, only it requires more memory to store the (otherwise unused)
+per-atom properties.
 
 The last line, \textit{boundary p p p}, indicates that periodic boundary
 conditions will be used along all three directions of space (the 3
