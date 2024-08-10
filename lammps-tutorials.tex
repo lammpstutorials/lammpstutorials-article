@@ -4138,7 +4138,7 @@ to open LAMMPS--GUI when opening a file with that extension. The ``lammps-gui''
 and ``lmp'' commands should be available on the command line in a Command Prompt
 or Terminal window as well.
 
-\subsection{Opening and Saving Files}
+\subsection{Opening, Editing, and Saving Files}
 
 LAMMPS--GUI can be launched from the command line as explained above where you
 can launch it without arguments or provide one file name as argument.  All
@@ -4152,14 +4152,34 @@ other arguments are ignored. Example:
 Files can also be opened from the ``File'' menu.  There is the option to
 select a file through a dialog and then open it.  There is also a record
 of the last five opened files and entries to open them directly.
-Finally, there is the \texttt{Ctrl-O} keyboard shortcut to open a file.
+Finally, there is the \texttt{Ctrl--O} keyboard shortcut to open a file.
 
 When integrated into a desktop environment, it also possible to open files
 with a ``.lmp'' extension or use drag-n-drop.
 
+For the most part, the editor window behaves like other graphical editors.
+You can enter, delete, and copy and paste text.  When entering text, for
+the first word in a line, there will be a pop-up window with possible
+completions after typing the first two characters. You can change the highlight
+with the up and down cursor keys and select a completion with the enter key
+or using the mouse.  You can also keep typing and the selection in the pop-up
+will be refined.  For some commands, there will also be completion pop-ups for some
+of their keywords or if a filename is expected (then the pop-up lists files
+in the current folder).
+
+As soon as LAMMPS--GUI recognizes a command line, it will apply syntax highlighting
+according to some built-in categories.  This can be used as a hint for detecting
+typos, since those may cause LAMMPS--GUI not to recognize the syntax and thus
+not apply the syntax highlighting or only partially.  When hitting the \texttt{Tab}
+key, the line will be reformatted.  A consistent formatting can improve the readability
+of input files, especially long and complex ones.
+
+If the file in the editor has unsaved changes an additional ``\*modified\*''
+text is shown in the window title.
 The current input buffer can be saved be selection ``Save'' or ``Save As..'' from
 the ``File'' menu.  You can also click on the ``Save'' icon on the left side
-of the status bar, and finally, there is the \texttt{Ctrl-S} keyboard shortcut.
+of the status bar, and finally, there is the \texttt{Ctrl--S} keyboard shortcut.
+
 
 \begin{note}
 When LAMMPS--GUI is opening a file it will \emph{switch} the working directory
@@ -4171,9 +4191,20 @@ write output files (images, trajectory dumps, averaged data files) and usually
 expects those files to be in the same folder as the input file.
 \end{note}
 
+%The contents of the \textit{Editor} window can be saved by either using
+%the ``Save'' or ``Save As'' entry in the ``File'' menu, using the
+%\texttt{Ctrl--S} keyboard shortcut or by clicking on the ``Save'' icon
+%at the bottom left of the \textit{Editor} window status bar.  For
+%running LAMMPS in LAMMPS--GUI it is not required to save the buffer.
+%The current contents of the buffer will be passed on to LAMMPS.
+%However, if you prefer to have your editor buffer automatically saved
+%before launching a run or exiting the LAMMPS-GUI, there is a setting for this
+%in the \textit{Preferences} dialog.
+
 \subsection{Running LAMMPS}
 
 FIXME: add section
+% mention no log file -> Output window -> Save to file
 
 \subsection{Creating Snapshot Images}
 
@@ -4186,10 +4217,12 @@ FIXME: add section
 \subsection{Graphs Window}
 
 FIXME: add section
+% mention export to .dat, .csv, .yml
 
 \subsection{Preferences}
 
 FIXME: add section
+% mention auto-save, fonts, acceleration,
 
 \section{Compiling LAMMPS from Source on Linux}
   \label{compiling-lammps-label}
