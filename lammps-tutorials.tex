@@ -4053,16 +4053,143 @@ POs 2149742 and 2407526.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{appendices}
-  \section{Using LAMMPS-GUI}
-  \label{using-lammps-gui}
+\section{Using LAMMPS--GUI}
+\label{using-lammps-gui}
 
-  { \normalsize
+\begin{note}
+  For the sake of simplicity we will refer during the tutorials to
+  keyboard shortcuts using the assignments from Linux and Windows.
+
+  Users of macOS have to use the ``Command'' key (\cmd) instead of the
+  ``Ctrl'' key for keyboard shortcuts.
+\end{note}
+
+\subsection{Installation}
+
+Pre-compiled versions of LAMMPS--GUI exist for Linux, {macOS}, and Windows.
+The Linux version comes in two variants, as compressed tar archive (.tar.gz)
+and as a flatpak \cite{flatpak_home} bundle. The macOS version as a .dmg
+installer image and the Window version is an executable Installer package.
+
+\subsubsection{Installing Linux .tar.gz variant}
+
+Download the archive, e.g. LAMMPS-Linux-x86\_64-GUI-XXXXAug2024.tar.gz, and unpack it.
+This will create a folder LAMMPS\_GUI which contains the included commands that
+can be launched directly as ``./lammps-gui'' and ``./lmp'' for example.  Adding this
+folder to the PATH environment variable, will make them available everywhere and without
+the ``./'' prefix.
+
+\subsubsection{Installing Linux .flatpak variant}
+
+Download the bundle file and then install it with
+{
+\normalsize
+\begin{verbatim}
+flatpak install --user \
+    LAMMPS-Linux-x86_64-GUI-XXXAug2024.flatpak
+\end{verbatim}
+}
+This should integrate LAMMPS--GUI into your desktop environment (e.g. GNOME,
+KDE, XFCE) and it should appear in the ``Applications'' menu under ``Science''.
+Also the ``.lmp'' file extension should have been registered to launch LAMMPS--GUI
+when opening a file with that extension in the desktop's file manager.
+
+It is possible to launch it from the command line with:
+{\normalsize
+\begin{verbatim}
+flatpak run org.lammps.lammps-gui
+\end{verbatim}
+}
+Similarly for the LAMMPS command line version:
+{\normalsize
+\begin{verbatim}
+flatpak run --command=lmp \
+    org.lammps.lammps-gui -in in.melt
+\end{verbatim}
+}
+
+\subsubsection{Installing macOS .dmg package}
+
+After downloading the LAMMPS-macOS-multiarch-GUI-XXXAug2024.dmg file, you
+need double-click on it and then drag the LAMMPS\_GUI app bundle into the
+Applications folder shown in the dialog that opens.  For enabling command line access
+follow the instructions in the README.txt file.
+
+After installation, LAMMPS\_GUI can be launched from the Applications folder,
+you can also drag an input file on top of it or open files with the ``.lmp''
+extension.  The LAMMPS--GUI bundle is currently not cryptographically signed
+so macOS may initially refuse to launch it.  But you can clear its access in
+the ``Security \& Privacy" system setting dialog.
+
+\subsubsection{Installing Windows .exe package}
+
+When downloading the LAMMPS-Win10-64bit-GUI-XXXAug2024.exe installer, Windows
+will suggest to delete the file since it is from an unknown developer and
+downloaded from the internet.  This is because neither the installer nor the
+LAMMPS--GUI and other applications inside have been cryptographically signed.
+You have to tell it keep it and when launching the installer again confirm
+that you want to run it anyway.
+
+After installation, there should be a new entry in the start menu and also
+the ``.lmp'' extension should be registered with the Windows File Explorer
+to open LAMMPS--GUI when opening a file with that extension. The ``lammps-gui''
+and ``lmp'' commands should be available on the command line in a Command Prompt
+or Terminal window as well.
+
+\subsection{Opening and Saving Files}
+
+LAMMPS--GUI can be launched from the command line as explained above where you
+can launch it without arguments or provide one file name as argument.  All
+other arguments are ignored. Example:
+{
+\normalsize
 \begin{verbatim}
   lammps-gui input.lmp
 \end{verbatim}
-  }
+}
+Files can also be opened from the ``File'' menu.  There is the option to
+select a file through a dialog and then open it.  There is also a record
+of the last five opened files and entries to open them directly.
+Finally, there is the \texttt{Ctrl-O} keyboard shortcut to open a file.
 
-  \section{Compiling LAMMPS from Source on Linux}
+When integrated into a desktop environment, it also possible to open files
+with a ``.lmp'' extension or use drag-n-drop.
+
+The current input buffer can be saved be selection ``Save'' or ``Save As..'' from
+the ``File'' menu.  You can also click on the ``Save'' icon on the left side
+of the status bar, and finally, there is the \texttt{Ctrl-S} keyboard shortcut.
+
+\begin{note}
+When LAMMPS--GUI is opening a file it will \emph{switch} the working directory
+of the folder that contains the input file.  The same happens when saving to
+a different folder than the current working directory.  The current working
+directory can be seen in the status bar on the bottom right.  This is important
+to know since LAMMPS input files often require other files for reading and may
+write output files (images, trajectory dumps, averaged data files) and usually
+expects those files to be in the same folder as the input file.
+\end{note}
+
+\subsection{Running LAMMPS}
+
+FIXME: add section
+
+\subsection{Creating Snapshot Images}
+
+FIXME: add section
+
+\subsection{Output Window}
+
+FIXME: add section
+
+\subsection{Graphs Window}
+
+FIXME: add section
+
+\subsection{Preferences}
+
+FIXME: add section
+
+\section{Compiling LAMMPS from Source on Linux}
   \label{compiling-lammps-label}
   FIXME: add section
 
