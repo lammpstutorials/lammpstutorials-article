@@ -245,23 +245,9 @@ is introduced where atoms are connected by bonds: a small carbon
 nanotube. The use of both classical and reactive force fields (here,
 AIREBO) is illustrated.  An external deformation is applied to the CNT,
 and its deformation is measured.  This tutorial also illustrates the use
-of an external visualization tool to visualize breaking bonds.
-
-% AK: this is still useful stuff to be shown somewhere.  This tutorial
-% also illustrates the use of LAMMPS from the command line using the
-% YAML thermo format to easily import data from the \textit{log} file
-% into Python.
-%
-% AK: when using LAMMPS-GUI, analyzing thermo data should be even easier
-% since the data can be exported from the chart window to a
-% gnuplot/xmgrace compatible .dat file or a .csv file that can be easily
-% imported into Excel or OOCalc or by pandas into python. It would be
-% straightforward to add an YAML export for consistency with processing
-% the log.  LAMMPS GUI will by default not create a log file, but
-% instead capture the screen output.  This can be stored to a file and
-% then the YAML content extracted.  Also, this could be automated by
-% adding a "export thermo data to YAML" feature to the log window of the
-% GUI.
+of an external visualization tool to visualize breaking bonds, and
+demonstrates how creative use of LAMMPS features designed for other
+purposes can be used to do the same without an external tool.
 
 In \hyperref[all-atoms-label]{tutorial 3}, two components, liquid water
 and a polymer molecule, are merged and equilibrated.  A long-range
@@ -421,16 +407,9 @@ using LAMMPS--GUI with the tutorials presented here.  A complete
 description of all LAMMPS--GUI features is in the LAMMPS manual
 \cite{lammps_gui_docs}.
 
-\begin{note}
-  For the sake of simplicity we will refer during the tutorials to
-  keyboard shortcuts using the assignments from Linux and Windows.
-
-  Users of macOS have to use the ``Command'' key (\cmd) instead of the
-  ``Ctrl'' key for keyboard shortcuts.
-\end{note}
-
 \section{Content and links}
 
+% AK: S.G. this refers to the "old" tutorials.
 The tutorials described in this article can be accessed at
 \href{https://lammpstutorials.github.io}{lammpstutorials.github.io},
 where additional exercises with solutions are also provided. All files
@@ -458,19 +437,20 @@ system.
 To run a simulation using LAMMPS, you need to write an input script with
 a series of commands that LAMMPS will then execute.  For clarity, the
 input scripts for this tutorial will be divided into five categories,
-which we will fill out step by step.  First, create a folder named
-\textit{my-first-input/} to hold the files (input and outputs) for the
-first part of this tutorial, then launch LAMMPS--GUI, copy-n-paste the
-text below into the \textit{Editor} window, and save it to the folder as
-a file called \textit{input.lmp}.
+which we will fill out step by step.  To set up the tutorial, select
+``Start Tutorial 1'' from the ``Tutorials'' menu of LAMMPS--GUI and
+follow the instructions.  This will select, and -- if needed -- create,
+a folder, place the initial input file \textit{initial.lmp} into it, and
+open it in the LAMMPS--GUI editor.  The editor should have the following
+content.
 {\normalsize
 \begin{verbatim}
- # PART A - ENERGY MINIMIZATION
- # 1) Initialization
- # 2) System definition
- # 3) Settings
- # 4) Visualization
- # 5) Run
+# PART A - ENERGY MINIMIZATION
+# 1) Initialization
+# 2) System definition
+# 3) Settings
+# 4) Visualization
+# 5) Run
 \end{verbatim}
 }
 
@@ -485,16 +465,6 @@ in it \emph{immediately}.  Therefore, the \textit{Initialization} and
 input, and the \textit{Run} category at the bottom.  Also, the specifics
 of some commands can change after global settings are changed, so the
 order of commands in the input script matters for such cases.
-
-The contents of the \textit{Editor} window can be saved by either using
-the ``Save'' or ``Save As'' entry in the ``File'' menu, using the
-\texttt{Ctrl--S} keyboard shortcut or by clicking on the ``Save'' icon
-at the bottom left of the \textit{Editor} window status bar.  For
-running LAMMPS in LAMMPS--GUI it is not required to save the buffer.
-The current contents of the buffer will be passed on to LAMMPS.
-However, if you prefer to have your editor buffer automatically saved
-before launching a run or exiting the LAMMPS-GUI, there is a setting for this
-in the \textit{Preferences} dialog.
 
 \paragraph{Initialization}
 
