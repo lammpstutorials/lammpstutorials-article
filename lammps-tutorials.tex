@@ -391,7 +391,7 @@ specifically for working with LAMMPS:
 \end{itemize}
 
 \hyperref[using-lammps-gui]{Appendix \ref{using-lammps-gui-label}}
-contains basic instructions for installtion and using LAMMPS--GUI with
+contains basic instructions for installation and using LAMMPS--GUI with
 the tutorials presented here.  A complete description of all LAMMPS--GUI
 features is in the LAMMPS manual \cite{lammps_gui_docs}.
 
@@ -613,7 +613,7 @@ $\sigma = \frac{\bar{\sigma}}{2^{\frac{1}{6}}}$ in the formulation above
 we get the alternate but equivalent expression:
 $$E_{ij} (r) = \epsilon_{ij} \left[ \left( \dfrac{\bar{\sigma}_{ij}}{r} \right)^{12}
   - 2\left( \dfrac{\bar{\sigma}_{ij}}{r} \right)^{6} \right], ~
-\text{for} ~ r < r_c,$$ LAMMPS can run simulations for both formulations
+\text{for} ~ r < r_c.$$ LAMMPS can run simulations for both formulations
 with the same \textit{lj/cut} pair style, only the parameters for $\bar{\sigma}$
 of the second formulation must be divided by $2^{\frac{1}{6}}$ to get the $\sigma$
 needed for the first formulation for the LJ potential.
@@ -649,15 +649,15 @@ run 0 post no
 The \textit{thermo} command asks LAMMPS to print thermodynamic
 information to the console every given number of steps, in this input
 every 10 simulation steps.  The \textit{thermo\_style custom} determines
-\emph{which} output LAMMPS should print.  This selection prints the the
+\emph{which} output LAMMPS should print.  This selection prints the
 step number (\textit{step}), the total energy (\textit{etotal}), and the
 pressure (\textit{press}).  The \textit{run 0} command will tell LAMMPS
 just to a force and energy initialization.
 
 You can now run LAMMPS.  It should finish quickly and with the default
-settings LAMMPS--GUI will open two new windows, one with the console
+settings, LAMMPS--GUI will open two new windows, one with the console
 output and one with a chart.  The output window will show some info
-printed by the various command in the input as they are executed and
+printed by the various commands in the input as they are executed and
 the total energy and pressure at step 0, the requested thermodynamic
 data.  Since we have not done any real simulation steps, the charts
 are empty.
@@ -707,15 +707,15 @@ is, LAMMPS will compute the forces on all atoms and then update the
 positions according to a selected algorithm so that the potential energy
 will decrease.  By default, LAMMPS uses the conjugate gradient (CG)
 algorithm \cite{hestenes1952methods}.  The simulation will stop as soon
-at the minimizer algorithm cannot find a way to to lower the potential
+as the minimizer algorithm cannot find a way to lower the potential
 energy.  Except for trivial systems, minimization algorithms will find
 the ``next'' minimum, which may not be the global minimum.
 
 Run the minimization and observe that LAMMPS-GUI will capture the output
-and update the chart in realtime.  This run executes fast (depending on
-the capability of your computer, of course), and thus may fail to
+and update the chart in real-time.  This run executes quickly (depending on
+your computer's capability) and may fail to
 capture some of the thermodynamic data (see figure \ref{fig:chart-log}).
-In that case, you can use the \textit{Preferences} dialog to reduce the
+In that case, use the \textit{Preferences} dialog to reduce the
 GUI update interval and switch to single threaded, unaccelerated
 execution in the Accelerators tab.  You can repeat the run.  A new run
 will always ``forget'' the current system and start over from the top.
@@ -905,9 +905,9 @@ tutorial setup.  This contains the \textit{Part A} of the
 \textit{initial.lmp} file \emph{without} the \textit{create\_atoms}
 commands in the \textit{System definition} part.
 
-We want to create the the atoms of types 1 and 2 in two separate
+We want to create the atoms of types 1 and 2 in two separate
 regions.  Thus we need to add two \textit{region} commands and then
-re-add \textit{create\_atoms} commands, but using the new regions
+re-add the \textit{create\_atoms} commands, but using the new regions
 instead of the simulation box region for placing the created atoms:
 {\normalsize
 \begin{verbatim}
@@ -926,7 +926,7 @@ create_atoms 2 random 150 127569 cylinder_in
 }
 The \textit{side in} and \textit{side out} keywords are used to define
 regions that represent the inside and outside of the cylinder of radius
-10. Then append a sixth section \textit{Save system} at the end of the
+10. Then, append a sixth section \textit{Save system} at the end of the
 file with the following content.:
 {\normalsize
 \begin{verbatim}
@@ -937,7 +937,7 @@ write_data minimized_coordinates.data
 
 The significant improvement input is the addition of the
 \textit{write\_data} command.  This command is used to write the state
-of the system a text format file called \textit{improved.min.data}.
+of the system to a text format file called \textit{improved.min.data}.
 Note that the \textit{write\_data} command is placed \emph{after} the
 \textit{minimize} command.  This \textit{.data} file will be used later
 to restart the simulation from the final state of the energy
