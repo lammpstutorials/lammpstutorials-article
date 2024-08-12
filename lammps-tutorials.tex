@@ -490,11 +490,6 @@ therefore each particle is just a point with a mass.  This is the
 minimal atom style; other atom styles allow to associate more properties
 with atoms like charges, bonds, molecule IDs and much more.  The choice
 of atom style is generally determined by the model being simulated.
-Using a different atom style is possible for as long as it is a superset
-of the atom style with the required properties.  For example, it would
-be possible to use atom style ``charge'' instead of ``atomic''.  It will
-not affect the simulation, only it requires more memory to store the
-(otherwise unused) per-atom properties.
 
 The last line, \textit{boundary p p p}, indicates that periodic boundary
 conditions will be used along all three directions of space (the 3
@@ -604,19 +599,14 @@ $$E_{ij} (r) = 4 \epsilon_{ij} \left[ \left( \dfrac{\sigma_{ij}}{r} \right)^{12}
 the depth of the potential well that sets the interaction strength, and
 $\sigma_{ij}$ represents the distance where the potential energy of the
 LJ potential is zero.  Here, the indexes \textit{ij} refer to pairs of
-particle types \textit{i} and \textit{j}.  The minimum of the LJ
-potential in this formulation is at
-$\bar{\sigma} = 2^{\frac{1}{6}}\sigma$.  Sometimes people use an
-alternate formulation of the LJ potential which uses $\bar{\sigma}$,
-i.e.~the minimum of the potential.  By substituting
-$\sigma = \frac{\bar{\sigma}}{2^{\frac{1}{6}}}$ in the formulation above
-we get the alternate but equivalent expression:
+particle types \textit{i} and \textit{j}.  Sometimes the LJ potential is
+formulated using the minimum of the potential
+$\bar{\sigma} = 2^{\frac{1}{6}}\sigma$:
 $$E_{ij} (r) = \epsilon_{ij} \left[ \left( \dfrac{\bar{\sigma}_{ij}}{r} \right)^{12}
-  - 2\left( \dfrac{\bar{\sigma}_{ij}}{r} \right)^{6} \right], ~
-\text{for} ~ r < r_c.$$ LAMMPS can run simulations for both formulations
-with the same \textit{lj/cut} pair style, only the parameters for $\bar{\sigma}$
-of the second formulation must be divided by $2^{\frac{1}{6}}$ to get the $\sigma$
-needed for the first formulation for the LJ potential.
+    - 2\left( \dfrac{\bar{\sigma}_{ij}}{r} \right)^{6} \right], ~
+  \text{for} ~ r < r_c.$$
+This is the \emph{same} potential, only the $\sigma$ parameters must
+be converted through dividing by $2^{\frac{1}{6}}$.
 
 The fourth line, \textit{pair\_coeff 1 1 1.0 1.0}, sets the
 Lennard-Jones coefficients for the interactions between pairs of atoms
@@ -677,11 +667,11 @@ At this point it is also possible to create a snapshot image of the
 current system using the \textit{Image Viewer} window.  The image viewer
 works by telling LAMMPS to render an image of the current system using
 its own render library through the \textit{dump image} command.  The
-resulting is read in and displayed.  The various buttons can be used to
-change what is shown and how it is rendered.  The image of figure
-\ref{fig:LJ} was created this way.  This will always create an image of
-the currently active state of the system.  Save the image for later
-comparisons.
+resulting image is read in and displayed.  The various buttons can be
+used to change what is shown and how it is rendered.  The image of
+figure \ref{fig:LJ} was created this way.  This will always create an
+image of the currently active state of the system.  Save the image for
+later comparisons.
 
 \paragraph{Energy minimization}
 Now replace the \textit{run} command with the \textit{minimize} command
