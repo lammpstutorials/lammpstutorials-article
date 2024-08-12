@@ -328,12 +328,12 @@ For Linux (with x86\_64 CPU), macOS (BigSur or later), and Windows (10
 and 11) you can download a pre-compiled LAMMPS package from the LAMMPS
 release page on GitHub
 (\href{https://github.com/lammps/lammps/releases}{github.com/lammps/lammps/releases}).
-Choose a package that has GUI in the file name (it will contain
+Choose a package with `GUI' in the file name (it will contain
 LAMMPS--GUI and a LAMMPS executable for the console).  These
 pre--compiled packages aim to be portable and therefore omit support for
 running in parallel with MPI. \hyperref[using-lammps-gui]{Appendix
   \ref{using-lammps-gui-label}} has instructions for installing
-LAMMPS--GUI and using its features that are most relevant to the
+LAMMPS--GUI and using its most relevant features for the
 tutorials.
 
 LAMMPS versions have good backward compatibility (that is, old inputs
@@ -465,7 +465,7 @@ executed \emph{before} the simulation box is created, and they will
 cause an error if entered later.  Similarly, many LAMMPS commands may
 only be entered \emph{after} the simulation box is defined.  Only a very
 small number of commands may be used in both cases.  Edit
-\textit{initial.lmp} so that section looks like this:
+\textit{initial.lmp} so that the \textit{Initialization} section looks like this:
 {\normalsize
 \begin{verbatim}
 # 1) Initialization
@@ -647,19 +647,19 @@ run 0 post no
 \end{verbatim}
 }
 The \textit{thermo} command asks LAMMPS to print thermodynamic
-information to the console every given number of steps, in this input
-every 10 simulation steps.  The \textit{thermo\_style custom} determines
+information to the console every given number of steps, in this case,
+every 10 simulation steps.  The \textit{thermo\_style custom} command specifies
 \emph{which} output LAMMPS should print.  This selection prints the
 step number (\textit{step}), the total energy (\textit{etotal}), and the
-pressure (\textit{press}).  The \textit{run 0} command will tell LAMMPS
-just to a force and energy initialization.
+pressure (\textit{press}).  The \textit{run 0} command instructs LAMMPS
+to perform only force and energy initialization.
 
 You can now run LAMMPS.  It should finish quickly and with the default
 settings, LAMMPS--GUI will open two new windows, one with the console
 output and one with a chart.  The output window will show some info
 printed by the various commands in the input as they are executed and
-the total energy and pressure at step 0, the requested thermodynamic
-data.  Since we have not done any real simulation steps, the charts
+the total energy and pressure at step 0, i.e. the requested thermodynamic
+data.  Since no real simulation steps have been performed, the charts
 are empty.
 
 \begin{figure}
@@ -709,7 +709,7 @@ will decrease.  By default, LAMMPS uses the conjugate gradient (CG)
 algorithm \cite{hestenes1952methods}.  The simulation will stop as soon
 as the minimizer algorithm cannot find a way to lower the potential
 energy.  Except for trivial systems, minimization algorithms will find
-the ``next'' minimum, which may not be the global minimum.
+a local minimum rather than the global minimum.
 
 Run the minimization and observe that LAMMPS-GUI will capture the output
 and update the chart in real-time.  This run executes quickly (depending on
@@ -717,8 +717,8 @@ your computer's capability) and may fail to
 capture some of the thermodynamic data (see figure \ref{fig:chart-log}).
 In that case, use the \textit{Preferences} dialog to reduce the
 GUI update interval and switch to single threaded, unaccelerated
-execution in the Accelerators tab.  You can repeat the run.  A new run
-will always ``forget'' the current system and start over from the top.
+execution in the Accelerators tab.  You can repeat the run.  Each new run
+will start fresh, forgetting the current system and starting over from the top.
 
 The potential energy can be seen to decrease from a positive value to a
 negative value.  The initially positive value of the potential energy is
@@ -935,10 +935,10 @@ write_data minimized_coordinates.data
 \end{verbatim}
 }
 
-The significant improvement input is the addition of the
+A significant improvement to the input is the addition of the
 \textit{write\_data} command.  This command is used to write the state
 of the system to a text format file called \textit{improved.min.data}.
-Note that the \textit{write\_data} command is placed \emph{after} the
+Make sure the \textit{write\_data} command is placed \emph{after} the
 \textit{minimize} command.  This \textit{.data} file will be used later
 to restart the simulation from the final state of the energy
 minimization step without having to repeat the system creation and
