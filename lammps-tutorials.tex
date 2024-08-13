@@ -187,10 +187,10 @@ performing random changes to the system configuration that are either
 accepted or rejected based on energy criteria
 \cite{frenkel2023understanding, allen2017computer}.  MS allow for
 measuring a broad variety of properties, including structural properties
-(e.g. bond length distribution, coordination numbers, radial
-distribution functions), thermodynamic properties (e.g. temperature,
-pressure, volume), dynamic behaviors (e.g. diffusion coefficient,
-viscosity), and mechanical responses (e.g. elastic constant, Poisson
+(e.g.~bond length distribution, coordination numbers, radial
+distribution functions), thermodynamic properties (e.g.~temperature,
+pressure, volume), dynamic behaviors (e.g.~diffusion coefficient,
+viscosity), and mechanical responses (e.g.~elastic constant, Poisson
 ratio).  Some of these quantities can be directly compared with
 experimental data, enabling the validation of the simulated system,
 while others, available only through simulations, are often useful for
@@ -221,7 +221,7 @@ distracting.
 In addition to the intrinsic complexity of LAMMPS, performing accurate
 MS involves making several complex and system-specific decisions related
 to the physics to be modeled, such as selecting the thermodynamic
-ensemble (e.g. micro-canonical, grand-canonical), determining the
+ensemble (e.g.~micro-canonical, grand-canonical), determining the
 simulation duration, and choosing the sets of parameters describing the
 interactions between the atoms (the so-called force field)
 \cite{van2018validation}.  These choices are independent of the chosen
@@ -1216,16 +1216,16 @@ neighbors in red.  Figure \ref{fig:coords-viz} shows an example.
 
 % "classical" or rather "conventional molecular"?
 In this tutorial, the system of interest is a small, single walled
-carbon nanotube (CNT) in an empty box (Fig.\,\ref{fig:CNT}).  An
-% FIXME: not a force but strain.
-external force is imposed on the CNT, and its deformation is monitored
-over time.  To illustrate the difference between classical and reactive
-force fields, this tutorial is divided into two parts.  In the first
-part, a classical force field \cite{typelabel_paper} is used and the
-bonds between the atoms of the CNT are unbreakable.  In the second part,
-a reactive force field (named AIREBO \cite{stuart2000reactive}) is used,
-allowing for the breaking of chemical bonds when the CNT experiences
-large strain from the deformation.
+carbon nanotube (CNT) in an empty box (Fig.\,\ref{fig:CNT}).  The CNT is
+strained by keeping atoms at one end in place and moving atoms at the
+other end with constant velocity.  To illustrate the difference between
+classical \cite{typelabel_paper} and reactive force fields, this
+tutorial is divided into two parts: in the first part, a classical force
+field (called OPLS-AA \cite{jorgensenDevelopmentTestingOPLS1996}) is
+used and the bonds between the atoms of the CNT are unbreakable, in the
+second part, a reactive force field (called AIREBO
+\cite{stuart2000reactive}) is used, allowing for the breaking of
+chemical bonds when the CNT experiences large strain.
 
 To set up this tutorial, select ``Start Tutorial 2'' from the
 ``Tutorials'' menu of LAMMPS--GUI and follow the instructions.  This
@@ -1233,8 +1233,8 @@ will select, and -- if needed -- create, a folder, and place several
 files into it.  The initial input file, set up for a single point energy
 calculation, will also be loaded into the editor under the name
 \textit{unbreakable.lmp}.  Additional files are a data file with a CNT
-\textit{cnt\_molecular.data} topology and geometry, and a file
-\textit{parameters.inc} with force field parameters.
+\textit{unbreakable.data} topology and geometry and scripts and files
+for the second part of the tutorial.
 
 \begin{figure}
 \centering
@@ -1255,7 +1255,7 @@ $k_\text{b}$: $U_\text{b} = k_\text{b} \left( r - r_0
 applied to maintain the relative orientations of neighboring atoms.
 
 \paragraph{The LAMMPS input}
-After following the setup the editor should have the following content:
+After completing the setup the editor should have the following content:
 {\normalsize
 \begin{verbatim}
 variable T equal 300
@@ -1265,32 +1265,38 @@ atom_style molecular
 boundary f f f
 
 pair_style lj/cut 14.0
-
 bond_style harmonic
 angle_style harmonic
 dihedral_style opls
 improper_style harmonic
-
 special_bonds lj 0.0 0.0 0.5
 
-read_data cnt_molecular.data extra/atom/type 1
+read_data unbreakable.data
+
+pair_coeff 1 1 0.066 3.4
+bond_coeff 1 469.0 1.4
+angle_coeff 1 63.0 120.0
+dihedral_coeff 1 0 7.25 0 0
+improper_coeff 1 5 180.0
+
+run 0 post no
 \end{verbatim}
 }
 The chosen unit system is \textit{real} (therefore distances are in
-Ångstrom and time in femtosecond), the \textit{atom\_style} is molecular
-(therefore atoms are point particles that can be bonded with each
-other), and the boundary conditions are fixed.   The boundary conditions
-do not matter here, as the box boundaries were placed far from the
-CNT.  Just like in the previous tutorial,
-\hyperref[lennard-jones-label]{Lennard-Jones fluid}, the pair style is
-\textit{lj/cut} (i.e.~a Lennard-Jones potential with a cutoff) with
-cutoff set to 14 Ångstroms, which means that only the atoms closer than
-that interact through the Lennard-Jones potential.
+Ångstrom, time in femtosecond, and energies in kcal/mol), the
+\textit{atom\_style} is molecular (therefore atoms are point particles
+that can be bonded with each other), and the boundary conditions are
+fixed.  The boundary conditions do not matter here, as the box
+boundaries were placed far from the CNT.  Just like in the previous
+tutorial, \hyperref[lennard-jones-label]{Lennard-Jones fluid}, the pair
+style is \textit{lj/cut} (i.e.~a Lennard-Jones potential with cutoff)
+and its cutoff is set to 14 Ångstroms, which means that only the atoms
+closer than that interact through the Lennard-Jones potential.
 
 The \textit{bond\_style}, \textit{angle\_style},
 \textit{dihedral\_style}, and \textit{improper\_style} commands specify
 the different potentials used to restrain the relative positions of the
-atoms. The \textit{special\_bonds} command sets the weighting factors
+atoms.  The \textit{special\_bonds} command sets the weighting factors
 for the Lennard-Jones interaction between atoms directly connected by
 one bond, two bonds, and three bonds, respectively.  This is done for
 convenience when parameterizing the force constants for bond, angles and
@@ -1299,29 +1305,37 @@ these pairs, they do not need to be taken into account when determining
 the force constants.
 
 The last command, \textit{read\_data}, imports the
-\textit{cnt\_molecular.data} file which contains information about the
-box size, atom positions, as well as the identity of the atoms that are
+\textit{unbreakable.data} file which contains information about the box
+size, atom positions, as well as the identity of the atoms that are
 linked by \textit{bonds}, \textit{angles}, \textit{dihedrals}, and
 \textit{impropers} interactions.  It was created using VMD and TopoTools
-\cite{kohlmeyer2017topotools}.  Since TopoTools knows nothing about
-force fields the data file does not contain force field parameters
-(unlike the data file we created with LAMMPS in tutorial 1), and thus we
-need to specify the parameters of both, the bonded and non-bonded
-potentials separately.
+\cite{kohlmeyer2017topotools}.  The details of the format of the
+different sections in a data file change with different settings.  In
+particular, the \textit{Atoms} section may have a different number of
+columns or they may represent different properties when the
+\textit{atom\_style} is changed.  To help users, LAMMPS and tools like
+VMD + TopoTools will add a comment (here \textit{\# molecular}) to the
+\textit{Atoms} header line in the data files indicating the intended
+\textit{atom\_style}.  LAMMPS will print a warning when the chosen atom
+style does not match what is written in that comment.
 
-The parameters we use are taken from the OPLS-AA (Optimised Potentials
-for Liquid Simulations-All-Atom) force field
-\cite{jorgensenDevelopmentTestingOPLS1996}.  These are stored in the file
-\textit{parameters.inc} which should contain: {\normalsize
+This data file does not contain any sections with potential parameters
+and thus we need to specify the parameters of both, the bonded and
+non-bonded potentials in the input.  The parameters we use are taken
+from the OPLS-AA (Optimised Potentials for Liquid Simulations-All-Atom)
+force field \cite{jorgensenDevelopmentTestingOPLS1996}.
+{\normalsize
 \begin{verbatim}
 pair_coeff 1 1 0.066 3.4
 bond_coeff 1 469 1.4
 angle_coeff 1 63 120
 dihedral_coeff 1 0 7.25 0 0
 improper_coeff 1 5 180
+
+run 0 post no
 \end{verbatim}
 }
-% AK: the english here reads a bit "quirky". Jake, any ideas as anative speaker?
+% AK: the english here reads a bit "quirky". Jake, any ideas as a native speaker?
 The \textit{pair\_coeff} command sets the parameters for non-bonded
 Lennard-Jones interactions atom type 1 to
 $\epsilon_{11} = 0.066 \, \text{kcal/mol}$ and
@@ -4290,7 +4304,7 @@ executable Installer package.
 
 \subsubsection{Installing Linux .tar.gz variant}
 
-Download the archive, e.g. LAMMPS-Linux-x86\_64-GUI-XXXXAug2024.tar.gz,
+Download the archive, e.g.~LAMMPS-Linux-x86\_64-GUI-XXXXAug2024.tar.gz,
 and unpack it.  This will create a folder LAMMPS\_GUI which contains the
 included commands that can be launched directly as ``./lammps-gui'' and
 ``./lmp'' for example.  Adding this folder to the PATH environment
@@ -4308,7 +4322,7 @@ flatpak install --user \
 \end{verbatim}
 }
 This should integrate LAMMPS--GUI into your desktop environment
-(e.g. GNOME, KDE, XFCE) and it should appear in the ``Applications''
+(e.g.~GNOME, KDE, XFCE) and it should appear in the ``Applications''
 menu under ``Science''.  Also the ``.lmp'' file extension should have
 been registered to launch LAMMPS--GUI when opening a file with that
 extension in the desktop's file manager.
