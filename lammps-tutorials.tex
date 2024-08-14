@@ -76,6 +76,11 @@
   numbers=none, frame=single ,frameround=tttt,
 }
 
+% make \emph{} use underline instead of italic
+\renewcommand{\emph}[1]{\underline{#1}}
+% for LAMMPS commands
+\newcommand{\lmpcmd}[1]{\texttt{\normalsize\bfseries #1}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% IMPORTANT USER CONFIGURATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -409,9 +414,9 @@ where additional exercises with solutions are also provided. All files
 and inputs required to follow the tutorials are available from a
 dedicated GitHub account,
 \href{https://github.com/lammpstutorials}{github.com/lammpstutorials}. In
-the following, all the commands that must be copied and pasted into
-LAMMPS input files or the terminal are written in a \verb+verbatim+
-style, and the file and folder names are written in \textit{italic}.
+the following, all LAMMPS input file commands or commands for the
+console are typeset in \lmpcmd{bold monospace} and file and folder names
+are typeset in \textit{italic}.
 
 \subsection{Tutorial 1: Lennard-Jones fluid}
 \label{lennard-jones-label}
@@ -468,7 +473,8 @@ executed \emph{before} the simulation box is created, and they will
 cause an error if entered later.  Similarly, many LAMMPS commands may
 only be entered \emph{after} the simulation box is defined.  Only a very
 small number of commands may be used in both cases.  Edit
-\textit{initial.lmp} so that the \textit{Initialization} section looks like this:
+\textit{initial.lmp} so that the \textit{Initialization} section looks
+like this:
 
 \begin{lstlisting}
 # 1) Initialization
@@ -478,28 +484,28 @@ atom_style atomic
 boundary p p p
 \end{lstlisting}
 
-The first line, \textit{units lj}, indicates that we want to use
+The first line, \lmpcmd{units lj}, indicates that we want to use
 so-called ``reduced units'' in which all quantities are unitless.  This
 is a popular choice for simulations investigating general statistical
 mechanical principles where only relative differences between parameters
 matter and that are not aimed to represent any specific material.
 
-The second line, \textit{dimension 3}, indicates that the simulation is
+The second line, \lmpcmd{dimension 3}, indicates that the simulation is
 in 3D as opposed to a 2D system where atoms can only move in the
-xy-plane.  The third line, \textit{atom\_style atomic}, indicates that
-the \textit{atomic} style will be used for simple individual particles,
+xy-plane.  The third line, \lmpcmd{atom\_style atomic}, indicates that
+the \lmpcmd{atomic} style will be used for simple individual particles,
 therefore each particle is just a point with a mass.  This is the
 minimal atom style; other atom styles allow to associate more properties
 with atoms like charges, bonds, molecule IDs and much more.  The choice
 of atom style is generally determined by the model being simulated.
 
-The last line, \textit{boundary p p p}, indicates that periodic boundary
+The last line, \lmpcmd{boundary p p p}, indicates that periodic boundary
 conditions will be used along all three directions of space (the 3
-\textit{p} stand for \textit{x}, \textit{y}, and \textit{z},
-respectively).  Alternatives are fixed non-periodic, \textit{f},
-shrink-wrapped non-periodic \textit{s}, and shrink-wrapped non-periodic
-with minimum, \textit{m}.  For non-periodic boundaries, there can be a
-different choice for each side, so something like \textit{boundary p p
+\lmpcmd{p} stand for \lmpcmd{x}, \lmpcmd{y}, and \lmpcmd{z},
+respectively).  Alternatives are fixed non-periodic, \lmpcmd{f},
+shrink-wrapped non-periodic \lmpcmd{s}, and shrink-wrapped non-periodic
+with minimum, \lmpcmd{m}.  For non-periodic boundaries, there can be a
+different choice for each side, so something like \lmpcmd{boundary p p
   fm} is valid input and suitable for slab geometry systems.
 
 Strictly speaking, neither of these three commands are required, because
@@ -521,7 +527,7 @@ LAMMPS users.
 Each LAMMPS command is associated with extensive online documentation
 detailing the different options for that command.  From the LAMMPS-GUI
 editor buffer, the LAMMPS documentation can be accessed by
-right-clicking the line with a command, such as \textit{units lj}, and
+right-clicking the line with a command, such as \lmpcmd{units lj}, and
 selecting \textit{View documentation for (\dots)}\,.  LAMMPS--GUI will
 ask your web browser to open the corresponding URL in the online manual.
 See figure \ref{fig:GUI-1} for a screenshot with such a context menu.
@@ -532,27 +538,24 @@ The next step is to create the simulation box and put some atoms into it.
 Modify the \textit{System definition} category of \textit{initial.lmp} as follows:
 \begin{lstlisting}
 # 2) System definition
-region simulation_box block &
-     -20.0 20.0 -20.0 20.0 -20.0 20.0 units box
-create_box 2 simulation_box
-create_atoms 1 random 1500 341341 simulation_box &
-     overlap 0.3
-create_atoms 2 random 100 127569 simulation_box &
-     overlap 0.3
+region simbox block -20 20 -20 20 -20 20 units box
+create_box 2 simbox
+create_atoms 1 random 1500 341341 simbox overlap 0.3
+create_atoms 2 random 100 127569 simbox overlap 0.3
 \end{lstlisting}
 
-The first line, \textit{region simulation\_box (...)}, creates a region
-named \textit{simulation\_box} that is a block (i.e.~a rectangular
+The first line, \lmpcmd{region simbox (...)}, creates a region
+named \lmpcmd{simbox} that is a block (i.e.~a rectangular
 cuboid) that extends from -20 to 20 length units along all 3 directions
-of space.  The \textit{units box} option requests that the region
+of space.  The \lmpcmd{units box} option requests that the region
 dimensions are computed as multiples of the length unit and not as
-multiples of the lattice spacing (\textit{units lattice}), which is the
+multiples of the lattice spacing (\lmpcmd{units lattice}), which is the
 default.  In this specific case there is no difference, since we did not
-use the \textit{lattice} command and the default lattice spacing is 1.0
+use the \lmpcmd{lattice} command and the default lattice spacing is 1.0
 in x-, y-, or z-direction.
 
-The second line, \textit{create\_box 2 simulation\_box}, creates a
-simulation box based on the region \textit{simulation\_box} with two
+The second line, \lmpcmd{create\_box 2 simbox}, creates a
+simulation box based on the region \lmpcmd{simbox} with two
 types of atoms.  From this point on, any command referencing an atom
 type larger than \textit{2} will trigger an error.  You may specify more
 atom types than what are necessary, but for each atom type you must set
@@ -560,14 +563,14 @@ the mass and provide force field parameters for all of them. Not doing
 so will cause LAMMPS to abort with an error at the beginning of a
 minimization or an MD run.
 
-The third line, \textit{create\_atoms (\dots)}, creates 1500 atoms of type
+The third line, \lmpcmd{create\_atoms (\dots)}, creates 1500 atoms of type
 \textit{1} at random positions within the region
-\textit{simulation\_box}.  The integer \textit{341341} is a seed for the
+\lmpcmd{simbox}.  The integer \textit{341341} is a seed for the
 internal random number generator that can be changed to create different
 sequences of random numbers and thus different initial geometries for
 the simulation.  The fourth line creates 100 atoms of type \textit{2}.
-Both \textit{create\_atoms} commands use the optional argument
-\textit{overlap 0.3} to add a constraint to the randomly placed atoms
+Both \lmpcmd{create\_atoms} commands use the optional argument
+\lmpcmd{overlap 0.3} to add a constraint to the randomly placed atoms
 that they much have at least 0.3 length units distance.  This step is to
 avoid so-called ``close contacts'' between atoms which can cause
 problems due to causing large forces.
@@ -584,10 +587,10 @@ pair_coeff 1 1 1.0 1.0
 pair_coeff 2 2 0.5 3.0
 \end{lstlisting}
 
-The two \textit{mass} commands assign a mass of 1.0 and 10.0 mass units
+The two \lmpcmd{mass} commands assign a mass of 1.0 and 10.0 mass units
 to the atoms of type 1 and 2, respectively.
 
-The third line, \textit{pair\_style lj/cut 4.0}, requests that the atoms
+The third line, \lmpcmd{pair\_style lj/cut 4.0}, requests that the atoms
 will be interacting through a Lennard-Jones (LJ) potential with a
 cut-off equal to $r_c = 4.0$ length units
 \cite{wang2020lennard,fischer2023history}:
@@ -606,7 +609,7 @@ $$E_{ij} (r) = \epsilon_{ij} \left[ \left( \dfrac{\bar{\sigma}_{ij}}{r} \right)^
 This is the \emph{same} potential, only the $\sigma$ parameters must
 be converted through dividing by $2^{\frac{1}{6}}$.
 
-The fourth line, \textit{pair\_coeff 1 1 1.0 1.0}, sets the
+The fourth line, \lmpcmd{pair\_coeff 1 1 1.0 1.0}, sets the
 Lennard-Jones coefficients for the interactions between pairs of atoms
 of type 1, respectively the energy parameter $\epsilon_{11} = 1.0$ and
 the distance parameter $\sigma_{11} = 1.0$.  Similarly, the last line
@@ -886,15 +889,13 @@ re-add the \textit{create\_atoms} commands, but using the new regions
 instead of the simulation box region for placing the created atoms:
 \begin{lstlisting}
 # 2) System definition
-region simulation_box block -20 20 -20 20 -20 20
-create_box 2 simulation_box
+region simbox block -20 20 -20 20 -20 20
+create_box 2 simbox
 # for creating atoms
-region cylinder_in cylinder z 0 0 10 INF INF &
-    side in
-region cylinder_out cylinder z 0 0 10 INF INF &
-    side out
-create_atoms 1 random 1000 341341 cylinder_out
-create_atoms 2 random 150 127569 cylinder_in
+region cyl_in cylinder z 0 0 10 INF INF side in
+region cyl_out cylinder z 0 0 10 INF INF side out
+create_atoms 1 random 1000 341341 cyl_out
+create_atoms 2 random 150 127569 cyl_in
 \end{lstlisting}
 The \textit{side in} and \textit{side out} keywords are used to define
 regions that represent the inside and outside of the cylinder of radius
@@ -980,14 +981,14 @@ cylinder, let us delete the misplaced atoms by adding the following
 commands to \textit{improved.md.lmp}:
 
 \begin{lstlisting}
-region cylinder_in cylinder z 0 0 10 INF INF &
+region cyl_in cylinder z 0 0 10 INF INF &
     side in
-region cylinder_out cylinder z 0 0 10 INF INF &
+region cyl_out cylinder z 0 0 10 INF INF &
     side out
 group group_type_1 type 1
 group group_type_2 type 2
-group group_region_in region cylinder_in
-group group_region_out region cylinder_out
+group group_region_in region cyl_in
+group group_region_out region cyl_out
 group group_type_1_in &
    intersect group_type_1 group_region_in
 group group_type_2_out &
@@ -1019,12 +1020,12 @@ longer needed.  This is done in the last four lines.
 Let us monitor the number of atoms of each type inside the cylinder as a
 function of time, by creating the following equal-style variables:
 \begin{lstlisting}
-variable n1_in equal count(group_type_1,cylinder_in)
-variable n2_in equal count(group_type_2,cylinder_in)
+variable n1_in equal count(group_type_1,cyl_in)
+variable n2_in equal count(group_type_2,cyl_in)
 \end{lstlisting}
 The equal-style \textit{variables} are expressions that are evaluated
 during the run and return a number.  Here they are defined to count
-the number of atoms of a specific group in the \textit{cylinder\_in} region.
+the number of atoms of a specific group in the \textit{cyl\_in} region.
 
 In addition to counting the atoms in each region, let us also extract
 the coordination number of type 2 atoms around type 1 atoms.  The
@@ -1088,7 +1089,7 @@ run 300000
 \centering
 \includegraphics[width=\linewidth]{LJ-mixing}
 \caption{a) Evolution of the number $N_\text{in}$ of atoms within the
-\textit{cylinder\_in} region as a function of the time $t$. b) Evolution of
+\textit{cyl\_in} region as a function of the time $t$. b) Evolution of
 the coordination number $C_{1-2}$ between atoms of types 1 and 2.}
 \label{fig:mixing}
 \end{figure}
@@ -1322,14 +1323,11 @@ atoms at the two edges and place them into groups named \textit{rtop} and
 \textit{rbot}, respectively. Add the following lines to \textit{input.lmp}:
 \begin{lstlisting}
 group carbon_atoms type 1
-variable xmax equal &
-    bound(carbon_atoms,xmax)-0.5
-variable xmin equal &
-    bound(carbon_atoms,xmin)+0.5
+variable xmax equal bound(carbon_atoms,xmax)-0.5
+variable xmin equal bound(carbon_atoms,xmin)+0.5
 region rtop block ${xmax} INF INF INF INF INF
 region rbot block INF ${xmin} INF INF INF INF
-region rmid block &
-    ${xmin} ${xmax} INF INF INF INF
+region rmid block ${xmin} ${xmax} INF INF INF INF
 \end{lstlisting}
 The first command includes all the atoms of type 1 (i.e.~all the atoms here)
 in a group named \textit{carbon\_atoms}.
@@ -1343,12 +1341,12 @@ and $x > x_\text{max}$ (\textit{rtop}, for region top).
 Finally, let us define 3 groups of atoms corresponding to the atoms located
 in each of the 3 regions, respectively, by adding to \textit{input.lmp}:
 \begin{lstlisting}
-group carbon_top region rtop
-group carbon_bot region rbot
-group carbon_mid region rmid
-set group carbon_top mol 1
-set group carbon_bot mol 2
-set group carbon_mid mol 3
+group cnt_top region rtop
+group cnt_bot region rbot
+group cnt_mid region rmid
+set group cnt_top mol 1
+set group cnt_bot mol 2
+set group cnt_mid mol 3
 \end{lstlisting}
 With the three \textit{set} commands we assign different (otherwise unused)
 molecule IDs to atoms in those three groups.  We will use this later to
@@ -1357,8 +1355,8 @@ color these groups of atoms differently.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-underformed}
-\caption{CNT with the atoms from the \textit{carbon\_mid} group in pink,
-and the atoms from the \textit{carbon\_top} and the \textit{carbon\_bot}
+\caption{CNT with the atoms from the \textit{cnt\_mid} group in pink,
+and the atoms from the \textit{cnt\_top} and the \textit{cnt\_bot}
 groups in white.}
 \label{fig:CNT-underformed}
 \end{figure}
@@ -1367,13 +1365,13 @@ Run the simulation using LAMMPS. The number of atoms in each group is given in
 the \textit{Output} window.  It is an important check to make sure that the number
 of atoms in each group corresponds to what is expected, just like here:
 \begin{lstlisting}
-10 atoms in group carbon_top
-10 atoms in group carbon_bot
-680 atoms in group carbon_mid
+10 atoms in group cnt_top
+10 atoms in group cnt_bot
+680 atoms in group cnt_mid
 \end{lstlisting}
-The atoms from the \textit{carbon\_top} and \textit{carbon\_bot} groups are
+The atoms from the \textit{cnt\_top} and \textit{cnt\_bot} groups are
 represented in white in Fig.\,\ref{fig:CNT-underformed}, and the atoms from
-the \textit{carbon\_mid} group in pink.
+the \textit{cnt\_mid} group in pink.
 
 Finally, to start from a less ideal state and create a system with some defects,
 let us randomly delete a small fraction of the carbon atoms. To avoid deleting
@@ -1401,25 +1399,24 @@ The 10 deleted atoms were chosen randomly from the central part of the CNT.}
 
 \paragraph{The molecular dynamics}
 
-Let us give an initial temperature to the atoms of \textit{carbon\_mid}:
+Let us give an initial temperature to the atoms of \textit{cnt\_mid}:
 \begin{lstlisting}
 reset_atoms id sort yes
-velocity carbon_mid create ${T} 48455 &
+velocity cnt_mid create ${T} 48455 &
     mom yes rot yes
 \end{lstlisting}
 Re-setting the atom IDs is necessary before using the \textit{velocity} command
 when atoms were deleted, which is done here with the \textit{reset\_atoms} command.
 The \textit{velocity} command gives initial velocities to the atoms of the middle
-group \textit{carbon\_mid}, ensuring an initial temperature of $300\,\text{K}$
+group \textit{cnt\_mid}, ensuring an initial temperature of $300\,\text{K}$
 for these atoms.
 
 Let us specify the thermalization and the dynamics of the system. Add the following
 lines into \textit{input.lmp}:
 \begin{lstlisting}
 fix mynve all nve
-compute Tmid carbon_mid temp
-fix myber carbon_mid temp/berendsen &
-    ${T} ${T} 100
+compute Tmid cnt_mid temp
+fix myber cnt_mid temp/berendsen ${T} ${T} 100.0
 fix_modify myber temp Tmid
 \end{lstlisting}
 % AK: why temp/berendsen? This seems particularly unsuitable for this system
@@ -1428,13 +1425,13 @@ fix_modify myber temp Tmid
 The \textit{fix nve}
 is applied to all atoms so that all atom positions are recalculated at every step,
 and a \textit{Berendsen} thermostat is applied to the atoms of the group
-\textit{carbon\_mid} only \cite{berendsen1984molecular}.
+\textit{cnt\_mid} only \cite{berendsen1984molecular}.
 % AK This is incorrect. Any thermostat will thermostat only the group
 % and define its internal temperature compute for the same group.
 %
 %The
 %\textit{fix\_modify myber} ensures that the \textit{fix Berendsen} uses the
-%temperature of the group \textit{carbon\_mid} as an input, instead of the
+%temperature of the group \textit{cnt\_mid} as an input, instead of the
 %temperature of the whole system. This is necessary to make sure that the frozen
 %edges won't bias the temperature. Note that the atoms of the edges do not need
 %a thermostat because their motion will be restrained, see below.
@@ -1442,17 +1439,17 @@ and a \textit{Berendsen} thermostat is applied to the atoms of the group
 To restrain the motion of the atoms at the edges, let us add the following
 commands to \textit{input.lmp}:
 \begin{lstlisting}
-fix mysf1 carbon_top setforce 0 0 0
-fix mysf2 carbon_bot setforce 0 0 0
-velocity carbon_top set 0 0 0
-velocity carbon_bot set 0 0 0
+fix mysf1 cnt_top setforce 0 0 0
+fix mysf2 cnt_bot setforce 0 0 0
+velocity cnt_top set 0 0 0
+velocity cnt_bot set 0 0 0
 \end{lstlisting}
 The two \textit{setforce} commands cancel the forces applied on the atoms of the
 two edges, respectively. The cancellation of the forces is done at every step,
 and along all 3 directions of space, $x$, $y$, and $z$, due to the use of
 \textit{0 0 0}. The two \textit{velocity} commands set the initial velocities
-along $x$, $y$, and $z$ to 0 for the atoms of \textit{carbon\_top} and
-\textit{carbon\_bot}, respectively. As a consequence of these last four commands,
+along $x$, $y$, and $z$ to 0 for the atoms of \textit{cnt\_top} and
+\textit{cnt\_bot}, respectively. As a consequence of these last four commands,
 the atoms of the edges will remain immobile during the simulation (or at least
 they would if no other command was applied to them).
 
@@ -1470,7 +1467,7 @@ variable for the distance $L$ between the two edges, as well as  a variable $F$
 for the force applied on the edges:
 \begin{lstlisting}
 variable L equal &
-    xcm(carbon_top,x)-xcm(carbon_bot,x)
+    xcm(cnt_top,x)-xcm(cnt_bot,x)
 variable F equal f_mysf1[1]-f_mysf2[1]
 \end{lstlisting}
 Here, the force is extracted from the fixes \textit{mysf1} and \textit{mysf2}
@@ -1508,8 +1505,8 @@ by combining the \textit{velocity set} command with previously defined
 \textit{fix setforce}. Add the following lines in the \textit{input.lmp} file,
 right after the last \textit{run 5000} command:
 \begin{lstlisting}
-velocity carbon_top set 0.0005 0 0
-velocity carbon_bot set -0.0005 0 0
+velocity cnt_top set 0.0005 0 0
+velocity cnt_bot set -0.0005 0 0
 run 10000
 \end{lstlisting}
 The chosen velocity for the deformation is $100\,\text{m/s}$, or
@@ -1632,35 +1629,28 @@ file and place it within the \textit{breakable-bonds/} folder. The rest of the
 \begin{lstlisting}
 group carbon_atoms type 1
 
-variable xmax equal &
-    bound(carbon_atoms,xmax)-0.5
-variable xmin equal &
-    bound(carbon_atoms,xmin)+0.5
+variable xmax equal bound(carbon_atoms,xmax)-0.5
+variable xmin equal bound(carbon_atoms,xmin)+0.5
 region rtop block ${xmax} INF INF INF INF INF
 region rbot block INF ${xmin} INF INF INF INF
-region rmid block &
-    ${xmin} ${xmax} INF INF INF INF
+region rmid block ${xmin} ${xmax} INF INF INF INF
 
-group carbon_top region rtop
-group carbon_bot region rbot
-group carbon_mid region rmid
+group cnt_top region rtop
+group cnt_bot region rbot
+group cnt_mid region rmid
 
 variable xmax_del equal ${xmax}-2
 variable xmin_del equal ${xmin}+2
-region rdel block ${xmin_del} ${xmax_del}&
-    INF INF INF INF
+region rdel block ${xmin_del} ${xmax_del} INF INF INF INF
 
 group rdel region rdel
-delete_atoms random fraction 0.02 no rdel &
-    NULL 482793
+delete_atoms random fraction 0.02 no rdel NULL 482793
 
 reset_atoms id sort yes
-velocity carbon_mid create ${T} 48455 &
-    mom yes rot yes
+velocity cnt_mid create ${T} 48455 mom yes rot yes
 fix mynve all nve
-compute Tmid carbon_mid temp
-fix myber carbon_mid temp/berendsen &
-    ${T} ${T} 0.1
+compute Tmid cnt_mid temp
+fix myber cnt_mid temp/berendsen ${T} ${T} 0.1
 fix_modify myber temp Tmid
 \end{lstlisting}
 
@@ -1671,13 +1661,13 @@ the motion was imposed on the 2 edges). As an equilibration step, let us set the
 velocity to 0 for the atoms of both edges. Add the following lines into
 the \textit{input.lmp} file:
 \begin{lstlisting}
-fix mysf1 carbon_bot setforce 0 0 0
-fix mysf2 carbon_top setforce 0 0 0
-velocity carbon_bot set 0 0 0
-velocity carbon_top set 0 0 0
+fix mysf1 cnt_bot setforce 0 0 0
+fix mysf2 cnt_top setforce 0 0 0
+velocity cnt_bot set 0 0 0
+velocity cnt_top set 0 0 0
 
 variable L equal &
-    xcm(carbon_top,x)-xcm(carbon_bot,x)
+    xcm(cnt_top,x)-xcm(cnt_bot,x)
 variable F equal f_mysf1[1]-f_mysf2[1]
 
 dump mydmp all image 5000 dump.*.jpg type type &
@@ -1703,7 +1693,7 @@ After equilibration, let us set the velocity of one of the edges equal to
 $15~\text{m/s}$ and run for a longer duration than previously. Add the following
 lines into \textit{input.lmp}:
 \begin{lstlisting}
-velocity carbon_top set 0.15 0 0
+velocity cnt_top set 0.15 0 0
 run 280000
 \end{lstlisting}
 Run the simulation. Some bonds are expected to break at approximately
