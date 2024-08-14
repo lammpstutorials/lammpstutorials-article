@@ -71,15 +71,22 @@
 \widowpenalty1000
 \displaywidowpenalty=1000
 
+\definecolor{listing}{rgb}{0.95,0.95,0.95}
+\definecolor{command}{rgb}{0.15,0.15,0.15}
 \lstset{
   basicstyle=\ttfamily\small\bfseries,
-  numbers=none, frame=single ,frameround=tttt,
+  numbers=none,
+  frame=none,
+%  frame=single,
+%  framerule=0.01pt,
+%  frameround=tttt,
+  backgroundcolor=\color{listing}
 }
 
 % make \emph{} use underline instead of italic
 \renewcommand{\emph}[1]{\underline{#1}}
 % for LAMMPS commands
-\newcommand{\lmpcmd}[1]{\texttt{\normalsize\bfseries #1}}
+\newcommand{\lmpcmd}[1]{\texttt{\normalsize\bfseries\textcolor{command}{#1}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% IMPORTANT USER CONFIGURATION
