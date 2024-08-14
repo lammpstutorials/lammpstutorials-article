@@ -2,3 +2,6 @@
 	path = files/pyplot-perso
 	url = git@github.com:simongravelle/pyplot-perso.git
 	branch = LAMMPS-livecom
+[submodule "dependencies/.github"]
+	path = dependencies/.github
+	url = git@github.com:lammpstutorials/.github.git
