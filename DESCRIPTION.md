@@ -5,7 +5,7 @@ more accessible to new users.
 
 ## Tutorials
 
-- Tutorial 1: Lennard-Jones ﬂuid
+- Tutorial 1: Lennard-Jones fluid
 - Tutorial 2: Pulling on a carbon nanotube
 - Tutorial 3: Polymer in water
 - Tutorial 4: Nanosheared electrolyte
