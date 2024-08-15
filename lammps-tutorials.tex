@@ -414,16 +414,16 @@ features is in the LAMMPS manual \cite{lammps_gui_docs}.
 
 \section{Content and links}
 
-% AK: S.G. this refers to the "old" tutorials.
 The tutorials described in this article can be accessed at
 \href{https://lammpstutorials.github.io}{lammpstutorials.github.io},
 where additional exercises with solutions are also provided. All files
 and inputs required to follow the tutorials are available from a
 dedicated GitHub account,
-\href{https://github.com/lammpstutorials}{github.com/lammpstutorials}. In
-the following, all LAMMPS input file commands or commands for the
-console are typeset in \lmpcmd{bold monospace} and file and folder names
-are typeset in \textit{italic}.
+\href{https://github.com/lammpstutorials}{github.com/lammpstutorials}.
+
+In the following, all LAMMPS input or console commands are typeset in
+\lmpcmd{bold monospace}, section, file and folder names are typeset in
+\textit{italic}, and keyboard shortcuts in \texttt{monospace}.
 
 \subsection{Tutorial 1: Lennard-Jones fluid}
 \label{lennard-jones-label}
@@ -447,7 +447,7 @@ which we will fill out step by step.  To set up this tutorial, select
 follow the instructions.  This will select, and -- if needed -- create,
 a folder, place the initial input file \textit{initial.lmp} into it, and
 open that file in the LAMMPS--GUI editor.  The editor should have the
-following content afterwards.
+following content:
 \begin{lstlisting}
 # PART A - ENERGY MINIMIZATION
 # 1) Initialization
@@ -463,7 +463,7 @@ These five categories are not required in every input script and do not
 necessarily need to be in that exact order.  For instance, parts 3 and 4
 could be inverted, or part 4 could be omitted.  Note, however, that
 LAMMPS reads input files from top to bottom and processes each command
-in it \emph{immediately}.  Therefore, the \textit{Initialization} and
+\emph{immediately}.  Therefore, the \textit{Initialization} and
 \textit{System definition} categories must appear at the top of the
 input, and the \textit{Run} category at the bottom.  Also, the specifics
 of some commands can change after global settings are changed, so the
@@ -476,12 +476,11 @@ enter global setting for the simulation, such as choice of units, the
 behavior at the boundaries of the box (e.g., periodic or non-periodic)
 or the type of atoms (e.g., uncharged point particles or extended
 spheres with a radius and angular velocities).  These commands must be
-executed \emph{before} the simulation box is created, and they will
-cause an error if entered later.  Similarly, many LAMMPS commands may
-only be entered \emph{after} the simulation box is defined.  Only a very
-small number of commands may be used in both cases.  Edit
-\textit{initial.lmp} so that the \textit{Initialization} section looks
-like this:
+executed \emph{before} the simulation box is created; they will cause an
+error if entered later.  Similarly, many LAMMPS commands may only be
+entered \emph{after} the simulation box is defined.  Only a very small
+number of commands may be used in both cases.  Edit \textit{initial.lmp}
+so that the \textit{Initialization} section looks like this:
 
 \begin{lstlisting}
 # 1) Initialization
@@ -515,15 +514,14 @@ with minimum, \lmpcmd{m}.  For non-periodic boundaries, there can be a
 different choice for each side, so something like \lmpcmd{boundary p p
   fm} is valid input and suitable for slab geometry systems.
 
-Strictly speaking, neither of these three commands are required, because
-all three settings are the default settings for the respective global
-properties.  It is, however, good practice to make such defaults
-explicit so that there is no confusion when sharing the input with other
-LAMMPS users.
+Strictly speaking, neither of these four commands are required, because
+the represent they default settings for the respective global properties.
+It is, however, good practice to make such defaults explicit so that
+there is no confusion when sharing inputs with other LAMMPS users.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.75\linewidth]{GUI-1.png}
+\includegraphics[width=0.65\linewidth]{GUI-1.png}
 \caption{A screenshot of the LAMMPS-GUI \textit{Editor} window during
   \hyperref[lennard-jones-label]{Tutorial 1}. The coloring of the text
   is based on the syntax for LAMMPS input files.  The pop-up menu is the
@@ -536,7 +534,7 @@ detailing the different options for that command.  From the LAMMPS-GUI
 editor buffer, the LAMMPS documentation can be accessed by
 right-clicking the line with a command, such as \lmpcmd{units lj}, and
 selecting \textit{View documentation for (\dots)}\,.  LAMMPS--GUI will
-ask your web browser to open the corresponding URL in the online manual.
+ask your web browser to open the corresponding URL of the online manual.
 See figure \ref{fig:GUI-1} for a screenshot with such a context menu.
 
 \paragraph{System definition}
