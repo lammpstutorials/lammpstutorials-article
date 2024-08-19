@@ -27,7 +27,7 @@ molecule mol3 rxn1_stp2_unreacted.molecule_template
 molecule mol4 rxn1_stp2_reacted.molecule_template
 
 dump mydmp all image 1000 dump.reacting.*.ppm type &
-     type shiny 0.1 box yes 0.01 &
+     type shiny 0.1 box no 0.01 &
      view 0 0 zoom 1.8 fsaa yes bond atom 0.5
 dump_modify mydmp backcolor white &
      acolor c2 gray acolor c_1 lightslategray &
