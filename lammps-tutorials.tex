@@ -3973,6 +3973,115 @@ and $x_0 = 5~\mathrm{\AA{}}$.}
 \label{fig:US-freenergy}
 \end{figure}
 
+\subsection{Tutorial 8: Reactive Molecular Dynamics}
+\label{bond-react-label}
+
+The goal of this tutorial is to create a system made of 
+carbon nanotubes embedded in a polymer melt made in nylon.
+
+\subsubsection{Creating the system}
+
+The first step of the tutorial is to mix small carbon nanotubes
+with the polymer. Create a new input file, call it \textit{mixing.lmp},
+and copy the following lines into it:
+{\normalsize
+\begin{verbatim}
+units real
+boundary p p p
+atom_style full
+
+kspace_style pppm 1.0e-5
+pair_style lj/class2/coul/long 8.5
+angle_style class2
+bond_style class2
+dihedral_style class2
+improper_style class2
+pair_modify tail yes mix sixthpower
+special_bonds lj/coul 0 0 1
+\end{verbatim}
+}
+The \textit{class2} styles compute a 6/9 Lennard-Jones \cite{sun1998compass}. 
+The \textit{class2} bonds, angles, dihedrals, and impropers are used as
+well, see the documention for a description of their respective potentials.
+The \textit{mix sixthpower} imposes a different mixing rule for the parameters
+as compared to the previous tutorials.
+
+Let us read the data file containing the unreacted nylon molecules, and
+replicate it in all directions of the space. Add the folloxing lines
+to \textit{mixing.lmp}:
+{\normalsize
+\begin{verbatim}
+read_data nylon.data &
+  extra/bond/per/atom 5  &
+  extra/angle/per/atom 15 &
+  extra/dihedral/per/atom 15 &
+  extra/improper/per/atom 25 &
+  extra/special/per/atom 25
+replicate 3 4 4
+\end{verbatim}
+}
+The resulting box is $(7.2\,\text{nm})^3$ in size, and its density is low
+enough that inserting CNTs will be easy.
+
+% S.G.: @jrgissing, here we should describe the content of nylon.data.
+% How was it created, what is the specifity of the molecules involved, etc...
+
+To add 5 CNTs to the simulation box, add the following commands
+to \textit{mixing.lmp}:
+{\normalsize
+\begin{verbatim}
+molecule CNT cnt.molecule
+create_atoms 0 random 5 8305 NULL overlap 3 &
+    maxtry 500 mol CNT 7687
+\end{verbatim}
+}
+Let us use the \textit{minimize} command to reduce the energy of the system:
+{\normalsize
+\begin{verbatim}
+minimize 1.0e-4 1.0e-6 100 1000
+reset_timestep 0
+\end{verbatim}
+}
+Then, let us output images of the system using \textit{dump image},
+and perform an equilibration of system using \textit{fix npt}
+{\normalsize
+\begin{verbatim}
+dump mydmp all image 1000 dump.mixing.*.ppm type &
+    type shiny 0.1 box no 0.01 &
+    view 0 0 zoom 1.8 fsaa yes bond atom 0.5
+dump_modify mydmp backcolor white &
+    acolor c2 gray acolor c_1 lightslategray &
+    acolor o dimgray acolor o_1 dimgray &
+    acolor hc lightslategray acolor ho lightslategray &
+    acolor hn lightslategray acolor hw white &
+    acolor o* red acolor n darkslategray &
+    acolor na darkslategray acolor cp lightpink &
+    adiam c2 0.3 adiam c_1 0.3 adiam cp 0.3 &
+    adiam o 0.28 adiam o_1 0.28 adiam o* 2.8 &
+    adiam hc 0.15 adiam ho 0.15 adiam hn 0.15 &
+    adiam hw 1.5 adiam n 0.3 adiam na 0.3 
+
+velocity all create 300 1829 dist gaussian &
+    mom yes rot yes
+fix mynpt all npt temp 300 300 100 iso 1000 1000 1000
+
+thermo 1000
+thermo_style custom step temp pe etotal press density vol
+
+run 10000
+unfix mynpt
+
+fix mynpt all npt temp 300 300 100 iso 1 1 1000
+
+run 20000
+write_data cnt-nylon-mix.data
+\end{verbatim}
+}
+To speed up the equilibration of the system, the run is first performed
+with an imposed pressure of 1000\,atm, and then with an imposed
+pressure of 1\,atm.
+
+
 \section*{Author Contributions}
 % S.G. to update
 S.G. conceived and wrote all the online tutorials and underlying Sphinx documentation
