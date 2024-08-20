@@ -348,7 +348,7 @@ release page on GitHub
 Choose a package with `GUI' in the file name (it will contain
 LAMMPS--GUI and a LAMMPS executable for the console).  These
 pre--compiled packages aim to be portable and therefore omit support for
-running in parallel with MPI. \hyperref[using-lammps-gui]{Appendix
+running in parallel with MPI. \hyperref[using-lammps-gui-label]{Appendix
   \ref{using-lammps-gui-label}} has instructions for installing
 LAMMPS--GUI and using its most relevant features for the
 tutorials.
@@ -407,7 +407,7 @@ specifically for working with LAMMPS:
 \item Wizard dialogs to set up these tutorials
 \end{itemize}
 
-\hyperref[using-lammps-gui]{Appendix \ref{using-lammps-gui-label}}
+\hyperref[using-lammps-gui-label]{Appendix \ref{using-lammps-gui-label}}
 contains basic instructions for installation and using LAMMPS--GUI with
 the tutorials presented here.  A complete description of all LAMMPS--GUI
 features is in the LAMMPS manual \cite{lammps_gui_docs}.
@@ -559,14 +559,13 @@ default.  In this specific case there is no difference, since we did not
 use the \lmpcmd{lattice} command and the default lattice spacing is 1.0
 in x-, y-, or z-direction.
 
-The second line, \lmpcmd{create\_box 2 simbox}, creates a
-simulation box based on the region \lmpcmd{simbox} with two
-types of atoms.  From this point on, any command referencing an atom
-type larger than \textit{2} will trigger an error.  You may specify more
-atom types than what are necessary, but for each atom type you must set
-the mass and provide force field parameters for all of them. Not doing
-so will cause LAMMPS to abort with an error at the beginning of a
-minimization or an MD run.
+The second line, \lmpcmd{create\_box 2 simbox}, creates a simulation box
+based on the region \lmpcmd{simbox} with two types of atoms.  From this
+point on, any command referencing an atom type larger than \textit{2}
+will trigger an error.  You may specify more atom types than what are
+necessary, but for each atom type you must set the mass and provide
+force field parameters. Not doing so will cause LAMMPS to abort with an
+error at the beginning of a minimization or an MD run.
 
 The third line, \lmpcmd{create\_atoms (\dots)}, creates 1500 atoms of type
 \textit{1} at random positions within the region
@@ -586,13 +585,13 @@ Now we provide the settings for the two types of atoms.  Modify the
 \begin{lstlisting}
 # 3) Settings
 mass 1 1.0
-mass 2 10.0
+mass 2 5.0
 pair_style lj/cut 4.0
 pair_coeff 1 1 1.0 1.0
 pair_coeff 2 2 0.5 3.0
 \end{lstlisting}
 
-The two \lmpcmd{mass} commands assign a mass of 1.0 and 10.0 mass units
+The two \lmpcmd{mass} commands assign a mass of 1.0 and 5.0 mass units
 to the atoms of type 1 and 2, respectively.
 
 The third line, \lmpcmd{pair\_style lj/cut 4.0}, requests that the atoms
@@ -605,14 +604,7 @@ $$E_{ij} (r) = 4 \epsilon_{ij} \left[ \left( \dfrac{\sigma_{ij}}{r} \right)^{12}
 the depth of the potential well that sets the interaction strength, and
 $\sigma_{ij}$ represents the distance where the potential energy of the
 LJ potential is zero.  Here, the indexes \textit{ij} refer to pairs of
-particle types \textit{i} and \textit{j}.  Sometimes the LJ potential is
-formulated using the minimum of the potential
-$\bar{\sigma} = 2^{\frac{1}{6}}\sigma$:
-$$E_{ij} (r) = \epsilon_{ij} \left[ \left( \dfrac{\bar{\sigma}_{ij}}{r} \right)^{12}
-    - 2\left( \dfrac{\bar{\sigma}_{ij}}{r} \right)^{6} \right], ~
-  \text{for} ~ r < r_c.$$
-This is the \emph{same} potential, only the $\sigma$ parameters must
-be converted through dividing by $2^{\frac{1}{6}}$.
+particle types \textit{i} and \textit{j}.
 
 The fourth line, \lmpcmd{pair\_coeff 1 1 1.0 1.0}, sets the
 Lennard-Jones coefficients for the interactions between pairs of atoms
@@ -628,35 +620,6 @@ thus have: $\epsilon_{12} = \sqrt{1.0 \times 0.5} = 0.707$, and
 $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
 
 \paragraph{Single point energy}
-The system is now fully parameterized and the input ready to compute
-forces.  Let us fill in the two last remaining categories,
-\textit{Visualization}, and \textit{Run}, by adding the following lines
-into \textit{initial.lmp}:
-\begin{lstlisting}
-# 4) Visualization
-thermo 10
-thermo_style custom step etotal press
-
-# 5) Run
-run 0 post no
-\end{lstlisting}
-
-The \textit{thermo} command asks LAMMPS to print thermodynamic
-information to the console every given number of steps, in this case,
-every 10 simulation steps.  The \textit{thermo\_style custom} command specifies
-\emph{which} output LAMMPS should print.  This selection prints the
-step number (\textit{step}), the total energy (\textit{etotal}), and the
-pressure (\textit{press}).  The \textit{run 0} command instructs LAMMPS
-to perform only force and energy initialization.
-
-You can now run LAMMPS.  It should finish quickly and with the default
-settings, LAMMPS--GUI will open two new windows, one with the console
-output and one with a chart.  The output window will show some info
-printed by the various commands in the input as they are executed and
-the total energy and pressure at step 0, i.e. the requested thermodynamic
-data.  Since no real simulation steps have been performed, the charts
-are empty.
-
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{LJ}
@@ -666,12 +629,42 @@ are empty.
 \label{fig:LJ}
 \end{figure}
 
+The system is now fully parameterized and the input ready to compute
+forces.  Let us fill in the two last remaining categories,
+\textit{Visualization}, and \textit{Run}, by adding the following lines
+into \textit{initial.lmp}:
+\begin{lstlisting}
+# 4) Visualization
+thermo 10
+thermo_style custom step etotal press
+# 5) Run
+run 0 post no
+\end{lstlisting}
+
+The \lmpcmd{thermo 10} command asks LAMMPS to print thermodynamic
+information to the console every given number of steps, in this case,
+every 10 simulation steps.  The \lmpcmd{thermo\_style custom} command
+specifies \emph{which} output LAMMPS should print.  This selection
+prints the step number (\textit{step}), the total energy
+(\textit{etotal}), and the pressure (\textit{press}).  The \lmpcmd{run
+  0 post no} command instructs LAMMPS to perform only force and energy
+initialization and the \lmpcmd{post no} option disables the post-run
+summary and statistics output.
+
+You can now run LAMMPS.  It should finish quickly and with the default
+settings, LAMMPS--GUI will open two new windows, one with the console
+output and one with a chart.  The output window will show some info
+printed by the various commands in the input as they are executed and
+the total energy and pressure at step 0, i.e. the requested thermodynamic
+data.  Since no real simulation steps have been performed, the charts
+are empty.
+
 \paragraph{Snapshot Image}
 
-At this point it is also possible to create a snapshot image of the
+At this point it is possible to create a snapshot image of the
 current system using the \textit{Image Viewer} window.  The image viewer
 works by telling LAMMPS to render an image of the current system using
-its own render library through the \textit{dump image} command.  The
+its own render library through the \lmpcmd{dump image} command.  The
 resulting image is read in and displayed.  The various buttons can be
 used to change what is shown and how it is rendered.  The image of
 figure \ref{fig:LJ} was created this way.  This will always create an
@@ -679,12 +672,30 @@ image of the currently active state of the system.  Save the image for
 later comparisons.
 
 \paragraph{Energy minimization}
-Now replace the \textit{run} command with the \textit{minimize} command
+Now replace the \lmpcmd{run} command line with a \lmpcmd{minimize} command
 as shown below.
 \begin{lstlisting}
 # 5) Run
 minimize 1.0e-6 1.0e-6 1000 10000
 \end{lstlisting}
+
+This tells LAMMPS to perform an energy minimization of the system.  That
+is, LAMMPS will compute the forces on all atoms and then update the
+positions according to a selected algorithm so that the potential energy
+will decrease.  By default, LAMMPS uses the conjugate gradient (CG)
+algorithm \cite{hestenes1952methods}.  The simulation will stop as soon
+as the minimizer algorithm cannot find a way to lower the potential
+energy.  Except for trivial systems, minimization algorithms will find a
+local minimum rather than the global minimum.
+
+Run the minimization and observe that LAMMPS-GUI will capture the output
+and update the chart in real-time.  This run executes quickly (depending
+on your computer's capability) and LAMMPS--GUI may fail to capture some
+of the thermodynamic data (see figure \ref{fig:chart-log}).  In that
+case, use the \textit{Preferences} dialog to reduce the data update
+interval and switch to single threaded, unaccelerated execution in the
+Accelerators tab.  You can repeat the run.  Each new run will start
+fresh, forgetting the current system and starting over from the top.
 
 \begin{figure}
 \centering
@@ -694,24 +705,6 @@ minimize 1.0e-6 1.0e-6 1000 10000
   the minimization simulation of \hyperref[lennard-jones-label]{Tutorial 1}.}
 \label{fig:chart-log}
 \end{figure}
-
-This tells LAMMPS to perform an energy minimization of the system.  That
-is, LAMMPS will compute the forces on all atoms and then update the
-positions according to a selected algorithm so that the potential energy
-will decrease.  By default, LAMMPS uses the conjugate gradient (CG)
-algorithm \cite{hestenes1952methods}.  The simulation will stop as soon
-as the minimizer algorithm cannot find a way to lower the potential
-energy.  Except for trivial systems, minimization algorithms will find
-a local minimum rather than the global minimum.
-
-Run the minimization and observe that LAMMPS-GUI will capture the output
-and update the chart in real-time.  This run executes quickly (depending on
-your computer's capability) and may fail to
-capture some of the thermodynamic data (see figure \ref{fig:chart-log}).
-In that case, use the \textit{Preferences} dialog to reduce the
-GUI update interval and switch to single threaded, unaccelerated
-execution in the Accelerators tab.  You can repeat the run.  Each new run
-will start fresh, forgetting the current system and starting over from the top.
 
 The potential energy can be seen to decrease from a positive value to a
 negative value.  The initially positive value of the potential energy is
@@ -727,19 +720,19 @@ Create and save a snapshot image of the simulation state after the
 minimization and compare the two images.  You should see that atoms
 are ``clumping together''.
 
-Since the \textit{thermo\_style} command also includes the \textit{press}
+Since the \lmpcmd{thermo\_style} command also includes the \textit{press}
 keyword, it is possible to switch from plotting the total energy to
 showing the pressure by choosing \textit{Press} in \textit{Select data}
 drop down menu.
 
 \paragraph{Molecular dynamics}
 
-After the energy minimization, any overlapping atoms have been displaced,
-and the system is now ready to perform a molecular dynamics simulation
-using the minimized geometry.  Since we want to start from the result of
-the energy minimization step, we can append commands for the MD simulation
-to the same input script, \textit{initial.lmp}. After the
-\textit{minimize} command, add the following lines:
+After the energy minimization, any overlapping atoms have been
+displaced, and the system is now ready to perform a molecular dynamics
+simulation using the minimized geometry.  Since we want to start from
+the result of the energy minimization step, we can append commands for
+the MD simulation to the same input script, \textit{initial.lmp}. After
+the \textit{minimize} command, add the following lines:
 \begin{lstlisting}
 # PART B - MOLECULAR DYNAMICS
 # 4) Visualization
@@ -750,12 +743,12 @@ thermo_style custom step temp etotal pe ke press
 Since LAMMPS reads the input from top to bottom and acts on each line
 immediately, these lines will be executed \emph{after} the energy
 minimization.  There is no need to re-initialize or re-define the
-system.  The \textit{thermo} command is called a second time to change
+system.  The \lmpcmd{thermo} command is called a second time to change
 the previous value of 10 to a value of 50 as soon as \textit{PART B} of
-the simulation starts.  In addition, a new \textit{thermo\_style}
+the simulation starts.  In addition, a new \lmpcmd{thermo\_style}
 command changes which thermodynamic information to be printed by LAMMPS
-during \textit{PART B}.  This is done because, during molecular
-dynamics, the system will have a non-zero temperature (\textit{temp})
+during \textit{PART B}.  This is done because during molecular
+dynamics the system will have a non-zero temperature (\textit{temp})
 and kinetic energy (\textit{ke}) and it is useful to monitor those.
 Here, \textit{pe} is the potential energy of the system, such that
 \textit{pe + ke = etotal}.
@@ -768,7 +761,7 @@ fix mynve all nve
 timestep 0.005
 run 10000
 \end{lstlisting}
-The \textit{fix nve} command is used to update the positions and the
+The \lmpcmd{fix nve} command is used to update the positions and the
 velocities of the atoms in the group \textit{all} at every step.  The
 group \textit{all} is a default group that contains every atom.  The
 last two lines set the value of the \textit{timestep} and the number of
@@ -782,12 +775,9 @@ This means the system has no exchange of energy outside the simulation
 box and the number of particles and the box volume are constant.  We can
 see that there is no equilibrium between potential and kinetic energy
 yet, as the former is falling while the latter is rising.  If you extend
-the run for many more steps, the values for both kinetic and
+the run for more steps (say 100000), the values for both kinetic and
 potential energy will plateau (indicating equilibrium) and the total
-energy should fluctuate around some constant value.  To achieve the
-latter, we have to reduce errors by increasing the cutoff to 5 length
-units and reducing the timestep to 0.0025 time units since the choices
-of 2.5 and 0.005 are quite aggressive.
+energy should fluctuate around some constant value.
 
 Now we change the \textit{Run} section to:
 \begin{lstlisting}
