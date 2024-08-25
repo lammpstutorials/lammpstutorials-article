@@ -3977,12 +3977,15 @@ and $x_0 = 5~\mathrm{\AA{}}$.}
 \label{bond-react-label}
 
 The goal of this tutorial is to create a system made of 
-carbon nanotubes embedded in a polymer melt made in nylon.
+carbon nanotubes embedded in a polymer melt made in nylon-6,6. The
+REACTER protocol is used to simulate the polymerization of nylon, and the formation
+of water is followed in time.
 
 \subsubsection{Creating the system}
 
 The first step of the tutorial is to mix small carbon nanotubes
-with the polymer. Create a new input file, call it \textit{mixing.lmp},
+with the initial, unreacted, polymer molecules: hexamethylenediamine and adipic
+acid. Create a new input file, call it \textit{mixing.lmp},
 and copy the following lines into it:
 {\normalsize
 \begin{verbatim}
