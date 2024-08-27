@@ -3979,12 +3979,12 @@ and $x_0 = 5~\mathrm{\AA{}}$.}
 The goal of this tutorial is to create a system made of 
 carbon nanotubes embedded in a polymer melt made in nylon-6,6. The
 REACTER protocol is used to simulate the polymerization of nylon, and the formation
-of water is followed in time.
+of water molecules is followed in time \cite{gissinger2020reacter, gissinger2024molecular}.
 
 \subsubsection{Creating the system}
 
 The first step of the tutorial is to mix small carbon nanotubes
-with the initial, unreacted, polymer molecules: hexamethylenediamine and adipic
+with the initial, unreacted, molecules: hexamethylenediamine and adipic
 acid. Create a new input file, call it \textit{mixing.lmp},
 and copy the following lines into it:
 {\normalsize
@@ -4003,11 +4003,14 @@ pair_modify tail yes mix sixthpower
 special_bonds lj/coul 0 0 1
 \end{verbatim}
 }
-The \textit{class2} styles compute a 6/9 Lennard-Jones \cite{sun1998compass}. 
+The \textit{class2} styles compute a 6/9 Lennard-Jones \cite{sun1998compass}.
+In contrast with reaxff and airebo, a \textit{classical} force field is used here.
 The \textit{class2} bonds, angles, dihedrals, and impropers are used as
 well, see the documention for a description of their respective potentials.
-The \textit{mix sixthpower} imposes a different mixing rule for the parameters
-as compared to the previous tutorials.
+The \textit{mix sixthpower} imposes a different mixing rule for the calculation
+of the cross coefficients as compared to the previous tutorials:
+$\sigma_{ij} = ( 0.5 (\sigma^6_i+\sigma_j^6))^{1/6}$, and 
+$\epsilon_{ij} = (2 \sqrt{\epsilon_i \epsilon_j} \sigma^3_i \sigma^3_j) / (\sigma^6_i+\sigma_j^6)$.
 
 Let us read the data file containing the unreacted nylon molecules, and
 replicate it in all directions of the space. Add the folloxing lines
@@ -4046,7 +4049,7 @@ reset_timestep 0
 \end{verbatim}
 }
 Then, let us output images of the system using \textit{dump image},
-and perform an equilibration of system using \textit{fix npt}
+and perform an equilibration of system using \textit{fix npt}:
 {\normalsize
 \begin{verbatim}
 dump mydmp all image 1000 dump.mixing.*.ppm type &
@@ -4084,6 +4087,12 @@ To speed up the equilibration of the system, the run is first performed
 with an imposed pressure of 1000\,atm, and then with an imposed
 pressure of 1\,atm.
 
+\subsubsection{Atom maps and molecule templates}
+
+The REACTER protocol requires an \textit{atom map} to be provided by the user.
+This map contains information about the reaction mechanism, the atoms that are
+the initiators to the reaction, as well as distance cutoffs. Pre-reaction and
+post-reaction molecule templates must also be provided.
 
 \section*{Author Contributions}
 % S.G. to update
