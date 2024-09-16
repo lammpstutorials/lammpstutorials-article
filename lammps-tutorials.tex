@@ -3977,16 +3977,19 @@ and $x_0 = 5~\mathrm{\AA{}}$.}
 \label{bond-react-label}
 
 The goal of this tutorial is to create a system made of 
-carbon nanotubes embedded in a polymer melt made in nylon-6,6. The
+carbon nanotubes (CNTs) embedded in a polymer melt made in nylon-6,6. The
 REACTER protocol is used to simulate the polymerization of nylon, and the formation
 of water molecules is followed in time \cite{gissinger2020reacter, gissinger2024molecular}.
+In contrast with Airebo (\hyperref[carbon-nanotube-label]{Tutorial 2})
+and ReaxFF (\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}), the REACTER
+protocol relies on the use of a \textit{classical} force field.
 
 \subsubsection{Creating the system}
 
 The first step of the tutorial is to mix small carbon nanotubes
-with the initial, unreacted, molecules: hexamethylenediamine and adipic
-acid. Create a new input file, call it \textit{mixing.lmp},
-and copy the following lines into it:
+with the initial, unreacted, molecules. The molecules are hexamethylenediamine
+(C$_6$H$_{16}$N$_2$) and adipic acid (C$_6$H$_{10}$O$_4$). Create a new input
+file, call it \textit{mixing.lmp}, and copy the following lines into it:
 {\normalsize
 \begin{verbatim}
 units real
@@ -4004,17 +4007,16 @@ special_bonds lj/coul 0 0 1
 \end{verbatim}
 }
 The \textit{class2} styles compute a 6/9 Lennard-Jones \cite{sun1998compass}.
-In contrast with reaxff and airebo, a \textit{classical} force field is used here.
 The \textit{class2} bonds, angles, dihedrals, and impropers are used as
 well, see the documention for a description of their respective potentials.
-The \textit{mix sixthpower} imposes a different mixing rule for the calculation
-of the cross coefficients as compared to the previous tutorials:
-$\sigma_{ij} = ( 0.5 (\sigma^6_i+\sigma_j^6))^{1/6}$, and 
-$\epsilon_{ij} = (2 \sqrt{\epsilon_i \epsilon_j} \sigma^3_i \sigma^3_j) / (\sigma^6_i+\sigma_j^6)$.
+The \textit{mix sixthpower} imposes the following mixing rule for the calculation
+of the cross coefficients: $\sigma_{ij} = ( 0.5 (\sigma^6_i+\sigma_j^6))^{1/6}$,
+and $\epsilon_{ij} = (2 \sqrt{\epsilon_i \epsilon_j} \sigma^3_i \sigma^3_j)
+/ (\sigma^6_i+\sigma_j^6)$.
 
-Let us read the data file containing the unreacted nylon molecules, and
-replicate it in all directions of the space. Add the folloxing lines
-to \textit{mixing.lmp}:
+Let us read a data file named \href{\filepath tutorial8/nylon.data}{\textit{nylon.data}}
+containing the unreacted molecule template, and let us replicate it. Add the
+folloxing lines to \textit{mixing.lmp}:
 {\normalsize
 \begin{verbatim}
 read_data nylon.data &
@@ -4028,8 +4030,7 @@ replicate 3 4 4
 }
 The resulting box is $(7.2\,\text{nm})^3$ in size, and its density is low
 enough that inserting CNTs will be easy.
-
-% S.G.: @jrgissing, here we should describe the content of nylon.data.
+% S.G.: @jrgissing, here we could describe the content of nylon.data.
 % How was it created, what is the specifity of the molecules involved, etc...
 
 To add 5 CNTs to the simulation box, add the following commands
@@ -4048,25 +4049,32 @@ minimize 1.0e-4 1.0e-6 100 1000
 reset_timestep 0
 \end{verbatim}
 }
-Then, let us output images of the system using \textit{dump image},
-and perform an equilibration of system using \textit{fix npt}:
+Then, let us use \textit{dump image} to output images every 1000 steps:
 {\normalsize
 \begin{verbatim}
-dump mydmp all image 1000 dump.mixing.*.ppm type &
-    type shiny 0.1 box no 0.01 &
-    view 0 0 zoom 1.8 fsaa yes bond atom 0.5
+dump mydmp all image 1000 dump.mixing.*.ppm &
+  type type shiny 0.1 box no 0.01 &
+  view 0 0 zoom 1.8 fsaa yes bond atom 0.5
 dump_modify mydmp backcolor white &
-    acolor c2 gray acolor c_1 lightslategray &
-    acolor o dimgray acolor o_1 dimgray &
-    acolor hc lightslategray acolor ho lightslategray &
-    acolor hn lightslategray acolor hw white &
-    acolor o* red acolor n darkslategray &
-    acolor na darkslategray acolor cp lightpink &
-    adiam c2 0.3 adiam c_1 0.3 adiam cp 0.3 &
-    adiam o 0.28 adiam o_1 0.28 adiam o* 2.8 &
-    adiam hc 0.15 adiam ho 0.15 adiam hn 0.15 &
-    adiam hw 1.5 adiam n 0.3 adiam na 0.3 
-
+  acolor c2 gray acolor c_1 lightslategray &
+  acolor o dimgray acolor o_1 dimgray &
+  acolor hc lightslategray &
+  acolor ho lightslategray &
+  acolor hn lightslategray acolor hw white &
+  acolor o* red acolor n darkslategray &
+  acolor na darkslategray &
+  acolor cp lightpink &
+  adiam c2 0.3 adiam c_1 0.3 &
+  adiam cp 0.3 adiam o 0.28 &
+  adiam o_1 0.28 adiam o* 2.8 &
+  adiam hc 0.15 adiam ho 0.15 &
+  adiam hn 0.15 adiam hw 1.5 &
+  adiam n 0.3 adiam na 0.3 
+\end{verbatim}
+}
+Then, let us perform a short equilibration of system using \textit{fix npt}:
+{\normalsize
+\begin{verbatim}
 velocity all create 300 1829 dist gaussian &
     mom yes rot yes
 fix mynpt all npt temp 300 300 100 iso 1000 1000 1000
@@ -4083,9 +4091,9 @@ run 20000
 write_data cnt-nylon-mix.data
 \end{verbatim}
 }
-To speed up the equilibration of the system, the run is first performed
-with an imposed pressure of 1000\,atm, and then with an imposed
-pressure of 1\,atm.
+To speed up the equilibration of the system, a relatively large pressure of
+1000\,atm is imposed for the first 10\,ps. Then for the following 20\,ps, the
+desired pressure of 1\,atm is imposed.
 
 \subsubsection{Atom maps and molecule templates}
 
