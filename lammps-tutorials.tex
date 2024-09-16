@@ -4083,7 +4083,8 @@ fix mynpt all npt temp 300 300 100 &
   iso 1000 1000 1000
 
 thermo 1000
-thermo_style custom step temp pe etotal press density vol
+thermo_style custom step temp pe etotal press &
+  density vol
 
 run 10000
 \end{verbatim}

@@ -23,34 +23,40 @@ read_data nylon.data &
 replicate 3 4 4
 
 molecule CNT cnt.molecule
-create_atoms 0 random 5 8305 NULL overlap 3 maxtry 500 mol CNT 7687
+create_atoms 0 random 5 8305 NULL overlap 3 &
+  maxtry 500 mol CNT 7687
+
 minimize 1.0e-4 1.0e-6 100 1000
 reset_timestep 0
 
-dump mydmp all image 1000 dump.mixing.*.ppm type &
-     type shiny 0.1 box no 0.01 &
-     view 0 0 zoom 1.8 fsaa yes bond atom 0.5
+dump mydmp all image 1000 dump.mixing.*.ppm &
+  type type shiny 0.1 box no 0.01 &
+  view 0 0 zoom 1.8 fsaa yes bond atom 0.5
 dump_modify mydmp backcolor white &
-     acolor c2 gray acolor c_1 lightslategray &
-     acolor o dimgray acolor o_1 dimgray &
-     acolor hc lightslategray acolor ho lightslategray &
-     acolor hn lightslategray acolor hw white &
-     acolor o* red acolor n darkslategray &
-     acolor na darkslategray acolor cp lightpink &
-     adiam c2 0.3 adiam c_1 0.3 adiam cp 0.3 &
-     adiam o 0.28 adiam o_1 0.28 adiam o* 2.8 &
-     adiam hc 0.15 adiam ho 0.15 adiam hn 0.15 &
-     adiam hw 1.5 adiam n 0.3 adiam na 0.3 
+  acolor c2 gray acolor c_1 lightslategray &
+  acolor o dimgray acolor o_1 dimgray &
+  acolor hc lightslategray &
+  acolor ho lightslategray &
+  acolor hn lightslategray acolor hw white &
+  acolor o* red acolor n darkslategray &
+  acolor na darkslategray &
+  acolor cp lightpink &
+  adiam c2 0.3 adiam c_1 0.3 &
+  adiam cp 0.3 adiam o 0.28 &
+  adiam o_1 0.28 adiam o* 2.8 &
+  adiam hc 0.15 adiam ho 0.15 &
+  adiam hn 0.15 adiam hw 1.5 &
+  adiam n 0.3 adiam na 0.3
 
-fix mynpt all npt temp 300 300 100 iso 1000 1000 1000
-
+velocity all create 300 1829 dist gaussian &
+  mom yes rot yes
+fix mynpt all npt temp 300 300 100 &
+  iso 1000 1000 1000
 thermo 1000
-thermo_style custom step temp pe etotal press density vol
-
+thermo_style custom step temp pe etotal &
+  press density
 run 10000
-unfix mynpt
 
-velocity all create 300 1829 dist gaussian mom yes rot yes
 fix mynpt all npt temp 300 300 100 iso 1 1 1000
 
 run 20000
