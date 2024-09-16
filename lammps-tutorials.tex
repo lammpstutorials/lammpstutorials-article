@@ -4039,7 +4039,7 @@ to \textit{mixing.lmp}:
 \begin{verbatim}
 molecule CNT cnt.molecule
 create_atoms 0 random 5 8305 NULL overlap 3 &
-    maxtry 500 mol CNT 7687
+  maxtry 500 mol CNT 7687
 \end{verbatim}
 }
 Let us use the \textit{minimize} command to reduce the energy of the system:
@@ -4072,35 +4072,41 @@ dump_modify mydmp backcolor white &
   adiam n 0.3 adiam na 0.3 
 \end{verbatim}
 }
-Then, let us perform a short equilibration of system using \textit{fix npt}:
+Then, let us perform a short equilibration of system using \textit{fix npt}
+with a isotropic couplage. To speed up the equilibration of the system, let us 
+impose a relatively large pressure of 1000\,atm for the first 10\,ps:
 {\normalsize
 \begin{verbatim}
 velocity all create 300 1829 dist gaussian &
-    mom yes rot yes
-fix mynpt all npt temp 300 300 100 iso 1000 1000 1000
+  mom yes rot yes
+fix mynpt all npt temp 300 300 100 &
+  iso 1000 1000 1000
 
 thermo 1000
 thermo_style custom step temp pe etotal press density vol
 
 run 10000
-unfix mynpt
-
+\end{verbatim}
+}
+Then, for the following 20\,ps, let us continue the equilibration
+with an imposed pressure of 1\,atm, and write the final state of the
+system in a file named \textit{cnt-nylon-mix.data}:
+{\normalsize
+\begin{verbatim}
 fix mynpt all npt temp 300 300 100 iso 1 1 1000
 
 run 20000
 write_data cnt-nylon-mix.data
 \end{verbatim}
 }
-To speed up the equilibration of the system, a relatively large pressure of
-1000\,atm is imposed for the first 10\,ps. Then for the following 20\,ps, the
-desired pressure of 1\,atm is imposed.
 
 \subsubsection{Atom maps and molecule templates}
 
-The REACTER protocol requires an \textit{atom map} to be provided by the user.
-This map contains information about the reaction mechanism, the atoms that are
-the initiators to the reaction, as well as distance cutoffs. Pre-reaction and
-post-reaction molecule templates must also be provided.
+The REACTER protocol relies on classical force fields. For the reaction to
+occur, an \textit{atom map} containing information about the reaction mechanism
+must be provided by the user. The atom map specifies which atoms are
+the initiators to the reaction and what are the distance cutoffs. In addition,
+pre-reaction and post-reaction molecule templates must be provided.
 
 \section*{Author Contributions}
 % S.G. to update
