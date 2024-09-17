@@ -55,4 +55,3 @@ thermo 1000
 thermo_style custom step temp pe etotal press f_myrxns[1] f_myrxns[2]
 
 run 50000
-write_data reacted.data
