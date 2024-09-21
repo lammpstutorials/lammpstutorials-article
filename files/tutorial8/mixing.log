@@ -149,8 +149,7 @@ Setting up Verlet run ...
   Current step  : 0
   Time step     : 1
 Per MPI rank memory allocation (min/avg/max) = 53 | 53 | 53 Mbytes
-   Step          Temp          PotE      1000   289.56875      51879.291      54780.337     -184.87885      0.17640177   
-ng         TotEng         Press         Density    
+   Step          Temp          PotEng         TotEng         Press         Density    
          0   300            49825.43       52830.981      492.00401      0.12282015   
       2000   301.09845      51720.389      54736.945      180.68344      0.23065719   
       3000   301.51859      51395.529      54416.294      61.066418      0.28926638   
