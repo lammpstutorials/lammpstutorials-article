@@ -4107,7 +4107,8 @@ converges toward an equilibrium value $\rho \approx 1.3$\,g/cm$^3$
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{REACT-mixing}
-\caption{Evolution of the system density $\rho$ during equilibration.}
+\caption{Evolution of the system density, $\rho$, as a function of the
+time, $t$, during equilibration.}
 \label{fig:evolution-density}
 \end{figure}
 
@@ -4232,6 +4233,16 @@ run 50000
 }
 Here, in addition, the \textit{thermo custom} command was called and was
 asked to print the cumulative reaction counts from \textit{fix myrxns}.
+The number of reaction, $N_r$, can be seen to increase with time
+(Fig.\,\ref{fig:evolution-reacting})
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{REACT-reacting}
+\caption{Evolution of the reaction counts, $\text{N}_r$,
+as a function of the time, $t$, during the reaction.}
+\label{fig:evolution-reacting}
+\end{figure}
 
 \section*{Author Contributions}
 % S.G. to update
