@@ -53,12 +53,6 @@
 \usepackage[italic]{mathastext}
 \graphicspath{{figures/}}
 
-\newtcolorbox{note}{
-    boxrule = 1.5pt,
-    rounded corners,
-    arc = 5pt   % corners roundness
-}
-
 % avoid single line at top or bottom of column
 \clubpenalty1000
 \widowpenalty1000
@@ -66,23 +60,34 @@
 
 \definecolor{listing}{rgb}{0.95,0.95,0.95}
 \definecolor{command}{rgb}{0.15,0.15,0.15}
+
 \lstset{
-  basicstyle=\small\color{command},  % Default font, small size, and custom color
+  basicstyle=\small\color{command}, % Use default font + small size and command color
   numbers=none, % No number on the side
   frame=single, % Enable a frame
-  framerule=0.0pt, % Invisible frame frame
+  framerule=0pt, % Invisible frame frame
   framesep=5pt, % Space between text and frame
-  backgroundcolor=\color{listing}, % Set background color
+  backgroundcolor=\color{listing}, % Set background color to listing
   xleftmargin=5pt, % Extra left margin for spacing
   xrightmargin=5pt, % Extra right margin for spacing
+}
+
+\newtcolorbox{note}{
+  colback=listing, % Background color (matches listings)
+  colframe=listing, % Set frame color to match the background
+  boxrule=0pt, % Frame thickness
+  sharp corners, % Square corners
+  left=5pt, % Extra left padding
+  right=5pt, % Extra right padding
+  top=5pt, % Extra top padding
+  bottom=5pt, % Extra bottom padding
 }
 
 % make \emph{} use underline instead of italic
 \renewcommand{\emph}[1]{\underline{#1}}
 % for LAMMPS commands
-\newcommand{\lmpcmd}[1]{%
-  \hspace{0pt}\colorbox{listing}{\textcolor{command}{\texttt{#1}}}\hspace{0pt}%
-}
+\newcommand{\lmpcmd}[1]{\hspace{0pt}\colorbox{listing}{\textcolor{command}{\texttt{#1}}}\hspace{0pt}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% IMPORTANT USER CONFIGURATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
