@@ -36,7 +36,6 @@
 \usepackage{microtype}
 \usepackage{tcolorbox}
 \usepackage{newverbs}
-\usepackage{listings}
 \usepackage[title]{appendix}
 
 \usepackage[
@@ -54,12 +53,6 @@
 \usepackage[italic]{mathastext}
 \graphicspath{{figures/}}
 
-\definecolor{mylightblue}{RGB}{68.085,183.09,194.055}
-\definecolor{mystrongblue}{RGB}{2.04,74.97,121.89}
-\definecolor{myorange}{RGB}{255.0,173.91,72.93}
-\definecolor{graytitle}{gray}{0.5}
-\definecolor{cverbbg}{gray}{0.93}
-
 \newtcolorbox{note}{
     boxrule = 1.5pt,
     rounded corners,
@@ -74,20 +67,22 @@
 \definecolor{listing}{rgb}{0.95,0.95,0.95}
 \definecolor{command}{rgb}{0.15,0.15,0.15}
 \lstset{
-  basicstyle=\ttfamily\small\bfseries,
-  numbers=none,
-  frame=none,
-%  frame=single,
-%  framerule=0.01pt,
-%  frameround=tttt,
-  backgroundcolor=\color{listing}
+  basicstyle=\small\color{command},  % Default font, small size, and custom color
+  numbers=none, % No number on the side
+  frame=single, % Enable a frame
+  framerule=0.0pt, % Invisible frame frame
+  framesep=5pt, % Space between text and frame
+  backgroundcolor=\color{listing}, % Set background color
+  xleftmargin=5pt, % Extra left margin for spacing
+  xrightmargin=5pt, % Extra right margin for spacing
 }
 
 % make \emph{} use underline instead of italic
 \renewcommand{\emph}[1]{\underline{#1}}
 % for LAMMPS commands
-\newcommand{\lmpcmd}[1]{\texttt{\normalsize\bfseries\textcolor{command}{#1}}}
-
+\newcommand{\lmpcmd}[1]{%
+  \hspace{0pt}\colorbox{listing}{\textcolor{command}{\texttt{#1}}}\hspace{0pt}%
+}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% IMPORTANT USER CONFIGURATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -142,7 +137,6 @@
 
 \begin{frontmatter}
 \maketitle
-
 
 \begin{abstract}
   The availability of open-source molecular simulation software packages
@@ -521,7 +515,7 @@ there is no confusion when sharing inputs with other LAMMPS users.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.65\linewidth]{GUI-1.png}
+\includegraphics[width=\linewidth]{GUI-1.png}
 \caption{A screenshot of the LAMMPS-GUI \textit{Editor} window during
   \hyperref[lennard-jones-label]{Tutorial 1}. The coloring of the text
   is based on the syntax for LAMMPS input files.  The pop-up menu is the
@@ -699,8 +693,8 @@ fresh, forgetting the current system and starting over from the top.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.45\linewidth]{chart-1}
-\includegraphics[width=0.45\linewidth]{output-1}
+\includegraphics[width=0.49\linewidth]{chart-1}
+\includegraphics[width=0.497\linewidth]{output-1}
 \caption{\textit{Chart} (left) and \textit{Output} (right) window of LAMMPS-GUI after performing
   the minimization simulation of \hyperref[lennard-jones-label]{Tutorial 1}.}
 \label{fig:chart-log}
