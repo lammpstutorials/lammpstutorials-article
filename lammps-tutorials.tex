@@ -36,7 +36,6 @@
 \usepackage{microtype}
 \usepackage{tcolorbox}
 \usepackage{newverbs}
-\usepackage{listings}
 \usepackage[title]{appendix}
 
 \usepackage[
@@ -54,18 +53,6 @@
 \usepackage[italic]{mathastext}
 \graphicspath{{figures/}}
 
-\definecolor{mylightblue}{RGB}{68.085,183.09,194.055}
-\definecolor{mystrongblue}{RGB}{2.04,74.97,121.89}
-\definecolor{myorange}{RGB}{255.0,173.91,72.93}
-\definecolor{graytitle}{gray}{0.5}
-\definecolor{cverbbg}{gray}{0.93}
-
-\newtcolorbox{note}{
-    boxrule = 1.5pt,
-    rounded corners,
-    arc = 5pt   % corners roundness
-}
-
 % avoid single line at top or bottom of column
 \clubpenalty1000
 \widowpenalty1000
@@ -73,20 +60,35 @@
 
 \definecolor{listing}{rgb}{0.95,0.95,0.95}
 \definecolor{command}{rgb}{0.15,0.15,0.15}
+\definecolor{download}{rgb}{0.039,0.616,0.851}
+
 \lstset{
-  basicstyle=\ttfamily\small\bfseries,
-  numbers=none,
-  frame=none,
-%  frame=single,
-%  framerule=0.01pt,
-%  frameround=tttt,
-  backgroundcolor=\color{listing}
+  basicstyle=\small\color{command}, % Use default font + small size and command color
+  numbers=none, % No number on the side
+  frame=single, % Enable a frame
+  framerule=0pt, % Invisible frame frame
+  framesep=5pt, % Space between text and frame
+  backgroundcolor=\color{listing}, % Set background color to listing
+  xleftmargin=5pt, % Extra left margin for spacing
+  xrightmargin=5pt, % Extra right margin for spacing
 }
 
-% make \emph{} use underline instead of italic
-\renewcommand{\emph}[1]{\underline{#1}}
-% for LAMMPS commands
-\newcommand{\lmpcmd}[1]{\texttt{\normalsize\bfseries\textcolor{command}{#1}}}
+\newtcolorbox{note}{
+  colback=listing, % Background color (matches listings)
+  colframe=listing, % Set frame color to match the background
+  boxrule=0pt, % Frame thickness
+  sharp corners, % Square corners
+  left=5pt, % Extra left padding
+  right=5pt, % Extra right padding
+  top=5pt, % Extra top padding
+  bottom=5pt, % Extra bottom padding
+}
+
+\renewcommand{\emph}[1]{\underline{#1}} % make \emph{} use underline instead of italic
+\newcommand{\lmpcmd}[1]{\hspace{0pt}\colorbox{listing}{\textcolor{command}{\texttt{#1}}}\hspace{0pt}} % lammps command
+\newcommand{\flrcmd}[1]{\textcolor{command}{\texttt{#1}}} % folder
+\newcommand{\flecmd}[1]{\textcolor{command}{\texttt{#1}}} % files name 
+\newcommand{\dwlcmd}[1]{\textcolor{download}{\texttt{#1}}} % downloadable files
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% IMPORTANT USER CONFIGURATION
@@ -142,7 +144,6 @@
 
 \begin{frontmatter}
 \maketitle
-
 
 \begin{abstract}
   The availability of open-source molecular simulation software packages
@@ -421,9 +422,11 @@ and inputs required to follow the tutorials are available from a
 dedicated GitHub account,
 \href{https://github.com/lammpstutorials}{github.com/lammpstutorials}.
 
-In the following, all LAMMPS input or console commands are typeset in
-\lmpcmd{bold monospace}, section, file and folder names are typeset in
-\textit{italic}, and keyboard shortcuts in \texttt{monospace}.
+In the following, all LAMMPS input or console commands are typeset
+in \lmpcmd{colored monospace}.  Section titles, keyboard shortcuts,
+file names, and folder names are typeset in \flecmd{monospace}.
+% S.G.: remove "folder names" if all folders are removed
+% S.G.: remove "Section titles" as well?
 
 \subsection{Tutorial 1: Lennard-Jones fluid}
 \label{lennard-jones-label}
@@ -445,7 +448,7 @@ input scripts for this tutorial will be divided into five categories,
 which we will fill out step by step.  To set up this tutorial, select
 ``Start Tutorial 1'' from the ``Tutorials'' menu of LAMMPS--GUI and
 follow the instructions.  This will select, and -- if needed -- create,
-a folder, place the initial input file \textit{initial.lmp} into it, and
+a folder, place the initial input file \flecmd{initial.lmp} into it, and
 open that file in the LAMMPS--GUI editor.  The editor should have the
 following content:
 \begin{lstlisting}
@@ -479,7 +482,7 @@ spheres with a radius and angular velocities).  These commands must be
 executed \emph{before} the simulation box is created; they will cause an
 error if entered later.  Similarly, many LAMMPS commands may only be
 entered \emph{after} the simulation box is defined.  Only a very small
-number of commands may be used in both cases.  Edit \textit{initial.lmp}
+number of commands may be used in both cases.  Edit \flecmd{initial.lmp}
 so that the \textit{Initialization} section looks like this:
 
 \begin{lstlisting}
@@ -521,7 +524,7 @@ there is no confusion when sharing inputs with other LAMMPS users.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.65\linewidth]{GUI-1.png}
+\includegraphics[width=\linewidth]{GUI-1.png}
 \caption{A screenshot of the LAMMPS-GUI \textit{Editor} window during
   \hyperref[lennard-jones-label]{Tutorial 1}. The coloring of the text
   is based on the syntax for LAMMPS input files.  The pop-up menu is the
@@ -540,7 +543,7 @@ See figure \ref{fig:GUI-1} for a screenshot with such a context menu.
 \paragraph{System definition}
 
 The next step is to create the simulation box and put some atoms into it.
-Modify the \textit{System definition} category of \textit{initial.lmp} as follows:
+Modify the \textit{System definition} category of \flecmd{initial.lmp} as follows:
 \begin{lstlisting}
 # 2) System definition
 region simbox block -20 20 -20 20 -20 20 units box
@@ -581,7 +584,7 @@ problems due to causing large forces.
 
 \paragraph{Settings}
 Now we provide the settings for the two types of atoms.  Modify the
-\textit{Settings} category of \textit{initial.lmp} as follows:
+\textit{Settings} category of \flecmd{initial.lmp} as follows:
 \begin{lstlisting}
 # 3) Settings
 mass 1 1.0
@@ -632,7 +635,7 @@ $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
 The system is now fully parameterized and the input ready to compute
 forces.  Let us fill in the two last remaining categories,
 \textit{Visualization}, and \textit{Run}, by adding the following lines
-into \textit{initial.lmp}:
+into \flecmd{initial.lmp}:
 \begin{lstlisting}
 # 4) Visualization
 thermo 10
@@ -699,8 +702,8 @@ fresh, forgetting the current system and starting over from the top.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.45\linewidth]{chart-1}
-\includegraphics[width=0.45\linewidth]{output-1}
+\includegraphics[width=0.49\linewidth]{chart-1}
+\includegraphics[width=0.497\linewidth]{output-1}
 \caption{\textit{Chart} (left) and \textit{Output} (right) window of LAMMPS-GUI after performing
   the minimization simulation of \hyperref[lennard-jones-label]{Tutorial 1}.}
 \label{fig:chart-log}
@@ -731,7 +734,7 @@ After the energy minimization, any overlapping atoms have been
 displaced, and the system is now ready to perform a molecular dynamics
 simulation using the minimized geometry.  Since we want to start from
 the result of the energy minimization step, we can append commands for
-the MD simulation to the same input script, \textit{initial.lmp}. After
+the MD simulation to the same input script, \flecmd{initial.lmp}. After
 the \textit{minimize} command, add the following lines:
 \begin{lstlisting}
 # PART B - MOLECULAR DYNAMICS
@@ -754,7 +757,7 @@ Here, \textit{pe} is the potential energy of the system, such that
 \textit{pe + ke = etotal}.
 
 Then, let us add a second \textit{Run} category by adding the following
-lines to \textit{PART B} of \textit{initial.lmp}:
+lines to \textit{PART B} of \flecmd{initial.lmp}:
 \begin{lstlisting}
 # 5) Run
 fix mynve all nve
@@ -837,7 +840,7 @@ copy the command line used to create this visualization to the clipboard
 by either using the \texttt{Ctrl-D} keyboard shortcut or select
 \textit{Copy dump image command} from the \textit{File} menu.  This text
 can be pasted into the into the \textit{Visualization} section of
-\textit{PART B:} of the \textit{initial.lmp} file.
+\textit{PART B:} of the \flecmd{initial.lmp} file.
 
 This may look like the following:
 \begin{lstlisting}
@@ -850,7 +853,7 @@ dump_modify viz pad 9 boxcolor darkblue &
 \end{lstlisting}
 This command tells LAMMPS to generate NetPBM format images every 100
 steps. The two \textit{type} keywords are for \textit{color} and
-\textit{diameter}, respectively.  Run the \textit{initial.lmp} using
+\textit{diameter}, respectively.  Run the \flecmd{initial.lmp} using
 LAMMPS again, and a new window named \textit{Slide Show} will pop up.
 It will show each image created by the \textit {dump image} as it is
 created and after the simulation is finished (or stopped), the slide
@@ -873,9 +876,9 @@ such as imposing specific initial positions on the atoms and restarting the
 simulation from a previously saved configuration.
 
 \paragraph{Control the initial atom positions}
-Open the \textit{improved.min.lmp} which was downloaded during the
+Open the \flecmd{improved.min.lmp} which was downloaded during the
 tutorial setup.  This contains the \textit{Part A} of the
-\textit{initial.lmp} file \emph{without} the \textit{create\_atoms}
+\flecmd{initial.lmp} file \emph{without} the \textit{create\_atoms}
 commands in the \textit{System definition} part.
 
 We want to create the atoms of types 1 and 2 in two separate
@@ -903,15 +906,15 @@ write_data minimized_coordinates.data
 
 A significant improvement to the input is the addition of the
 \textit{write\_data} command.  This command is used to write the state
-of the system to a text format file called \textit{improved.min.data}.
+of the system to a text format file called \flecmd{improved.min.data}.
 Make sure the \textit{write\_data} command is placed \emph{after} the
-\textit{minimize} command.  This \textit{.data} file will be used later
+\textit{minimize} command.  This \flecmd{.data} file will be used later
 to restart the simulation from the final state of the energy
 minimization step without having to repeat the system creation and
 minimization.
 
 Run LAMMPS on the improved input.  At the end of the simulation, a file
-called \textit{improved.min.data} is created.  You can view the contents
+called \flecmd{improved.min.data} is created.  You can view the contents
 of the file with the file view feature of LAMMPS--GUI, e.g.~from the
 \textit{File} menu or by right-clicking on the file name in the editor
 and selecting the entry ``View file 'improved.min.data' ''.
@@ -919,7 +922,7 @@ and selecting the entry ``View file 'improved.min.data' ''.
 You can see that the data file contains all the information necessary to
 restart the simulation, such as the number of atoms, the box size, the
 \textit{masses}, and the \textit{pair\_coeffs}.  The
-\textit{improved.min.data} file also contains the final
+\flecmd{improved.min.data} file also contains the final
 positions of the atoms within the \textit{Atoms} section. The first five
 columns of the \textit{Atoms} section correspond (from left to right) to
 the atom indexes (from 1 to the total number of atoms, 1150), the atom
@@ -953,9 +956,9 @@ thus which per-atom data is set and stored internally in LAMMPS.
 \end{figure}
 
 To continue a simulation from the saved configuration, open the
-\textit{improved.md.lmp} which was downloaded during the tutorial setup.
-This contains the \textit{Initialization} part from \textit{initial.lmp}
-and \textit{improved.min.lmp}.
+\flecmd{improved.md.lmp} which was downloaded during the tutorial setup.
+This contains the \textit{Initialization} part from \flecmd{initial.lmp}
+and \flecmd{improved.min.lmp}.
 
 Since we want to read the system from the data file, we do not need
 to repeat most of the \textit{System definition} and \textit{Settings}
@@ -973,7 +976,7 @@ have noticed that some atoms have left their original region during
 minimization.  To start the simulation from a clean slate, with only
 atoms of type 2 within the cylinder and atoms of type 1 outside the
 cylinder, let us delete the misplaced atoms by adding the following
-commands to \textit{improved.md.lmp}:
+commands to \flecmd{improved.md.lmp}:
 
 \begin{lstlisting}
 region cyl_in cylinder z 0 0 10 INF INF &
@@ -1029,7 +1032,7 @@ of type 1 atoms defined by a cutoff distance.  Taking the average serves
 as a good indicator of the degree of mixing in a binary mixture.  This
 is done with two \textit{compute} commands.  The first counts the
 coordinated atoms, the second takes the average over all type 1
-atoms. Add the following lines into \textit{improved.md.lmp}:
+atoms. Add the following lines into \flecmd{improved.md.lmp}:
 \begin{lstlisting}
 compute coor12 group_type_1 coord/atom cutoff 2.0 &
     group group_type_2
@@ -1052,9 +1055,9 @@ respectively the system at $t=0$ (left panel), $t=75$ (middle panel), and $t=150
 \end{figure}
 
 Finally, let us complete the script by adding the following lines into
-Add the following lines into \textit{improved.md.lmp}.  Note there is no
+\flecmd{improved.md.lmp}.  Note there is no
 need for a \textit{Settings} section, because the settings are taken
-from the \textit{.data} file.
+from the \flecmd{.data} file.
 \begin{lstlisting}
 # 4) Visualization
 thermo 1000
@@ -1070,7 +1073,7 @@ The two variables, \textit{n1\_in}, \textit{n2\_in}, and the compute
 \textit{sumcoor12}, were added to the list of information printed during
 the simulation.
 
-\textit{improved.md.lmp}:
+Add the following lines into \flecmd{improved.md.lmp}:
 \begin{lstlisting}
 # 5) Run
 velocity all create 1.0 49284 mom yes dist gaussian
@@ -1110,7 +1113,7 @@ extreme case it can freeze and drift very fast. This phenomenon is
 sometimes referred to as the ``flying ice cube syndrome''
 \cite{wong2016good}.
 
-Run \textit{improved.md.lmp} and observe the mixing of the two populations
+Run \flecmd{improved.md.lmp} and observe the mixing of the two populations
 over time (see also Fig.\,\ref{fig:evolution-population}).  From the
 variables \textit{n1\_in} and \textit{n2\_in}, one can follow the number
 of atoms in each region as a function of time
@@ -1186,8 +1189,8 @@ To set up this tutorial, select ``Start Tutorial 2'' from the
 will select, and -- if needed -- create, a folder, and place several
 files into it.  The initial input file, set up for a single point energy
 calculation, will also be loaded into the editor under the name
-\textit{unbreakable.lmp}.  Additional files are a data file with a CNT
-\textit{unbreakable.data} topology and geometry and scripts and files
+\flecmd{unbreakable.lmp}.  Additional files are a data file with a CNT
+\flecmd{unbreakable.data} topology and geometry and scripts and files
 for the second part of the tutorial.
 
 \begin{figure}
@@ -1257,7 +1260,7 @@ these pairs, they do not need to be taken into account when determining
 the force constants.
 
 The last command, \textit{read\_data}, imports the
-\textit{unbreakable.data} file which contains information about the box
+\flecmd{unbreakable.data} file which contains information about the box
 size, atom positions, as well as the identity of the atoms that are
 linked by \textit{bonds}, \textit{angles}, \textit{dihedrals}, and
 \textit{impropers} interactions.  It was created using VMD and TopoTools
@@ -1315,7 +1318,7 @@ tutorial.
 In this tutorial, a deformation will be applied to the CNT by displacing
 the atoms located at its edges. To achieve this, we will first isolate the
 atoms at the two edges and place them into groups named \textit{rtop} and
-\textit{rbot}, respectively. Add the following lines to \textit{input.lmp}:
+\textit{rbot}, respectively. Add the following lines to \flecmd{input.lmp}:
 \begin{lstlisting}
 group carbon_atoms type 1
 variable xmax equal bound(carbon_atoms,xmax)-0.5
@@ -1334,7 +1337,7 @@ bottom), $x_\text{min} > x > x_\text{max}$ (\textit{rmid}, for region middle),
 and $x > x_\text{max}$ (\textit{rtop}, for region top).
 
 Finally, let us define 3 groups of atoms corresponding to the atoms located
-in each of the 3 regions, respectively, by adding to \textit{input.lmp}:
+in each of the 3 regions, respectively, by adding to \flecmd{input.lmp}:
 \begin{lstlisting}
 group cnt_top region rtop
 group cnt_bot region rbot
@@ -1407,7 +1410,7 @@ group \textit{cnt\_mid}, ensuring an initial temperature of $300\,\text{K}$
 for these atoms.
 
 Let us specify the thermalization and the dynamics of the system. Add the following
-lines into \textit{input.lmp}:
+lines into \flecmd{input.lmp}:
 \begin{lstlisting}
 fix mynve all nve
 compute Tmid cnt_mid temp
@@ -1432,7 +1435,7 @@ and a \textit{Berendsen} thermostat is applied to the atoms of the group
 %a thermostat because their motion will be restrained, see below.
 
 To restrain the motion of the atoms at the edges, let us add the following
-commands to \textit{input.lmp}:
+commands to \flecmd{input.lmp}:
 \begin{lstlisting}
 fix mysf1 cnt_top setforce 0 0 0
 fix mysf2 cnt_bot setforce 0 0 0
@@ -1497,7 +1500,7 @@ Python (see below).
 
 Let us impose a constant velocity deformation on the CNT
 by combining the \textit{velocity set} command with previously defined
-\textit{fix setforce}. Add the following lines in the \textit{input.lmp} file,
+\textit{fix setforce}. Add the following lines in the \flecmd{input.lmp} file,
 right after the last \textit{run 5000} command:
 \begin{lstlisting}
 velocity cnt_top set 0.0005 0 0
@@ -1548,8 +1551,8 @@ where $L_0$ is the initial CNT length.
 Right-click inside the \textit{Output} window, and select
 \textit{Export YAML data to file}. Call the output \textit{log.yaml}, and save
 it within \textit{unbreakable-bonds}. Download this script
-\href{\filepath tutorial2/unbreakable-bonds/yaml-reader.py}{\textit{yaml-reader.py}} as well, and save it
-within \textit{unbreakable-bonds/}. The \textit{yaml-reader.py} first imports
+\href{\filepath tutorial2/unbreakable-bonds/yaml-reader.py}{\dwlcmd{yaml-reader.py}} as well, and save it
+within \flrcmd{unbreakable-bonds/}. The \flecmd{yaml-reader.py} first imports
 the \textit{log.yaml} file. Then, a certain pattern is
 identified and stored as a string character named \textit{docs}. The string is
 then converted into a list, and $F$ and $L$ are extracted. The stress and strain
@@ -1577,9 +1580,9 @@ CNT again, but this time using a reactive force field that allows for the bonds
 to break if the applied deformation is large enough.
 
 \paragraph{Input file initialization}
-Create a second folder called \textit{breakable-bonds/} next to
-\textit{unbreakable-bonds/}, and create a new input file in it called
-\textit{input.lmp}. Type into \textit{input.lmp}:
+Create a second folder called \flrcmd{breakable-bonds/} next to
+\flrcmd{unbreakable-bonds/}, and create a new input file in it called
+\flecmd{input.lmp}. Type into \flecmd{input.lmp}:
 \begin{lstlisting}
 # Initialisation
 variable T equal 300
@@ -1598,28 +1601,28 @@ bond information is required with AIREBO.
 
 Since \textit{bond}, \textit{angle}, and \textit{dihedral} do not need to be
 explicitly set when using AIREBO, some simplification must be made to the
-\textit{.data} file. Download the new \textit{.data}
-file named \href{\filepath tutorial2/breakable-bonds/cnt_atom.data}{\textit{cnt\_atom.data}},
-and place it within \textit{breakable-bonds/}. Just like \textit{cnt\_molecular.data},
-the \textit{cnt\_atom.data} contains the information
+\flecmd{.data} file. Download the new \flecmd{.data}
+file named \href{\filepath tutorial2/breakable-bonds/cnt_atom.data}{\dwlcmd{cnt\_atom.data}},
+and place it within \flrcmd{breakable-bonds/}. Just like \textit{cnt\_molecular.data},
+the \flecmd{cnt\_atom.data} contains the information
 required for placing the atoms in the box, but no bond/angle/dihedral information.
-Another difference between \textit{cnt\_molecular.data} and \textit{cnt\_atom.data}
+Another difference between \flecmd{cnt\_molecular.data} and \flecmd{cnt\_atom.data}
 is that, here, a larger distance of 120 Ångstroms was used for the box size along
 the \textit{x} axis, to allow for larger deformation.
 
 \paragraph{Use of AIREBO potential}
 
 Then, let us import the LAMMPS data file, and set the pair coefficients by adding
-the following lines into \textit{input.lmp}:
+the following lines into \flecmd{input.lmp}:
 \begin{lstlisting}
 # System definition
 read_data cnt_atom.data
 pair_coeff * * CH.airebo C
 \end{lstlisting}
 Here, there is one atom type, which we impose to be `carbon' by using
-the letter \textit{C}. Download the \href{\filepath tutorial2/breakable-bonds/CH.airebo}{\textit{CH.airebo}}
+the letter \textit{C}. Download the \href{\filepath tutorial2/breakable-bonds/CH.airebo}{\dwlcmd{CH.airebo}}
 file and place it within the \textit{breakable-bonds/} folder. The rest of the
-\textit{input.lmp} is very similar to the previous one:
+\flecmd{input.lmp} is very similar to the previous one:
 
 \begin{lstlisting}
 group carbon_atoms type 1
@@ -1654,7 +1657,7 @@ Here, let us impose a constant velocity deformation using the atoms of one
 edge while maintaining the other edge fixed (note that for the unbreakable CNT,
 the motion was imposed on the 2 edges). As an equilibration step, let us set the
 velocity to 0 for the atoms of both edges. Add the following lines into
-the \textit{input.lmp} file:
+the \flecmd{input.lmp} file:
 \begin{lstlisting}
 fix mysf1 cnt_bot setforce 0 0 0
 fix mysf2 cnt_top setforce 0 0 0
@@ -1679,14 +1682,14 @@ run 5000
 \end{lstlisting}
 Note the relatively small timestep of $0.0005\,\text{ps}$ used. A reactive force
 field usually requires a smaller timestep than a classical one. When running
-\textit{input.lmp} with LAMMPS, you can see that the temperature deviates
+\flecmd{input.lmp} with LAMMPS, you can see that the temperature deviates
 from the target temperature of $300\,\text{K}$ at the start of the equilibration,
 but that after a few steps, it reaches the target value.
 
 \paragraph{Launch the deformation}
 After equilibration, let us set the velocity of one of the edges equal to
 $15~\text{m/s}$ and run for a longer duration than previously. Add the following
-lines into \textit{input.lmp}:
+lines into \flecmd{input.lmp}:
 \begin{lstlisting}
 velocity cnt_top set 0.15 0 0
 run 280000
@@ -1755,8 +1758,8 @@ In this tutorial, the water reservoir is first prepared in the absence of the po
 A rectangular box of water is created and equilibrated at ambient temperature and
 ambient pressure. The SPC/Fw water model is used \cite{wu2006flexible}, which is
 a flexible variant of the rigid SPC (simple point charge) model \cite{berendsen1981interaction}.
-Create a folder called \textit{pureH2O/}. Inside this folder, create an empty text
-file called \textit{input.lmp}. Copy the following lines into it:
+Create a folder called \flrcmd{pureH2O/}. Inside this folder, create an empty text
+file called \flecmd{input.lmp}. Copy the following lines into it:
 \begin{lstlisting}
  units real
  atom_style full
@@ -1783,7 +1786,7 @@ interactions. The \textit{pppm} style refers to particle-particle particle-mesh 
 Then, let us create a 3D simulation box of dimensions $9 \times 3 \times 3 \; \text{nm}^3$,
 and make space for 8 atom types (2 for the water, 6 for the polymer), 7 bond types
 (1 for the water, 6 for the polymer), 8 angle types (1 for the water, 7 for the polymer),
-and 4 dihedral types (only for the polymer). Copy the following lines into \textit{input.lmp}:
+and 4 dihedral types (only for the polymer). Copy the following lines into \flecmd{input.lmp}:
 \begin{lstlisting}
  region box block -45 45 -15 15 -15 15
  create_box 8 box &
@@ -1796,28 +1799,28 @@ and 4 dihedral types (only for the polymer). Copy the following lines into \text
  extra/special/per/atom 14
 \end{lstlisting}
 The \textit{extra/x/per/atom} commands are here for
-memory allocation. We will use a file named \textit{PARM.lmp} that contains
+memory allocation. We will use a file named \flecmd{PARM.lmp} that contains
 all the parameters (masses, interaction energies, bond equilibrium
-distances, etc). In \textit{input.lmp}, add the following line:
+distances, etc). In \flecmd{input.lmp}, add the following line:
 \begin{lstlisting}
  include ../PARM.lmp
 \end{lstlisting}
 
 Download and save the
-\href{\filepath tutorial3/PARM.lmp}{\textit{PARM.lmp}}
+\href{\filepath tutorial3/PARM.lmp}{\dwlcmd{PARM.lmp}}
 file next to the \textit{pureH2O/} folder. This example uses type labels, which
 are strings that map to each of the numeric atom types, bond types, angles types,
 etc. in the simulation. Type labels can be any string defined by the user, and we
 will use the atom types from the GROMOS 54A7 force field. In this example, the atom
-types are defined in \textit{PARM.lmp}, within which the \textit{mass}
+types are defined in \flecmd{PARM.lmp}, within which the \textit{mass}
 and \textit{pair\_coeff} of atoms of types OW and HW are for water and the remaining
 atom types are for the polymer molecule. Similarly, the \textit{bond\_coeff OW-HW}
 and \textit{angle\_coeff HW-OW-HW} are for water, while all the other parameters
 are for the polymer.
 
 Let us create water molecules. To do so, let us import a molecule template called
-\textit{H2O-SPCFw.mol} and then randomly create 1050 molecules. Add the following
-lines into \textit{input.lmp}:
+\flecmd{H2O-SPCFw.mol} and then randomly create 1050 molecules. Add the following
+lines into \flecmd{input.lmp}:
 \begin{lstlisting}
  molecule h2omol H2O-SPCFw.mol
  create_atoms 0 random 1050 87910 NULL mol &
@@ -1836,15 +1839,15 @@ after starting the simulation:
 \end{lstlisting}
 When LAMMPS fails to create the desired number of molecules, a WARNING appears
 in the \textit{log} file. The molecule template called
-\href{\filepath tutorial3/pureH2O/H2O-SPCFw.mol}{\textit{H2O-SPCFw.mol}}
-must be downloaded and saved in the \textit{pureH2O/} folder. This template contains
+\href{\filepath tutorial3/pureH2O/H2O-SPCFw.mol}{\dwlcmd{H2O-SPCFw.mol}}
+must be downloaded and saved in the \flrcmd{pureH2O/} folder. This template contains
 the necessary structural information of a water molecule, such as the number of
 atoms, or the IDs of the atoms that are connected by bonds, angles, etc.
 
 Then, let us organize the atoms of types OW and HW of the water molecules in a
 group named \textit{H2O} and perform a small energy minimization. The energy
 minimization is mandatory here given the small \textit{overlap} value of 1 Ångstrom
-chosen in the \textit{create\_atoms} command. Add the following lines into \textit{input.lmp}:
+chosen in the \textit{create\_atoms} command. Add the following lines into \flecmd{input.lmp}:
 \begin{lstlisting}
  group H2O type OW HW
  minimize 1.0e-4 1.0e-6 100 1000
@@ -1857,7 +1860,7 @@ command is usually not a round number (since the minimization stops when one of
 four criteria is reached). Let us use the \textit{fix npt} to control the temperature
 of the molecules with a Nosé-Hoover thermostat and the pressure of the system with
 a Nosé-Hoover barostat \cite{nose1984unified, hoover1985canonical, martyna1994constant},
-by adding the following line into \textit{input.lmp}:
+by adding the following line into \flecmd{input.lmp}:
 \begin{lstlisting}
  fix mynpt all npt temp 300 300 100 &
      iso 1 1 1000
@@ -1867,7 +1870,7 @@ The \textit{fix npt} allows us to impose both a temperature of $300\,\text{K}$
 (with a damping constant of $1000\,\text{fs}$). With the \textit{iso} keyword,
 the three dimensions of the box will be re-scaled simultaneously.
 
-Let us output the system into images by adding the following commands to \textit{input.lmp}:
+Let us output the system into images by adding the following commands to \flecmd{input.lmp}:
 \begin{lstlisting}
  dump mydmp all image 1000 dump.*.ppm type &
      type shiny 0.1 box no 0.01 &
@@ -1890,7 +1893,7 @@ the number of molecules, and the variable \textit{myrho} is the number of molecu
 divided by the volume of the simulation box, i.e.~the density (in $\mathrm{\AA{}}^{-3}$).
 
 Finally, let us set the timestep to 1.0 fs, and run the simulation for 20 ps by
-adding the following lines into \textit{input.lmp}:
+adding the following lines into \flecmd{input.lmp}:
 \begin{lstlisting}
  timestep 1.0
  run 20000
@@ -1898,7 +1901,7 @@ adding the following lines into \textit{input.lmp}:
  write_data H2O.data
 \end{lstlisting}
 % S.G. may be a binary restart file could be used here to illustrate the new functionalities of the GUI?
-The final state is written into \textit{H2O.data}. From the value of \textit{myrho},
+The final state is written into \flecmd{H2O.data}. From the value of \textit{myrho},
 it should be clear that the system is quickly reaching its equilibrium
 density (see a snapshot of the equilibrated system in Fig.\,\ref{fig:PEG-water},
 and the evolution of the density in Fig.\,\ref{fig:PEG-density}).
@@ -1934,8 +1937,8 @@ atoms in red, and the hydrogen atoms in white.}
 \label{fig:PEG-in-vacuum}
 \end{figure}
 
-Create a second folder alongside \textit{pureH2O/} and call it \textit{mergePEGH2O/}.
-Create a new blank file in it, call it \textit{input.lmp}. Within \textit{input.lmp},
+Create a second folder alongside \flrcmd{pureH2O/} and call it \flrcmd{mergePEGH2O/}.
+Create a new blank file in it, call it \flecmd{input.lmp}. Within \flecmd{input.lmp},
 copy the same first lines as previously:
 \begin{lstlisting}
  units real
@@ -1948,7 +1951,7 @@ copy the same first lines as previously:
  special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 &
      angle yes dihedral yes
 \end{lstlisting}
-Then, import the previously generated data file \textit{H2O.data} as well as the \textit{PARM.lmp} file:
+Then, import the previously generated data file \flecmd{H2O.data} as well as the \flecmd{PARM.lmp} file:
 \begin{lstlisting}
  read_data ../pureH2O/H2O.data &
      extra/bond/per/atom 3 &
@@ -1958,20 +1961,20 @@ Then, import the previously generated data file \textit{H2O.data} as well as the
  include ../PARM.lmp
 \end{lstlisting}
 Download the template called
-\href{\filepath tutorial3/mergePEGH2O/PEG-GROMOS.mol}{\textit{PEG-GROMOS.mol}}
+\href{\filepath tutorial3/mergePEGH2O/PEG-GROMOS.mol}{\dwlcmd{PEG-GROMOS.mol}}
 for the PEG molecule, and then create a single molecule in the middle of the box:
 \begin{lstlisting}
  molecule pegmol PEG-GROMOS.mol
  create_atoms 0 single 0 0 0 mol pegmol 454756
 \end{lstlisting}
 Let us create 2 groups to differentiate the PEG from the H2O, by adding the following
-lines into \textit{input.lmp}:
+lines into \flecmd{input.lmp}:
 \begin{lstlisting}
  group H2O type OW HW
  group PEG type C CPos H HC OAlc OE
 \end{lstlisting}
 Water molecules that are overlapping with the PEG must be deleted to avoid future crashing.
-Add the following line into \textit{input.lmp}:
+Add the following line into \flecmd{input.lmp}:
 \begin{lstlisting}
  delete_atoms overlap 2.0 H2O PEG mol yes
 \end{lstlisting}
@@ -2024,9 +2027,9 @@ transparent continuum field for clarity.}
 \subsubsection{Stretching the PEG molecule}
 Here, a constant forcing is applied to the two ends of the PEG molecule until it
 stretches. Create a new folder next to the previously created folders, call it
-\textit{pullonPEG/}, and create a new input file in it called \textit{input.lmp}.
+\flrcmd{pullonPEG/}, and create a new input file in it called \flecmd{input.lmp}.
 First, let us create a variable \textit{f0} corresponding to the magnitude of the
-force we are going to apply. Copy the following line into the \textit{input.lmp} file:
+force we are going to apply. Copy the following line into the \flecmd{input.lmp} file:
 \begin{lstlisting}
 variable f0 equal 5
 \end{lstlisting}
@@ -2047,7 +2050,7 @@ Then, copy the same lines as previously:
      angle yes dihedral yes
 \end{lstlisting}
 Start the simulation from the equilibrated PEG-water system and include again the
-parameter file by adding the following lines to the \textit{input.lmp}:
+parameter file by adding the following lines to the \flecmd{input.lmp}:
 \begin{lstlisting}
  read_data ../mergePEGH2O/mix.data
  include ../PARM.lmp
@@ -2056,7 +2059,7 @@ Next, let us create some useful atom groups, including H2O and PEG (as previousl
 as well as 2 groups containing a single atom each, the oxygen atoms at the ends
 of the chain. Atoms of types OAlc correspond to the hydroxy (alcohol) group oxygen
 atoms located at the ends of the PEG molecule, which we are going to use to pull
-on the PEG molecule. Add the following lines to the \textit{input.lmp}:
+on the PEG molecule. Add the following lines to the \flecmd{input.lmp}:
 \begin{lstlisting}
  group H2O type OW HW
  group PEG type C CPos H HC OAlc OE
@@ -2083,7 +2086,7 @@ Add the following \textit{dump} command to create images of the system:
      adiam H 1 adiam HC 1 adiam OE 2.8
 \end{lstlisting}
 Let us use a single Nosé-Hoover thermostat applied to all the atoms by adding the
-following lines to \textit{input.lmp}:
+following lines to \flecmd{input.lmp}:
 \begin{lstlisting}
 timestep 1.0
 fix mynvt all nvt temp 300 300 100
@@ -2092,7 +2095,7 @@ Let us also print the end-to-end distance of the PEG,
 here defined as the distance between the groups \textit{topull1}
 and \textit{topull2}, as well as the gyration
 radius of the molecule \cite{fixmanRadiusGyrationPolymer1962a}
-by adding the following lines to \textit{input.lmp}:
+by adding the following lines to \flecmd{input.lmp}:
 \begin{lstlisting}
  variable x1 equal xcm(topull1,x)
  variable x2 equal xcm(topull2,x)
@@ -2119,7 +2122,7 @@ by the forcing. Then, let us apply a forcing on the 2 selected oxygen atoms usin
  fix myaf2 topull2 addforce -${f0} 0 0
  run 30000
 \end{lstlisting}
-Run the \textit{input.lmp} file using LAMMPS. From the generated images of the system,
+Run the \flecmd{input.lmp} file using LAMMPS. From the generated images of the system,
 you should see that the PEG molecule eventually aligns
 in the direction of the force (as seen in Fig.\,\ref{fig:PEG-in-water}).
 The evolutions of the end-to-end distance and of the gyration radius over
@@ -2172,8 +2175,8 @@ The fluid and walls must first be generated and then equilibrated at a reasonabl
 temperature and pressure.
 
 \paragraph{System generation}
-Create a new folder called \textit{systemcreation/}. Within
-\textit{systemcreation/}, open a blank file called \textit{input.lmp}, and
+Create a new folder called \flrcmd{systemcreation/}. Within
+\flrcmd{systemcreation/}, open a blank file called \flecmd{input.lmp}, and
 copy the following lines into it:
 \begin{lstlisting}
 boundary p p f
@@ -2209,7 +2212,7 @@ boundaries along the $z$ coordinate: \textit{boundary p p f}. With the \textit{s
 option, the system is treated as periodical along $z$, but with an empty volume inserted
 between the periodic images of the slab, and the interactions along $z$ effectively turned off.
 
-Let us create the box by adding the following lines to \textit{input.lmp}:
+Let us create the box by adding the following lines to \flecmd{input.lmp}:
 
 \begin{lstlisting}
 lattice fcc 4.04
@@ -2241,7 +2244,7 @@ to each numeric atom type, bond type, and angle type.
 Now, we can add atoms to the system. First, let us create two sub-regions corresponding
 respectively to the two solid walls, and create a larger region from the union of the
 two regions. Then, let us create atoms of type WALL within the two regions. Add the
-following lines to \textit{input.lmp}:
+following lines to \flecmd{input.lmp}:
 \begin{lstlisting}
 region rbotwall block -3 3 -3 3 -4 -3
 region rtopwall block -3 3 -3 3 3 4
@@ -2250,10 +2253,10 @@ create_atoms WALL region rwall
 \end{lstlisting}
 Atoms will be placed in the positions of the previously defined lattice, thus
 forming fcc solids. To add the water molecules, first download the molecule
-template called \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial4/RigidH2O.txt}{\textit{RigidH2O.txt}}
-and place it within \textit{systemcreation/}. The template contains all the
+template called \href{\filepath tutorial4/RigidH2O.txt}{\dwlcmd{RigidH2O.txt}}
+and place it within \flrcmd{systemcreation/}. The template contains all the
 necessary information concerning the water molecule, such as atom positions,
-bonds, and angles. Add the following lines to \textit{input.lmp}:
+bonds, and angles. Add the following lines to \flecmd{input.lmp}:
 \begin{lstlisting}
 region rliquid block INF INF INF INF -2 2
 molecule h2omol RigidH2O.txt
@@ -2262,15 +2265,15 @@ create_atoms 0 region rliquid mol h2omol 482793
 Within the last three lines, a \textit{region} named \textit{rliquid} is
 created based on the last defined lattice, \textit{fcc 4.04}. \textit{rliquid}
 will be used for depositing the water molecules. The \textit{molecule} command
-opens up the molecule template called \textit{RigidH2O.txt}, and names the
+opens up the molecule template called \flecmd{RigidH2O.txt}, and names the
 associated molecule \textit{h2omol}. The new molecules are placed on the
 \textit{fcc 4.04} lattice by the \textit{create\_atoms} command. The first
-parameter is 0, meaning that the atom IDs from the \textit{RigidH2O.txt} file
+parameter is 0, meaning that the atom IDs from the \flecmd{RigidH2O.txt} file
 will be used. The number \textit{482793} is a seed that is required by LAMMPS,
 it can be any positive integer.
 
 Finally, let us create 30 ions (15 $\text{Na}^+$ and 15 $\text{Cl}^-$) in between
-the water molecules, by adding the following commands to \textit{input.lmp}:
+the water molecules, by adding the following commands to \flecmd{input.lmp}:
 \begin{lstlisting}
 create_atoms Na+ random 15 52802 rliquid &
     overlap 0.3 maxtry 500
@@ -2291,13 +2294,13 @@ Before starting the simulation, we still need to define the parameters of the
 simulation: the mass of the 5 atom types (O, H, $\text{Na}^+$, $\text{Cl}^-$,
 and wall), the pairwise interaction parameters (here, the parameters for the
 Lennard-Jones potential), and the bond and angle parameters. Copy the following
-lines into \textit{input.lmp}:
+lines into \flecmd{input.lmp}:
 \begin{lstlisting}
 include ../PARM.lmp
 include ../GROUP.lmp
 \end{lstlisting}
-Create a new text file called \textit{PARM.lmp} next to the \textit{systemcreation/}
-folder. Copy the following lines into \textit{PARM.lmp}:
+Create a new text file called \flecmd{PARM.lmp} next to the \flrcmd{systemcreation/}
+folder. Copy the following lines into \flecmd{PARM.lmp}:
 \begin{lstlisting}
 mass O 15.9994
 mass H 1.008
@@ -2327,7 +2330,7 @@ walls would be extremely hydrophilic, causing the water molecule to form dense l
 comparison, the water-water energy $\epsilon_\text{1-1}$ is only $0.185199\,\text{kcal/mol}$.
 Therefore, the walls were made less hydrophilic by reducing the value of $\epsilon_\text{1-5}$.
 
-Copy the following lines into \textit{PARM.lmp} as well:
+Copy the following lines into \flecmd{PARM.lmp} as well:
 \begin{lstlisting}
 bond_coeff O-H 0 0.9572
 angle_coeff H-O-H 0 104.52
@@ -2341,8 +2344,8 @@ Similarly, the angle coefficient for the H-O-H angle of the water molecule sets
 the force constant of the angular harmonic potential to 0 and the equilibrium
 angle to $104.52^\circ$.
 
-Let us also create another file called \textit{GROUP.lmp} next to
-\textit{PARM.lmp}, and copy the following lines into it:
+Let us also create another file called \flecmd{GROUP.lmp} next to
+\flecmd{PARM.lmp}, and copy the following lines into it:
 \begin{lstlisting}
 group H2O type O H
 group Na type Na+
@@ -2359,13 +2362,13 @@ group walltop intersect wall top
 group wallbot intersect wall bot
 \end{lstlisting}
 As it is now, the fluid density within the two walls is too high. To avoid
-high density and pressure, let us add the following lines into \textit{input.lmp}
+high density and pressure, let us add the following lines into \flecmd{input.lmp}
 to delete to delete about $15~\%$ of the water molecules:
 \begin{lstlisting}
 delete_atoms random fraction 0.15 yes &
     H2O NULL 482793 mol yes
 \end{lstlisting}
-Finally, add the following lines into \textit{input.lmp}:
+Finally, add the following lines into \flecmd{input.lmp}:
 \begin{lstlisting}
 run 0
 
@@ -2374,12 +2377,12 @@ write_dump all image dump.jpg type type
 \end{lstlisting}
 With \textit{run 0}, the simulation will run for 0 steps, which is enough for
 creating the system and saving the final state. The \textit{write\_data}
-creates a file called \textit{system.data} containing the information required
+creates a file called \flecmd{system.data} containing the information required
 to restart the simulation from the final configuration generated by this input
 file. With the \textit{nocoeff} option, the parameters from the force field are
-not written in the \textit{.data} file. The \textit{write\_dump} command creates
+not written in the \flecmd{.data} file. The \textit{write\_dump} command creates
 an image of the system (see also Fig.\,\ref{fig:NANOSHEAR-system}).
-Run the \textit{input.lmp} file using LAMMPS.
+Run the \flecmd{input.lmp} file using LAMMPS.
 
 \begin{figure}
 \centering
@@ -2399,9 +2402,9 @@ as done for instance in the first tutorial; \hyperref[lennard-jones-label]{Lenna
 Instead, a molecular dynamics simulation will be performed here, with some techniques
 employed to prevent the system from exploding due to overlapping atoms.
 
-Let us create a new folder called \textit{minimization/} next to \textit{systemcreation/},
-and create a new input file called \textit{input.lmp} in it. Copy the following lines
-in \textit{input.lmp}:
+Let us create a new folder called \flrcmd{minimization/} next to \flrcmd{systemcreation/},
+and create a new input file called \flecmd{input.lmp} in it. Copy the following lines
+in \flecmd{input.lmp}:
 \begin{lstlisting}
 boundary p p f
 units real
@@ -2419,8 +2422,8 @@ include ../PARM.lmp
 include ../GROUP.lmp
 \end{lstlisting}
 The only difference from the previous input is that instead of creating a new
-box and new atoms, we open the previously created file \textit{system.data}
-located in \textit{systemcreation/}. The file \textit{system.data} contains the
+box and new atoms, we open the previously created file \flecmd{system.data}
+located in \flrcmd{systemcreation/}. The file \flecmd{system.data} contains the
 definition of the simulation box and the positions of the atoms.
 
 Now, let us create a first simulation step using a relatively small
@@ -2442,7 +2445,7 @@ force the temperature of the system to reach the desired value of $1~\text{K}$,
 and the SHAKE algorithm is used in order to maintain the shape of the water molecules.
 
 Let us also create images of the system and control
-the printing of thermodynamic outputs by adding the following lines to \textit{input.lmp}:
+the printing of thermodynamic outputs by adding the following lines to \flecmd{input.lmp}:
 \begin{lstlisting}
 dump mydmp all image 200 dump.*.jpg type type &
     shiny 0.1 box no 0.01 view 90 0 zoom 1.8
@@ -2454,11 +2457,11 @@ dump_modify mydmp backcolor white &
     acolor WALL gray adiam WALL 3
 thermo 200
 \end{lstlisting}
-Finally, let us run for 4000 steps. Add the following lines into \textit{input.lmp}:
+Finally, let us run for 4000 steps. Add the following lines into \flecmd{input.lmp}:
 \begin{lstlisting}
 run 4000
 \end{lstlisting}
-When running the \textit{input.lmp} file with LAMMPS, you should see that the
+When running the \flecmd{input.lmp} file with LAMMPS, you should see that the
 total energy of the system is initially very high, but rapidly decreases and
 reach a plateau (Fig.\,\ref{fig:NANOSHEAR-minimization}). From the generated image of the system,
 you will see that some of the atoms are moving, particularly those that were
@@ -2482,9 +2485,9 @@ write_data system.data nocoeff
 For the last of the three steps, fix \textit{nve} is used instead of
 \textit{nve/limit}, which will allow for better relaxation of the atom positions.
 
-When running the \textit{input.lmp} file with LAMMPS, you should see that the
+When running the \flecmd{input.lmp} file with LAMMPS, you should see that the
 the temperature reaches the desired value of $300\,\text{K}$. The generated file
-\textit{system.data} contains the final state of the system.
+\flecmd{system.data} contains the final state of the system.
 
 \begin{figure}
 \centering
@@ -2498,9 +2501,9 @@ consecutive steps.}
 
 \paragraph{System equilibration}
 Let us equilibrate further the entire system by letting both fluid and piston
-relax at ambient temperature. Create a new folder called \textit{equilibration/}
-next to the previously created folders, and create a new \textit{input.lmp}
-file in it. Add the following lines into \textit{input.lmp}:
+relax at ambient temperature. Create a new folder called \flrcmd{equilibration/}
+next to the previously created folders, and create a new \flecmd{input.lmp}
+file in it. Add the following lines into \flecmd{input.lmp}:
 \begin{lstlisting}
 boundary p p f
 units real
@@ -2525,7 +2528,7 @@ timestep 1.0
 \end{lstlisting}
 The fix \textit{recenter} does not influence the dynamics but will keep the
 system in the center of the box, which makes the
-visualization easier. Then, add the following lines into \textit{input.lmp}
+visualization easier. Then, add the following lines into \flecmd{input.lmp}
 for the trajectory visualization and output:
 \begin{lstlisting}
 
@@ -2553,7 +2556,7 @@ Finally, let us add the \textit{run} command:
 run 30000
 write_data system.data nocoeff
 \end{lstlisting}
-Run the \textit{input.lmp} file using LAMMPS. As seen from the data printed by
+Run the \flecmd{input.lmp} file using LAMMPS. As seen from the data printed by
 \textit{fix myat1}, the distance between the two walls reduces until it reaches
 an equilibrium value (Fig.\,\ref{fig:NANOSHEAR-equilibration}).
 
@@ -2573,8 +2576,8 @@ i.e.~on the order of half a nanosecond.
 \subsubsection{Imposed shearing}
 
 From the equilibrated configuration, let us impose a lateral motion on the two
-walls and shear the electrolyte. In a new folder called \textit{shearing/},
-create a new \textit{input.lmp} file that starts like the previous ones:
+walls and shear the electrolyte. In a new folder called \flrcmd{shearing/},
+create a new \flecmd{input.lmp} file that starts like the previous ones:
 \begin{lstlisting}
 boundary p p f
 units real
@@ -2613,7 +2616,7 @@ the \textit{x} coordinate from the thermalization, which is important since a
 large velocity will be imposed along \textit{x}.
 
 Then, let us impose the velocity of the two walls by adding the following
-commands to \textit{input.lmp}:
+commands to \flecmd{input.lmp}:
 \begin{lstlisting}
 fix mysf1 walltop setforce 0 NULL NULL
 fix mysf2 wallbot setforce 0 NULL NULL
@@ -2629,7 +2632,7 @@ commands act only once and impose the velocity of the atoms of the groups
 
 Finally, let us dump the atom positions, and extract the velocity profiles using
 several \textit{ave/chunk} commands, extract the force applied on the walls, and
-then run for $200\,\text{ps}$ Add the following lines into \textit{input.lmp}:
+then run for $200\,\text{ps}$ Add the following lines into \flecmd{input.lmp}:
 \begin{lstlisting}
 dump mydmp all image 200 dump.*.jpg type type &
     shiny 0.1 box no 0.01 view 90 0 zoom 1.8
@@ -2721,11 +2724,11 @@ the atomic charges during the deformation of the structure, and the chemical
 reactions occurring due to the deformation are tracked over time.
 
 \subsubsection{Prepare and relax}
-Create a folder, name it \textit{RelaxSilica/}, and download the initial topology
+Create a folder, name it \flrcmd{RelaxSilica/}, and download the initial topology
 of a small amorphous silica structure called
-\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/silica.data}{\textit{silica.data}}.
+\href{\filepath tutorial5/silica.data}{\dwlcmd{silica.data}}.
 This structure was created using a classical force field called
-Vashishta \cite{vashishta1990interaction}. If you open the \textit{silica.data}
+Vashishta \cite{vashishta1990interaction}. If you open the \flecmd{silica.data}
 file, you will see in the Atoms section that all silicon atoms have the same
 charge $q = 1.1\,\text{e}$, and all oxygen atoms have the charge $q = -0.55\,\text{e}$.
 This is common with classical force fields and will change once ReaxFF is used.
@@ -2733,7 +2736,7 @@ This is common with classical force fields and will change once ReaxFF is used.
 The first action we need to perform here is to relax the structure with ReaxFF,
 which we are gonna do using molecular dynamics. To make sure that the system
 equilibrates nicely, let us track some parameters over time. Create an input
-file called \textit{input.lmp} in \textit{RelaxSilica/}, and copy the following
+file called \flecmd{input.lmp} in \flrcmd{RelaxSilica/}, and copy the following
 lines into it:
 \begin{lstlisting}
 units real
@@ -2746,9 +2749,9 @@ mass O 15.999
 \end{lstlisting}
 So far, the input is very similar to what was seen in the previous tutorials.
 Some basic parameters are defined (\textit{units}, \textit{atom\_style} and \textit{masses}),
-and the \textit{.data} file is imported by the \textit{read\_data} command.
+and the \flecmd{.data} file is imported by the \textit{read\_data} command.
 
-Now, let us copy three crucial lines into the \textit{input.lmp} file:
+Now, let us copy three crucial lines into the \flecmd{input.lmp} file:
 \begin{lstlisting}
 pair_style reaxff NULL safezone 3.0 mincap 150
 pair_coeff * * reaxCHOFe.ff Si O
@@ -2759,15 +2762,15 @@ Here, the \textit{pair\_style reaxff} is used with no control file. The
 \textit{safezone} and \textit{mincap} keywords have been added to avoid memory
 allocation issues, which sometimes can trigger the segmentation faults and
 \textit{bondchk} failed errors. The \textit{pair\_coeff} uses the
-\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/reaxCHOFe.ff}{\textit{reaxCHOFe.ff}}
-file, which must be downloaded and saved within \textit{RelaxSilica/}. Finally, the
+\href{\filepath tutorial5/reaxCHOFe.ff}{\dwlcmd{reaxCHOFe.ff}}
+file, which must be downloaded and saved within \flrcmd{RelaxSilica/}. Finally, the
 \textit{fix qeq/reaxff} is used to perform charge equilibration \cite{rappe1991charge}.
 The charge equilibration occurs at every step. The values 0.0 and 10.0 are the
 low and the high cutoffs, respectively, and $1.0 \text{e} -6$ is a tolerance.
 Finally, \textit{maxiter} sets an upper limit to the number of attempts to
 equilibrate the charge.
 
-Then, let us add some commands to the \textit{input.lmp} file  to measure the
+Then, let us add some commands to the \flecmd{input.lmp} file  to measure the
 evolution of the charges during the simulation:
 \begin{lstlisting}
 group grpSi type Si
@@ -2776,7 +2779,7 @@ variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
 \end{lstlisting}
 Let us also print the charge in the \textit{.log} file by using \textit{thermo\_style},
-and create images of the system. Add the following lines into the \textit{input.lmp}:
+and create images of the system. Add the following lines into the \flecmd{input.lmp}:
 \begin{lstlisting}
 thermo 200
 thermo_style custom step temp etotal press &
@@ -2818,11 +2821,11 @@ run 5000
 
 write_data silica-relaxed.data
 \end{lstlisting}
-Run the \textit{input.lmp} file using LAMMPS. As seen from \textit{species.log},
+Run the \flecmd{input.lmp} file using LAMMPS. As seen from \textit{species.log},
 only one species is detected, called O384Si192, representing the entire system.
 The value of the charge of the atoms can be extracted from the \textit{dump.lammpstrj}
 file using Python. You can use this
-\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial5/dump-reader.py}{\textit{dump-reader}}
+\href{\filepath tutorial5/dump-reader.py}{\dwlcmd{dump-reader.py}}
 script to import the charge values into Python.
 As the simulation progresses, the charge of every atom fluctuates
 because it is adjusting to the local environment of the atom (Fig.\,\ref{fig:SIO-charge}).
@@ -2874,9 +2877,9 @@ then tune the \textit{Color scale} in the \textit{Color control windows}.}
 
 \subsubsection{Deform the structure}
 Let us apply a deformation to the structure to force some $\text{Si}-\text{O}$
-bonds to break (and eventually re-assemble). Next to \textit{RelaxSilica/},
-create a folder, call it \textit{Deform/} and create a file called \textit{input.lmp}
-in it. Copy the same lines as previously in \textit{input.lmp}:
+bonds to break (and eventually re-assemble). Next to \flrcmd{RelaxSilica/},
+create a folder, call it \flrcmd{Deform/} and create a file called \flecmd{input.lmp}
+in it. Copy the same lines as previously in \flecmd{input.lmp}:
 \begin{lstlisting}
 units real
 atom_style full
@@ -2891,8 +2894,8 @@ pair_coeff * * ../RelaxSilica/reaxCHOFe.ff Si O
 fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 &
     reaxff maxiter 400
 \end{lstlisting}
-The only differences with the previous \textit{input.lmp} file are the paths to
-the \textit{.data} and \textit{.ff} files located within \textit{RelaxSilica/}.
+The only differences with the previous \flecmd{input.lmp} file are the paths to
+the \flecmd{.data} and \flecmd{.ff} files located within \flrcmd{RelaxSilica/}.
 Copy the following lines as well:
 \begin{lstlisting}
 group grpSi type Si
@@ -2935,7 +2938,7 @@ initial values for the average charge.}
 
 Let us run for 5000 steps without deformation, then apply the \textit{fix deform}
 for elongating progressively the box along \textit{x} during 25000 steps. Add
-the following line to \textit{input.lmp}:
+the following line to \flecmd{input.lmp}:
 \begin{lstlisting}
 run 5000
 
@@ -2945,7 +2948,7 @@ run 25000
 
 write_data silica-deformed.data
 \end{lstlisting}
-Run the \textit{input.lmp} file using LAMMPS. During the deformation, the charge
+Run the \flecmd{input.lmp} file using LAMMPS. During the deformation, the charge
 values progressively evolve until the structure eventually breaks down. After the
 structure breaks down, the charges equilibrate near new average values that differ
 from the starting averages (Fig.\,\ref{fig:SIO-deformed-charge}). The difference
@@ -3000,10 +3003,10 @@ during deformation.}
 In ambient conditions, some of the surface $\text{SiO}_2$ atoms are chemically
 passivated by forming covalent bonds with hydrogen (H) atom \cite{sulpizi2012silica}.
 Let us add hydrogen atoms randomly to the cracked silica and observe how the
-system evolves.  Next to \textit{RelaxSilica/} and \textit{Deform/}, create a folder,
-and call it \textit{Decorate/}. Then, let us modify the previously generated data
-file \textit{silica-deformed.data} and make space for a third atom type.
-Copy \textit{silica-deformed.data} from the \textit{Deform/} folder, and modify
+system evolves.  Next to \flrcmd{RelaxSilica/} and \flrcmd{Deform/}, create a folder,
+and call it \flrcmd{Decorate/}. Then, let us modify the previously generated data
+file \flecmd{silica-deformed.data} and make space for a third atom type.
+Copy \flecmd{silica-deformed.data} from the \flrcmd{Deform/} folder, and modify
 the first lines as follows:
 \begin{lstlisting}
 576 atoms
@@ -3019,7 +3022,7 @@ H 1.008
 
 (...)
 \end{lstlisting}
-Create a file called \textit{input.lmp} into the \textit{Decorate/} folder, and
+Create a file called \flecmd{input.lmp} into the \flrcmd{Decorate/} folder, and
 copy the following lines into it:
 \begin{lstlisting}
 units real
@@ -3129,15 +3132,15 @@ impose the chemical potential (or pressure) of a given fluid in a nanoporous str
 \subsubsection{Generation of the silica block}
 \noindent Let us first generate a block of amorphous silica ($\text{SiO}_2$).
 To do so, we are going to replicate a building block containing 3 Si and 6 O atoms.
-Create two folders side by side, and name them respectively \textit{Potential/}
-and \textit{SilicaBlock/}. The initial data file for the SiO atoms called
-\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/SiO.data}{\textit{SiO.data}}
-must be downloaded and saved in \textit{SilicaBlock/}. This data file contains
+Create two folders side by side, and name them respectively \flrcmd{Potential/}
+and \flrcmd{SilicaBlock/}. The initial data file for the SiO atoms called
+\href{\filepath tutorial6/SiO.data}{\dwlcmd{SiO.data}}
+must be downloaded and saved in \flrcmd{SilicaBlock/}. This data file contains
 the coordinates of the 9 atoms, their masses, and their charges.
 
 Let us replicate these atoms using LAMMPS, and apply an annealing procedure to
-obtain a block of amorphous silica. Create a new input file called \textit{input.lmp}
-in the \textit{SilicaBlock/} folder, and copy
+obtain a block of amorphous silica. Create a new input file called \flecmd{input.lmp}
+in the \flrcmd{SilicaBlock/} folder, and copy
 the following lines into it:
 \begin{lstlisting}
 units metal
@@ -3153,7 +3156,7 @@ the bonds between atoms from their relative positions \cite{vashishta1990interac
 
 Let us then import the system consisting of 9 atoms, and replicate it four times
 in all three directions of space, thus creating a system with 576 atoms. Add the
-following lines into \textit{input.lmp}:
+following lines into \flecmd{input.lmp}:
 \begin{lstlisting}
 read_data SiO.data
 replicate 4 4 4
@@ -3165,10 +3168,10 @@ print out the positions of the atoms every 5000 steps:
 pair_coeff * * &
     ../Potential/SiO.1990.vashishta Si O
 \end{lstlisting}
-Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/SiO.1990.vashishta}{SiO.1990.vashishta},
-and copy it within the \textit{Potential/} folder.
+Download the \href{\filepath tutorial6/SiO.1990.vashishta}{\dwlcmd{SiO.1990.vashishta}},
+and copy it within the \flrcmd{Potential/} folder.
 
-Let us add a \textit{dump image} command to \textit{input.lmp} to follow the
+Let us add a \textit{dump image} command to \flecmd{input.lmp} to follow the
 evolution of the system with time:
 \begin{lstlisting}
 dump mydmp all image 200 dump.*.jpg type type &
@@ -3224,8 +3227,8 @@ can be seen to follow well the desired annealing procedure (Fig.\,\ref{fig:GCMC-
 The evolution of the box dimensions over time confirms that the box was indeed
 deformed isotropically during the first stage of the simulation, and then anisotropically
 (Fig.\,\ref{fig:GCMC-dimension}). After running
-the simulation, the final LAMMPS topology file called \textit{amorphousSiO.data}
-will be located in \textit{SilicaBlock/} (Fig.\,\ref{fig:GCMC-snapshot}).
+the simulation, the final LAMMPS topology file called \flecmd{amorphousSiO.data}
+will be located in \flrcmd{SilicaBlock/} (Fig.\,\ref{fig:GCMC-snapshot}).
 
 \begin{figure}
 \centering
@@ -3254,8 +3257,8 @@ represented in yellow, and the oxygen atoms in red.}
 
 \subsubsection{Cracking the silica}
 Let us dilate the block of silica until a crack forms. Create a new folder
-called \textit{Cracking/} next to \textit{SilicaBlock/}, as well as a new
-\textit{input.lmp} file starting with familiar lines as previously:
+called \flrcmd{Cracking/} next to \flrcmd{SilicaBlock/}, as well as a new
+\flecmd{input.lmp} file starting with familiar lines as previously:
 \begin{lstlisting}
 units metal
 boundary p p p
@@ -3273,7 +3276,7 @@ dump dmp all atom 1000 dump.lammpstrj
 Let us progressively increase the size of the box in the $x$ direction, thus forcing
 the silica to deform and eventually crack. To do so, a loop based on the jump command
 is used. At every step of the loop, the box dimension over $x$ will be multiplied
-by a scaling factor 1.005. Add the following lines into the \textit{input.lmp}:
+by a scaling factor 1.005. Add the following lines into the \flecmd{input.lmp}:
 \begin{lstlisting}
 fix nvt1 all nvt temp 300 300 0.1
 timestep 0.001
@@ -3314,11 +3317,11 @@ made. Each attempt is either accepted or rejected based on energy considerations
 Find more details in classical textbooks like Ref.~\citenum{frenkel2023understanding}.
 
 \paragraph{Using hydrid potentials}
-\noindent Create a new folder called \textit{Addingwater/}. Download and save
+\noindent Create a new folder called \flrcmd{Addingwater/}. Download and save
 the water molecule template called
-\href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial6/H2O.mol}{\textit{H2O.mol}}
-within the \textit{Addingwater/} folder. Create a new input file called \textit{input.lmp}
-within \textit{Addingwater/}, and copy the following lines into it:
+\href{\filepath tutorial6/H2O.mol}{\dwlcmd{H2O.mol}}
+within the \flrcmd{Addingwater/} folder. Create a new input file called \flecmd{input.lmp}
+within \flrcmd{Addingwater/}, and copy the following lines into it:
 \begin{lstlisting}
 units metal
 boundary p p p
@@ -3344,9 +3347,9 @@ and angles of the water molecules are defined, although they are not important
 since TIP4P/2005 is a rigid water model.
 
 Before going further, we also need to make a few changes to our data file.
-Currently, \textit{dilatedSiO.data} only includes two atom types, but we need four.
-Copy the previously generated \textit{dilatedSiO.data} file within \textit{Addingwater/}.
-Currently, \textit{dilatedSiO.data} starts with:
+Currently, \flecmd{dilatedSiO.data} only includes two atom types, but we need four.
+Copy the previously generated \flecmd{dilatedSiO.data} file within \flrcmd{Addingwater/}.
+Currently, \flecmd{dilatedSiO.data} starts with:
 \begin{lstlisting}
 576 atoms
 2 atom types
@@ -3411,7 +3414,7 @@ Doing so, we anticipate that there will be 4 atom types in the simulations,
 with O and H of $\text{H}_2\text{O}$ having types OW and HW, respectively. There
 will also be 1 bond type and 1 angle type. The extra bond, extra angle, and
 extra special lines are here for memory allocation. We can continue to fill in
-the \textit{input.lmp} file, by adding the system definition:
+the \flecmd{input.lmp} file, by adding the system definition:
 \begin{lstlisting}
 read_data dilatedSiO.data
 molecule h2omol H2O.mol
@@ -3422,13 +3425,13 @@ lattice none 1
 group SiO type Si O
 group H2O type OW HW
 \end{lstlisting}
-After reading the data file and defining the h2omol molecule from the \textit{H2O.txt}
+After reading the data file and defining the h2omol molecule from the \flecmd{H2O.txt}
 file, the \textit{create\_atoms} command is used to include some water molecules
 in the system on a simple cubic lattice. Not adding a molecule before starting
 the GCMC steps usually leads to failure. Note that here, most water molecules
 overlap with the silica. These overlapping water molecules will have to be
 deleted before starting the simulation (see below). Then, add the following
-settings to \textit{input.lmp}:
+settings to \flecmd{input.lmp}:
 \begin{lstlisting}
 pair_coeff * * vashishta &
     ../Potential/SiO.1990.vashishta &
@@ -3482,7 +3485,7 @@ dump_modify mydmp backcolor white &
 
 \paragraph{GCMC simulation}
 To prepare for the GCMC simulation, let us make the first equilibration step by
-adding the following lines into \textit{input.lmp}:
+adding the following lines into \flecmd{input.lmp}:
 \begin{lstlisting}
 compute_modify thermo_temp dynamic yes
 compute ctH2O H2O temp
@@ -3504,7 +3507,7 @@ with time. The \textit{compute\_modify} with \textit{dynamic yes} for water is
 used to specify that the number of molecules is not constant.
 
 Finally, let us use the \textit{fix gcmc} and perform the grand canonical Monte
-Carlo steps. Add the following lines into \textit{input.lmp}:
+Carlo steps. Add the following lines into \flecmd{input.lmp}:
 \begin{lstlisting}
 variable tfac equal 5.0/3.0
 fix fgcmc H2O gcmc 100 100 0 0 65899 300 &
@@ -3600,7 +3603,7 @@ unfavorable area to explore.
 
 \paragraph{Basic LAMMPS parameters}
 \noindent Create a folder called \textit{FreeSampling/}, and create an input
-script called \textit{input.lmp} in it. Copy the following lines into it:
+script called \flecmd{input.lmp} in it. Copy the following lines into it:
 \begin{lstlisting}
 variable sigma equal 3.405
 variable epsilon equal 0.238
@@ -3626,7 +3629,7 @@ the second part of the tutorial automatically assumes the energy to be in kcal/m
 
 \paragraph{System creation and settings}
 \noindent Let us define the simulation box and randomly add atoms by copying the
-following lines into \textit{input.lmp}:
+following lines into \flecmd{input.lmp}:
 \begin{lstlisting}
 region myreg block -25 25 -5 5 -25 25
 create_box 1 myreg
@@ -3672,7 +3675,7 @@ $U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathr
 
 Let us apply energy minimization to the system, and then impose the force $F(x)$
 to all of the atoms in the simulation using the \textit{addforce} command. Add
-the following lines to \textit{input.lmp}:
+the following lines to \flecmd{input.lmp}:
 \begin{lstlisting}
 minimize 1e-4 1e-6 100 1000
 reset_timestep 0
@@ -3727,7 +3730,7 @@ system in Fig.\,\ref{fig:US-system-unbiased}.
 Once the system is equilibrated, let us record the density profile of
 the atoms along the $x$ axis using
 the \textit{ave/chunk} command. A total of 10 density profiles will be printed.
-Add the following line to \textit{input.lmp}:
+Add the following line to \flecmd{input.lmp}:
 \begin{lstlisting}
 unfix myat
 undump mydmp
@@ -3817,8 +3820,8 @@ which allows for the removal of the biasing effect and ultimately deduces the
 unbiased free energy profile.
 
 \paragraph{LAMMPS input script}
-Create a new folder called \textit{BiasedSampling/}, and create a new input file
-called \textit{input.lmp} in it, and copy the following lines:
+Create a new folder called \flrcmd{BiasedSampling/}, and create a new input file
+called \flecmd{input.lmp} in it, and copy the following lines:
 \begin{lstlisting}
 variable sigma equal 3.405
 variable epsilon equal 0.238
@@ -3876,7 +3879,7 @@ particle of type A2 will additionally be exposed to the biasing potential
 $V$ (Fig.\,){fig:US-system-biased}).
 
 Let us create a loop with 50 steps, and move progressively the center of the
-bias potential by an increment of 0.1 nm. Add the following lines to \textit{input.lmp}:
+bias potential by an increment of 0.1 nm. Add the following lines to \flecmd{input.lmp}:
 \begin{lstlisting}
 variable a loop 50
 label loop
@@ -3892,7 +3895,7 @@ unfix myat1
 next a
 jump SELF loop
 \end{lstlisting}
-A folder called \textit{data/} needs to be created within \textit{BiasedSampling/}.
+A folder called \flrcmd{data/} needs to be created within \flrcmd{BiasedSampling/}.
 The spring command serves to impose the additional harmonic potential $V$ with
 the spring constant $k$. Note that the value of $k$ should be chosen with care,
 if $k$ is too small, the particle won't follow the biasing potential center,
@@ -3902,7 +3905,7 @@ from -25 to 25. For each value of $x_\text{des}$, an equilibration step of 0.4 n
 is performed, followed by a step of 2 ns during which the position along $x$ of
 the particle is saved in data files (one data file per value of $x_\text{des}$).
 You can always increase the duration of the runs for better samplings. Run the
-\textit{input.lmp}  file using LAMMPS.
+\flecmd{input.lmp}  file using LAMMPS.
 
 \begin{figure}
 \centering
@@ -3925,15 +3928,15 @@ make clean
 make
 \end{lstlisting}
 \noindent The compilation creates an executable called \textit{wham} that you can
-copy in the \textit{BiasedSampling/} folder. To apply the WHAM algorithm to our
+copy in the \flrcmd{BiasedSampling/} folder. To apply the WHAM algorithm to our
 simulation, we first need to create a metadata file. This file simply contains
 \begin{itemize}
 \item the paths to all the data files,
 \item the value of $x_\text{des}$,
 \item and the values of $k$.
 \end{itemize}
-Download the \href{https://raw.githubusercontent.com/lammpstutorials/lammpstutorials-article/main/files/tutorial7/metadata.dat}{\textit{metadata.dat}}
-file I have written and save it in \textit{BiasedSampling/}. Then, simply run the
+Download the \href{\filepath tutorial7/metadata.dat}{\dwlcmd{metadata.dat}}
+file I have written and save it in \flrcmd{BiasedSampling/}. Then, simply run the
 following command in the terminal:
 \begin{lstlisting}
 ./wham -25 25 50 1e-8 119.8 0 \
