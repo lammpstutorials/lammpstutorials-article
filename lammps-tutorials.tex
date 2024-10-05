@@ -870,20 +870,21 @@ on).
 
 \subsubsection{Improving the script}
 
-Let us improve the input script and perform slightly more advanced operations,
-such as imposing specific initial positions on the atoms and restarting the
+Let us improve the input script and perform more advanced operations,
+such as specifying initial positions for the atoms and restarting the
 simulation from a previously saved configuration.
 
 \paragraph{Control the initial atom positions}
-Open the \flecmd{improved.min.lmp} which was downloaded during the
-tutorial setup.  This contains the \textit{Part A} of the
-\flecmd{initial.lmp} file \emph{without} the \textit{create\_atoms}
-commands in the \textit{System definition} part.
+
+Open the \flecmd{improved.min.lmp}, which was downloaded during the
+tutorial setup.  This file contains the \lmpcmd{Part A} of the
+\flecmd{initial.lmp} file, but \emph{without} the \lmpcmd{create\_atoms}
+commands in the \lmpcmd{System definition} section.
 
 We want to create the atoms of types 1 and 2 in two separate
-regions.  Thus we need to add two \textit{region} commands and then
-re-add the \textit{create\_atoms} commands, but using the new regions
-instead of the simulation box region for placing the created atoms:
+regions.  To achieve this, we need to add two \lmpcmd{region} commands and then
+reintroduce the \lmpcmd{create\_atoms} commands, this time using the new
+regions instead of the simulation box region to place the atoms:
 \begin{lstlisting}
 # 2) System definition
 region simbox block -20 20 -20 20 -20 20
@@ -894,42 +895,42 @@ region cyl_out cylinder z 0 0 10 INF INF side out
 create_atoms 1 random 1000 34134 cyl_out
 create_atoms 2 random 150 12756 cyl_in
 \end{lstlisting}
-The \textit{side in} and \textit{side out} keywords are used to define
-regions that represent the inside and outside of the cylinder of radius
-10. Then, append a sixth section \textit{Save system} at the end of the
-file with the following content.:
+The \lmpcmd{side in} and \lmpcmd{side out} keywords are used to define
+regions representing the inside and outside of the cylinder of radius
+10 length units.  Then, append a sixth section titled \lmpcmd{Save system} at the end
+of the file with the following content (make sure the \lmpcmd{write\_data} command
+is placed \emph{after} the \lmpcmd{minimize} command):
 \begin{lstlisting}
 # 6) Save system
 write_data minimized_coordinates.data
 \end{lstlisting}
 
-A significant improvement to the input is the addition of the
-\textit{write\_data} command.  This command is used to write the state
-of the system to a text format file called \flecmd{improved.min.data}.
-Make sure the \textit{write\_data} command is placed \emph{after} the
-\textit{minimize} command.  This \flecmd{.data} file will be used later
+A key improvement to the input is the addition of the
+\lmpcmd{write\_data} command.  This command writes the state
+of the system to a text file called \flecmd{minimized\_coordinates.data}.
+This \flecmd{.data} file will be used later
 to restart the simulation from the final state of the energy
 minimization step without having to repeat the system creation and
 minimization.
 
-Run LAMMPS on the improved input.  At the end of the simulation, a file
-called \flecmd{improved.min.data} is created.  You can view the contents
+Run the \flecmd{improved.min.lmp} file using LAMMPS.  At the end of the simulation, a file
+called \flecmd{minimized\_coordinates.data} is created.  You can view the contents
 of the file with the file view feature of LAMMPS--GUI, e.g.~from the
-\textit{File} menu or by right-clicking on the file name in the editor
-and selecting the entry ``View file 'improved.min.data' ''.
+\guicmd{File} menu or by right-clicking on the file name in the editor
+and selecting the entry \guicmd{View file `minimized\_coordinates.data'}.
 
-You can see that the data file contains all the information necessary to
+The created \flecmd{.data} file contains all the information necessary to
 restart the simulation, such as the number of atoms, the box size, the
-\textit{masses}, and the \textit{pair\_coeffs}.  The
-\flecmd{improved.min.data} file also contains the final
-positions of the atoms within the \textit{Atoms} section. The first five
-columns of the \textit{Atoms} section correspond (from left to right) to
+masses, and the pair coefficients.  The
+\flecmd{.data} file also contains the final
+positions of the atoms within the \lmpcmd{Atoms} section. The first five
+columns of the \lmpcmd{Atoms} section correspond (from left to right) to
 the atom indexes (from 1 to the total number of atoms, 1150), the atom
 types (1 or 2 here), and the positions of the atoms $x$, $y$, $z$. The
 last three columns are image flags that keep track of which atoms
 crossed the periodic boundary.  The exact format of each line in the
-\textit{Atoms} section depends on the choice of \textit{atom\_style} and
-thus which per-atom data is set and stored internally in LAMMPS.
+\textit{Atoms} section depends on the choice of \textit{atom\_style}, which
+determines which per-atom data is set and stored internally in LAMMPS.
 
 \begin{note}
   Instead of the \textit{write\_data} command, you can also use the
@@ -937,9 +938,9 @@ thus which per-atom data is set and stored internally in LAMMPS.
   of the simulation to a binary restart file.  Binary restart files are
   more compact, faster to write, contain more information and thus are
   often more convenient to use.  For example, the choice of atom style
-  or pair style is recorded so those commands do not need to issued
-  before reading the restart.  But restart files are not expected to be
-  portable across LAMMPS versions or platforms.  Thus, in this tutorial
+  or pair style is recorded, so those commands do not need to be issued
+  before reading the restart.  However, restart files are not expected to be
+  portable across LAMMPS versions or platforms.  Thus, in this tutorial,
   we use \textit{write\_data} so we can provide you with a reference
   copy of the data file in the solutions that will work for you,
   regardless of your LAMMPS version or platform.

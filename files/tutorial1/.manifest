@@ -18,12 +18,11 @@ solution/initial.run0.png
 solution/initial.min.png
 solution/initial.mp4
 solution/improved.min.lmp
-solution/improved.min.data
 solution/improved.min.log
 solution/improved.min.png
 solution/improved.md.lmp
 solution/improved.md.log
 solution/improved.md.dat
-solution/initial.mp4
+solution/minimized_coordinates.data
 
 # 3) folders not known to LAMMPS GUI will be skipped
