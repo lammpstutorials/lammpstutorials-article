@@ -380,23 +380,23 @@ files, and linked to the LAMMPS library, allowing it to run LAMMPS
 directly.  The text editor functions similarly to other graphical editors
 like Notepad or Gedit but offers the following enhancements specifically for LAMMPS:
 \begin{itemize}
-	\item Auto-completion of LAMMPS commands and options
-	\item Syntax highlighting for LAMMPS input files
-	\item Visualization using LAMMPS built-in renderer
-	\item Start and stop simulations via mouse or keyboard
-	\item Monitoring of simulation progress
-	\item Automatic plotting of thermodynamic data during runs
-	\item Capture of ``dump image'' outputs for animations
-	\item Export of thermodynamic data for external plotting
-	\item Support for OpenMP threading or GPU acceleration
-	\item Context-sensitive online help (via right-click)
-	\item Customization of settings through a preferences dialog
-	\item Syntax-aware line indentation
-	\item Display of line numbers
-	\item Capture of output in a text window
-	\item Inspection of binary restart files
-	\item Viewing of plain text files
-	\item Use of wizard dialogs to set up tutorials
+  \item Auto-completion of LAMMPS commands and options
+  \item Syntax highlighting for LAMMPS input files
+  \item Visualization using LAMMPS built-in renderer
+  \item Start and stop simulations via mouse or keyboard
+  \item Monitoring of simulation progress
+  \item Automatic plotting of thermodynamic data during runs
+  \item Capture of ``dump image'' outputs for animations
+  \item Export of thermodynamic data for external plotting
+  \item Support for OpenMP threading or GPU acceleration
+  \item Context-sensitive online help (via right-click)
+  \item Customization of settings through a preferences dialog
+  \item Syntax-aware line indentation
+  \item Display of line numbers
+  \item Capture of output in a text window
+  \item Inspection of binary restart files
+  \item Viewing of plain text files
+  \item Use of wizard dialogs to set up tutorials
 \end{itemize}
 
 \hyperref[using-lammps-gui-label]{Appendix \ref{using-lammps-gui-label}}
@@ -802,7 +802,8 @@ will eventually reach a dynamic equilibrium where the kinetic energy
 removed and added are about the same.  The number 1530917 is a
 seed used to initialize the random number generator used inside of
 \lmpcmd{fix langevin}; you can change it to perform statistically
-independent simulations.
+independent simulations.  In the presence of a thermostat, the MD simulation
+will be performed in the canonical or NVT ensemble.
 
 Run the simulation again using LAMMPS. From the information
 printed in the \guicmd{Output} window, one can see that the temperature
@@ -819,8 +820,10 @@ about 1.5 (Figure~\ref{fig:evolution-energy}\,b).
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{LJ-energy}
-\caption{a) Potential energy ($p_\text{e}$) of the binary mixture as a function
-of the $t$. b) Kinetic energy ($k_\text{e}$) as a function of time $t$.}
+\caption{a)~Potential ($p_\text{e}$) and kinetic energy ($k_\text{e}$) of the
+binary mixture as functions of the step during energy minimization.
+b)~$p_\text{e}$ and $k_\text{e}$ as functions of time $t$ during
+molecular dynamics in the NVT ensemble.}
 \label{fig:evolution-energy}
 \end{figure}
 
