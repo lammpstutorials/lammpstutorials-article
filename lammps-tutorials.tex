@@ -154,7 +154,7 @@
   software packages and wide array of options and features can make it
   challenging to use them correctly, particularly for beginners in the
   topic of MD simulations.  LAMMPS is one such versatile molecular
-  simulation code, designed for modeling particle-based systems for a
+  simulation code, designed for modeling particle-based systems across a
   broad range of materials science and computational chemistry
   applications, including atomistic, coarse--grained, mesoscale,
   grid-free continuum, and discrete element models.  LAMMPS is capable
@@ -167,7 +167,7 @@
   molecular simulations in LAMMPS with systems of varying complexities,
   including a simple fluid and a carbon nanotube.  The last three
   tutorials address more advanced molecular simulation techniques,
-  specifically, the use of a reactive force field, enhanced sampling, and
+  specifically the use of a reactive force field, enhanced sampling, and
   grand canonical Monte Carlo.
   % AK: ideally, there would be an eighth tutorial showcasing both
   % fix bond/react and how to benefit from type labels in its use.
@@ -183,18 +183,10 @@
 
 \section{Introduction}
 
-%Here you would explain what problem you are tackling and briefly motivate your work.
-
-%In this particular template, we have removed most of the usage examples which occur in \texttt{sample-document.tex} to provide a minimal template you can modify; however, we retain a couple of examples illustrating more unusual features of our templates/article class, such as the checklists, and information on algorithms and pseudocode.
-
-%Keep in mind, as you prepare your manuscript, that you should plan for a representative image  which will be used to highlight your article on the journal website and publications. Usually, this would be one of your figures, but it must also be uploaded separately upon article submission. We give specific guidelines for this image on the journal website in the section on article submission (see \url{https://livecomsjournal.github.io/authors/policies/index.html#article-submission}).
-
-%Additionally, for well-formatted manuscripts, we recommend that you let LaTeX handle figure/table placement for you as much as possible, so please avoid specifying strenuous float instructions like `[h!]` and `[H]` as much as possible.
-
 Molecular simulations (MS) can be used to model a large variety of
-atomic, coarse-grained systems, including solids, fluids, polymers, and
+atomic, coarse--grained systems, including solids, fluids, polymers, and
 biomolecules, as well as complex interfaces and multi-component systems.
-Various MS methods exist, molecular dynamics (MD) and Monte Carlo (MC)
+Various MS methods exist -- molecular dynamics (MD) and Monte Carlo (MC)
 being among the most commonly used.  MD is the preferred method for
 obtaining the accurate dynamics of a system, as it relies on solving
 Newton's equations of motion.  For systems with many degrees of freedom
@@ -203,7 +195,7 @@ MD because it allows for efficiently exploring a configuration space
 without being confined by the accessible time scale.  MC involves
 performing random changes to the system configuration that are either
 accepted or rejected based on energy criteria
-\cite{frenkel2023understanding, allen2017computer}.  MS allow for
+\cite{frenkel2023understanding, allen2017computer}.  MS allows for
 measuring a broad variety of properties, including structural properties
 (e.g.~bond length distribution, coordination numbers, radial
 distribution functions), thermodynamic properties (e.g.~temperature,
@@ -217,34 +209,34 @@ interpreting experimental data \cite{van2008molecular}.
 LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator)
 \cite{lammps_home} is a highly flexible and parallel open-source MS
 tool.  Over the years, a broad variety of particle interaction models
-have been implemented in LAMMPS, enabling it to model -- among others --
-atomic, polymeric, biological, metallic, reactive, granular, mesoscale,
-grid--free continuum, and coarse-grained systems
+have been implemented in LAMMPS, enabling it to model a wide range of
+systems, including atomic, polymeric, biological, metallic, reactive, granular,
+mesoscale, grid--free continuum, and coarse--grained systems
 \cite{thompson2022lammps}.  LAMMPS can be used on a single CPU core, a
 multi-socket and multi-core server, an HPC cluster, or a high-end
-supercomputing system.  It can handle complex and large-scale
-simulations efficiently, including hybrid MPI--OpenMP parallelization
+supercomputing system.  It can efficiently handle complex and large-scale
+simulations, including hybrid MPI--OpenMP parallelization
 and MPI + GPU acceleration (for a subset of its functionality).
 
 However, LAMMPS requires users to provide detailed input files that can
 be challenging to write correctly, considering the overwhelming number
 of features and options offered by LAMMPS.  While LAMMPS has
 extensive and detailed documentation, it can be difficult for new users
-to navigate since it focuses on describing \emph{all} available
-features, but expects that users already know which to choose.  Many of
-the advanced features are not relevant to most users and the defaults
-usually adequate and thus the level of detail in the manual can become
+to navigate.  While it focuses on describing \emph{all} available
+features, it assumes users already know which to choose.  Many of
+the advanced features are not relevant to most users, and the defaults
+usually adequate; thus, the level of detail in the manual can become
 distracting.
 
 In addition to the intrinsic complexity of LAMMPS, performing accurate
-MS involves making several complex and system-specific decisions related
+MS requires several complex and system-specific decisions related
 to the physics to be modeled, such as selecting the thermodynamic
 ensemble (e.g.~micro-canonical, grand-canonical), determining the
 simulation duration, and choosing the sets of parameters describing the
-interactions between the atoms (the so-called force field)
-\cite{van2018validation}.  These choices are independent of the chosen
-simulation software, although sometimes limited by the availability of
-features in a given software package.  The tutorials presented in this
+interactions between atoms (the so-called force field)
+\cite{van2018validation}.  These choices are independent of the
+simulation software, though they can sometimes be limited by the availability of
+features in a given package.  The tutorials presented in this
 article aim to flatten the learning curve, and help users perform
 accurate and reliable MS using LAMMPS.
 
