@@ -85,7 +85,8 @@
   bottom=5pt, % Extra bottom padding
 }
 
-\renewcommand{\emph}[1]{\underline{#1}} % make \emph{} use underline instead of italic
+% \renewcommand{\emph}[1]{\underline{#1}} % make \emph{} use underline instead of italic
+% S.G.: I went back to italic since all the other italic commands were replaced
 \newcommand{\lmpcmd}[1]{\hspace{0pt}\colorbox{listing}{\textcolor{command}{\texttt{#1}}}\hspace{0pt}} % lammps command
 \newcommand{\flrcmd}[1]{\textcolor{command}{\texttt{#1}}} % folder in monopace
 \newcommand{\flecmd}[1]{\textcolor{command}{\texttt{#1}}} % files name in monopace
@@ -425,24 +426,24 @@ are in \guicmd{quoted monospace}.
 \label{lennard-jones-label}
 
 The objective of this tutorial is to perform a simple MD simulation
-using LAMMPS.  The system is a Lennard-Jones fluid composed of neutral
+using LAMMPS.  The system consists of a Lennard-Jones fluid composed of neutral
 particles with two different effective diameters, contained within a
 cubic box with periodic boundary conditions (Fig.\,\ref{fig:LJ}).  In
 this tutorial, the temperature of the system is maintained using a
 Langevin thermostat \cite{schneider1978molecular}, and basic quantities,
-including the potential and kinetic energies, are extracted from the
-system.
+including the potential and kinetic energies, are calculated from the
+simulation.
 
 \subsubsection{My first input}
 
 To run a simulation using LAMMPS, you need to write an input script with
-a series of commands that LAMMPS will then execute.  For clarity, the
+a series of commands for LAMMPS to execute.  For clarity, the
 input scripts for this tutorial will be divided into five categories,
-which we will fill out step by step.  To set up this tutorial, select
-``Start Tutorial 1'' from the ``Tutorials'' menu of LAMMPS--GUI and
-follow the instructions.  This will select, and -- if needed -- create,
-a folder, place the initial input file \flecmd{initial.lmp} into it, and
-open that file in the LAMMPS--GUI editor.  The editor should have the
+which will be filled out step by step.  To set up this tutorial, select
+\guicmd{Start Tutorial 1} from the \guicmd{Tutorials} menu of LAMMPS--GUI, and
+follow the instructions.  This will select and, if needed, create a folder,
+place the initial input file \flecmd{initial.lmp} in it, and
+open that file in the LAMMPS--GUI editor.  The editor should display the
 following content:
 \begin{lstlisting}
 # PART A - ENERGY MINIMIZATION
@@ -453,30 +454,30 @@ following content:
 # 5) Run
 \end{lstlisting}
 
-A line or part of a line starting with a hash symbol ($\#$) is a comment
+Everything that appears after a hash symbol ($\#$) is a comment
 and ignored by LAMMPS.  LAMMPS--GUI will color such comments in red.
 These five categories are not required in every input script and do not
-necessarily need to be in that exact order.  For instance, parts 3 and 4
-could be inverted, or part 4 could be omitted.  Note, however, that
+necessarily need to be in that exact order.  For instance, the \lmpcmd{Settings}
+and the \lmpcmd{Visualization} categories could be inverted, or
+the \lmpcmd{Visualization} category could be omitted.  Note, however, that
 LAMMPS reads input files from top to bottom and processes each command
-\emph{immediately}.  Therefore, the \textit{Initialization} and
-\textit{System definition} categories must appear at the top of the
-input, and the \textit{Run} category at the bottom.  Also, the specifics
-of some commands can change after global settings are changed, so the
+\emph{immediately}.  Therefore, the \lmpcmd{Initialization} and
+\lmpcmd{System definition} categories must appear at the top of the
+input, and the \lmpcmd{Run} category must appear at the bottom.  Also, the
+specifics of some commands can change after global settings are changed, so the
 order of commands in the input script matters.
 
 \paragraph{Initialization}
 
-In the first section of the script, called \textit{Initialization}, we
-enter global setting for the simulation, such as choice of units, the
-behavior at the boundaries of the box (e.g., periodic or non-periodic)
-or the type of atoms (e.g., uncharged point particles or extended
-spheres with a radius and angular velocities).  These commands must be
-executed \emph{before} the simulation box is created; they will cause an
-error if entered later.  Similarly, many LAMMPS commands may only be
+In the first section of the script, called \lmpcmd{Initialization}, we
+set global parameters for the simulation, such as units, boundary conditions
+(e.g., periodic or non-periodic), and atom types (e.g., uncharged point particles
+or extended spheres with a radius and angular velocities).  These commands must be
+executed \emph{before} creating the simulation box, or they will cause
+an error.  Similarly, many LAMMPS commands may only be
 entered \emph{after} the simulation box is defined.  Only a very small
 number of commands may be used in both cases.  Edit \flecmd{initial.lmp}
-so that the \textit{Initialization} section looks like this:
+so that the \lmpcmd{Initialization} section looks like this:
 
 \begin{lstlisting}
 # 1) Initialization
@@ -486,20 +487,20 @@ atom_style atomic
 boundary p p p
 \end{lstlisting}
 
-The first line, \lmpcmd{units lj}, indicates that we want to use
-so-called ``reduced units'' in which all quantities are unitless.  This
-is a popular choice for simulations investigating general statistical
-mechanical principles where only relative differences between parameters
-matter and that are not aimed to represent any specific material.
+The first line, \lmpcmd{units lj}, indicates that we are using
+so-called \emph{reduced} units in which all quantities are unitless.  This is
+a popular choice for simulations investigating general statistical mechanical
+principles, focusing on relative differences between parameters rather than
+representing any specific material.
 
 The second line, \lmpcmd{dimension 3}, indicates that the simulation is
-in 3D as opposed to a 2D system where atoms can only move in the
+in 3D, as opposed to 2D, where atoms are restricted to move only in the 
 xy-plane.  The third line, \lmpcmd{atom\_style atomic}, indicates that
 the \lmpcmd{atomic} style will be used for simple individual particles,
-therefore each particle is just a point with a mass.  This is the
-minimal atom style; other atom styles allow to associate more properties
-with atoms like charges, bonds, molecule IDs and much more.  The choice
-of atom style is generally determined by the model being simulated.
+meaning each particle is represented as a point with a mass.  This is the
+minimal atom style; other atom styles allow for associating additional properties
+with atoms, such as charges, bonds, molecule IDs, and more.  The choice
+of atom style is determined by the model being simulated.
 
 The last line, \lmpcmd{boundary p p p}, indicates that periodic boundary
 conditions will be used along all three directions of space (the 3
@@ -510,10 +511,10 @@ with minimum, \lmpcmd{m}.  For non-periodic boundaries, there can be a
 different choice for each side, so something like \lmpcmd{boundary p p
   fm} is valid input and suitable for slab geometry systems.
 
-Strictly speaking, neither of these four commands are required, because
-the represent they default settings for the respective global properties.
-It is, however, good practice to make such defaults explicit so that
-there is no confusion when sharing inputs with other LAMMPS users.
+Strictly speaking, none of these four commands are required because
+they represent the default settings for the respective global properties.
+However, it is good practice to make such defaults explicit to avoid
+confusion when sharing inputs with other LAMMPS users.
 
 \begin{figure}
 \centering
@@ -521,17 +522,17 @@ there is no confusion when sharing inputs with other LAMMPS users.
 \caption{A screenshot of the LAMMPS-GUI \textit{Editor} window during
   \hyperref[lennard-jones-label]{Tutorial 1}. The coloring of the text
   is based on the syntax for LAMMPS input files.  The pop-up menu is the
-  context menu for right-clicking on the ``atom\_style'' line.}
+  context menu for right-clicking on the \lmpcmd{atom\_style} line.}
 \label{fig:GUI-1}
 \end{figure}
 
 Each LAMMPS command is associated with extensive online documentation
 detailing the different options for that command.  From the LAMMPS-GUI
-editor buffer, the LAMMPS documentation can be accessed by
+editor buffer, the documentation can be accessed by
 right-clicking the line with a command, such as \lmpcmd{units lj}, and
-selecting \textit{View documentation for (\dots)}\,.  LAMMPS--GUI will
-ask your web browser to open the corresponding URL of the online manual.
-See figure \ref{fig:GUI-1} for a screenshot with such a context menu.
+selecting \guicmd{View documentation for (\dots)}\,.  LAMMPS--GUI will
+prompt your web browser to open the corresponding URL of the online manual.
+See figure~\ref{fig:GUI-1} for a screenshot of this context menu.
 
 \paragraph{System definition}
 
