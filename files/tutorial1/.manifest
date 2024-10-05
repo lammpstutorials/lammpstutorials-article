@@ -1,0 +1,29 @@
+# LAMMPS Tutorial manifest file. This file determines what is downloaded when.
+# comments start with a # as the first character.
+# comments and empty lines are ignored
+##############################################################################
+# 1) input file templates
+# the first file will be automatically loaded
+initial.lmp
+improved.min.lmp
+improved.md.lmp
+
+# 2) solution files
+# only downloaded on request
+solution/initial.lmp
+solution/initial.log
+solution/initial.parta.dat
+solution/initial.partb.dat
+solution/initial.run0.png
+solution/initial.min.png
+solution/initial.mp4
+solution/improved.min.lmp
+solution/improved.min.data
+solution/improved.min.log
+solution/improved.min.png
+solution/improved.md.lmp
+solution/improved.md.log
+solution/improved.md.dat
+solution/initial.mp4
+
+# 3) folders not known to LAMMPS GUI will be skipped

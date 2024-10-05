@@ -519,8 +519,8 @@ confusion when sharing inputs with other LAMMPS users.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GUI-1.png}
-\caption{A screenshot of the LAMMPS-GUI \textit{Editor} window during
-  \hyperref[lennard-jones-label]{Tutorial 1}. The coloring of the text
+\caption{A screenshot of the LAMMPS-GUI \guicmd{Editor} window during
+  \hyperref[lennard-jones-label]{Tutorial 1}.  The coloring of the text
   is based on the syntax for LAMMPS input files.  The pop-up menu is the
   context menu for right-clicking on the \lmpcmd{atom\_style} line.}
 \label{fig:GUI-1}
@@ -567,7 +567,7 @@ error at the beginning of a minimization or MD run.
 
 The third line, \lmpcmd{create\_atoms (\dots)}, creates 1500 atoms of type
 1 at random positions within the region
-\lmpcmd{simbox}.  The integer \lmpcmd{34134} is a seed for the
+\lmpcmd{simbox}.  The integer 34134 is a seed for the
 internal random number generator that can be changed to create different
 sequences of random numbers and thus different initial geometries for
 the simulation.  The fourth line creates 100 atoms of type 2.
@@ -650,26 +650,30 @@ the post-run summary and statistics output.
 
 You can now run LAMMPS.  It should finish quickly, and with the default
 settings, LAMMPS--GUI will open two windows: one displaying the console
-output and another with a chart.  The output window shows information from
+output and another with a chart.  The \guicmd{Output} window shows information from
 the executed commands, along with the total energy and pressure at step 0,
-as specified by the thermodynamic data request. Since no actual simulation
+as specified by the thermodynamic data request.  Since no actual simulation
 steps were performed, the charts will be empty.
 
 \paragraph{Snapshot Image}
 
-At this point it is possible to create a snapshot image of the
-current system using the \textit{Image Viewer} window.  The image viewer
-works by telling LAMMPS to render an image of the current system using
-its own render library through the \lmpcmd{dump image} command.  The
-resulting image is read in and displayed.  The various buttons can be
-used to change what is shown and how it is rendered.  The image of
-figure \ref{fig:LJ} was created this way.  This will always create an
-image of the currently active state of the system.  Save the image for
-later comparisons.
+At this point, you can create a snapshot image of the
+current system using the \guicmd{Image Viewer} window, which can be
+accessed by clicking the \guicmd{Create snapshot image} button at the
+bottom of the LAMMPS-GUI.  The image viewer
+works by instructing LAMMPS to render an image of the current system using
+its internal rendering library via the \lmpcmd{dump image} command.  The
+resulting image is then displayed, and various buttons allow you to adjust
+the view and rendering style.  The image of
+figure~\ref{fig:LJ} was created this way.  This will always capture the current
+state of the system.  Save the image for future comparisons.
+% S.G.: Using the LAMMPS-GUI that came with the 29Aug2024 version, all spheres
+% have the same size by default. Is it expected behavior?
 
 \paragraph{Energy minimization}
-Now replace the \lmpcmd{run} command line with a \lmpcmd{minimize} command
-as shown below.
+
+Now, replace the \lmpcmd{run 0 post no} command line with a \lmpcmd{minimize}
+command as follows:
 \begin{lstlisting}
 # 5) Run
 minimize 1.0e-6 1.0e-6 1000 10000
@@ -678,48 +682,48 @@ minimize 1.0e-6 1.0e-6 1000 10000
 This tells LAMMPS to perform an energy minimization of the system.  That
 is, LAMMPS will compute the forces on all atoms and then update the
 positions according to a selected algorithm so that the potential energy
-will decrease.  By default, LAMMPS uses the conjugate gradient (CG)
+decreases.  By default, LAMMPS uses the conjugate gradient (CG)
 algorithm \cite{hestenes1952methods}.  The simulation will stop as soon
 as the minimizer algorithm cannot find a way to lower the potential
 energy.  Except for trivial systems, minimization algorithms will find a
 local minimum rather than the global minimum.
 
 Run the minimization and observe that LAMMPS-GUI will capture the output
-and update the chart in real-time.  This run executes quickly (depending
-on your computer's capability) and LAMMPS--GUI may fail to capture some
+and update the chart in real time.  This run executes quickly (depending
+on your computer's capabilities) and LAMMPS--GUI may fail to capture some
 of the thermodynamic data (see figure \ref{fig:chart-log}).  In that
-case, use the \textit{Preferences} dialog to reduce the data update
-interval and switch to single threaded, unaccelerated execution in the
-Accelerators tab.  You can repeat the run.  Each new run will start
+case, use the \guicmd{Preferences} dialog to reduce the data update
+interval and switch to single-threaded, unaccelerated execution in the
+\guicmd{Accelerators} tab.  You can repeat the run.  Each new run will start
 fresh, forgetting the current system and starting over from the top.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.49\linewidth]{chart-1}
 \includegraphics[width=0.497\linewidth]{output-1}
-\caption{\textit{Chart} (left) and \textit{Output} (right) window of LAMMPS-GUI after performing
-  the minimization simulation of \hyperref[lennard-jones-label]{Tutorial 1}.}
+\caption{\guicmd{Charts} (left) and \guicmd{Output} (right) windows of LAMMPS-GUI
+  after performing the minimization simulation of \hyperref[lennard-jones-label]{Tutorial 1}.}
 \label{fig:chart-log}
 \end{figure}
 
-The potential energy can be seen to decrease from a positive value to a
+The potential energy decreases from a positive value to a
 negative value.  The initially positive value of the potential energy is
-expected because the atoms have been created at random positions within
-the simulation box and some of them are very close, resulting in a large
-initial potential energy due to the repulsive branch of the
+expected because the atoms are created at random positions within
+the simulation box, with some of them being very close to each other,
+resulting in a large initial potential energy due to the repulsive branch of the
 Lennard-Jones potential.  As the energy minimization progresses, the
-energy decreases -- first rapidly -- then more slowly and plateaus at
-a negative value, indicating that the atoms have been displaced to
+energy decreases -- first rapidly -- then more slowly, and it plateaus at
+a negative value, indicating that the atoms are displaced to
 reasonable distances from each other.
 
 Create and save a snapshot image of the simulation state after the
-minimization and compare the two images.  You should see that atoms
+minimization and compare the two images.  You should see that the atoms
 are ``clumping together''.
 
 Since the \lmpcmd{thermo\_style} command also includes the \textit{press}
 keyword, it is possible to switch from plotting the total energy to
-showing the pressure by choosing \textit{Press} in \textit{Select data}
-drop down menu.
+displaying the pressure by choosing \guicmd{Press} in the \guicmd{Select data}
+drop-down menu of the \guicmd{Charts} window.
 
 \paragraph{Molecular dynamics}
 
@@ -727,8 +731,8 @@ After the energy minimization, any overlapping atoms have been
 displaced, and the system is now ready to perform a molecular dynamics
 simulation using the minimized geometry.  Since we want to start from
 the result of the energy minimization step, we can append commands for
-the MD simulation to the same input script, \flecmd{initial.lmp}. After
-the \textit{minimize} command, add the following lines:
+the MD simulation to the same input script, \flecmd{initial.lmp}.  After
+the \lmpcmd{minimize} command, add the following lines:
 \begin{lstlisting}
 # PART B - MOLECULAR DYNAMICS
 # 4) Visualization
@@ -742,26 +746,26 @@ minimization.  There is no need to re-initialize or re-define the
 system.  The \lmpcmd{thermo} command is called a second time to change
 the previous value of 10 to a value of 50 as soon as \textit{PART B} of
 the simulation starts.  In addition, a new \lmpcmd{thermo\_style}
-command changes which thermodynamic information to be printed by LAMMPS
+command changes which thermodynamic information is to be printed by LAMMPS
 during \textit{PART B}.  This is done because during molecular
-dynamics the system will have a non-zero temperature (\textit{temp})
+dynamics, the system will have a non-zero temperature (\textit{temp})
 and kinetic energy (\textit{ke}) and it is useful to monitor those.
 Here, \textit{pe} is the potential energy of the system, such that
 \textit{pe + ke = etotal}.
 
-Then, let us add a second \textit{Run} category by adding the following
-lines to \textit{PART B} of \flecmd{initial.lmp}:
+Then, let us add a second \lmpcmd{Run} category by adding the following
+lines to \emph{PART B} of \flecmd{initial.lmp}:
 \begin{lstlisting}
 # 5) Run
 fix mynve all nve
 timestep 0.005
 run 10000
 \end{lstlisting}
-The \lmpcmd{fix nve} command is used to update the positions and the
-velocities of the atoms in the group \textit{all} at every step.  The
-group \textit{all} is a default group that contains every atom.  The
-last two lines set the value of the \textit{timestep} and the number of
-steps for the \textit{run}, respectively, corresponding to a total
+The \lmpcmd{fix nve} command is used to update the positions and
+velocities of the atoms in the group \lmpcmd{all} at every step.  The
+group \lmpcmd{all} is a default group that contains every atom.  The
+last two lines set the value of the \lmpcmd{timestep} and the number of
+steps for the \lmpcmd{run}, respectively, corresponding to a total
 duration of 50 time units.
 
 Since there are no other fix commands that change forces or velocities,
@@ -771,71 +775,69 @@ This means the system has no exchange of energy outside the simulation
 box and the number of particles and the box volume are constant.  We can
 see that there is no equilibrium between potential and kinetic energy
 yet, as the former is falling while the latter is rising.  If you extend
-the run for more steps (say 100000), the values for both kinetic and
-potential energy will plateau (indicating equilibrium) and the total
+the run for more steps (say 100,000), the values for both kinetic and
+potential energy will plateau (indicating equilibrium), and the total
 energy should fluctuate around some constant value.
 
-Now we change the \textit{Run} section to:
+Now we change the \lmpcmd{Run} section to:
 \begin{lstlisting}
- # 5) Run
- fix mynve all nve
- fix mylgv all langevin 1.0 1.0 0.1 1530917
- timestep 0.005
- run 10000
+# 5) Run
+fix mynve all nve
+fix mylgv all langevin 1.0 1.0 0.1 1530917
+timestep 0.005
+run 10000
 \end{lstlisting}
 
 The new command adds a ``Langevin thermostat'' to the atoms in the group
-\textit{all}, with a desired target temperature of 1.0 temperature units
+\lmpcmd{all}, with a desired target temperature of 1.0 temperature units
 throughout the run (the two numbers stand for the target at the beginning
 and at the end of the run, which allows for a temperature ramp if
-they differ) \cite{schneider1978molecular}.  A \textit{damping}
-parameter of 0.1 is used.  The \textit{damping} parameter determines how
+they differ) \cite{schneider1978molecular}.  A \lmpcmd{damping}
+parameter of 0.1 is used.  The \lmpcmd{damping} parameter determines how
 rapidly the temperature is relaxed to its desired value.  In a Langevin
-thermostat the atoms are subject to friction and random noise (in the form
+thermostat, the atoms are subject to friction and random noise (in the form
 of randomly added velocities).  Since a constant friction term removes
 more kinetic energy from fast atoms and less from slow atoms, the system
 will eventually reach a dynamic equilibrium where the kinetic energy
-removed and added are about the same.  The number \textit{1530917} is a
+removed and added are about the same.  The number 1530917 is a
 seed used to initialize the random number generator used inside of
-\textit{fix langevin}, you can change it to perform statistically
+\lmpcmd{fix langevin}; you can change it to perform statistically
 independent simulations.
 
-Run the simulation again using LAMMPS. Open the \textit{Output} window
-by selecting \textit{View}, and \textit{Output}. From the information
-printed in the \textit{Output} window, one can see that the temperature
-\textit{Temp} starts from 0, but rapidly reaches the requested value and
+Run the simulation again using LAMMPS. From the information
+printed in the \guicmd{Output} window, one can see that the temperature
+starts from 0 but rapidly reaches the requested value and
 stabilizes itself near $T=1$ temperature units.  One can also see that
 the potential energy, $p_\text{e}$, rapidly decreases during energy
-minimization (see also Fig.\,\ref{fig:evolution-energy}\,a). After
+minimization (see also figure~\ref{fig:evolution-energy}\,a). After
 the molecular dynamics simulation starts, $p_\text{e}$ increases until
 it reaches a plateau value of about -0.25. The kinetic energy,
 $k_\text{e}$, is equal to zero during energy minimization and then
 increases during molecular dynamics until it reaches a plateau value of
-about 1.5 (Fig.\,\ref{fig:evolution-energy}\,b).
+about 1.5 (Figure~\ref{fig:evolution-energy}\,b).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{LJ-energy}
 \caption{a) Potential energy ($p_\text{e}$) of the binary mixture as a function
-of the time $t$. b) Kinetic energy ($k_\text{e}$) as a function of $t$.}
+of the $t$. b) Kinetic energy ($k_\text{e}$) as a function of time $t$.}
 \label{fig:evolution-energy}
 \end{figure}
 
 \paragraph{Trajectory visualization}
 
-So far, the simulation was monitored only from the thermodynamic
-information.  To better follow the evolution of the system and visualize
-the trajectories of the atoms, we use the \textit{dump image} command to
+So far, the simulation has been mostly monitored through the analysis of
+thermodynamic information.  To better follow the evolution of the system and visualize
+the trajectories of the atoms, let us use the \lmpcmd{dump image} command to
 create snapshot images during the simulation.  We have already explored
-the \textit{Image Viewer} window.  Open it (again) and adjust the
-visualization to your liking using the various buttons.  Now you can
+the \guicmd{Image Viewer} window.  Open it again and adjust the
+visualization to your liking using the available buttons.  Now you can
 copy the command line used to create this visualization to the clipboard
-by either using the \texttt{Ctrl-D} keyboard shortcut or select
-\textit{Copy dump image command} from the \textit{File} menu.  This text
-can be pasted into the into the \textit{Visualization} section of
-\textit{PART B:} of the \flecmd{initial.lmp} file.
+by either using the \guicmd{Ctrl-D} keyboard shortcut or selecting
+\guicmd{Copy dump image command} from the \guicmd{File} menu.  This text
+can be pasted into the into the \lmpcmd{Visualization} section of
+\lmpcmd{PART B} of the \flecmd{initial.lmp} file. This may look like the following:
 
-This may look like the following:
 \begin{lstlisting}
 dump viz all image 100 myimage-*.ppm type type &
     size 800 800 zoom 1.452 shiny 0.7 fsaa yes &
@@ -845,22 +847,22 @@ dump_modify viz pad 9 boxcolor darkblue &
     backcolor white adiam 1 1.6 adiam 2 4.8
 \end{lstlisting}
 This command tells LAMMPS to generate NetPBM format images every 100
-steps. The two \textit{type} keywords are for \textit{color} and
-\textit{diameter}, respectively.  Run the \flecmd{initial.lmp} using
-LAMMPS again, and a new window named \textit{Slide Show} will pop up.
-It will show each image created by the \textit {dump image} as it is
+steps. The two \lmpcmd{type} keywords are for \lmpcmd{color} and
+\lmpcmd{diameter}, respectively.  Run the \flecmd{initial.lmp} using
+LAMMPS again, and a new window named \guicmd{Slide Show} will pop up.
+It will show each image created by the \lmpcmd{dump image} as it is
 created and after the simulation is finished (or stopped), the slide
-show viewer allows to animate the trajectory by cycling through the
-images.  The window also allows to export the animation to a movie
+show viewer allows you to animate the trajectory by cycling through the
+images.  The window also allows you to export the animation to a movie
 (provided the FFMpeg program is installed) and to bulk delete those
 image files.
 
 The rendering of the system can be further adjusted using the many
-options of the \textit{dump image} command.  The value for the
-\textit{shiny} keyword is used to adjust the shininess of the atoms, the
-\textit{box} keyword adds or removes a representation of the box, and
-the \textit{view} and \textit{zoom} keywords adjust the camera and so
-on.
+options of the \lmpcmd{dump image} command.  The value for the
+\lmpcmd{shiny} keyword is used to adjust the shininess of the atoms, the
+\lmpcmd{box} keyword adds or removes a representation of the box, and
+the \lmpcmd{view} and \lmpcmd{zoom} keywords adjust the camera (and so
+on).
 
 \subsubsection{Improving the script}
 
