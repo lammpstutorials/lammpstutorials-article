@@ -245,6 +245,7 @@ accurate and reliable MS using LAMMPS.
 This set of tutorials consists of seven tutorials arranged in order of
 increasing difficulty.  The novelties associated with each tutorial are
 briefly described below.
+% S.G. update to 8 tutorials
 
 In \hyperref[lennard-jones-label]{tutorial 1}, the structure of LAMMPS
 input files is illustrated through the creation of a simple atomic
@@ -300,29 +301,26 @@ sampling through classical MD or MC methods.
 
 \section{Prerequisites}
 
-% Here you would identify prerequisites/background knowledge that are assumed by your work, as well as any software/license requirements.
-
 \subsection{Background knowledge}
-% Tutorials should clearly define what concepts or abilities researchers will need to complete the tutorial (e.g., some proficiency in Python; experience with Jupyter notebooks; knowledge of classical MD; etc).
 
 This set of tutorials assumes no prior knowledge of the LAMMPS software
-itself.  Performing the tutorials requires the use of a text editor and
+itself.  Completing the tutorials requires a text editor and
 a suitable LAMMPS executable.  We use LAMMPS--GUI \cite{lammps_gui_docs}
 here since it has features that make it particularly convenient for
 tutorials, but other console or graphical text editors like GNU nano,
-vi/vim, Emacs, Notepad, Gedit, Visual Studio Code, and many more can be
-used for this purpose.  LAMMPS can be executed directly from LAMMPS--GUI
+vi/vim, Emacs, Notepad, Gedit, Visual Studio Code can also be
+used.  LAMMPS can be executed directly from LAMMPS--GUI
 or from the command line, which requires some familiarity with executing
-commands from a command--line prompt.
+commands from a terminal or command--line prompt.
 
 In addition, prior knowledge of the theoretical basics of molecular
-simulations and statistical physics are highly beneficial.  The user may
+simulations and statistical physics is highly beneficial.  Users may
 refer to textbooks like \textit{Understanding Molecular Simulation} by
 Daan Frenkel and Berend Smit \cite{frenkel2023understanding}, as well as
 \textit{Computer Simulation of Liquids} by Michael Allen and Dominic
 Tildesley \cite{allen2017computer}.  Additionally, to better understand
 the fundamental concepts behind soft matter systems simulated in these
-tutorials, the user can refer to \textit{Basic Concepts for Simple and
+tutorials, users can refer to \textit{Basic Concepts for Simple and
   Complex Liquids} by Jean-Louis Barrat and Jean-Pierre Hansen
 \cite{barrat2003basic}, as well as \textit{Theory of Simple Liquids:
   with Applications to Soft Matter} by Jean-Pierre Hansen and Ian Ranald
@@ -333,39 +331,37 @@ McDonald \cite{hansen2013theory}.
 
 The LAMMPS release version XXXAug2024 \cite{lammps_code} and the
 matching LAMMPS--GUI software version 1.6.XXX are required to follow the
-tutorials since they use features that first appeared in those versions.
+tutorials, as they use features that first appeared in these versions.
 For Linux (with x86\_64 CPU), macOS (BigSur or later), and Windows (10
-and 11) you can download a pre-compiled LAMMPS package from the LAMMPS
+and 11) you can download a precompiled LAMMPS package from the LAMMPS
 release page on GitHub
 (\href{https://github.com/lammps/lammps/releases}{github.com/lammps/lammps/releases}).
-Choose a package with `GUI' in the file name (it will contain
-LAMMPS--GUI and a LAMMPS executable for the console).  These
-pre--compiled packages aim to be portable and therefore omit support for
+Select a package with `GUI' in the file name, which includes
+both LAMMPS--GUI and a LAMMPS console executable.  These
+precompiled packages are designed to be portable, and therefore omit support for
 running in parallel with MPI. \hyperref[using-lammps-gui-label]{Appendix
   \ref{using-lammps-gui-label}} has instructions for installing
-LAMMPS--GUI and using its most relevant features for the
-tutorials.
+LAMMPS--GUI and using its most relevant features for the tutorials.
 
-LAMMPS versions have good backward compatibility (that is, old inputs
-work with newer LAMMPS versions) but are not as good in forward
-compatibility (i.e.~newer inputs are not as likely to work with older
-LAMMPS versions).  Thus, it is generally possible to follow this
-tutorial with more recent releases of LAMMPS--GUI and LAMMPS.  Older
-versions may need some (minor) adjustments.  This tutorial shall
-nevertheless be occasionally revised to remain compatible with and take
-advantage of new features in the most recent stable version of LAMMPS.
+LAMMPS versions have good backward compatibility: old inputs generally work with
+newer LAMMPS versions.  However, forward compatibility is not as strong, meaning
+newer inputs are not as likely to work with older LAMMPS versions.  Thus, it is
+generally possible to follow this tutorial with more recent releases of
+LAMMPS--GUI and LAMMPS.  Older versions may need some minor adjustments.
+Nevertheless, these tutorials will be periodically revised to ensure compatibility
+and take advantage of new features in the most recent stable version of LAMMPS.
 
 For advanced tutorials, external tools are required for plotting and
 visualization, since the corresponding functionality in LAMMPS--GUI is
 limited.  Suitable external tools for plotting include Python with
 Pandas/Matplotlib \cite{van1995python,hunter2007Matplotlib}, XmGrace,
-Gnuplot, Microsoft Excel, LibreOffice Calc.  Suitable external tools for
-visualization include VMD \cite{vmd_home,humphrey1996vmd} and OVITO
-\cite{ovito_home,ovito_paper}.
+Gnuplot, Microsoft Excel, and LibreOffice Calc.  For
+visualization, suitable external tools include VMD \cite{vmd_home,humphrey1996vmd}
+and OVITO \cite{ovito_home,ovito_paper}.
 
 \hyperref[compiling-lammps-label]{Appendix \ref{compiling-lammps-label}}
 has instructions for compiling LAMMPS from source for use with this
-tutorial in case there is no suitable pre-compiled version available
+tutorial in case there is no suitable precompiled version available
 for your platform or environment.
 
 \hyperref[parallel-lammps-label]{Appendix \ref{parallel-lammps-label}}
@@ -4000,7 +3996,7 @@ POs 2149742 and 2407526.
 
 \subsection{Installation}
 
-Pre-compiled versions of LAMMPS--GUI exist for Linux, {macOS}, and
+Precompiled versions of LAMMPS--GUI exist for Linux, {macOS}, and
 Windows.  The Linux version comes in two variants, as compressed tar
 archive (.tar.gz) and as a flatpak \cite{flatpak_home} bundle. The macOS
 version as a .dmg installer image and the Window version is an
