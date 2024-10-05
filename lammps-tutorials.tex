@@ -531,8 +531,8 @@ detailing the different options for that command.  From the LAMMPS-GUI
 editor buffer, the documentation can be accessed by
 right-clicking the line with a command, such as \lmpcmd{units lj}, and
 selecting \guicmd{View documentation for (\dots)}\,.  LAMMPS--GUI will
-prompt your web browser to open the corresponding URL of the online manual.
-See figure~\ref{fig:GUI-1} for a screenshot of this context menu.
+prompt your web browser to open the corresponding URL of the online manual. See
+figure~\ref{fig:GUI-1} for a screenshot of this context menu.
 
 \paragraph{System definition}
 
@@ -540,45 +540,47 @@ The next step is to create the simulation box and put some atoms into it.
 Modify the \textit{System definition} category of \flecmd{initial.lmp} as follows:
 \begin{lstlisting}
 # 2) System definition
-region simbox block -20 20 -20 20 -20 20 units box
+region simbox block -20 20 -20 20 -20 20
 create_box 2 simbox
-create_atoms 1 random 1500 341341 simbox overlap 0.3
-create_atoms 2 random 100 127569 simbox overlap 0.3
+create_atoms 1 random 1500 34134 simbox overlap 0.3
+create_atoms 2 random 100 12756 simbox overlap 0.3
 \end{lstlisting}
 
 The first line, \lmpcmd{region simbox (...)}, creates a region
-named \lmpcmd{simbox} that is a block (i.e.~a rectangular
-cuboid) that extends from -20 to 20 length units along all 3 directions
-of space.  The \lmpcmd{units box} option requests that the region
-dimensions are computed as multiples of the length unit and not as
-multiples of the lattice spacing (\lmpcmd{units lattice}), which is the
-default.  In this specific case there is no difference, since we did not
-use the \lmpcmd{lattice} command and the default lattice spacing is 1.0
-in x-, y-, or z-direction.
+named \lmpcmd{simbox} that is a block (i.e.,~a rectangular
+cuboid) extending from -20 to 20 length units along all 3 directions
+of space.  % The \lmpcmd{units box} option requests that the region
+%dimensions are computed as multiples of the length unit and not as
+%multiples of the lattice spacing (\lmpcmd{units lattice}), which is the
+%default.  In this specific case there is no difference, since we did not
+%use the \lmpcmd{lattice} command and the default lattice spacing is 1.0
+%in x-, y-, or z-direction.
+% S.G.: I removed "units box", I think it just bring confusion.
 
 The second line, \lmpcmd{create\_box 2 simbox}, creates a simulation box
 based on the region \lmpcmd{simbox} with two types of atoms.  From this
 point on, any command referencing an atom type larger than \textit{2}
-will trigger an error.  You may specify more atom types than what are
-necessary, but for each atom type you must set the mass and provide
-force field parameters. Not doing so will cause LAMMPS to abort with an
-error at the beginning of a minimization or an MD run.
+will trigger an error.  You may specify more atom types than
+necessary, but for each type you must set the mass and provide
+force field parameters. Failing to do so will cause LAMMPS to abort with an
+error at the beginning of a minimization or MD run.
 
 The third line, \lmpcmd{create\_atoms (\dots)}, creates 1500 atoms of type
-\textit{1} at random positions within the region
-\lmpcmd{simbox}.  The integer \textit{341341} is a seed for the
+1 at random positions within the region
+\lmpcmd{simbox}.  The integer \lmpcmd{34134} is a seed for the
 internal random number generator that can be changed to create different
 sequences of random numbers and thus different initial geometries for
-the simulation.  The fourth line creates 100 atoms of type \textit{2}.
+the simulation.  The fourth line creates 100 atoms of type 2.
 Both \lmpcmd{create\_atoms} commands use the optional argument
-\lmpcmd{overlap 0.3} to add a constraint to the randomly placed atoms
-that they much have at least 0.3 length units distance.  This step is to
-avoid so-called ``close contacts'' between atoms which can cause
-problems due to causing large forces.
+\lmpcmd{overlap 0.3} to impose a constraint on the randomly placed atoms
+so that they must be at least 0.3 length units apart.  This step helps avoid
+so-called ``close contacts'' between atoms which can cause
+problems due to generating large forces.
 
 \paragraph{Settings}
-Now we provide the settings for the two types of atoms.  Modify the
-\textit{Settings} category of \flecmd{initial.lmp} as follows:
+
+Next, we specify the settings for the two atom types.  Modify the
+\lmpcmd{Settings} category of \flecmd{initial.lmp} as follows:
 \begin{lstlisting}
 # 3) Settings
 mass 1 1.0
@@ -588,20 +590,18 @@ pair_coeff 1 1 1.0 1.0
 pair_coeff 2 2 0.5 3.0
 \end{lstlisting}
 
-The two \lmpcmd{mass} commands assign a mass of 1.0 and 5.0 mass units
-to the atoms of type 1 and 2, respectively.
-
-The third line, \lmpcmd{pair\_style lj/cut 4.0}, requests that the atoms
+The two \lmpcmd{mass} commands assign a mass of 1.0 and 5.0 units
+to the atoms of type 1 and 2, respectively.  The third line,
+\lmpcmd{pair\_style lj/cut 4.0}, specifies that the atoms
 will be interacting through a Lennard-Jones (LJ) potential with a
 cut-off equal to $r_c = 4.0$ length units
 \cite{wang2020lennard,fischer2023history}:
 $$E_{ij} (r) = 4 \epsilon_{ij} \left[ \left( \dfrac{\sigma_{ij}}{r} \right)^{12}
   - \left( \dfrac{\sigma_{ij}}{r} \right)^{6} \right], ~ \text{for} ~ r
 < r_c,$$ where $r$ is the inter-particle distance, $\epsilon_{ij}$ is
-the depth of the potential well that sets the interaction strength, and
-$\sigma_{ij}$ represents the distance where the potential energy of the
-LJ potential is zero.  Here, the indexes \textit{ij} refer to pairs of
-particle types \textit{i} and \textit{j}.
+the depth of the potential well, determining the interaction strength, and
+$\sigma_{ij}$ is the distance at which the potential energy is zero.
+Here, the indexes $ij$ refer to pairs of particle types $i$ and $j$.
 
 The fourth line, \lmpcmd{pair\_coeff 1 1 1.0 1.0}, sets the
 Lennard-Jones coefficients for the interactions between pairs of atoms
@@ -617,6 +617,7 @@ thus have: $\epsilon_{12} = \sqrt{1.0 \times 0.5} = 0.707$, and
 $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
 
 \paragraph{Single point energy}
+
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{LJ}
@@ -626,9 +627,9 @@ $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
 \label{fig:LJ}
 \end{figure}
 
-The system is now fully parameterized and the input ready to compute
-forces.  Let us fill in the two last remaining categories,
-\textit{Visualization}, and \textit{Run}, by adding the following lines
+The system is now fully parameterized, and the input ready to compute
+forces.  Let us complete the two remaining categories,
+\lmpcmd{Visualization}, and \lmpcmd{Run}, by adding the following lines
 into \flecmd{initial.lmp}:
 \begin{lstlisting}
 # 4) Visualization
@@ -641,20 +642,18 @@ run 0 post no
 The \lmpcmd{thermo 10} command asks LAMMPS to print thermodynamic
 information to the console every given number of steps, in this case,
 every 10 simulation steps.  The \lmpcmd{thermo\_style custom} command
-specifies \emph{which} output LAMMPS should print.  This selection
-prints the step number (\textit{step}), the total energy
-(\textit{etotal}), and the pressure (\textit{press}).  The \lmpcmd{run
-  0 post no} command instructs LAMMPS to perform only force and energy
-initialization and the \lmpcmd{post no} option disables the post-run
-summary and statistics output.
+specifies what LAMMPS should output -- in this case, the step number
+(\textit{step}), total energy (\textit{etotal}), and pressure (\textit{press}).
+The \lmpcmd{run 0 post no} command instructs LAMMPS to initialize forces and energy
+without actually running the simulation, and the \lmpcmd{post no} option disables
+the post-run summary and statistics output.
 
-You can now run LAMMPS.  It should finish quickly and with the default
-settings, LAMMPS--GUI will open two new windows, one with the console
-output and one with a chart.  The output window will show some info
-printed by the various commands in the input as they are executed and
-the total energy and pressure at step 0, i.e. the requested thermodynamic
-data.  Since no real simulation steps have been performed, the charts
-are empty.
+You can now run LAMMPS.  It should finish quickly, and with the default
+settings, LAMMPS--GUI will open two windows: one displaying the console
+output and another with a chart.  The output window shows information from
+the executed commands, along with the total energy and pressure at step 0,
+as specified by the thermodynamic data request. Since no actual simulation
+steps were performed, the charts will be empty.
 
 \paragraph{Snapshot Image}
 
@@ -886,8 +885,8 @@ create_box 2 simbox
 # for creating atoms
 region cyl_in cylinder z 0 0 10 INF INF side in
 region cyl_out cylinder z 0 0 10 INF INF side out
-create_atoms 1 random 1000 341341 cyl_out
-create_atoms 2 random 150 127569 cyl_in
+create_atoms 1 random 1000 34134 cyl_out
+create_atoms 2 random 150 12756 cyl_in
 \end{lstlisting}
 The \textit{side in} and \textit{side out} keywords are used to define
 regions that represent the inside and outside of the cylinder of radius
@@ -3628,7 +3627,7 @@ following lines into \flecmd{input.lmp}:
 region myreg block -25 25 -5 5 -25 25
 create_box 1 myreg
 labelmap atom 1 A1
-create_atoms A1 random 60 341341 myreg &
+create_atoms A1 random 60 34134 myreg &
     overlap 1.5 maxtry 50
 
 mass * 39.95
@@ -3834,7 +3833,7 @@ region myreg block -25 25 -5 5 -25 25
 create_box 2 myreg
 labelmap atom 1 A1 2 A2
 create_atoms A2 single 0 0 0
-create_atoms A1 random 5 341341 myreg &
+create_atoms A1 random 5 34134 myreg &
     overlap 1.5 maxtry 50
 
 mass * 39.948
