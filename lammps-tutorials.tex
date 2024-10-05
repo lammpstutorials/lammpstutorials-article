@@ -37,6 +37,7 @@
 \usepackage{tcolorbox}
 \usepackage{newverbs}
 \usepackage[title]{appendix}
+\usepackage{csquotes}
 
 \usepackage[
     type={CC},
@@ -86,9 +87,11 @@
 
 \renewcommand{\emph}[1]{\underline{#1}} % make \emph{} use underline instead of italic
 \newcommand{\lmpcmd}[1]{\hspace{0pt}\colorbox{listing}{\textcolor{command}{\texttt{#1}}}\hspace{0pt}} % lammps command
-\newcommand{\flrcmd}[1]{\textcolor{command}{\texttt{#1}}} % folder
-\newcommand{\flecmd}[1]{\textcolor{command}{\texttt{#1}}} % files name 
-\newcommand{\dwlcmd}[1]{\textcolor{download}{\texttt{#1}}} % downloadable files
+\newcommand{\flrcmd}[1]{\textcolor{command}{\texttt{#1}}} % folder in monopace
+\newcommand{\flecmd}[1]{\textcolor{command}{\texttt{#1}}} % files name in monopace
+%\newcommand{\guicmd}[1]{\textcolor{command}{\texttt{\enquote{#1}}}} % LAMMPS-GUI commands in quotation monopace
+\newcommand{\guicmd}[1]{\textcolor{command}{\texttt{«#1»}}} % LAMMPS-GUI commands in French quotation monopace
+\newcommand{\dwlcmd}[1]{\textcolor{download}{\texttt{#1}}} % downloadable files in monopace blue
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% IMPORTANT USER CONFIGURATION
@@ -376,9 +379,9 @@ files, and linked to the LAMMPS library, allowing it to run LAMMPS
 directly.  The text editor functions similarly to other graphical editors
 like Notepad or Gedit but offers the following enhancements specifically for LAMMPS:
 \begin{itemize}
-  \item Auto-completion of LAMMPS commands and options
-  \item Syntax highlighting for LAMMPS input files
-  \item Visualization using LAMMPS built-in renderer
+	\item Auto-completion of LAMMPS commands and options
+	\item Syntax highlighting for LAMMPS input files
+	\item Visualization using LAMMPS built-in renderer
 	\item Start and stop simulations via mouse or keyboard
 	\item Monitoring of simulation progress
 	\item Automatic plotting of thermodynamic data during runs
@@ -404,16 +407,19 @@ features is in the LAMMPS manual \cite{lammps_gui_docs}.
 
 The tutorials described in this article can be accessed at
 \href{https://lammpstutorials.github.io}{lammpstutorials.github.io},
-where additional exercises with solutions are also provided. All files
+where additional exercises with solutions are also provided.  All files
 and inputs required to follow the tutorials are available from a
 dedicated GitHub account,
 \href{https://github.com/lammpstutorials}{github.com/lammpstutorials}.
+Additionally, these files can be downloaded by clicking \guicmd{Start Tutorial X}
+(where \texttt{X} = 1...8) from the \guicmd{Tutorials} menu of LAMMPS-GUI.
 
-In the following, all LAMMPS input or console commands are typeset
-in \lmpcmd{colored monospace}.  Section titles, keyboard shortcuts,
-file names, and folder names are typeset in \flecmd{monospace}.
-% S.G.: remove "folder names" if all folders are removed
-% S.G.: remove "Section titles" as well?
+In the following, all LAMMPS input or console commands are formatted
+in \lmpcmd{colored monospace}.  Keyboard shortcuts and 
+file names are formatted in \flecmd{monospace}, and LAMMPS-GUI options and menus
+are in \guicmd{quoted monospace}.
+% S.G.: I removed "folder names" because all folders will eventually be removed (TO CONTROL BEFORE SUBMITTING)
+% S.G.: I removed "Section titles" as well because it seems to be using a different style
 
 \subsection{Tutorial 1: Lennard-Jones fluid}
 \label{lennard-jones-label}
