@@ -23,6 +23,6 @@ solution/improved.min.png
 solution/improved.md.lmp
 solution/improved.md.log
 solution/improved.md.dat
-solution/minimized_coordinates.data
+solution/min_coords.data
 
 # 3) folders not known to LAMMPS GUI will be skipped

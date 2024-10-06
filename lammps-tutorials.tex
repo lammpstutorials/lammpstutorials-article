@@ -261,7 +261,7 @@ ensembles.
 
 In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system
 is introduced where atoms are connected by bonds: a small carbon
-nanotube. The use of both classical and reactive force fields (here,
+nanotube.  The use of both classical and reactive force fields (here,
 AIREBO) is illustrated.  An external deformation is applied to the CNT,
 and its deformation is measured.  This tutorial also illustrates the use
 of an external visualization tool to visualize breaking bonds, and
@@ -271,7 +271,7 @@ without an external tool.
 In \hyperref[all-atoms-label]{tutorial 3}, two components, liquid water
 and a polymer molecule, are merged and equilibrated.  A long-range
 solver is used to handle the electrostatic interactions accurately, and
-the system is equilibrated in the isothermal-isobaric (NPT) ensemble. A
+the system is equilibrated in the isothermal-isobaric (NPT) ensemble.  A
 stretching force is then applied to the polymer.  This tutorial also
 demonstrates the use of molecule files and type labels
 \cite{typelabel_paper} to make molecule files more generic.
@@ -344,7 +344,7 @@ release page on GitHub
 Select a package with `GUI' in the file name, which includes
 both LAMMPS--GUI and a LAMMPS console executable.  These
 precompiled packages are designed to be portable, and therefore omit support for
-running in parallel with MPI. \hyperref[using-lammps-gui-label]{Appendix
+running in parallel with MPI.  \hyperref[using-lammps-gui-label]{Appendix
   \ref{using-lammps-gui-label}} has instructions for installing
 LAMMPS--GUI and using its most relevant features for the tutorials.
 
@@ -532,7 +532,7 @@ detailing the different options for that command.  From the LAMMPS-GUI
 editor buffer, the documentation can be accessed by
 right-clicking the line with a command, such as \lmpcmd{units lj}, and
 selecting \guicmd{View documentation for (\dots)}\,.  LAMMPS--GUI will
-prompt your web browser to open the corresponding URL of the online manual. See
+prompt your web browser to open the corresponding URL of the online manual.  See
 figure~\ref{fig:GUI-1} for a screenshot of this context menu.
 
 \paragraph{System definition}
@@ -563,7 +563,7 @@ based on the region \lmpcmd{simbox} with two types of atoms.  From this
 point on, any command referencing an atom type larger than \textit{2}
 will trigger an error.  You may specify more atom types than
 necessary, but for each type you must set the mass and provide
-force field parameters. Failing to do so will cause LAMMPS to abort with an
+force field parameters.  Failing to do so will cause LAMMPS to abort with an
 error at the beginning of a minimization or MD run.
 
 The third line, \lmpcmd{create\_atoms (\dots)}, creates 1500 atoms of type
@@ -624,7 +624,7 @@ $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
 \includegraphics[width=0.55\linewidth]{LJ}
 \caption{The binary mixture simulated during \hyperref[lennard-jones-label]{Tutorial 1}.
   The atoms of type 1 are represented as small red spheres, the atoms of type 2 as large
-  green spheres, and the edges of the simulation box are represented a blue sticks}
+  green spheres, and the edges of the simulation box are represented as blue sticks.}
 \label{fig:LJ}
 \end{figure}
 
@@ -660,7 +660,7 @@ steps were performed, the charts will be empty.
 
 At this point, you can create a snapshot image of the
 current system using the \guicmd{Image Viewer} window, which can be
-accessed by clicking the \guicmd{Create Image} button in the \guicmd{Run} menu. 
+accessed by clicking the \guicmd{Create Image} button in the \guicmd{Run} menu.
 The image viewer works by instructing LAMMPS to render an image of the current system using
 its internal rendering library via the \lmpcmd{dump image} command.  The
 resulting image is then displayed, and various buttons allow you to adjust
@@ -808,9 +808,9 @@ printed in the \guicmd{Output} window, one can see that the temperature
 starts from 0 but rapidly reaches the requested value and
 stabilizes itself near $T=1$ temperature units.  One can also see that
 the potential energy, $p_\text{e}$, rapidly decreases during energy
-minimization (see also figure~\ref{fig:evolution-energy}\,a). After
+minimization (see also figure~\ref{fig:evolution-energy}\,a).  After
 the molecular dynamics simulation starts, $p_\text{e}$ increases until
-it reaches a plateau value of about -0.25. The kinetic energy,
+it reaches a plateau value of about -0.25.  The kinetic energy,
 $k_\text{e}$, is equal to zero during energy minimization and then
 increases during molecular dynamics until it reaches a plateau value of
 about 1.5 (Figure~\ref{fig:evolution-energy}\,b).
@@ -819,7 +819,8 @@ about 1.5 (Figure~\ref{fig:evolution-energy}\,b).
 \centering
 \includegraphics[width=\linewidth]{LJ-energy}
 \caption{a)~Potential ($p_\text{e}$) and kinetic energy ($k_\text{e}$) of the
-binary mixture as functions of the step during energy minimization.
+binary mixture simulated during \hyperref[lennard-jones-label]{Tutorial 1} as
+functions of the step during energy minimization.
 b)~$p_\text{e}$ and $k_\text{e}$ as functions of time $t$ during
 molecular dynamics in the NVT ensemble.}
 \label{fig:evolution-energy}
@@ -837,7 +838,7 @@ copy the command line used to create this visualization to the clipboard
 by either using the \guicmd{Ctrl-D} keyboard shortcut or selecting
 \guicmd{Copy dump image command} from the \guicmd{File} menu.  This text
 can be pasted into the into the \lmpcmd{Visualization} section of
-\lmpcmd{PART B} of the \flecmd{initial.lmp} file. This may look like the following:
+\lmpcmd{PART B} of the \flecmd{initial.lmp} file.  This may look like the following:
 
 \begin{lstlisting}
 dump viz all image 100 myimage-*.ppm type type &
@@ -848,7 +849,7 @@ dump_modify viz pad 9 boxcolor darkblue &
     backcolor white adiam 1 1.6 adiam 2 4.8
 \end{lstlisting}
 This command tells LAMMPS to generate NetPBM format images every 100
-steps. The two \lmpcmd{type} keywords are for \lmpcmd{color} and
+steps.  The two \lmpcmd{type} keywords are for \lmpcmd{color} and
 \lmpcmd{diameter}, respectively.  Run the \flecmd{initial.lmp} using
 LAMMPS again, and a new window named \guicmd{Slide Show} will pop up.
 It will show each image created by the \lmpcmd{dump image} as it is
@@ -920,10 +921,10 @@ The created \flecmd{.data} file contains all the information necessary to
 restart the simulation, such as the number of atoms, the box size, the
 masses, and the pair coefficients.  The
 \flecmd{.data} file also contains the final
-positions of the atoms within the \lmpcmd{Atoms} section. The first five
+positions of the atoms within the \lmpcmd{Atoms} section.  The first five
 columns of the \lmpcmd{Atoms} section correspond (from left to right) to
 the atom indexes (from 1 to the total number of atoms, 1150), the atom
-types (1 or 2 here), and the positions of the atoms $x$, $y$, $z$. The
+types (1 or 2 here), and the positions of the atoms $x$, $y$, $z$.  The
 last three columns are image flags that keep track of which atoms
 crossed the periodic boundary.  The exact format of each line in the
 \textit{Atoms} section depends on the choice of \textit{atom\_style}, which
@@ -948,7 +949,10 @@ determines which per-atom data is set and stored internally in LAMMPS.
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{LJ-cylinder}
-\caption{Visualization of the improved system after minimization}
+\caption{Improved visualization of the binary mixture simulated
+during \hyperref[lennard-jones-label]{Tutorial 1}.  The atoms of type 1 are
+represented as small red spheres, the atoms of type 2 as large green spheres,
+and the edges of the simulation box are represented as blue sticks.}
 \label{fig:improved-min}
 \end{figure}
 
@@ -1028,7 +1032,7 @@ type 1 atoms, defined by a cutoff distance.  Taking the average provides
 as a good indicator of the degree of mixing in a binary mixture.  This
 is done using two \lmpcmd{compute} commands:  the first counts the
 coordinated atoms, and the second calculates the average over all type 1
-atoms. Add the following lines to \flecmd{improved.md.lmp}:
+atoms.  Add the following lines to \flecmd{improved.md.lmp}:
 \begin{lstlisting}
 compute coor12 grp_t1 coord/atom cutoff 2 &
   group grp_t2
@@ -1044,9 +1048,11 @@ in a \lmpcmd{thermo\_style custom} command (see below).
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{LJ-evolution}
-\caption{Evolution of the system during mixing. The three snapshots show
-respectively the system at $t=0$ (left panel), $t=75$ (middle panel), and $t=1500$
-(right panel).}
+\caption{Evolution of the system from \hyperref[lennard-jones-label]{Tutorial 1}
+during mixing.  The three snapshots show respectively the system
+at $t=0$ (left panel), $t=75$ (middle panel), and $t=1500$ (right panel).  The
+atoms of type 1 are represented as small turquoise spheres and the atoms of type 2
+as large blue spheres.}
 \label{fig:evolution-population}
 \end{figure}
 
@@ -1084,7 +1090,7 @@ run 300000
 \includegraphics[width=\linewidth]{LJ-mixing}
 \caption{a)~Evolution of the numbers $N_\text{1, in}$ and $N_\text{2, in}$ of atoms
 of types 1 and 2, respectively, within the \lmpcmd{cyl\_in} region as functions
-of time $t$. b)~Evolution of the coordination number $C_{1-2}$ between atoms of types 1 and 2.}
+of time $t$.  b)~Evolution of the coordination number $C_{1-2}$ between atoms of types 1 and 2.}
 \label{fig:mixing}
 \end{figure}
 
@@ -1094,7 +1100,7 @@ atom.  The initial velocity is chosen so that the average initial
 temperature is equal to 1.0 temperature units.  The additional keywords
 ensure that no linear momentum (\lmpcmd{mom yes}) is given to the
 system and that the generated velocities are distributed according to
-a Gaussian distribution. Another improvement is the \lmpcmd{zero yes}
+a Gaussian distribution.  Another improvement is the \lmpcmd{zero yes}
 keyword in the Langevin thermostat, which ensures that the total random
 force applied to the atoms is equal to zero.
 
@@ -1102,11 +1108,11 @@ force applied to the atoms is equal to zero.
   The steps to ensure no initial linear momentum and no net random
   force are important to prevent the system from starting to drift or move as a
   whole.  For a bulk system with periodic boundary conditions, it is
-  expected to remain in place. Thus, when computing the temperature from the
+  expected to remain in place.  Thus, when computing the temperature from the
   kinetic energy, we use $3N-3$ degrees of freedom since there is no
   global translation.  In a drifting system, some of the kinetic energy is
   due to the drift, which means the system itself cools down.  In
-  extreme cases, it can freeze and drift very fast. This phenomenon is
+  extreme cases, it can freeze and drift very fast.  This phenomenon is
   sometimes referred to as the ``flying ice cube syndrome'' \cite{wong2016good}.
 \end{note}
 
@@ -1128,42 +1134,39 @@ expected during mixing.  This can be observed using the entry
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{LJ-coords}
-\caption{Snapshot image with atoms colored by the computed 1-2 coordination
-  number: turquoise = 0, yellow = 1, red = 2}
+\caption{Snapshot image of the binary mixture simulated
+  during \hyperref[lennard-jones-label]{Tutorial 1} with atoms colored by the
+  computed $1-2$ coordination number \lmpcmd{c\_coor12}, from
+  turquoise (0.0) to blue (2.0).}
 \label{fig:coords-viz}
 \end{figure}
 
 \paragraph{Experiments}
 
 Here are some suggestions for further experiments with this system that
-may lead to additional insights into how different systems are set up
-and how different features work:
+may lead to additional insights into how different systems are configured
+and how various features function:
 \begin{itemize}
-\item Use Nos\'e--Hoover thermostat (\textit{fix nvt}) instead of Langevin
-  (\textit{fix nve} + \textit{fix langevin})
-\item Skip the \textit{minimize} step for both, Nos\'e--Hoover and Langevin
+\item Use Nos\'e--Hoover thermostat (\lmpcmd{fix nvt}) instead of Langevin
+  (\lmpcmd{fix nve} + \lmpcmd{fix langevin}).
+\item Omit the energy minimization step for both, Nos\'e--Hoover and Langevin.
 \item Apply the thermostat to only one type of atoms and observe the
-  temperature for each type separately
-\item Append an NVE run (i.e.~without any thermostat) and observe the energies
+  temperature for each type separately.
+\item Append an NVE run (i.e.~without any thermostat) and observe the energy levels.
 \end{itemize}
 
-It is also possible to color the atoms in the \textit{Slide Show}
-according to their coordination number. For that purpose, replace the
-\textit{dump} and \textit{dump\_modify} commands with the following
-commands:
+Another useful experiment to try is to color the atoms in the \guicmd{Slide Show}
+according to their respective coordination numbers.  To do this, replace the
+\lmpcmd{dump} and \lmpcmd{dump\_modify} commands with the following lines:
 \begin{lstlisting}
 dump mydmp all image 100 dump.md.*.ppm c_coor12 &
-    type shiny 0.1 box no 0.01 view 0 0 zoom 1.8 &
-    fsaa yes
- dump_modify mydmp amap 0.0 3.0 ca 1.0 3 &
-    min darkturquoise 0.9 yellow max red adiam 1 1 &
-    adiam 2 3 backcolor white
+  type shiny 0.1 box no 0.01 view 0 0 zoom 1.8 fsaa yes
+dump_modify mydmp amap 0.0 2.0 cf 1.0 2 min darkturquoise &
+  max darkblue adiam 1 1 adiam 2 3 backcolor white
 \end{lstlisting}
-
-Now atoms of type 2 and atoms of type 1 without type 2 neighbors
-within 2.0 length units are colored in turquoise, atoms of type 1 with
-one type 2 neighbor in yellow, and atoms of type 1 with two type 2
-neighbors in red.  Figure \ref{fig:coords-viz} shows an example.
+Now, the atom colors are based on the value of \lmpcmd{c\_coor12}, which is mapped
+continuously from dark turquoise (min) to dark blue (max) for values of
+\lmpcmd{c\_coor12} in the range $0.0$ to $2.0$ (Figure~\ref{fig:coords-viz}).
 
 \subsection{Tutorial 2: Pulling on a carbon nanotube}
 \label{carbon-nanotube-label}
