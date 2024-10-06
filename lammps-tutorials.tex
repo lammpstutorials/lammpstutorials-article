@@ -72,6 +72,7 @@
   backgroundcolor=\color{listing}, % Set background color to listing
   xleftmargin=5pt, % Extra left margin for spacing
   xrightmargin=5pt, % Extra right margin for spacing
+  columns=flexible, % or fixed or fullflexible
 }
 
 \newtcolorbox{note}{
@@ -87,7 +88,7 @@
 
 % \renewcommand{\emph}[1]{\underline{#1}} % make \emph{} use underline instead of italic
 % S.G.: I went back to italic since all the other italic commands were replaced
-\newcommand{\lmpcmd}[1]{\hspace{0pt}\colorbox{listing}{\textcolor{command}{\texttt{#1}}}\hspace{0pt}} % lammps command
+\newcommand{\lmpcmd}[1]{\hspace{0pt}\colorbox{listing}{\textcolor{command}{\small\texttt{#1}}}\hspace{0pt}} % lammps command
 \newcommand{\flrcmd}[1]{\textcolor{command}{\texttt{#1}}} % folder in monopace
 \newcommand{\flecmd}[1]{\textcolor{command}{\texttt{#1}}} % files name in monopace
 %\newcommand{\guicmd}[1]{\textcolor{command}{\texttt{\enquote{#1}}}} % LAMMPS-GUI commands in quotation monopace
@@ -412,7 +413,7 @@ where additional exercises with solutions are also provided.  All files
 and inputs required to follow the tutorials are available from a
 dedicated GitHub account,
 \href{https://github.com/lammpstutorials}{github.com/lammpstutorials}.
-Additionally, these files can be downloaded by clicking \guicmd{Start Tutorial X}
+Additionally, these files can be downloaded by clicking \guicmd{Start LAMMPS Tutorial X}
 (where \texttt{X} = 1...8) from the \guicmd{Tutorials} menu of LAMMPS-GUI.
 
 In the following, all LAMMPS input or console commands are formatted
@@ -440,7 +441,7 @@ To run a simulation using LAMMPS, you need to write an input script with
 a series of commands for LAMMPS to execute.  For clarity, the
 input scripts for this tutorial will be divided into five categories,
 which will be filled out step by step.  To set up this tutorial, select
-\guicmd{Start Tutorial 1} from the \guicmd{Tutorials} menu of LAMMPS--GUI, and
+\guicmd{Start LAMMPS Tutorial 1} from the \guicmd{Tutorials} menu of LAMMPS--GUI, and
 follow the instructions.  This will select and, if needed, create a folder,
 place the initial input file \flecmd{initial.lmp} in it, and
 open that file in the LAMMPS--GUI editor.  The editor should display the
