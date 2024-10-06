@@ -660,9 +660,8 @@ steps were performed, the charts will be empty.
 
 At this point, you can create a snapshot image of the
 current system using the \guicmd{Image Viewer} window, which can be
-accessed by clicking the \guicmd{Create snapshot image} button at the
-bottom of the LAMMPS-GUI.  The image viewer
-works by instructing LAMMPS to render an image of the current system using
+accessed by clicking the \guicmd{Create Image} button in the \guicmd{Run} menu. 
+The image viewer works by instructing LAMMPS to render an image of the current system using
 its internal rendering library via the \lmpcmd{dump image} command.  The
 resulting image is then displayed, and various buttons allow you to adjust
 the view and rendering style.  The image of
@@ -900,22 +899,22 @@ of the file with the following content (make sure the \lmpcmd{write\_data} comma
 is placed \emph{after} the \lmpcmd{minimize} command):
 \begin{lstlisting}
 # 6) Save system
-write_data minimized_coordinates.data
+write_data min_coords.data
 \end{lstlisting}
 
 A key improvement to the input is the addition of the
 \lmpcmd{write\_data} command.  This command writes the state
-of the system to a text file called \flecmd{minimized\_coordinates.data}.
+of the system to a text file called \flecmd{min\_coords.data}.
 This \flecmd{.data} file will be used later
 to restart the simulation from the final state of the energy
 minimization step without having to repeat the system creation and
 minimization.
 
 Run the \flecmd{improved.min.lmp} file using LAMMPS.  At the end of the simulation, a file
-called \flecmd{minimized\_coordinates.data} is created.  You can view the contents
+called \flecmd{min\_coords.data} is created.  You can view the contents
 of the file with the file view feature of LAMMPS--GUI, e.g.~from the
 \guicmd{File} menu or by right-clicking on the file name in the editor
-and selecting the entry \guicmd{View file `minimized\_coordinates.data'}.
+and selecting the entry \guicmd{View file `min\_coords.data'}.
 
 The created \flecmd{.data} file contains all the information necessary to
 restart the simulation, such as the number of atoms, the box size, the
@@ -967,7 +966,7 @@ lines to \flecmd{improved.md.lmp}:
 \begin{lstlisting}
 # 2) System definition
 pair_style lj/cut 4.0
-read_data minimized_coordinates.data
+read_data min_coords.data
 \end{lstlisting}
 
 By visualizing the system (see figure \ref{fig:improved-min}), you may

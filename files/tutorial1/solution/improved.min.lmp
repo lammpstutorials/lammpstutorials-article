@@ -23,5 +23,5 @@ thermo_style    custom step etotal press
 # 5) Run
 minimize        1.0e-6 1.0e-6 1000 10000
 # 6) Save status
-write_data      minimized_coordinates.data
+write_data      min_coords.data
 
