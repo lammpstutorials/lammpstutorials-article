@@ -88,7 +88,7 @@
 
 % \renewcommand{\emph}[1]{\underline{#1}} % make \emph{} use underline instead of italic
 % S.G.: I went back to italic since all the other italic commands were replaced
-\newcommand{\lmpcmd}[1]{\hspace{0pt}\colorbox{listing}{\textcolor{command}{\small\texttt{#1}}}\hspace{0pt}} % lammps command
+\newcommand{\lmpcmd}[1]{\hspace{0pt}\colorbox{listing}{\textcolor{command}{\small{#1}}}\hspace{0pt}} % lammps command
 \newcommand{\flrcmd}[1]{\textcolor{command}{\texttt{#1}}} % folder in monopace
 \newcommand{\flecmd}[1]{\textcolor{command}{\texttt{#1}}} % files name in monopace
 %\newcommand{\guicmd}[1]{\textcolor{command}{\texttt{\enquote{#1}}}} % LAMMPS-GUI commands in quotation monopace
@@ -417,7 +417,7 @@ Additionally, these files can be downloaded by clicking \guicmd{Start LAMMPS Tut
 (where \texttt{X} = 1...8) from the \guicmd{Tutorials} menu of LAMMPS-GUI.
 
 In the following, all LAMMPS input or console commands are formatted
-in \lmpcmd{colored monospace}.  Keyboard shortcuts and 
+with a \lmpcmd{colored background}.  Keyboard shortcuts and 
 file names are formatted in \flecmd{monospace}, and LAMMPS-GUI options and menus
 are in \guicmd{quoted monospace}.
 % S.G.: I removed "folder names" because all folders will eventually be removed (TO CONTROL BEFORE SUBMITTING)
