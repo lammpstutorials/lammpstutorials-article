@@ -7,7 +7,7 @@ Reading data file ...
   1150 atoms
   reading velocities ...
   1150 velocities
-  read_data CPU = 0.008 seconds
+  read_data CPU = 0.016 seconds
 1000 atoms in group grp_t1
 150 atoms in group grp_t2
 165 atoms in group grp_in
@@ -351,20 +351,20 @@ Per MPI rank memory allocation (min/avg/max) = 12.62 | 12.62 | 12.62 Mbytes
     298000   0.99957512    -0.21748891     1.4979859      1.2804969      0.016812985    200            59             0.054054054  
     299000   1.0174594     -0.24203802     1.5247876      1.2827496      0.016035544    202            60             0.045738046  
     300000   0.99574358    -0.22448684     1.4922438      1.267757       0.015433292    191            59             0.043659044  
-Loop time of 524.734 on 8 procs for 300000 steps with 1089 atoms
+Loop time of 611.436 on 8 procs for 300000 steps with 1089 atoms
 
-Performance: 246982.373 tau/day, 571.718 timesteps/s, 622.601 katom-step/s
-438.2% CPU use with 1 MPI tasks x 8 OpenMP threads
+Performance: 211959.960 tau/day, 490.648 timesteps/s, 534.316 katom-step/s
+456.3% CPU use with 1 MPI tasks x 8 OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 17.781     | 17.781     | 17.781     |   0.0 |  3.39
-Neigh   | 8.0319     | 8.0319     | 8.0319     |   0.0 |  1.53
-Comm    | 6.3951     | 6.3951     | 6.3951     |   0.0 |  1.22
-Output  | 429.93     | 429.93     | 429.93     |   0.0 | 81.93
-Modify  | 60.066     | 60.066     | 60.066     |   0.0 | 11.45
-Other   |            | 2.532      |            |       |  0.48
+Pair    | 19.164     | 19.164     | 19.164     |   0.0 |  3.13
+Neigh   | 9.4899     | 9.4899     | 9.4899     |   0.0 |  1.55
+Comm    | 7.3851     | 7.3851     | 7.3851     |   0.0 |  1.21
+Output  | 504.32     | 504.32     | 504.32     |   0.0 | 82.48
+Modify  | 68.283     | 68.283     | 68.283     |   0.0 | 11.17
+Other   |            | 2.798      |            |       |  0.46
 
 Nlocal:           1089 ave        1089 max        1089 min
 Histogram: 1 0 0 0 0 0 0 0 0 0

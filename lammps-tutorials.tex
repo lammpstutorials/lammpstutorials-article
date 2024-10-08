@@ -845,7 +845,7 @@ dump viz all image 100 myimage-*.ppm type type &
     size 800 800 zoom 1.452 shiny 0.7 fsaa yes &
     view 80 10 box yes 0.025 axes no 0.0 0.0 &
     center s 0.483725 0.510373 0.510373
-dump_modify viz pad 9 boxcolor darkblue &
+dump_modify viz pad 9 boxcolor royalblue &
     backcolor white adiam 1 1.6 adiam 2 4.8
 \end{lstlisting}
 This command tells LAMMPS to generate NetPBM format images every 100
@@ -1057,9 +1057,8 @@ as large blue spheres.}
 \end{figure}
 
 Finally, let us complete the script by adding the following lines to
-\flecmd{improved.md.lmp}.  Note that there is no
-need for a \lmpcmd{Settings} section, because the settings are taken
-from the \flecmd{.data} file.
+\flecmd{improved.md.lmp}.  Note that there is no need for a \lmpcmd{Settings}
+section, as the settings are taken from the \flecmd{.data} file.
 \begin{lstlisting}
 # 4) Visualization
 thermo 1000
@@ -1068,12 +1067,13 @@ thermo_style custom step temp pe ke etotal &
 
 dump mydmp all image 100 dump.md.*.ppm type type &
   shiny 0.1 box no 0.01 view 0 0 zoom 1.8 fsaa yes
-dump_modify mydmp  adiam 1 1 adiam 2 3 acolor 1 &
-  darkturquoise acolor 2 darkblue backcolor white
+dump_modify mydmp adiam 1 1 adiam 2 3 acolor 1 &
+  turquoise acolor 2 royalblue backcolor white
 \end{lstlisting}
-The two variables, \lmpcmd{n1\_in}, \lmpcmd{n2\_in}, along with the compute
+The two variables \lmpcmd{n1\_in}, \lmpcmd{n2\_in}, along with the compute
 \lmpcmd{sumcoor12}, were added to the list of information printed during
-the simulation.
+the simulation. Additionally, images of the system will be created with
+slightly less saturated colors than the default ones. 
 
 Finally, add the following lines to \flecmd{improved.md.lmp}:
 \begin{lstlisting}

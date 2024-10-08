@@ -31,7 +31,7 @@ thermo          1000
 thermo_style    custom step temp pe ke etotal press v_n1_in v_n2_in c_sumcoor12
 
 dump            mydmp    all      image 100 dump.md.*.ppm type type shiny 0.1 box no 0.01 view 0 0 zoom 1.8 fsaa yes
-dump_modify     mydmp adiam 1 1 adiam 2 3 acolor 1 darkturquoise acolor 2 darkblue backcolor white
+dump_modify     mydmp adiam 1 1 adiam 2 3 acolor 1 turquoise acolor 2 royalblue backcolor white
 
 # 5) Run
 velocity        all create 1.0 49284 mom yes dist gaussian
