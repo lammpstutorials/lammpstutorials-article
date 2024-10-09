@@ -11,6 +11,7 @@ lammps-tutorials.suppinfo
 lammps-tutorials.fls
 lammps-tutorials.synctex*
 lammps-tutorials.fdb*
+pdflatex*.fls
 
 # LaTex files for the presubmission letter
 presubmission-letter/*.log
@@ -31,4 +32,5 @@ _region_.*
 
 # LAMMPS output files
 dump.*.jpg
-dump.*.ppn
+dump.*.ppm
+myimage-*.ppm
