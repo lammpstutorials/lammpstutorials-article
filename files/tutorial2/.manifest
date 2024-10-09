@@ -1,0 +1,17 @@
+# LAMMPS Tutorial manifest file. This file determines what is downloaded when.
+# comments start with a # as the first character.
+# comments and empty lines are ignored
+##############################################################################
+# 1) input file templates and data files
+# the first file will be automatically loaded
+unbreakable.lmp
+unbreakable.data
+breakable.lmp
+breakable.data
+
+# 2) solution files
+# only downloaded on request
+
+# 3) support files
+yaml-reader.py
+CH.airebo

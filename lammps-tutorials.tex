@@ -1265,19 +1265,20 @@ so on.  By excluding the non-bonded (Lennard-Jones) interactions for
 these pairs, they do not need to be taken into account when determining
 the force constants.
 
-The last command, \textit{read\_data}, imports the
-\flecmd{unbreakable.data} file which contains information about the box
+The \lmpcmd{read\_data} command imports the
+\href{\filepath tutorial2/unbreakable.data}{\dwlcmd{unbreakable.data}}
+file which contains information about the box
 size, atom positions, as well as the identity of the atoms that are
-linked by \textit{bonds}, \textit{angles}, \textit{dihedrals}, and
-\textit{impropers} interactions.  It was created using VMD and TopoTools
+linked by \lmpcmd{bonds}, \lmpcmd{angles}, \lmpcmd{dihedrals}, and
+\lmpcmd{impropers} interactions.  It was created using VMD and TopoTools
 \cite{kohlmeyer2017topotools}.  The details of the format of the
 different sections in a data file change with different settings.  In
-particular, the \textit{Atoms} section may have a different number of
+particular, the \lmpcmd{Atoms} section may have a different number of
 columns or they may represent different properties when the
-\textit{atom\_style} is changed.  To help users, LAMMPS and tools like
-VMD + TopoTools will add a comment (here \textit{\# molecular}) to the
-\textit{Atoms} header line in the data files indicating the intended
-\textit{atom\_style}.  LAMMPS will print a warning when the chosen atom
+\lmpcmd{atom\_style} is changed.  To help users, LAMMPS and tools like
+VMD and TopoTools will add a comment (here \lmpcmd{\# molecular}) to the
+\lmpcmd{Atoms} header line in the data files indicating the intended
+\lmpcmd{atom\_style}.  LAMMPS will print a warning when the chosen atom
 style does not match what is written in that comment.
 
 This data file does not contain any sections with potential parameters
