@@ -1482,7 +1482,7 @@ and \textit{c\_} to call a compute, as seen in \hyperref[lennard-jones-label]{Tu
 Let us also add a \textit{dump image} command to visualize the system
 every 500 steps:
 \begin{lstlisting}
-dump mydmp all image 500 dump.*.ppm molecule type &
+dump mydmp all image 500 dump.*.ppm type type &
     shiny 0.1 box no 0.01 view 0 90 zoom 1.8
 dump_modify mydmp acolor 1 pink &
     adiam 1 1 backcolor white

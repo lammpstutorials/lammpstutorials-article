@@ -8,9 +8,13 @@ unbreakable.lmp
 unbreakable.data
 breakable.lmp
 breakable.data
+parameters.inc
 
 # 2) solution files
 # only downloaded on request
+solution/parameters.inc
+solution/unbreakable.lmp
+solution/unbreakable.data
 
 # 3) support files
 yaml-reader.py
