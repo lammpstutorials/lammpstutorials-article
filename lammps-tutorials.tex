@@ -1134,10 +1134,11 @@ expected during mixing.  This can be observed using the entry
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{LJ-coords}
-\caption{Snapshot image of the binary mixture simulated
-  during \hyperref[lennard-jones-label]{Tutorial 1} with atoms colored by the
-  computed $1-2$ coordination number \lmpcmd{c\_coor12}, from
-  turquoise (0.0) to blue (2.0).}
+\caption{Snapshot of the binary mixture simulated
+  during \hyperref[lennard-jones-label]{Tutorial 1} with atoms of type 1
+  colored according to their computed $1-2$ coordination
+  number \lmpcmd{c\_coor12}, ranging from turquoise, \lmpcmd{c\_coor12 = 0},
+  to yellow, \lmpcmd{c\_coor12 = 1}, and red, \lmpcmd{c\_coor12 = 2}.}
 \label{fig:coords-viz}
 \end{figure}
 
@@ -1156,17 +1157,21 @@ and how various features function:
 \end{itemize}
 
 Another useful experiment to try is to color the atoms in the \guicmd{Slide Show}
-according to their respective coordination numbers.  To do this, replace the
+according to an observable, such as their respective coordination
+numbers.  To do this, replace the
 \lmpcmd{dump} and \lmpcmd{dump\_modify} commands with the following lines:
 \begin{lstlisting}
-dump mydmp all image 100 dump.md.*.ppm c_coor12 &
-  type shiny 0.1 box no 0.01 view 0 0 zoom 1.8 fsaa yes
-dump_modify mydmp amap 0.0 2.0 cf 1.0 2 min darkturquoise &
-  max darkblue adiam 1 1 adiam 2 3 backcolor white
+variable coor12 atom (type==1)*(c_coor12)+(type==2)*-1
+dump mydmp all image 100 dump.md.*.ppm v_coor12 type shiny 0.1 &
+  box no 0.01 view 0 0 zoom 1.8 fsaa yes
+dump_modify mydmp adiam 1 1 adiam 2 3 backcolor white &
+  amap -1 2 ca 0.0 4 min royalblue 0 turquoise 1 yellow max red
 \end{lstlisting}
-Now, the atom colors are based on the value of \lmpcmd{c\_coor12}, which is mapped
-continuously from dark turquoise (min) to dark blue (max) for values of
-\lmpcmd{c\_coor12} in the range $0.0$ to $2.0$ (Figure~\ref{fig:coords-viz}).
+Run LAMMPS again.  Now, the atoms of type 1 are colored based on the value
+of \lmpcmd{c\_coor12}, which is mapped continuously from turquoise to yellow
+and red for atoms with the highest coordination (Figure~\ref{fig:coords-viz}).
+In the definition of the variable \lmpcmd{v\_coor12}, atoms of type 2 are
+all assigned a value of -1, and will therefore always be colored their default blue. 
 
 \subsection{Tutorial 2: Pulling on a carbon nanotube}
 \label{carbon-nanotube-label}
