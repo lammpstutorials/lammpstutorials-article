@@ -3966,6 +3966,286 @@ and $x_0 = 5~\mathrm{\AA{}}$.}
 \label{fig:US-freenergy}
 \end{figure}
 
+\subsection{Tutorial 8: Reactive Molecular Dynamics}
+\label{bond-react-label}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{REACT}
+\caption{Polymer melt made in nylon and carbon nanotubes (CNTs) simulated during
+\hyperref[bond-react-label]{Tutorial 8}. The water molecules (in red and white)
+are created by the polymerization of nylon simulation using REACTER.}
+\label{fig:REACT}
+\end{figure}
+
+The goal of this tutorial is to create a system made of 
+carbon nanotubes (CNTs) embedded in a polymer melt made in nylon-6,6 (Fig.\,\ref{fig:REACT}). The
+REACTER protocol is used to simulate the polymerization of nylon, and the formation
+of water molecules is followed in time \cite{gissinger2020reacter, gissinger2024molecular}.
+In contrast with Airebo (\hyperref[carbon-nanotube-label]{Tutorial 2})
+and ReaxFF (\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}), the REACTER
+protocol relies on the use of a \textit{classical} force field.
+
+\subsubsection{Creating the system}
+
+The first step of the tutorial is to mix small carbon nanotubes
+with the initial, unreacted, molecules. The molecules are hexamethylenediamine
+(C$_6$H$_{16}$N$_2$) and adipic acid (C$_6$H$_{10}$O$_4$). Create a new input
+file, call it \textit{mixing.lmp}, and copy the following lines into it:
+{\normalsize
+\begin{verbatim}
+units real
+boundary p p p
+atom_style full
+
+kspace_style pppm 1.0e-5
+pair_style lj/class2/coul/long 8.5
+angle_style class2
+bond_style class2
+dihedral_style class2
+improper_style class2
+pair_modify tail yes mix sixthpower
+special_bonds lj/coul 0 0 1
+\end{verbatim}
+}
+The \textit{class2} styles compute a 6/9 Lennard-Jones \cite{sun1998compass}.
+The \textit{class2} bonds, angles, dihedrals, and impropers are used as
+well, see the documention for a description of their respective potentials.
+The \textit{mix sixthpower} imposes the following mixing rule for the calculation
+of the cross coefficients: $\sigma_{ij} = ( 0.5 (\sigma^6_i+\sigma_j^6))^{1/6}$,
+and $\epsilon_{ij} = (2 \sqrt{\epsilon_i \epsilon_j} \sigma^3_i \sigma^3_j)
+/ (\sigma^6_i+\sigma_j^6)$.
+
+Let us read a data file named \href{\filepath tutorial8/nylon.data}{\textit{nylon.data}}
+containing the unreacted molecule template, and let us replicate it. Add the
+folloxing lines to \textit{mixing.lmp}:
+{\normalsize
+\begin{verbatim}
+read_data nylon.data &
+  extra/bond/per/atom 5  &
+  extra/angle/per/atom 15 &
+  extra/dihedral/per/atom 15 &
+  extra/improper/per/atom 25 &
+  extra/special/per/atom 25
+replicate 3 4 4
+\end{verbatim}
+}
+The resulting box is $(7.2\,\text{nm})^3$ in size, and its density is low
+enough that inserting CNTs will be easy.
+% S.G.: @jrgissing, here we could describe the content of nylon.data.
+% How was it created, what is the specifity of the molecules involved, etc...
+
+To add 5 CNTs to the simulation box, add the following commands
+to \textit{mixing.lmp}:
+{\normalsize
+\begin{verbatim}
+molecule CNT cnt.molecule
+create_atoms 0 random 5 8305 NULL overlap 3 &
+  maxtry 500 mol CNT 7687
+\end{verbatim}
+}
+Let us use the \textit{minimize} command to reduce the energy of the system:
+{\normalsize
+\begin{verbatim}
+minimize 1.0e-4 1.0e-6 100 1000
+reset_timestep 0
+\end{verbatim}
+}
+Then, let us use \textit{dump image} to output images every 1000 steps:
+{\normalsize
+\begin{verbatim}
+dump mydmp all image 1000 dump.mixing.*.ppm &
+  type type shiny 0.1 box no 0.01 &
+  view 0 0 zoom 1.8 fsaa yes bond atom 0.5
+dump_modify mydmp backcolor white &
+  acolor c2 gray acolor c_1 lightslategray &
+  acolor o dimgray acolor o_1 dimgray &
+  acolor hc lightslategray &
+  acolor ho lightslategray &
+  acolor hn lightslategray acolor hw white &
+  acolor o* red acolor n darkslategray &
+  acolor na darkslategray &
+  acolor cp lightpink &
+  adiam c2 0.3 adiam c_1 0.3 &
+  adiam cp 0.3 adiam o 0.28 &
+  adiam o_1 0.28 adiam o* 2.8 &
+  adiam hc 0.15 adiam ho 0.15 &
+  adiam hn 0.15 adiam hw 1.5 &
+  adiam n 0.3 adiam na 0.3 
+\end{verbatim}
+}
+Then, let us perform a short equilibration of system using \textit{fix npt}
+with a isotropic couplage. To speed up the equilibration of the system, let us 
+impose a relatively large pressure of 1000\,atm for the first 10\,ps:
+{\normalsize
+\begin{verbatim}
+velocity all create 300 1829 dist gaussian &
+  mom yes rot yes
+fix mynpt all npt temp 300 300 100 &
+  iso 1000 1000 1000
+
+thermo 1000
+thermo_style custom step temp pe etotal press &
+  density vol
+
+run 10000
+\end{verbatim}
+}
+Then, for the following 20\,ps, let us continue the equilibration
+with an imposed pressure of 1\,atm, and write the final state of the
+system in a file named \textit{cnt-nylon-mix.data}:
+{\normalsize
+\begin{verbatim}
+fix mynpt all npt temp 300 300 100 iso 1 1 1000
+
+run 20000
+write_data cnt-nylon-mix.data
+\end{verbatim}
+}
+As the time progresses, the density $\rho$ of the system progressively
+converges toward an equilibrium value $\rho \approx 1.3$\,g/cm$^3$
+(Fig.\,\ref{fig:evolution-density}).
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{REACT-mixing}
+\caption{Evolution of the system density, $\rho$, as a function of the
+time, $t$, during equilibration.}
+\label{fig:evolution-density}
+\end{figure}
+
+\subsubsection{Atom maps and molecule templates}
+
+The REACTER protocol relies on classical force fields. For the reaction to
+occur, an \textit{atom map} containing information about the reaction mechanism
+must be provided by the user. The atom map specifies which atoms are
+the initiators to the reaction and what are the distance cutoffs. In addition,
+pre-reaction and post-reaction molecule templates must be provided.
+
+Download the two atoms maps, \href{\filepath tutorial8/rxn1_stp1_map}{\textit{rxn1$\_$stp1$\_$map}}
+and \href{\filepath tutorial8/rxn1_stp1_map}{\textit{rxn1$\_$stp1$\_$map}},
+the two templates for the unreacted molecules,
+\href{\filepath tutorial8/rxn1_stp1_unreacted.molecule_template}{\textit{rxn1$\_$stp1$\_$unreacted.molecule$\_$template}}
+and 
+\href{\filepath tutorial8/rxn1_stp2_unreacted.molecule_template}{\textit{rxn1$\_$stp2$\_$unreacted.molecule$\_$template}},
+as well as the two templates for the reacted molecules,
+\href{\filepath tutorial8/rxn1_stp1_reacted.molecule_template}{\textit{rxn1$\_$stp1$\_$reacted.molecule$\_$template}}
+and 
+\href{\filepath tutorial8/rxn1_stp2_reacted.molecule_template}{\textit{rxn1$\_$stp2$\_$reacted.molecule$\_$template}}.
+
+% S.G.: @jrgissing, here we could describe the specifity, or at least the most important
+% details of the atom maps.
+% S.G.: the name of the molecule templates are too long. Would it be possible to shorten them
+% for the sake of the tutorial? like "reacted-1.mol" instead of rxn1_stp1_reacted.molecule_template.
+
+\subsubsection{Simulating the reaction}
+
+The first step, before simulating the reaction, is to import the previously
+generated configuration. Create a new input file named \textit{reacting.lmp},
+and copy the following lines into it:
+{\normalsize
+\begin{verbatim}
+units real
+boundary p p p
+atom_style full
+
+kspace_style pppm 1.0e-5
+pair_style lj/class2/coul/long 8.5
+angle_style class2
+bond_style class2
+dihedral_style class2
+improper_style class2
+pair_modify tail yes mix sixthpower
+
+special_bonds lj/coul 0 0 1
+
+read_data cnt-nylon-mix.data &
+  extra/bond/per/atom 5  &
+  extra/angle/per/atom 15 &
+  extra/dihedral/per/atom 15 &
+  extra/improper/per/atom 25 &
+  extra/special/per/atom 25
+\end{verbatim}
+}
+Here, the \textit{read$\_$data} command is used to import \textit{cnt-nylon-mix.data}.
+Then, let us import all four molecules template using the \textit{molecule} command:
+{\normalsize
+\begin{verbatim}
+molecule mol1 rxn1_stp1_unreacted.molecule_template
+molecule mol2 rxn1_stp1_reacted.molecule_template
+molecule mol3 rxn1_stp2_unreacted.molecule_template
+molecule mol4 rxn1_stp2_reacted.molecule_template 
+\end{verbatim}
+}
+In order to follow the evolution of the reaction with time, let us generate images
+of the system using \textit{dump image}:
+{\normalsize
+\begin{verbatim}
+dump mydmp all image 1000 dump.mixing.*.ppm &
+  type type shiny 0.1 box no 0.01 &
+  view 0 0 zoom 1.8 fsaa yes bond atom 0.5
+dump_modify mydmp backcolor white &
+  acolor c2 gray acolor c_1 lightslategray &
+  acolor o dimgray acolor o_1 dimgray &
+  acolor hc lightslategray &
+  acolor ho lightslategray &
+  acolor hn lightslategray acolor hw white &
+  acolor o* red acolor n darkslategray &
+  acolor na darkslategray &
+  acolor cp lightpink &
+  adiam c2 0.3 adiam c_1 0.3 &
+  adiam cp 0.3 adiam o 0.28 &
+  adiam o_1 0.28 adiam o* 2.8 &
+  adiam hc 0.15 adiam ho 0.15 &
+  adiam hn 0.15 adiam hw 1.5 &
+  adiam n 0.3 adiam na 0.3
+\end{verbatim}
+}
+Then, using the \textit{fix bond/react}, 
+{\normalsize
+\begin{verbatim}
+fix myrxns all bond/react &
+  stabilization yes statted_grp 0.03 &
+  react rxn1 all 1 0.0 2.9 mol1 mol2 rxn1_stp1_map 
+  react rxn2 all 1 0.0 5.0 mol3 mol4 rxn1_stp2_map
+\end{verbatim}
+}
+With the \textit{stabilization} keyword, the \textit{bond/react} command will
+try to stabilize the atoms involved in the reaction using the nve/limit
+command with a maximum displacement of $0.03\,\mathrm{\AA{}}$ (a command that was
+used, for instance, in \hyperref[sheared-confined-label]{Tutorial 4}). The two
+\textit{react} keywords contain specific details about the two reactions
+involved here, i.e. a transformation of \textit{mol1} into \textit{mol2} based
+on the atom map \textit{rxn1$\_$stp1$\_$map}, and a transformation of 
+\textit{mol3} into \textit{mol4} based on the atom map \textit{rxn1$\_$stp2$\_$map}.
+
+Finally, let us use the \textit{fix nvt} to perform the integration of the 
+equation of motion and control the temperature of the system:
+{\normalsize
+\begin{verbatim}
+fix mynvt statted_grp_REACT nvt $
+  temp 300 300 100
+
+thermo 1000
+thermo_style custom step temp pe $
+  etotal press f_myrxns[1] f_myrxns[2]
+
+run 50000
+\end{verbatim}
+}
+Here, in addition, the \textit{thermo custom} command was called and was
+asked to print the cumulative reaction counts from \textit{fix myrxns}.
+The number of reaction, $N_r$, can be seen to increase with time
+(Fig.\,\ref{fig:evolution-reacting})
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{REACT-reacting}
+\caption{Evolution of the reaction counts, $\text{N}_r$,
+as a function of the time, $t$, during the reaction.}
+\label{fig:evolution-reacting}
+\end{figure}
+
 \section*{Author Contributions}
 % S.G. to update
 S.G. conceived and wrote all the online tutorials and underlying Sphinx documentation

@@ -1,0 +1,57 @@
+# LAMMPS input file
+
+units real
+boundary p p p
+atom_style full
+
+kspace_style pppm 1.0e-5
+pair_style lj/class2/coul/long 8.5
+angle_style class2
+bond_style class2
+dihedral_style class2
+improper_style class2
+pair_modify tail yes mix sixthpower
+
+special_bonds lj/coul 0 0 1
+
+read_data cnt-nylon-mix.data &
+  extra/bond/per/atom 5  &
+  extra/angle/per/atom 15 &
+  extra/dihedral/per/atom 15 &
+  extra/improper/per/atom 25 &
+  extra/special/per/atom 25
+
+molecule mol1 rxn1_stp1_unreacted.molecule_template
+molecule mol2 rxn1_stp1_reacted.molecule_template
+molecule mol3 rxn1_stp2_unreacted.molecule_template
+molecule mol4 rxn1_stp2_reacted.molecule_template 
+
+dump mydmp all image 1000 dump.reacting.*.ppm &
+  type type shiny 0.1 box no 0.01 &
+  view 0 0 zoom 1.8 fsaa yes bond atom 0.5
+dump_modify mydmp backcolor white &
+  acolor c2 gray acolor c_1 lightslategray &
+  acolor o dimgray acolor o_1 dimgray &
+  acolor hc lightslategray &
+  acolor ho lightslategray &
+  acolor hn lightslategray acolor hw white &
+  acolor o* red acolor n darkslategray &
+  acolor na darkslategray &
+  acolor cp lightpink &
+  adiam c2 0.3 adiam c_1 0.3 &
+  adiam cp 0.3 adiam o 0.28 &
+  adiam o_1 0.28 adiam o* 2.8 &
+  adiam hc 0.15 adiam ho 0.15 &
+  adiam hn 0.15 adiam hw 1.5 &
+  adiam n 0.3 adiam na 0.3
+
+fix myrxns all bond/react stabilization yes statted_grp .03 &
+    react rxn1 all 1 0.0 2.9 mol1 mol2 rxn1_stp1_map &
+    react rxn2 all 1 0.0 5.0 mol3 mol4 rxn1_stp2_map
+
+fix mynvt statted_grp_REACT nvt temp 300 300 100
+
+thermo 1000
+thermo_style custom step temp pe etotal press f_myrxns[1] f_myrxns[2]
+
+run 50000
