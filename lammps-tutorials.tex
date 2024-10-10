@@ -1222,8 +1222,6 @@ by maintaining the relative orientations of neighboring atoms.
 
 After completing the setup, the editor should display the following content:
 \begin{lstlisting}
-variable T equal 300
-
 units real
 atom_style molecular
 boundary f f f
@@ -1318,8 +1316,8 @@ tutorial \cite{typelabel_paper}.
 
 In this tutorial, a deformation will be applied to the CNT by displacing
 the atoms located at its edges. To achieve this, we will first isolate the
-atoms at the two edges and place them into groups named \textit{rtop} and
-\textit{rbot}, respectively. Add the following lines to \flecmd{input.lmp}:
+atoms at the two edges and place them into groups named \lmpcmd{rtop} and
+\lmpcmd{rbot}. Add the following lines to \flecmd{input.lmp}:
 \begin{lstlisting}
 group carbon_atoms type 1
 variable xmax equal bound(carbon_atoms,xmax)-0.5
@@ -1329,16 +1327,16 @@ region rbot block INF ${xmin} INF INF INF INF
 region rmid block ${xmin} ${xmax} INF INF INF INF
 \end{lstlisting}
 The first command includes all the atoms of type 1 (i.e.~all the atoms here)
-in a group named \textit{carbon\_atoms}.
+in a group named \lmpcmd{carbon\_atoms}.
 The variable $x_\text{max}$ corresponds to the coordinate of the
-last atoms along $x$ minus 0.5 Ångströms, and $x_\text{min}$ to the coordinate
-of the first atoms along $x$ plus 0.5 Ångströms. Then, three regions are defined
-and correspond respectively to: $x < x_\text{min}$, (\textit{rbot}, for region
-bottom), $x_\text{min} > x > x_\text{max}$ (\textit{rmid}, for region middle),
-and $x > x_\text{max}$ (\textit{rtop}, for region top).
+last atoms along $x$ minus 0.5~Ångströms, and $x_\text{min}$ to the coordinate
+of the first atoms along $x$ plus 0.5~Ångströms. Then, three regions are defined,
+corresponding to the following: $x < x_\text{min}$, (\lmpcmd{rbot}, for region
+bottom), $x_\text{min} > x > x_\text{max}$ (\lmpcmd{rmid}, for region middle),
+and $x > x_\text{max}$ (\lmpcmd{rtop}, for region top).
 
-Finally, let us define 3 groups of atoms corresponding to the atoms located
-in each of the 3 regions, respectively, by adding to \flecmd{input.lmp}:
+Finally, let us define 3 groups of atoms corresponding to the atoms
+in each of the 3 regions by adding to \flecmd{input.lmp}:
 \begin{lstlisting}
 group cnt_top region rtop
 group cnt_bot region rbot
@@ -1347,94 +1345,96 @@ set group cnt_top mol 1
 set group cnt_bot mol 2
 set group cnt_mid mol 3
 \end{lstlisting}
-With the three \textit{set} commands we assign different (otherwise unused)
-molecule IDs to atoms in those three groups.  We will use this later to
-color these groups of atoms differently.
+With the three \lmpcmd{set} commands, we assign unique, otherwise unused
+molecule IDs to atoms in those three groups.  We will use this IDs later to
+assign different colors to these groups of atoms.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-underformed}
-\caption{CNT with the atoms from the \textit{cnt\_mid} group in pink,
-and the atoms from the \textit{cnt\_top} and the \textit{cnt\_bot}
+\caption{The CNT simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}
+with the atoms from the \lmpcmd{cnt\_mid} group in pink
+and the atoms from the \lmpcmd{cnt\_top} and the \lmpcmd{cnt\_bot}
 groups in white.}
 \label{fig:CNT-underformed}
 \end{figure}
 
 Run the simulation using LAMMPS. The number of atoms in each group is given in
-the \textit{Output} window.  It is an important check to make sure that the number
-of atoms in each group corresponds to what is expected, just like here:
+the \guicmd{Output} window.  It is an important check to make sure that the number
+of atoms in each group corresponds to what is expected, as shown here:
 \begin{lstlisting}
 10 atoms in group cnt_top
 10 atoms in group cnt_bot
 680 atoms in group cnt_mid
 \end{lstlisting}
-The atoms from the \textit{cnt\_top} and \textit{cnt\_bot} groups are
-represented in white in Fig.\,\ref{fig:CNT-underformed}, and the atoms from
-the \textit{cnt\_mid} group in pink.
+The atoms from the \lmpcmd{cnt\_top} and \lmpcmd{cnt\_bot} groups are
+represented in white in Fig.\,\ref{fig:CNT-underformed}. The atoms from
+the \lmpcmd{cnt\_mid} group are represented in pink.
 
 Finally, to start from a less ideal state and create a system with some defects,
 let us randomly delete a small fraction of the carbon atoms. To avoid deleting
-atoms that are too close to the edges, let us define a new region name \textit{rdel}
-that starts $2\,\text{\AA{}}$ from the CNT edges.
+atoms that are too close to the edges, let us define a new region named \lmpcmd{rdel}
+that starts at $2\,\text{\AA{}}$ from the CNT edges:
 \begin{lstlisting}
 variable xmax_del equal ${xmax}-2
 variable xmin_del equal ${xmin}+2
-region rdel block ${xmin_del} ${xmax_del} &
-    INF INF INF INF
+region rdel block ${xmin_del} ${xmax_del} INF INF INF INF
 group rdel region rdel
-delete_atoms random fraction 0.02 no rdel &
-    NULL 482793 bond yes
+delete_atoms random fraction 0.02 no rdel NULL 2793 bond yes
 \end{lstlisting}
-The \textit{delete\_atoms} command randomly deletes $2\,\%$ of the atoms from
-the \textit{rdel} group (i.e.~about 10 atoms) (Fig.\,\ref{fig:CNT-underformed-deleted}).
+The \lmpcmd{delete\_atoms} command randomly deletes $2\,\%$ of the atoms from
+the \lmpcmd{rdel} group, here about 10 atoms (Fig.\,\ref{fig:CNT-underformed-deleted}).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-underformed-deleted}
 \caption{Same CNT as in Fig.\,\ref{fig:CNT-underformed}, but with 10 deleted atoms.
-The 10 deleted atoms were chosen randomly from the central part of the CNT.}
+The 10 deleted atoms were chosen randomly from the central part
+of the CNT (region \lmpcmd{rdel}).}
 \label{fig:CNT-underformed-deleted}
 \end{figure}
 
 \paragraph{The molecular dynamics}
 
-Let us give an initial temperature to the atoms of \textit{cnt\_mid}:
+Let us give an initial temperature to the atoms of the group \lmpcmd{cnt\_mid}:
 \begin{lstlisting}
 reset_atoms id sort yes
-velocity cnt_mid create ${T} 48455 &
-    mom yes rot yes
+velocity cnt_mid create 300 48455 mom yes rot yes
 \end{lstlisting}
-Re-setting the atom IDs is necessary before using the \textit{velocity} command
-when atoms were deleted, which is done here with the \textit{reset\_atoms} command.
-The \textit{velocity} command gives initial velocities to the atoms of the middle
-group \textit{cnt\_mid}, ensuring an initial temperature of $300\,\text{K}$
+Re-setting the atom IDs is necessary before using the \lmpcmd{velocity} command
+when atoms were deleted, which is done here with the \lmpcmd{reset\_atoms} command.
+The \lmpcmd{velocity} command gives initial velocities to the atoms of the middle
+group \lmpcmd{cnt\_mid}, ensuring an initial temperature of $T = 300\,\text{K}$
 for these atoms.
 
 Let us specify the thermalization and the dynamics of the system. Add the following
 lines into \flecmd{input.lmp}:
 \begin{lstlisting}
-fix mynve all nve
-compute Tmid cnt_mid temp
-fix myber cnt_mid temp/berendsen ${T} ${T} 100.0
-fix_modify myber temp Tmid
+fix mynve1 cnt_top nve
+fix mynve2 cnt_bot nve
+fix mynvt cnt_mid nvt temp 300 300 100.0
 \end{lstlisting}
 % AK: why temp/berendsen? This seems particularly unsuitable for this system
 % it is designed for bulk systems that are in equilibrium, so that you
 % can do an "almost" NVE while removing extra kinetic energy from noise.
-The \textit{fix nve}
-is applied to all atoms so that all atom positions are recalculated at every step,
-and a \textit{Berendsen} thermostat is applied to the atoms of the group
-\textit{cnt\_mid} only \cite{berendsen1984molecular}.
+% SG: we could change it, yes. In the original version, it was also a pretext to
+% make an exercice on the the flying ice cube... Its not shere anymore.
+The \lmpcmd{fix nve} are applied to the atoms of \lmpcmd{cnt\_top} and
+\lmpcmd{cnt\_bot}, respectively, and will ensure that the positions of the atoms
+from these groups are recalculated at every step. The \lmpcmd{fix nvt} does the
+same for the \lmpcmd{cnt\_mid} group, while also applying a Nos\'e-Hoover thermostat
+with desired temperature of 300\,K \cite{nose1984unified, hoover1985canonical}.
+% so that , and a \lmpcmd{Berendsen} thermostat is applied
+% to the atoms of the group \lmpcmd{cnt\_mid} only \cite{berendsen1984molecular}.
 % AK This is incorrect. Any thermostat will thermostat only the group
+% SG: OK. Shouln'd we remove the fix_modify then?
 % and define its internal temperature compute for the same group.
-%
-%The
-%\textit{fix\_modify myber} ensures that the \textit{fix Berendsen} uses the
+%The \textit{fix\_modify myber} ensures that the \textit{fix Berendsen} uses the
 %temperature of the group \textit{cnt\_mid} as an input, instead of the
 %temperature of the whole system. This is necessary to make sure that the frozen
 %edges won't bias the temperature. Note that the atoms of the edges do not need
 %a thermostat because their motion will be restrained, see below.
-
+% SG: I removed Berendsen now --> use it as a "Experiments" + cite \cite{berendsen1984molecular}.
 To restrain the motion of the atoms at the edges, let us add the following
 commands to \flecmd{input.lmp}:
 \begin{lstlisting}
@@ -1443,66 +1443,68 @@ fix mysf2 cnt_bot setforce 0 0 0
 velocity cnt_top set 0 0 0
 velocity cnt_bot set 0 0 0
 \end{lstlisting}
-The two \textit{setforce} commands cancel the forces applied on the atoms of the
+The two \lmpcmd{setforce} commands cancel the forces applied on the atoms of the
 two edges, respectively. The cancellation of the forces is done at every step,
 and along all 3 directions of space, $x$, $y$, and $z$, due to the use of
-\textit{0 0 0}. The two \textit{velocity} commands set the initial velocities
-along $x$, $y$, and $z$ to 0 for the atoms of \textit{cnt\_top} and
-\textit{cnt\_bot}, respectively. As a consequence of these last four commands,
+\lmpcmd{0 0 0}. The two \lmpcmd{velocity} commands set the initial velocities
+along $x$, $y$, and $z$ to 0 for the atoms of \lmpcmd{cnt\_top} and
+\lmpcmd{cnt\_bot}, respectively. As a consequence of these last four commands,
 the atoms of the edges will remain immobile during the simulation (or at least
 they would if no other command was applied to them).
 
-On a side note, the \textit{velocity set}
+On a side note, the \lmpcmd{velocity set}
 commands impose the velocity of a group of atoms at the start of a run but do
-not enforce the velocity during the entire simulation. When \textit{velocity set}
-is used in combination with \textit{setforce 0 0 0}, as is the case here, the
+not enforce the velocity during the entire simulation. When \lmpcmd{velocity set}
+is used in combination with \lmpcmd{setforce 0 0 0}, as is the case here, the
 atoms won't feel any force during the entire simulation. According to the Newton
 equation, no force means no acceleration, meaning that the initial velocity
 will persist during the entire simulation, thus producing a constant velocity motion.
 
 \paragraph{Outputs}
 Next, to measure the strain and stress applied to the CNT, let us create a
-variable for the distance $L$ between the two edges, as well as  a variable $F$
-for the force applied on the edges:
+variable for the distance $L_\text{cnt}$ between the two edges,
+as well as a variable $F_\text{cnt}$ for the force applied on the edges:
 \begin{lstlisting}
-variable L equal &
-    xcm(cnt_top,x)-xcm(cnt_bot,x)
-variable F equal f_mysf1[1]-f_mysf2[1]
+variable Lcnt equal xcm(cnt_top,x)-xcm(cnt_bot,x)
+variable Fcnt equal f_mysf1[1]-f_mysf2[1]
 \end{lstlisting}
-Here, the force is extracted from the fixes \textit{mysf1} and \textit{mysf2}
-using \textit{f\_}, similarly to the use of \textit{v\_} to call a variable,
-and \textit{c\_} to call a compute, as seen in \hyperref[lennard-jones-label]{Tutorial 1}.
+Here, the force is extracted from the fixes \lmpcmd{mysf1} and \lmpcmd{mysf2}
+using \lmpcmd{f\_}, similarly to the use of \lmpcmd{v\_} to call a variable,
+and \lmpcmd{c\_} to call a compute, as seen in \hyperref[lennard-jones-label]{Tutorial 1}.
 
-Let us also add a \textit{dump image} command to visualize the system
+Let us also add a \lmpcmd{dump image} command to visualize the system
 every 500 steps:
 \begin{lstlisting}
-dump mydmp all image 500 dump.*.ppm type type &
-    shiny 0.1 box no 0.01 view 0 90 zoom 1.8
-dump_modify mydmp acolor 1 pink &
-    adiam 1 1 backcolor white
+variable colors string "pink white white"
+dump mydmp all image 500 dump.*.ppm mol type &
+  adiam 1.5 box no 0.01 view 0 90 zoom 1.8 shiny 0.1 fsaa yes
+dump_modify mydmp pad 5 amap 0 10 sa 1 3 ${colors} &
+  backcolor white
 \end{lstlisting}
 Let us run a small equilibration step to bring the system to the required
 temperature before applying any deformation:
 \begin{lstlisting}
+compute Tmid cnt_mid temp
 thermo 100
-thermo_style custom step temp etotal v_L v_F
+thermo_style custom step temp etotal v_Lcnt v_Fcnt
 thermo_modify temp Tmid line yaml
 
 timestep 1.0
 run 5000
 \end{lstlisting}
-With the \textit{thermo\_modify} command, we specify to LAMMPS that the
-temperature $T_\mathrm{mid}$ must be outputted, instead of the
-temperature of the entire system. This choice is motivated by the presence of
+With the \lmpcmd{thermo\_modify} command, we specify to LAMMPS that the
+temperature $T_\mathrm{mid}$ of the middle group, \lmpcmd{cnt\_mid},
+must be outputted, instead of the temperature of the entire system.
+This choice is motivated by the presence of
 frozen parts with an effective temperature of 0\,K, which makes the average
-temperature of the entire system less relevant. The \textit{thermo\_modify}
+temperature of the entire system less relevant. The \lmpcmd{thermo\_modify}
 command also imposes the use of the YAML format that can easily be read by
 Python (see below).
 
 Let us impose a constant velocity deformation on the CNT
 by combining the \textit{velocity set} command with previously defined
-\textit{fix setforce}. Add the following lines in the \flecmd{input.lmp} file,
-right after the last \textit{run 5000} command:
+\lmpcmd{fix setforce}. Add the following lines in the \lmpcmd{input.lmp} file,
+right after the last \lmpcmd{run 5000} command:
 \begin{lstlisting}
 velocity cnt_top set 0.0005 0 0
 velocity cnt_bot set -0.0005 0 0
@@ -1519,7 +1521,7 @@ deforming at $t = 5\,\text{ps}$.}
 \label{fig:CNT-unbreakable-lenght}
 \end{figure}
 
-Run the simulation using LAMMPS. As can be seen from the variable $L$, the length
+Run the simulation using LAMMPS. As can be seen from the variable $L_\text{cnt}$, the length
 of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.\,\ref{fig:CNT-unbreakable-lenght}),
 as expected from the imposed constant velocity. What you observe in the \textit{Slide Show}
 windows should resembles Fig.\,\ref{fig:CNT-deformed-unbreakable}. The total energy of the system
@@ -1556,7 +1558,8 @@ it within \textit{unbreakable-bonds}. Download this script
 within \flrcmd{unbreakable-bonds/}. The \flecmd{yaml-reader.py} first imports
 the \textit{log.yaml} file. Then, a certain pattern is
 identified and stored as a string character named \textit{docs}. The string is
-then converted into a list, and $F$ and $L$ are extracted. The stress and strain
+then converted into a list, and $F_\text{cnt}$ and $L_\text{cnt}$
+are extracted. The stress and strain
 are then calculated, and the result is saved in a data file using the
 NumPy \textit{savetxt} function. \textit{thermo[0]} can be used to access the
 information from the first minimization run, and \textit{thermo[1]} from
@@ -1567,9 +1570,11 @@ Fig.\,\ref{fig:CNT-stress-strain-unbreakable}.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-stress-strain-unbreakable}
-\caption{Stress applied on the CNT during deformation $F/A$, where $F$ is the force
-and $A$ the CNT surface area, as a function of the strain $(L-L_0/L_0)$, where
-$L$ is the CNT length and $L_0$ the CNT initial length. The potential is OPLS-AA.}
+\caption{Stress applied on the CNT during deformation $F_\text{cnt}/A_\text{cnt}$,
+where $F_\text{cnt}$ is the force and $A_\text{cnt}$ the CNT surface area,
+as a function of the strain $(L_\text{cnt}-L_\text{cnt-0}/L_\text{cnt-0})$, where
+$L_\text{cnt}$ is the CNT length and $L_\text{cnt-0}$ the CNT initial length.
+Here, the potential is OPLS-AA.}
 \label{fig:CNT-stress-strain-unbreakable}
 \end{figure}
 
