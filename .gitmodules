@@ -1,5 +1,5 @@
 [submodule "files/pyplot-perso"]
-	path = files/pyplot-perso
+	path = files/shared-pyplot
 	url = git@github.com:simongravelle/pyplot-perso.git
 	branch = LAMMPS-livecom
 [submodule "dependencies/.github"]

@@ -1,0 +1,9 @@
+# 1) Initialization
+units lj
+dimension 3
+atom_style atomic
+boundary p p p
+# 2) System definition
+# 3) Settings
+# 4) Visualization
+# 5) Run
