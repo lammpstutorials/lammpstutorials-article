@@ -1609,7 +1609,7 @@ bond information is required with AIREBO.
 
 \paragraph{Adapt the topology file}
 
-Since bonds,angles, and dihedrals do not need to be
+Since bonds, angles, and dihedrals do not need to be
 explicitly set when using AIREBO, some simplification must be made to the
 \flecmd{.data} file. The new \flecmd{.data}
 file is named \href{\filepath tutorial2/breakable.data}{\dwlcmd{breakable.data}},
@@ -1618,20 +1618,9 @@ the \flecmd{breakable.data} contains the information
 required for placing the atoms in the box, but no bond/angle/dihedral information.
 Another difference between the \flecmd{unbreakable.data} and \flecmd{breakable.data} files
 is that, here, a larger distance of 120~Ångströms was used for the box size along
-the $x$ axis, to allow for larger deformation.
+the $x$ axis, to allow for larger deformation of the CNT.
 
-\paragraph{Use of AIREBO potential}
-
-Then, let us import the LAMMPS data file, and set the pair coefficients by adding
-the following lines into \flecmd{input.lmp}:
-\begin{lstlisting}
-# System definition
-read_data cnt_atom.data
-pair_coeff * * CH.airebo C
-\end{lstlisting}
-Here, there is one atom type, which we impose to be `carbon' by using
-the letter \textit{C}. Download the \href{\filepath tutorial2/breakable-bonds/CH.airebo}{\dwlcmd{CH.airebo}}
-file and place it within the \textit{breakable-bonds/} folder. The rest of the
+The rest of the
 \flecmd{input.lmp} is very similar to the previous one:
 
 \begin{lstlisting}
