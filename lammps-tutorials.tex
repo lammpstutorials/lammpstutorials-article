@@ -1297,7 +1297,7 @@ $\epsilon_{11} = 0.066 \, \text{kcal/mol}$ and
 $\sigma_{11} = 3.4 \, \text{\AA{}}$.  The \lmpcmd{bond\_coeff} provides
 the equilibrium distance $r_0= 1.4 \, \text{\AA{}}$ and the
 spring constant $k_\text{b} = 469 \, \text{kcal/mol/\AA{}}^2$ for the
-harmonic potential imposed between two neighboring carbon atoms. The potential
+harmonic potential imposed between two neighboring carbon atoms.  The potential
 is given by $U_\text{b} = k_\text{b} ( r - r_0)^2$. The
 \lmpcmd{angle\_coeff} gives the equilibrium angle $\theta_0$ and
 constant for the potential between three neighboring atoms :
@@ -1306,18 +1306,18 @@ $U_\theta = k_\theta ( \theta - \theta_0)^2$. The
 for the constraints between 4 atoms.
 
 Rather than copying the contents of the file into the input, we
-incorporate it using the \lmpcmd{include} command. Using \lmpcmd{include} allows
+incorporate it using the \lmpcmd{include} command.  Using \lmpcmd{include} allows
 us to conveniently reuse the parameter settings
-in other inputs or switch them with others. This will become more general
+in other inputs or switch them with others.  This will become more general
 when using type labels, which is shown in the next
 tutorial \cite{typelabel_paper}.
 
 \paragraph{Prepare the initial state}
 
 In this tutorial, a deformation will be applied to the CNT by displacing
-the atoms located at its edges. To achieve this, we will first isolate the
+the atoms located at its edges.  To achieve this, we will first isolate the
 atoms at the two edges and place them into groups named \lmpcmd{rtop} and
-\lmpcmd{rbot}. Add the following lines to \flecmd{unbreakable.lmp}:
+\lmpcmd{rbot}.  Add the following lines to \flecmd{unbreakable.lmp}:
 \begin{lstlisting}
 group carbon_atoms type 1
 variable xmax equal bound(carbon_atoms,xmax)-0.5
@@ -1330,7 +1330,7 @@ The first command includes all the atoms of type 1 (i.e.~all the atoms here)
 in a group named \lmpcmd{carbon\_atoms}.
 The variable $x_\text{max}$ corresponds to the coordinate of the
 last atoms along $x$ minus 0.5~Ångströms, and $x_\text{min}$ to the coordinate
-of the first atoms along $x$ plus 0.5~Ångströms. Then, three regions are defined,
+of the first atoms along $x$ plus 0.5~Ångströms.  Then, three regions are defined,
 corresponding to the following: $x < x_\text{min}$, (\lmpcmd{rbot}, for region
 bottom), $x_\text{min} > x > x_\text{max}$ (\lmpcmd{rmid}, for region middle),
 and $x > x_\text{max}$ (\lmpcmd{rtop}, for region top).
@@ -1351,12 +1351,11 @@ assign different colors to these groups of atoms.
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{CNT-underformed}
-\caption{The CNT simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}
-with the atoms from the \lmpcmd{cnt\_mid} group in pink
-and the atoms from the \lmpcmd{cnt\_top} and the \lmpcmd{cnt\_bot}
-groups in white.}
-\label{fig:CNT-underformed}
+\includegraphics[width=\linewidth]{CNT-unbreakable}
+\caption{The unbreakable CNT simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}
+before the removal of atoms (top), after the removal of 10 atoms from the \lmpcmd{rmid}
+region (middle), and after deformation (bottom).}
+\label{fig:CNT-unbreakable}
 \end{figure}
 
 Run the simulation using LAMMPS. The number of atoms in each group is given in
@@ -1368,11 +1367,11 @@ of atoms in each group corresponds to what is expected, as shown here:
 680 atoms in group cnt_mid
 \end{lstlisting}
 The atoms from the \lmpcmd{cnt\_top} and \lmpcmd{cnt\_bot} groups are
-represented in white in Fig.\,\ref{fig:CNT-underformed}. The atoms from
+represented in white in Fig.\,\ref{fig:CNT-unbreakable}.  The atoms from
 the \lmpcmd{cnt\_mid} group are represented in pink.
 
 Finally, to start from a less ideal state and create a system with some defects,
-let us randomly delete a small fraction of the carbon atoms. To avoid deleting
+let us randomly delete a small fraction of the carbon atoms.  To avoid deleting
 atoms that are too close to the edges, let us define a new region named \lmpcmd{rdel}
 that starts at $2\,\text{\AA{}}$ from the CNT edges:
 \begin{lstlisting}
@@ -1383,16 +1382,7 @@ group rdel region rdel
 delete_atoms random fraction 0.02 no rdel NULL 2793 bond yes
 \end{lstlisting}
 The \lmpcmd{delete\_atoms} command randomly deletes $2\,\%$ of the atoms from
-the \lmpcmd{rdel} group, here about 10 atoms (Fig.\,\ref{fig:CNT-underformed-deleted}).
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{CNT-underformed-deleted}
-\caption{Same CNT as in Fig.\,\ref{fig:CNT-underformed}, but with 10 deleted atoms.
-The 10 deleted atoms were chosen randomly from the central part
-of the CNT (region \lmpcmd{rdel}).}
-\label{fig:CNT-underformed-deleted}
-\end{figure}
+the \lmpcmd{rdel} group, here about 10 atoms (Fig.\,\ref{fig:CNT-unbreakable}).
 
 \paragraph{The molecular dynamics}
 
@@ -1416,7 +1406,7 @@ fix mynvt cnt_mid nvt temp 300 300 100
 \end{lstlisting}
 The \lmpcmd{fix nve} are applied to the atoms of \lmpcmd{cnt\_top} and
 \lmpcmd{cnt\_bot}, respectively, and will ensure that the positions of the atoms
-from these groups are recalculated at every step. The \lmpcmd{fix nvt} does the
+from these groups are recalculated at every step.  The \lmpcmd{fix nvt} does the
 same for the \lmpcmd{cnt\_mid} group, while also applying a Nos\'e-Hoover thermostat
 with desired temperature of 300\,K \cite{nose1984unified, hoover1985canonical}.
 To restrain the motion of the atoms at the edges, let us add the following
@@ -1428,11 +1418,11 @@ velocity cnt_top set 0 0 0
 velocity cnt_bot set 0 0 0
 \end{lstlisting}
 The two \lmpcmd{setforce} commands cancel the forces applied on the atoms of the
-two edges, respectively. The cancellation of the forces is done at every step,
+two edges, respectively.  The cancellation of the forces is done at every step,
 and along all 3 directions of space, $x$, $y$, and $z$, due to the use of
-\lmpcmd{0 0 0}. The two \lmpcmd{velocity} commands set the initial velocities
+\lmpcmd{0 0 0}.  The two \lmpcmd{velocity} commands set the initial velocities
 along $x$, $y$, and $z$ to 0 for the atoms of \lmpcmd{cnt\_top} and
-\lmpcmd{cnt\_bot}, respectively. As a consequence of these last four commands,
+\lmpcmd{cnt\_bot}, respectively.  As a consequence of these last four commands,
 the atoms of the edges will remain immobile during the simulation (or at least
 they would if no other command was applied to them).
 
@@ -1440,7 +1430,7 @@ On a side note, the \lmpcmd{velocity set}
 commands impose the velocity of a group of atoms at the start of a run but do
 not enforce the velocity during the entire simulation. When \lmpcmd{velocity set}
 is used in combination with \lmpcmd{setforce 0 0 0}, as is the case here, the
-atoms won't feel any force during the entire simulation. According to the Newton
+atoms won't feel any force during the entire simulation.  According to the Newton
 equation, no force means no acceleration, meaning that the initial velocity
 will persist during the entire simulation, thus producing a constant velocity motion.
 
@@ -1481,14 +1471,14 @@ temperature $T_\mathrm{mid}$ of the middle group, \lmpcmd{cnt\_mid},
 must be outputted, instead of the temperature of the entire system.
 This choice is motivated by the presence of
 frozen parts with an effective temperature of 0\,K, which makes the average
-temperature of the entire system less relevant. The \lmpcmd{thermo\_modify}
+temperature of the entire system less relevant.  The \lmpcmd{thermo\_modify}
 command also imposes the use of the YAML format that can easily be read by
 Python (see below).
 
 Let us impose a constant velocity deformation on the CNT
 by combining the \textit{velocity set} command with previously defined
-\lmpcmd{fix setforce}. Add the following lines in the \lmpcmd{unbreakable.lmp} file,
-right after the last \lmpcmd{run 5000} command:
+\lmpcmd{fix setforce}.  Add the following lines in the \lmpcmd{unbreakable.lmp}
+file, right after the last \lmpcmd{run 5000} command:
 \begin{lstlisting}
 velocity cnt_top set 0.0005 0 0
 velocity cnt_bot set -0.0005 0 0
@@ -1501,31 +1491,24 @@ $0.001\,\text{\AA{}/fs}$.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-lenght-unbreakable}
-\caption{Evolution of the length $L$ of the CNT with time. The CNT starts
+\caption{Evolution of the length $L$ of the CNT with time.  The CNT starts
 deforming at $t = 5\,\text{ps}$.}
 \label{fig:CNT-unbreakable-lenght}
 \end{figure}
 
-Run the simulation using LAMMPS. As can be seen from the variable $L_\text{cnt}$, the length
+Run the simulation using LAMMPS.  As can be seen from the variable $L_\text{cnt}$, the length
 of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.\,\ref{fig:CNT-unbreakable-lenght}),
-as expected from the imposed constant velocity. What you observe in the \textit{Slide Show}
-windows should resembles Fig.\,\ref{fig:CNT-deformed-unbreakable}. The total energy of the system
+as expected from the imposed constant velocity.  What you observe in the \guicmd{Slide Show}
+windows should resembles Fig.\,\ref{fig:CNT-unbreakable}.  The total energy of the system
 shows a non-linear increase with $t$ once the deformation starts, which is expected
 from the typical dependency of bond energy with bond distance,
 $U_\text{b} = k_\text{b} \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-energy}).
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{CNT-deformed-unbreakable}
-\caption{CNT before (top) and after (bottom) deformation.}
-\label{fig:CNT-deformed-unbreakable}
-\end{figure}
-
-\begin{figure}
-\centering
 \includegraphics[width=\linewidth]{CNT-energy-unbreakable}
 \caption{Evolution of the total energy $E_\text{tot}$ of the system with time $t$.
-The CNT starts deforming at $t = 5\,\text{ps}$. The potential is OPLS-AA.}
+The CNT starts deforming at $t = 5\,\text{ps}$.  The potential is OPLS-AA.}
 \label{fig:CNT-unbreakable-energy}
 \end{figure}
 
@@ -1534,22 +1517,22 @@ The CNT starts deforming at $t = 5\,\text{ps}$. The potential is OPLS-AA.}
 Let us import the simulation data into Python, and generate a stress-strain curve.
 Here, the stress is defined as $F_\text{cnt}/A_\text{cnt}$,
 where $A_\text{cnt} = \pi r_\text{cnt}^2$ is the surface area of the
-CNT, and $r_\text{cnt}=5.2$\,\AA{} the CNT radius. The strain is defined
+CNT, and $r_\text{cnt}=5.2$\,\AA{} the CNT radius.  The strain is defined
 as $(L_\text{cnt}-L_\text{cnt-0})/L_\text{cnt-0}$, where $L_\text{cnt-0}$ is the initial CNT length.
 
 Right-click inside the \guicmd{Output} window, and select
-\guicmd{Export YAML data to file}. Call the output \flecmd{unbreakable.yaml}, and save
+\guicmd{Export YAML data to file}.  Call the output \flecmd{unbreakable.yaml}, and save
 it within the same folder as the input files, where a Python script named
 \href{\filepath tutorial2/yaml-reader.py}{\dwlcmd{yaml-reader.py}} should also
-be located. When executed using Python, this .py file first imports
-the \flecmd{unbreakable.yaml} file. Then, a certain pattern is
-identified and stored as a string character named `docs'. The string is
+be located.  When executed using Python, this .py file first imports
+the \flecmd{unbreakable.yaml} file.  Then, a certain pattern is
+identified and stored as a string character named `docs'.  The string is
 then converted into a list, and $F_\text{cnt}$ and $L_\text{cnt}$
-are extracted. The stress and strain
+are extracted.  The stress and strain
 are then calculated, and the result is saved in a data file using the
-NumPy `savetxt' function. `thermo[0]' can be used to access the
+NumPy `savetxt' function.  `thermo[0]' can be used to access the
 information from the first minimization run, and `thermo[1]' to access the
-information from the second MD run. The data extracted from
+information from the second MD run.  The data extracted from
 the \flecmd{unbreakable.yaml} file can then be used to plot the stress-strain
 curve, see Fig.\,\ref{fig:CNT-stress-strain-unbreakable}.
 
@@ -1567,7 +1550,7 @@ Here, the potential is OPLS-AA.}
 \subsubsection{Breakable bonds}
 
 When using a conventional molecular force field, as we have just done, the bonds between the atoms
-are non-breakable. Let us perform a similar simulation and deform a small
+are non-breakable.  Let us perform a similar simulation and deform a small
 CNT again, but this time with a reactive force field that allows bonds
 to break if the applied deformation is large enough.
 
