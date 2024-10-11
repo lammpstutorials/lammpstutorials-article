@@ -1182,7 +1182,7 @@ In this tutorial, the system of interest is a small, single-walled
 carbon nanotube (CNT) in an empty box (Fig.\,\ref{fig:CNT}).  The CNT is
 strained by fixing atoms at one end and moving atoms at the
 other end with constant velocity.  To illustrate the difference between
-classical \cite{typelabel_paper} and reactive force fields, this
+conventional \cite{typelabel_paper} and reactive force fields, this
 tutorial is divided into two parts: in the first part, a conventional molecular force
 field (called OPLS-AA \cite{jorgensenDevelopmentTestingOPLS1996}) is
 used and the bonds between the atoms of the CNT are unbreakable. In the
@@ -1210,7 +1210,7 @@ of the tutorial.
 
 \subsubsection{Unbreakable bonds}
 
-In most classical molecular dynamics force fields, the chemical bonds between
+With most conventional molecular force fields, the chemical bonds between
 atoms are defined at the start of the simulation and remain fixed, regardless
 of the forces applied to the atoms.  These bonds are typically modeled as springs
 with equilibrium distances $r_0$ and force constants $k_\text{b}$:
@@ -1546,26 +1546,27 @@ The CNT starts deforming at $t = 5\,\text{ps}$. The potential is OPLS-AA.}
 
 \paragraph{Importing YAML log file into Python}
 
-Let us import the simulation data into Python, and generate the stress-strain curve.
-Here, the stress is defined as $F/A$, where $A = \pi r^2$ is the surface area of the
-CNT, and $r=5.2$\,\AA{} the CNT radius. The strain is defined as $(L-L_0)/L_0$,
-where $L_0$ is the initial CNT length.
+Let us import the simulation data into Python, and generate a stress-strain curve.
+Here, the stress is defined as $F_\text{cnt}/A_\text{cnt}$,
+where $A_\text{cnt} = \pi r_\text{cnt}^2$ is the surface area of the
+CNT, and $r_\text{cnt}=5.2$\,\AA{} the CNT radius. The strain is defined
+as $(L_\text{cnt}-L_\text{cnt-0})/L_\text{cnt-0}$, where $L_\text{cnt-0}$ is the initial CNT length.
 
-Right-click inside the \textit{Output} window, and select
-\textit{Export YAML data to file}. Call the output \textit{log.yaml}, and save
-it within \textit{unbreakable-bonds}. Download this script
-\href{\filepath tutorial2/unbreakable-bonds/yaml-reader.py}{\dwlcmd{yaml-reader.py}} as well, and save it
-within \flrcmd{unbreakable-bonds/}. The \flecmd{yaml-reader.py} first imports
-the \textit{log.yaml} file. Then, a certain pattern is
-identified and stored as a string character named \textit{docs}. The string is
+Right-click inside the \guicmd{Output} window, and select
+\guicmd{Export YAML data to file}. Call the output \flecmd{unbreakable.yaml}, and save
+it within the same folder as the input files, where a Python script named
+\href{\filepath tutorial2/yaml-reader.py}{\dwlcmd{yaml-reader.py}} should also
+be located. When executed using Python, this .py file first imports
+the \flecmd{unbreakable.yaml} file. Then, a certain pattern is
+identified and stored as a string character named `docs'. The string is
 then converted into a list, and $F_\text{cnt}$ and $L_\text{cnt}$
 are extracted. The stress and strain
 are then calculated, and the result is saved in a data file using the
-NumPy \textit{savetxt} function. \textit{thermo[0]} can be used to access the
-information from the first minimization run, and \textit{thermo[1]} from
-the second MD run. The data extracted from the \textit{log.yaml} file can
-then be used to plot the stress-strain curve, see
-Fig.\,\ref{fig:CNT-stress-strain-unbreakable}.
+NumPy `savetxt' function. `thermo[0]' can be used to access the
+information from the first minimization run, and `thermo[1]' to access the
+information from the second MD run. The data extracted from
+the \flecmd{unbreakable.yaml} file can then be used to plot the stress-strain
+curve, see Fig.\,\ref{fig:CNT-stress-strain-unbreakable}.
 
 \begin{figure}
 \centering
@@ -1580,41 +1581,44 @@ Here, the potential is OPLS-AA.}
 
 \subsubsection{Breakable bonds}
 
-When using a classical force field, as we just did, the bonds between the atoms
+When using a conventional molecular force field, as we have just done, the bonds between the atoms
 are non-breakable. Let us perform a similar simulation and deform a small
-CNT again, but this time using a reactive force field that allows for the bonds
+CNT again, but this time with a reactive force field that allows bonds
 to break if the applied deformation is large enough.
 
 \paragraph{Input file initialization}
-Create a second folder called \flrcmd{breakable-bonds/} next to
-\flrcmd{unbreakable-bonds/}, and create a new input file in it called
-\flecmd{input.lmp}. Type into \flecmd{input.lmp}:
-\begin{lstlisting}
-# Initialisation
-variable T equal 300
 
+Open the following input named \lmpcmd{breakable.lmp} that must have
+been downloaded next to \lmpcmd{unbreakable.lmp} during the tutorial setup:
+\begin{lstlisting}
 units metal
 atom_style atomic
-boundary p p p
+boundary f f f
 pair_style airebo 2.5 1 1
+
+read_data breakable.data
+pair_style airebo 3.0
+pair_coeff * * CH.airebo C
+
+run 0 post no
 \end{lstlisting}
-\textit{metal} instead of \textit{real}, a choice that is imposed by the
-AIREBO force field. A second difference is the use of the
-\textit{atom\_style atomic} instead of \textit{molecular}, since no explicit
+Here, the \lmpcmd{metal} units system is used instead of \lmpcmd{real}, which is
+required by the AIREBO force field. A second difference is the use of the
+\lmpcmd{atom\_style atomic} instead of \lmpcmd{molecular}, since no explicit
 bond information is required with AIREBO.
 
 \paragraph{Adapt the topology file}
 
-Since \textit{bond}, \textit{angle}, and \textit{dihedral} do not need to be
+Since bonds,angles, and dihedrals do not need to be
 explicitly set when using AIREBO, some simplification must be made to the
-\flecmd{.data} file. Download the new \flecmd{.data}
-file named \href{\filepath tutorial2/breakable-bonds/cnt_atom.data}{\dwlcmd{cnt\_atom.data}},
-and place it within \flrcmd{breakable-bonds/}. Just like \textit{cnt\_molecular.data},
-the \flecmd{cnt\_atom.data} contains the information
+\flecmd{.data} file. The new \flecmd{.data}
+file is named \href{\filepath tutorial2/breakable.data}{\dwlcmd{breakable.data}},
+and must be placed within the same folder as the input file. Just like \flecmd{unbreakable.data},
+the \flecmd{breakable.data} contains the information
 required for placing the atoms in the box, but no bond/angle/dihedral information.
-Another difference between \flecmd{cnt\_molecular.data} and \flecmd{cnt\_atom.data}
-is that, here, a larger distance of 120 Ångströms was used for the box size along
-the \textit{x} axis, to allow for larger deformation.
+Another difference between the \flecmd{unbreakable.data} and \flecmd{breakable.data} files
+is that, here, a larger distance of 120~Ångströms was used for the box size along
+the $x$ axis, to allow for larger deformation.
 
 \paragraph{Use of AIREBO potential}
 

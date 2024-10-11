@@ -1,6 +1,4 @@
-variable T equal 300
-
-units real
+units metal
 atom_style atomic
 boundary f f f
 
