@@ -38,6 +38,7 @@ velocity cnt_mid create 300 48455 mom yes rot yes
 fix mynve1 cnt_top nve
 fix mynve2 cnt_bot nve
 fix mynvt cnt_mid nvt temp 300 300 100
+
 fix mysf1 cnt_top setforce 0 0 0
 fix mysf2 cnt_bot setforce 0 0 0
 velocity cnt_top set 0 0 0

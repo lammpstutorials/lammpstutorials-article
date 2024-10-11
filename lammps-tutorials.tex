@@ -1065,9 +1065,9 @@ thermo 1000
 thermo_style custom step temp pe ke etotal &
   press v_n1_in v_n2_in c_sumcoor12
 
-dump mydmp all image 100 dump.md.*.ppm type type &
+dump viz all image 100 myimage.md.*.ppm type type &
   shiny 0.1 box no 0.01 view 0 0 zoom 1.8 fsaa yes
-dump_modify mydmp adiam 1 1 adiam 2 3 acolor 1 &
+dump_modify viz adiam 1 1 adiam 2 3 acolor 1 &
   turquoise acolor 2 royalblue backcolor white
 \end{lstlisting}
 The two variables \lmpcmd{n1\_in}, \lmpcmd{n2\_in}, along with the compute
@@ -1162,9 +1162,9 @@ numbers.  To do this, replace the
 \lmpcmd{dump} and \lmpcmd{dump\_modify} commands with the following lines:
 \begin{lstlisting}
 variable coor12 atom (type==1)*(c_coor12)+(type==2)*-1
-dump mydmp all image 100 dump.md.*.ppm v_coor12 &
+dump viz all image 100 myimage.md.*.ppm v_coor12 &
   type shiny 0.1 box no 0.01 view 0 0 zoom 1.8 fsaa yes
-dump_modify mydmp adiam 1 1 adiam 2 3 backcolor white &
+dump_modify viz adiam 1 1 adiam 2 3 backcolor white &
   amap -1 2 ca 0.0 4 min royalblue 0 turquoise 1 yellow max red
 \end{lstlisting}
 Run LAMMPS again.  Now, the atoms of type 1 are colored based on the value
@@ -1317,7 +1317,7 @@ tutorial \cite{typelabel_paper}.
 In this tutorial, a deformation will be applied to the CNT by displacing
 the atoms located at its edges. To achieve this, we will first isolate the
 atoms at the two edges and place them into groups named \lmpcmd{rtop} and
-\lmpcmd{rbot}. Add the following lines to \flecmd{input.lmp}:
+\lmpcmd{rbot}. Add the following lines to \flecmd{unbreakable.lmp}:
 \begin{lstlisting}
 group carbon_atoms type 1
 variable xmax equal bound(carbon_atoms,xmax)-0.5
@@ -1336,7 +1336,7 @@ bottom), $x_\text{min} > x > x_\text{max}$ (\lmpcmd{rmid}, for region middle),
 and $x > x_\text{max}$ (\lmpcmd{rtop}, for region top).
 
 Finally, let us define 3 groups of atoms corresponding to the atoms
-in each of the 3 regions by adding to \flecmd{input.lmp}:
+in each of the 3 regions by adding to \flecmd{unbreakable.lmp}:
 \begin{lstlisting}
 group cnt_top region rtop
 group cnt_bot region rbot
@@ -1408,35 +1408,19 @@ group \lmpcmd{cnt\_mid}, ensuring an initial temperature of $T = 300\,\text{K}$
 for these atoms.
 
 Let us specify the thermalization and the dynamics of the system. Add the following
-lines into \flecmd{input.lmp}:
+lines into \flecmd{unbreakable.lmp}:
 \begin{lstlisting}
 fix mynve1 cnt_top nve
 fix mynve2 cnt_bot nve
-fix mynvt cnt_mid nvt temp 300 300 100.0
+fix mynvt cnt_mid nvt temp 300 300 100
 \end{lstlisting}
-% AK: why temp/berendsen? This seems particularly unsuitable for this system
-% it is designed for bulk systems that are in equilibrium, so that you
-% can do an "almost" NVE while removing extra kinetic energy from noise.
-% SG: we could change it, yes. In the original version, it was also a pretext to
-% make an exercice on the the flying ice cube... Its not shere anymore.
 The \lmpcmd{fix nve} are applied to the atoms of \lmpcmd{cnt\_top} and
 \lmpcmd{cnt\_bot}, respectively, and will ensure that the positions of the atoms
 from these groups are recalculated at every step. The \lmpcmd{fix nvt} does the
 same for the \lmpcmd{cnt\_mid} group, while also applying a Nos\'e-Hoover thermostat
 with desired temperature of 300\,K \cite{nose1984unified, hoover1985canonical}.
-% so that , and a \lmpcmd{Berendsen} thermostat is applied
-% to the atoms of the group \lmpcmd{cnt\_mid} only \cite{berendsen1984molecular}.
-% AK This is incorrect. Any thermostat will thermostat only the group
-% SG: OK. Shouln'd we remove the fix_modify then?
-% and define its internal temperature compute for the same group.
-%The \textit{fix\_modify myber} ensures that the \textit{fix Berendsen} uses the
-%temperature of the group \textit{cnt\_mid} as an input, instead of the
-%temperature of the whole system. This is necessary to make sure that the frozen
-%edges won't bias the temperature. Note that the atoms of the edges do not need
-%a thermostat because their motion will be restrained, see below.
-% SG: I removed Berendsen now --> use it as a "Experiments" + cite \cite{berendsen1984molecular}.
 To restrain the motion of the atoms at the edges, let us add the following
-commands to \flecmd{input.lmp}:
+commands to \flecmd{unbreakable.lmp}:
 \begin{lstlisting}
 fix mysf1 cnt_top setforce 0 0 0
 fix mysf2 cnt_bot setforce 0 0 0
@@ -1475,11 +1459,11 @@ and \lmpcmd{c\_} to call a compute, as seen in \hyperref[lennard-jones-label]{Tu
 Let us also add a \lmpcmd{dump image} command to visualize the system
 every 500 steps:
 \begin{lstlisting}
-variable colors string "pink white white"
-dump mydmp all image 500 dump.*.ppm mol type &
-  adiam 1.5 box no 0.01 view 0 90 zoom 1.8 shiny 0.1 fsaa yes
-dump_modify mydmp pad 5 amap 0 10 sa 1 3 ${colors} &
-  backcolor white
+dump viz all image 500 myimage-*.ppm element type size &
+  1000 400 zoom 6 shiny 0.3 fsaa yes bond atom 0.8 &
+  view 0 90 box no 0.0 axes no 0.0 0.0
+dump_modify viz pad 9 backcolor white &
+  adiam 1 0.85 bdiam 1 1.0
 \end{lstlisting}
 Let us run a small equilibration step to bring the system to the required
 temperature before applying any deformation:
@@ -1503,11 +1487,12 @@ Python (see below).
 
 Let us impose a constant velocity deformation on the CNT
 by combining the \textit{velocity set} command with previously defined
-\lmpcmd{fix setforce}. Add the following lines in the \lmpcmd{input.lmp} file,
+\lmpcmd{fix setforce}. Add the following lines in the \lmpcmd{unbreakable.lmp} file,
 right after the last \lmpcmd{run 5000} command:
 \begin{lstlisting}
 velocity cnt_top set 0.0005 0 0
 velocity cnt_bot set -0.0005 0 0
+
 run 10000
 \end{lstlisting}
 The chosen velocity for the deformation is $100\,\text{m/s}$, or

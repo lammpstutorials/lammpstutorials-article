@@ -31,17 +31,20 @@ velocity cnt_mid create 300 48455 mom yes rot yes
 fix mynve1 cnt_top nve
 fix mynve2 cnt_bot nve
 fix mynvt cnt_mid nvt temp 300 300 1.0
+
 fix mysf1 cnt_bot setforce 0 0 0
 fix mysf2 cnt_top setforce 0 0 0
-
 velocity cnt_bot set 0 0 0
 velocity cnt_top set 0 0 0
 
 variable Lcnt equal xcm(cnt_top,x)-xcm(cnt_bot,x)
 variable Fcnt equal f_mysf1[1]-f_mysf2[1]
 
-dump viz all image 500 myimage.*.ppm type type adiam 1.5 box no 0.01 view 0 90 zoom 1.8 shiny 0.1 fsaa yes
-dump_modify viz pad 5 backcolor white acolor 1 pink
+dump viz1 all image 500 myimage.*.ppm type type size 1000 400 zoom 4 shiny 0.3 adiam 1.5 box no 0.01 view 0 90 shiny 0.1 fsaa yes
+dump_modify     viz1 pad 5 backcolor white acolor 1 gray
+
+#dump viz all image 500 myimage-*.ppm element type size 1000 400 zoom 6 shiny 0.3 fsaa yes bond atom 0.8 view 0 90 box no 0.0 axes no 0.0 0.0
+#dump_modify viz pad 9 backcolor white adiam 1 0.85 bdiam 1 1.0
 
 compute Tmid cnt_mid temp
 thermo 100

@@ -31,6 +31,4 @@ _region_.*
 *.rej
 
 # LAMMPS output files
-dump.*.jpg
-dump.*.ppm
-myimage-*.ppm
+myimage*.ppm

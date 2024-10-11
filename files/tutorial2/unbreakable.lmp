@@ -1,5 +1,3 @@
-variable T equal 300
-
 units real
 atom_style molecular
 boundary f f f
