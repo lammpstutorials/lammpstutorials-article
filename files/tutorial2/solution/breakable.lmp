@@ -37,15 +37,15 @@ fix mysf2 cnt_top setforce 0 0 0
 velocity cnt_bot set 0 0 0
 velocity cnt_top set 0 0 0
 
-variable L equal xcm(cnt_top,x)−xcm(cnt_bot,x)
-variable F equal f_mysf1[1]−f_mysf2[1]
+variable Lcnt equal xcm(cnt_top,x)-xcm(cnt_bot,x)
+variable Fcnt equal f_mysf1[1]-f_mysf2[1]
 
-dump mydmp all image 500 dump.*.ppm type type adiam 1.5 box no 0.01 view 0 90 zoom 1.8 shiny 0.1 fsaa yes
-dump_modify mydmp pad 5 backcolor white acolor 1 pink
+dump viz all image 500 myimage.*.ppm type type adiam 1.5 box no 0.01 view 0 90 zoom 1.8 shiny 0.1 fsaa yes
+dump_modify viz pad 5 backcolor white acolor 1 pink
 
 compute Tmid cnt_mid temp
 thermo 100
-thermo_style custom step temp etotal v_L v_F
+thermo_style custom step temp etotal v_Lcnt v_Fcnt
 thermo_modify temp Tmid line yaml
 
 timestep 0.0005
