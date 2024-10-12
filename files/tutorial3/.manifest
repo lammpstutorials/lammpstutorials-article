@@ -1,0 +1,29 @@
+# LAMMPS Tutorial manifest file. This file determines what is downloaded when.
+# comments start with a # as the first character.
+# comments and empty lines are ignored
+##############################################################################
+# 1) input file templates and data files
+# the first file will be automatically loaded
+peg.mol
+water.mol
+parameters.inc
+
+# 2) solution files
+# only downloaded on request
+solution/parameters.inc
+solution/peg.mol
+solution/water.lmp
+solution/water.mol
+solution/water.data
+solution/water.log
+solution/water.png
+solution/merge.lmp
+solution/merge.data
+solution/merge.log
+solution/merge.png
+solution/pull.lmp
+solution/pull.log
+solution/pull.png
+
+# 3) support files
+
