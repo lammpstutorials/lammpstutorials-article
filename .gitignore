@@ -1,4 +1,4 @@
-# To be remove when final version is published
+# To be removed when final version is published
 lammps-tutorials.pdf
 
 # LaTex files for the manuscript
@@ -31,4 +31,4 @@ _region_.*
 *.rej
 
 # LAMMPS output files
-myimage*.ppm
+myimage-*.ppm
