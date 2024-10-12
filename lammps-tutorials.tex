@@ -62,7 +62,7 @@
 \definecolor{listing}{rgb}{0.95,0.95,0.95}
 \definecolor{command}{rgb}{0.15,0.15,0.15}
 \definecolor{download}{rgb}{0.039,0.616,0.851}
-\definecolor{note}{rgb}{0.741,0.925,1.00}
+\definecolor{note}{rgb}{0.92,0.98,1.00}
 
 \lstset{
   basicstyle=\small\color{command}, % Use default font + small size and command color
@@ -77,6 +77,7 @@
 }
 
 \newtcolorbox{note}{
+  %basicstyle=\small\color{command}, % Use default font + small size and command color
   colback=note, % Background color (matches listings)
   colframe=note, % Set frame color to match the background
   boxrule=0pt, % Frame thickness
@@ -1490,27 +1491,22 @@ $0.001\,\text{\AA{}/fs}$.
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{CNT-lenght-unbreakable}
-\caption{Evolution of the length $L$ of the CNT with time.  The CNT starts
-deforming at $t = 5\,\text{ps}$.}
-\label{fig:CNT-unbreakable-lenght}
+\includegraphics[width=\linewidth]{CNT-unbreakable-length-energy}
+\caption{a) Evolution of the length $L_\text{cnt}$ of the CNT with time,
+as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
+The CNT starts deforming at $t = 5\,\text{ps}$. b) Evolution of the total
+energy $E_\text{tot}$ of the system with time $t$. Here, the potential is OPLS-AA,
+and the CNT is unbreakable.}
+\label{fig:CNT-unbreakable-LE}
 \end{figure}
 
 Run the simulation using LAMMPS.  As can be seen from the variable $L_\text{cnt}$, the length
-of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.\,\ref{fig:CNT-unbreakable-lenght}),
+of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.\,\ref{fig:CNT-unbreakable-LE}\,a),
 as expected from the imposed constant velocity.  What you observe in the \guicmd{Slide Show}
 windows should resembles Fig.\,\ref{fig:CNT-unbreakable}.  The total energy of the system
 shows a non-linear increase with $t$ once the deformation starts, which is expected
 from the typical dependency of bond energy with bond distance,
-$U_\text{b} = k_\text{b} \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-energy}).
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{CNT-energy-unbreakable}
-\caption{Evolution of the total energy $E_\text{tot}$ of the system with time $t$.
-The CNT starts deforming at $t = 5\,\text{ps}$.  The potential is OPLS-AA.}
-\label{fig:CNT-unbreakable-energy}
-\end{figure}
+$U_\text{b} = k_\text{b} \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-LE}\,b).
 
 \paragraph{Importing YAML log file into Python}
 
@@ -1538,12 +1534,13 @@ curve, see Fig.\,\ref{fig:CNT-stress-strain-unbreakable}.
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{CNT-stress-strain-unbreakable}
-\caption{Stress applied on the CNT during deformation $F_\text{cnt}/A_\text{cnt}$,
+\includegraphics[width=0.55\linewidth]{CNT-unbreakable-stress-strain}
+\caption{Stress applied on the CNT during deformation, $F_\text{cnt}/A_\text{cnt}$,
 where $F_\text{cnt}$ is the force and $A_\text{cnt}$ the CNT surface area,
-as a function of the strain $(L_\text{cnt}-L_\text{cnt-0}/L_\text{cnt-0})$, where
-$L_\text{cnt}$ is the CNT length and $L_\text{cnt-0}$ the CNT initial length.
-Here, the potential is OPLS-AA.}
+as a function of the strain, $(L_\text{cnt}-L_\text{cnt-0}/L_\text{cnt-0})$, where
+$L_\text{cnt}$ is the CNT length and $L_\text{cnt-0}$ the CNT initial length,
+as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
+Here, the potential is OPLS-AA, and the CNT is unbreakable.}
 \label{fig:CNT-stress-strain-unbreakable}
 \end{figure}
 
@@ -1566,8 +1563,8 @@ required by the AIREBO force field.  A second difference is the use of the
 bond information is required with AIREBO. The following commands are
 setting up the AIREBO force field:
 \begin{lstlisting}
-  pair_style airebo 3.0
-  pair_coeff * * CH.airebo C
+pair_style airebo 3.0
+pair_coeff * * CH.airebo C
 \end{lstlisting}
 Here, \href{\filepath tutorial2/CH.airebo}{\dwlcmd{CH.airebo}} is the file
 containing the parameters for AIREBO, and must be placed next
@@ -1596,7 +1593,7 @@ the $x$ axis, to allow for larger deformation of the CNT.
 \paragraph{Start the simulation}
 
 Here, let us perform a similar deformation as the previous one. 
-In \lmpcmd{breakable.lmp}, replace the \guicmd{run 0 post no} line with:
+In \lmpcmd{breakable.lmp}, replace the \lmpcmd{run 0 post no} line with:
 \begin{lstlisting}
 fix mysf1 cnt_bot setforce 0 0 0
 fix mysf2 cnt_top setforce 0 0 0
@@ -1653,41 +1650,38 @@ VMD \cite{vmd_home,humphrey1996vmd} with the \guicmd{DynamicBonds} representatio
 \label{fig:CNT-deformed-breakable}
 \end{figure}
 
-Looking at the evolution of the energy, one can see that the total energy $E_\text{tot}$ is initially
-increasing with the deformation. When bonds break, the energy relaxes abruptly,
+Looking at the evolution of the energy, one can see that the total energy $E_\text{tot}$ is initially increasing with the deformation. When bonds break, the energy relaxes abruptly,
 as can be seen near $t=110~\text{ps}$ and again near $t=130~\text{ps}$ in
-Fig.\,\ref{fig:CNT-breakable-energy}. Using the same script as previously to
+Fig.\,\ref{fig:CNT-deformed-breakable}\,a. Using the same script as previously to
 import the data into Python, the stress-strain
-curve can be generated, see Fig.\,\ref{fig:CNT-stress-strain-breakable}.
+curve can be generated, see Fig.\,\ref{fig:CNT-deformed-breakable}\,b.
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{CNT-energy-breakable}
-\caption{Evolution of the total energy $E_\text{tot}$ of the CNT with time $t$.
-The potential is AIREBO.}
-\label{fig:CNT-breakable-energy}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{CNT-stress-strain-breakable}
-\caption{Stress applied on the CNT during deformation $F/A$, where $F$ is the force
-and $A$ the CNT surface area, as a function of the strain $(L-L_0/L_0)$, where
-$L$ is the CNT length and $L_0$ the CNT initial length. The potential is AIREBO.}
-\label{fig:CNT-stress-strain-breakable}
+\includegraphics[width=\linewidth]{CNT-breakable-stress-energy}
+\caption{a) Evolution of the total energy $E_\text{tot}$ of the CNT with time $t$.
+b) Stress applied on the CNT during deformation, $F_\text{cnt}/A_\text{cnt}$,
+where $F_\text{cnt}$ is the force and $A_\text{cnt}$ the CNT surface area,
+as a function of the strain, $(L_\text{cnt}-L_\text{cnt-0}/L_\text{cnt-0})$, where
+$L_\text{cnt}$ is the CNT length and $L_\text{cnt-0}$ the CNT initial length,
+as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
+Here, the potential is AIREBO, and the CNT is breakable.}
+\label{fig:CNT-breakable-energy-stress}
 \end{figure}
 
 \paragraph{Tip: bonds representation with AIREBO}
 
-The following input file \href{\filepath tutorial2/breakable.lmp}{\dwlcmd{breakable.lmp}}
-contains a trick to represent bonds while using AIREBO. While it is beyong the scope
-of the present tutorial, in short, the trick is to use AIREBO with the molecular atom
+In the following input file,
+\href{\filepath tutorial2/breakable-with-tip.lmp}{\dwlcmd{breakable-with-tip.lmp}},
+a trick is used to represent bonds while using AIREBO.  A detailled
+explanation of the script is beyong the scope of the present tutorial.
+In short, the trick is to use AIREBO with the molecular atom
 style, and use the \lmpcmd{bond/break} command to update the status of the bonds
 during the simulation:
 \begin{lstlisting}
 fix break all bond/break 1000 1 2.5
 \end{lstlisting}
-% S.G.: we could probably write a bit more about it
+% S.G.: we could write a bit more about it
 
 \subsection{Tutorial 3: Polymer in water}
 \label{all-atoms-label}
