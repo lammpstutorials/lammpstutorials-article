@@ -6,19 +6,28 @@
 # the first file will be automatically loaded
 unbreakable.lmp
 unbreakable.data
+unbreakable.inc
 breakable.lmp
 breakable.data
-parameters.inc
 
 # 2) solution files
 # only downloaded on request
-solution/parameters.inc
 solution/unbreakable.lmp
 solution/unbreakable.data
 solution/unbreakable.yaml
 solution/unbreakable.log
-solution/stress-strain.dat
+solution/unbreakable.inc
+solution/unbreakable.png
+solution/unbreakable.dat
+solution/unbreakable-yaml-reader.py
+solution/breakable.lmp
+solution/breakable.data
+solution/breakable.yaml
+solution/breakable.log
+solution/breakable.png
+solution/breakable.dat
+solution/breakable-yaml-reader.py
 
 # 3) support files
-yaml-reader.py
+unbreakable-yaml-reader.py
 CH.airebo

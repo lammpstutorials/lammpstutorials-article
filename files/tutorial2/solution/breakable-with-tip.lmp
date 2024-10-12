@@ -1,11 +1,28 @@
+
 units metal
-atom_style atomic
+atom_style molecular
 boundary f f f
+pair_style lj/cut 14
+bond_style harmonic
+angle_style harmonic
+dihedral_style opls
+improper_style harmonic
+read_data unbreakable.data extra/bond/per/atom 10 extra/special/per/atom 10
+include parameters.inc
 
-read_data breakable.data
-pair_style airebo 3.0
+pair_style airebo 3.0 1 1
 pair_coeff * * CH.airebo C
+bond_style zero
+bond_coeff 1 1.4
+delete_bonds all angle 1
+delete_bonds all dihedral 1
+delete_bonds all improper 1 remove special
 
+angle_style none
+dihedral_style none
+improper_style none
+
+special_bonds lj/coul 1.0 1.0 1.0
 group carbon_atoms type 1
 
 variable xmax equal bound(carbon_atoms,xmax)-0.5
@@ -18,14 +35,6 @@ group cnt_top region rtop
 group cnt_bot region rbot
 group cnt_mid region rmid
 
-variable xmax_del equal ${xmax}-2
-variable xmin_del equal ${xmin}+2
-region rdel block ${xmin_del} ${xmax_del} INF INF INF INF
-
-group rdel region rdel
-delete_atoms random fraction 0.02 no rdel NULL 482793
-
-reset_atoms id sort yes
 velocity cnt_mid create 300 48455 mom yes rot yes
 
 fix mynve1 cnt_top nve
@@ -40,8 +49,11 @@ velocity cnt_top set 0 0 0
 variable Lcnt equal xcm(cnt_top,x)-xcm(cnt_bot,x)
 variable Fcnt equal f_mysf1[1]-f_mysf2[1]
 
-dump viz all image 500 myimage.*.ppm type type size 1000 400 zoom 4 shiny 0.3 adiam 1.5 box no 0.01 view 0 90 shiny 0.1 fsaa yes
-dump_modify viz pad 5 backcolor white acolor 1 gray
+dump viz all image 500 myimage-*.ppm element type size 1000 400 zoom 4 shiny 0.3  fsaa yes bond atom 0.8 view 0 90 box no 0.0 axes no 0.0 0.0
+dump_modify viz pad 9 backcolor white element C adiam 1 0.85 bdiam 1 1.0
+
+fix break all bond/break 1000 1 2.5
+fix form all bond/create/angle 1000 1 1 2.0 1 aconstrain 90.0 180 
 
 compute Tmid cnt_mid temp
 thermo 100

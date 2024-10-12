@@ -10,6 +10,6 @@ improper_style harmonic
 special_bonds lj 0.0 0.0 0.5
 
 read_data unbreakable.data
-include parameters.inc
+include unbreakable.inc
 
 run 0 post no

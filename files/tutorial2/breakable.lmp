@@ -26,10 +26,10 @@ group rdel region rdel
 delete_atoms random fraction 0.02 no rdel NULL 482793
 
 reset_atoms id sort yes
-velocity cnt_mid create ${T} 48455 mom yes rot yes
-fix mynve all nve
-compute Tmid cnt_mid temp
-fix myber cnt_mid temp/berendsen ${T} ${T} 0.1
-fix_modify myber temp Tmid
+velocity cnt_mid create 300 48455 mom yes rot yes
+
+fix mynve1 cnt_top nve
+fix mynve2 cnt_bot nve
+fix mynvt cnt_mid nvt temp 300 300 0.1
 
 run 0 post no
