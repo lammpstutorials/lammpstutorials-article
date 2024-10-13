@@ -5,10 +5,10 @@ bond_style harmonic
 angle_style harmonic
 dihedral_style harmonic
 pair_style lj/cut/coul/long 10
-kspace_style pppm 1e-5
+kspace_style ewald 1e-5
 special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 angle yes
 
-region box block -45 45 -15 15 -15 15
+region box block -30 30 -15 15 -15 15
   create_box 8 box &
   bond/types 7 &
   angle/types 8 &
@@ -21,7 +21,7 @@ region box block -45 45 -15 15 -15 15
 include parameters.inc
 
 molecule h2omol water.mol
-create_atoms 0 random 1050 87910 NULL mol h2omol 454756 overlap 1.0 maxtry 50
+create_atoms 0 random 700 87910 NULL mol h2omol 454756 overlap 1.0 maxtry 50
 
 group H2O type OW HW
 minimize 1.0e-4 1.0e-6 100 1000
@@ -29,9 +29,9 @@ reset_timestep 0
 
 fix mynpt all npt temp 300 300 100 iso 1 1 1000
 
-dump mydmp all image 500 myimage-*.ppm type type &
-  shiny 0.1 box no 0.01 view 0 90 zoom 3.5 size 1000 400
-dump_modify mydmp backcolor white &
+dump viz all image 250 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 0 90 zoom 3 size 1000 500
+dump_modify viz backcolor white &
   acolor OW red acolor HW white &
   adiam OW 3 adiam HW 1.5
 
@@ -42,5 +42,5 @@ thermo 500
 thermo_style custom step temp etotal v_myvol v_rho
 
 timestep 1.0
-run 20000
+run 10000
 write_data water.data

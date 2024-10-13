@@ -4,9 +4,8 @@ bond_style harmonic
 angle_style harmonic
 dihedral_style harmonic
 pair_style lj/cut/coul/long 10
-kspace_style pppm 1e-5
-special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 &
-angle yes dihedral yes
+kspace_style ewald 1e-5
+special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 angle yes dihedral yes
 
 read_data merge.data
 include parameters.inc
@@ -22,10 +21,10 @@ variable end2 atom v_oxies*(x<v_xcm)
 group topull1 variable end1
 group topull2 variable end2
 
-dump mydmp all image 100 myimage*.ppm type &
+dump viz all image 250 myimage-*.ppm type &
   type shiny 0.1 box no 0.01 &
-  view 0 90 zoom 3.5 fsaa yes bond atom 0.8 size 1000 400 
-dump_modify mydmp backcolor white &
+  view 0 90 zoom 3 fsaa yes bond atom 0.8 size 1000 500 
+dump_modify viz backcolor white &
   acolor OW red acolor HW white &
   acolor OE darkred acolor OAlc darkred &
   acolor C gray acolor CPos gray &
@@ -35,15 +34,21 @@ dump_modify mydmp backcolor white &
   adiam H 1.4 adiam HC 1.4 adiam OE 2.6
 
 compute rgyr PEG gyration
-thermo_style custom step temp etotal c_rgyr
-thermo 100
+compute dphi PEG dihedral/local phi
+compute mphi PEG reduce ave c_dphi inputs local
+
+thermo_style custom step temp etotal c_rgyr c_mphi
+thermo 250
+
+dump mydmp all local 1000 tmp.dat index c_dphi
 
 timestep 1.0
 fix mynvt all nvt temp 300 300 100
+fix myrct PEG recenter 0 0 0 shift all
 
-run 30000
+run 10000
 
 fix myaf1 topull1 addforce 5 0 0
 fix myaf2 topull2 addforce -5 0 0
 
-run 30000
+run 10000
