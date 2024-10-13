@@ -12,6 +12,7 @@ include parameters.inc
 
 group H2O type OW HW
 group PEG type C CPos H HC OAlc OE
+#group PEG_CO type C CPos OAlc OE
 group ends type OAlc
 variable xcm equal xcm(ends,x)
 variable oxies atom type==label2type(atom,OAlc)
@@ -34,16 +35,17 @@ dump_modify viz backcolor white &
   adiam H 1.4 adiam HC 1.4 adiam OE 2.6
 
 compute rgyr PEG gyration
-compute prop all property/local dtype
+compute prop PEG property/local dtype
 compute dphi PEG dihedral/local phi
-# compute mphi PEG reduce ave c_dphi inputs local
+#compute mphi PEG reduce ave c_dphi inputs local
 
 thermo_style custom step temp etotal c_rgyr # c_mphi
 thermo 250
 
-dump mydmp all local 100 tmp.dat index c_dphi c_prop
+dump mydmp all local 100 pull.dat index c_dphi c_prop
 
-fix myhisto all ave/histo 100 120 15000 0 180 90 c_dphi file pull.dat ave running mode vector
+# S.G.: would be ok if one could select only dihedral 2 
+# fix myhisto all ave/histo 100 120 15000 0 180 90 c_dphi file pull.dat ave running mode vector
 
 timestep 1.0
 fix mynvt all nvt temp 300 300 100
