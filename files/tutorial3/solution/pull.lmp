@@ -34,21 +34,24 @@ dump_modify viz backcolor white &
   adiam H 1.4 adiam HC 1.4 adiam OE 2.6
 
 compute rgyr PEG gyration
+compute prop all property/local dtype
 compute dphi PEG dihedral/local phi
-compute mphi PEG reduce ave c_dphi inputs local
+# compute mphi PEG reduce ave c_dphi inputs local
 
-thermo_style custom step temp etotal c_rgyr c_mphi
+thermo_style custom step temp etotal c_rgyr # c_mphi
 thermo 250
 
-dump mydmp all local 1000 tmp.dat index c_dphi
+dump mydmp all local 100 tmp.dat index c_dphi c_prop
+
+fix myhisto all ave/histo 100 120 15000 0 180 90 c_dphi file pull.dat ave running mode vector
 
 timestep 1.0
 fix mynvt all nvt temp 300 300 100
 fix myrct PEG recenter 0 0 0 shift all
 
-run 10000
+run 15000
 
-fix myaf1 topull1 addforce 5 0 0
-fix myaf2 topull2 addforce -5 0 0
+fix myaf1 topull1 addforce 10 0 0
+fix myaf2 topull2 addforce -10 0 0
 
-run 10000
+run 15000
