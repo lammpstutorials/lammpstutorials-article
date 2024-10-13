@@ -417,7 +417,7 @@ Additionally, these files can be downloaded by clicking \guicmd{Start LAMMPS Tut
 (where \texttt{X} = 1...8) from the \guicmd{Tutorials} menu of LAMMPS-GUI.
 
 In the following, all LAMMPS input or console commands are formatted
-with a \lmpcmd{colored background}.  Keyboard shortcuts and 
+with a \lmpcmd{colored background}.  Keyboard shortcuts and
 file names are formatted in \flecmd{monospace}, and LAMMPS-GUI options and menus
 are in \guicmd{quoted monospace}.
 % S.G.: I removed "folder names" because all folders will eventually be removed (TO CONTROL BEFORE SUBMITTING)
@@ -495,7 +495,7 @@ principles, focusing on relative differences between parameters rather than
 representing any specific material.
 
 The second line, \lmpcmd{dimension 3}, indicates that the simulation is
-in 3D, as opposed to 2D, where atoms are restricted to move only in the 
+in 3D, as opposed to 2D, where atoms are restricted to move only in the
 xy-plane.  The third line, \lmpcmd{atom\_style atomic}, indicates that
 the \lmpcmd{atomic} style will be used for simple individual particles,
 meaning each particle is represented as a point with a mass.  This is the
@@ -1073,7 +1073,7 @@ dump_modify mydmp adiam 1 1 adiam 2 3 acolor 1 &
 The two variables \lmpcmd{n1\_in}, \lmpcmd{n2\_in}, along with the compute
 \lmpcmd{sumcoor12}, were added to the list of information printed during
 the simulation. Additionally, images of the system will be created with
-slightly less saturated colors than the default ones. 
+slightly less saturated colors than the default ones.
 
 Finally, add the following lines to \flecmd{improved.md.lmp}:
 \begin{lstlisting}
@@ -1171,7 +1171,7 @@ Run LAMMPS again.  Now, the atoms of type 1 are colored based on the value
 of \lmpcmd{c\_coor12}, which is mapped continuously from turquoise to yellow
 and red for atoms with the highest coordination (Figure~\ref{fig:coords-viz}).
 In the definition of the variable \lmpcmd{v\_coor12}, atoms of type 2 are
-all assigned a value of -1, and will therefore always be colored their default blue. 
+all assigned a value of -1, and will therefore always be colored their default blue.
 
 \subsection{Tutorial 2: Pulling on a carbon nanotube}
 \label{carbon-nanotube-label}
@@ -3971,27 +3971,26 @@ and $x_0 = 5~\mathrm{\AA{}}$.}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.55\linewidth]{REACT}
+\includegraphics[width=\linewidth]{REACT}
 \caption{Polymer melt made in nylon and carbon nanotubes (CNTs) simulated during
 \hyperref[bond-react-label]{Tutorial 8}. The water molecules (in red and white)
 are created by the polymerization of nylon simulation using REACTER.}
 \label{fig:REACT}
 \end{figure}
 
-The goal of this tutorial is to create a system made of 
-carbon nanotubes (CNTs) embedded in a polymer melt made in nylon-6,6 (Fig.\,\ref{fig:REACT}). The
-REACTER protocol is used to simulate the polymerization of nylon, and the formation
-of water molecules is followed in time \cite{gissinger2020reacter, gissinger2024molecular}.
-In contrast with Airebo (\hyperref[carbon-nanotube-label]{Tutorial 2})
+The goal of this tutorial is to create a model of a carbon nanotube (CNT) embedded
+in a polymer melt made of polystyrene (PS) (Fig.\,\ref{fig:REACT}). The
+REACTER protocol is used to simulate the polymerization of styrene monomers, and the
+polymerization reaction is followed in time \cite{gissinger2020reacter, gissinger2024molecular}.
+In contrast with AIREBO (\hyperref[carbon-nanotube-label]{Tutorial 2})
 and ReaxFF (\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}), the REACTER
 protocol relies on the use of a \textit{classical} force field.
 
 \subsubsection{Creating the system}
 
-The first step of the tutorial is to mix small carbon nanotubes
-with the initial, unreacted, molecules. The molecules are hexamethylenediamine
-(C$_6$H$_{16}$N$_2$) and adipic acid (C$_6$H$_{10}$O$_4$). Create a new input
-file, call it \textit{mixing.lmp}, and copy the following lines into it:
+The first step of the tutorial is to solvate the carbon nanotube
+with the styrene molecules. Create a new input file, call it \textit{mixing.lmp},
+and copy the following lines into it:
 {\normalsize
 \begin{verbatim}
 units real
@@ -4016,32 +4015,31 @@ of the cross coefficients: $\sigma_{ij} = ( 0.5 (\sigma^6_i+\sigma_j^6))^{1/6}$,
 and $\epsilon_{ij} = (2 \sqrt{\epsilon_i \epsilon_j} \sigma^3_i \sigma^3_j)
 / (\sigma^6_i+\sigma_j^6)$.
 
-Let us read a data file named \href{\filepath tutorial8/nylon.data}{\textit{nylon.data}}
-containing the unreacted molecule template, and let us replicate it. Add the
-folloxing lines to \textit{mixing.lmp}:
+Let us read a data file named \href{\filepath tutorial8/CNT.data}{\textit{CNT.data}}
+containing a periodic single-walled CNT. Add the following lines to \textit{mixing.lmp}:
 {\normalsize
 \begin{verbatim}
-read_data nylon.data &
+read_data CNT.data &
   extra/bond/per/atom 5  &
   extra/angle/per/atom 15 &
   extra/dihedral/per/atom 15 &
   extra/improper/per/atom 25 &
   extra/special/per/atom 25
-replicate 3 4 4
 \end{verbatim}
 }
-The resulting box is $(7.2\,\text{nm})^3$ in size, and its density is low
-enough that inserting CNTs will be easy.
+The CNT is about $(1.1\,\text{nm})^3$ in diameter and $(8.7\,\text{nm})^3$ long.
+The box is $(8\,\text{nm})^3$ in the other dimensions, so filling the box with
+styrene monomers will be easy.
 % S.G.: @jrgissing, here we could describe the content of nylon.data.
 % How was it created, what is the specifity of the molecules involved, etc...
 
-To add 5 CNTs to the simulation box, add the following commands
+To add 1000 styrene molecules to the simulation box, add the following commands
 to \textit{mixing.lmp}:
 {\normalsize
 \begin{verbatim}
-molecule CNT cnt.molecule
-create_atoms 0 random 5 8305 NULL overlap 3 &
-  maxtry 500 mol CNT 7687
+molecule styrene styrene.lmpmol
+create_atoms 0 random 1000 8305 NULL &
+overlap 2.75 maxtry 500 mol styrene 7687
 \end{verbatim}
 }
 Let us use the \textit{minimize} command to reduce the energy of the system:
@@ -4054,57 +4052,57 @@ reset_timestep 0
 Then, let us use \textit{dump image} to output images every 1000 steps:
 {\normalsize
 \begin{verbatim}
-dump mydmp all image 1000 dump.mixing.*.ppm &
-  type type shiny 0.1 box no 0.01 &
-  view 0 0 zoom 1.8 fsaa yes bond atom 0.5
-dump_modify mydmp backcolor white &
-  acolor c2 gray acolor c_1 lightslategray &
-  acolor o dimgray acolor o_1 dimgray &
-  acolor hc lightslategray &
-  acolor ho lightslategray &
-  acolor hn lightslategray acolor hw white &
-  acolor o* red acolor n darkslategray &
-  acolor na darkslategray &
-  acolor cp lightpink &
-  adiam c2 0.3 adiam c_1 0.3 &
-  adiam cp 0.3 adiam o 0.28 &
-  adiam o_1 0.28 adiam o* 2.8 &
-  adiam hc 0.15 adiam ho 0.15 &
-  adiam hn 0.15 adiam hw 1.5 &
-  adiam n 0.3 adiam na 0.3 
+  dump mydmp all image 1000 dump.mix.*.ppm &
+    type type shiny 0.1 box no 0.01 &
+    view 90 0 zoom 3 fsaa yes bond atom 0.5
+  dump_modify mydmp backcolor white &
+    acolor cp gray acolor c=1 gray &
+    acolor c= gray acolor c1 gray &
+    acolor c2 gray acolor c3 gray &
+    adiam cp 0.3 adiam c=1 0.3 &
+    adiam c= 0.3 adiam c1 0.3 &
+    adiam c2 0.3 adiam c3 0.3 &
+    acolor hc white adiam hc 0.15
 \end{verbatim}
 }
-Then, let us perform a short equilibration of system using \textit{fix npt}
-with a isotropic couplage. To speed up the equilibration of the system, let us 
+Then, let us density the system to a target value of  a short equilibration of system using \textit{fix npt}
+with a isotropic couplage. To speed up the equilibration of the system, let us
 impose a relatively large pressure of 1000\,atm for the first 10\,ps:
 {\normalsize
 \begin{verbatim}
-velocity all create 300 1829 dist gaussian &
-  mom yes rot yes
-fix mynpt all npt temp 300 300 100 &
-  iso 1000 1000 1000
+velocity all create 300.0 9845 dist gaussian &
+  rot yes loop local
+fix 1 all nvt temp 300 300 100
+
+fix 2 all deform 1 y erate -0.0001 &
+  z erate -0.0001
+variable rho equal density
+fix 3 all halt 10 v_rho > 0.9 error continue
 
 thermo 1000
 thermo_style custom step temp pe etotal press &
-  density vol
+density vol
 
-run 10000
+run 9000
 \end{verbatim}
 }
-Then, for the following 20\,ps, let us continue the equilibration
-with an imposed pressure of 1\,atm, and write the final state of the
-system in a file named \textit{cnt-nylon-mix.data}:
+Then, for the following 10\,ps, let us continue the equilibration
+in the same constant-volume ensemble, and write the final state of the
+system in a file named \textit{CNT-PS-mix.data}:
 {\normalsize
 \begin{verbatim}
-fix mynpt all npt temp 300 300 100 iso 1 1 1000
+unfix 2
+unfix 3
 
-run 20000
-write_data cnt-nylon-mix.data
+run 10000
+write_data CNT-PS-mix.data
 \end{verbatim}
 }
-As the time progresses, the density $\rho$ of the system progressively
-converges toward an equilibrium value $\rho \approx 1.3$\,g/cm$^3$
-(Fig.\,\ref{fig:evolution-density}).
+As the time progresses, [maybe plot total energy instead of density
+to demonstrate equilbrated box]
+%the density $\rho$ of the system progressively
+%converges toward an equilibrium value $\rho \approx 1.3$\,g/cm$^3$
+%(Fig.\,\ref{fig:evolution-density}).
 
 \begin{figure}
 \centering
@@ -4114,24 +4112,29 @@ time, $t$, during equilibration.}
 \label{fig:evolution-density}
 \end{figure}
 
-\subsubsection{Atom maps and molecule templates}
+\subsubsection{Reaction templates}
 
-The REACTER protocol relies on classical force fields. For the reaction to
-occur, an \textit{atom map} containing information about the reaction mechanism
-must be provided by the user. The atom map specifies which atoms are
-the initiators to the reaction and what are the distance cutoffs. In addition,
-pre-reaction and post-reaction molecule templates must be provided.
+The REACTER protocol enables the modeling of chemical reactions when using
+classical force fields. The user must provide a molecule template for the reactants,
+a molecule template for the products, and an \textit{reaction map} file that
+provides an atom mapping between the two templates. The reaction map file contains
+other information, such as which atoms are the initiators for the reaction, and which
+are edge atoms that would connect the rest of a long polymer chain in the simulation.
 
-Download the two atoms maps, \href{\filepath tutorial8/rxn1_stp1_map}{\textit{rxn1$\_$stp1$\_$map}}
-and \href{\filepath tutorial8/rxn1_stp1_map}{\textit{rxn1$\_$stp1$\_$map}},
-the two templates for the unreacted molecules,
-\href{\filepath tutorial8/rxn1_stp1_unreacted.molecule_template}{\textit{rxn1$\_$stp1$\_$unreacted.molecule$\_$template}}
-and 
-\href{\filepath tutorial8/rxn1_stp2_unreacted.molecule_template}{\textit{rxn1$\_$stp2$\_$unreacted.molecule$\_$template}},
-as well as the two templates for the reacted molecules,
-\href{\filepath tutorial8/rxn1_stp1_reacted.molecule_template}{\textit{rxn1$\_$stp1$\_$reacted.molecule$\_$template}}
-and 
-\href{\filepath tutorial8/rxn1_stp2_reacted.molecule_template}{\textit{rxn1$\_$stp2$\_$reacted.molecule$\_$template}}.
+There are three reactions to be defined: the polymerization of two styrene monomers,
+the addition of a strene monomer onto the end of a growing polymer chain, and the
+linking of two polymer chains. Download the three files associated with each reaction.
+The file names associated with each reaction use the abbreviation `M' for monomer and `P'
+for polymer. The first reaction uses the prefix `M-M' for the pre-reaction template, post-reaction
+template, and reaction map file (\href{\filepath tutorial8/M-M.rxnmap}{\textit{M-M.rxnmap}},
+\href{\filepath tutorial8/M-M_pre.lmpmol}{\textit{M-M$\_$pre.lmpmol}},
+\href{\filepath tutorial8/M-M_post.lmpmol}{\textit{M-M$\_$post.lmpmol}}).
+The second reaction uses the prefix `M-P', (\href{\filepath tutorial8/M-P.rxnmap}{\textit{M-P.rxnmap}},
+\href{\filepath tutorial8/M-P_pre.lmpmol}{\textit{M-P$\_$pre.lmpmol}},
+\href{\filepath tutorial8/M-P_post.lmpmol}{\textit{M-P$\_$post.lmpmol}}).
+The third reaction uses the prefix `P-P', (\href{\filepath tutorial8/P-P.rxnmap}{\textit{P-P.rxnmap}},
+\href{\filepath tutorial8/P-P_pre.lmpmol}{\textit{P-P$\_$pre.lmpmol}},
+\href{\filepath tutorial8/P-P_post.lmpmol}{\textit{P-P$\_$post.lmpmol}}).
 
 % S.G.: @jrgissing, here we could describe the specifity, or at least the most important
 % details of the atom maps.
@@ -4141,7 +4144,7 @@ and
 \subsubsection{Simulating the reaction}
 
 The first step, before simulating the reaction, is to import the previously
-generated configuration. Create a new input file named \textit{reacting.lmp},
+generated configuration. Create a new input file named \textit{polymerize.lmp},
 and copy the following lines into it:
 {\normalsize
 \begin{verbatim}
@@ -4159,7 +4162,7 @@ pair_modify tail yes mix sixthpower
 
 special_bonds lj/coul 0 0 1
 
-read_data cnt-nylon-mix.data &
+read_data CNT-PS-mix.data &
   extra/bond/per/atom 5  &
   extra/angle/per/atom 15 &
   extra/dihedral/per/atom 15 &
@@ -4168,46 +4171,42 @@ read_data cnt-nylon-mix.data &
 \end{verbatim}
 }
 Here, the \textit{read$\_$data} command is used to import \textit{cnt-nylon-mix.data}.
-Then, let us import all four molecules template using the \textit{molecule} command:
+Then, let us import all six molecules template using the \textit{molecule} command:
 {\normalsize
 \begin{verbatim}
-molecule mol1 rxn1_stp1_unreacted.molecule_template
-molecule mol2 rxn1_stp1_reacted.molecule_template
-molecule mol3 rxn1_stp2_unreacted.molecule_template
-molecule mol4 rxn1_stp2_reacted.molecule_template 
+molecule mol1 M-M_pre.lmpmol
+molecule mol2 M-M_post.lmpmol
+molecule mol3 M-P_pre.lmpmol
+molecule mol4 M-P_post.lmpmol
+molecule mol5 P-P_pre.lmpmol
+molecule mol6 P-P_post.lmpmol
 \end{verbatim}
 }
 In order to follow the evolution of the reaction with time, let us generate images
 of the system using \textit{dump image}:
 {\normalsize
 \begin{verbatim}
-dump mydmp all image 1000 dump.mixing.*.ppm &
-  type type shiny 0.1 box no 0.01 &
-  view 0 0 zoom 1.8 fsaa yes bond atom 0.5
-dump_modify mydmp backcolor white &
-  acolor c2 gray acolor c_1 lightslategray &
-  acolor o dimgray acolor o_1 dimgray &
-  acolor hc lightslategray &
-  acolor ho lightslategray &
-  acolor hn lightslategray acolor hw white &
-  acolor o* red acolor n darkslategray &
-  acolor na darkslategray &
-  acolor cp lightpink &
-  adiam c2 0.3 adiam c_1 0.3 &
-  adiam cp 0.3 adiam o 0.28 &
-  adiam o_1 0.28 adiam o* 2.8 &
-  adiam hc 0.15 adiam ho 0.15 &
-  adiam hn 0.15 adiam hw 1.5 &
-  adiam n 0.3 adiam na 0.3
+    dump mydmp all image 1000 dump.mix.*.ppm &
+    type type shiny 0.1 box no 0.01 &
+    view 90 0 zoom 3 fsaa yes bond atom 0.5
+  dump_modify mydmp backcolor white &
+    acolor cp gray acolor c=1 gray &
+    acolor c= gray acolor c1 gray &
+    acolor c2 gray acolor c3 gray &
+    adiam cp 0.3 adiam c=1 0.3 &
+    adiam c= 0.3 adiam c1 0.3 &
+    adiam c2 0.3 adiam c3 0.3 &
+    acolor hc white adiam hc 0.15
 \end{verbatim}
 }
-Then, using the \textit{fix bond/react}, 
+Then, using the \textit{fix bond/react},
 {\normalsize
 \begin{verbatim}
 fix myrxns all bond/react &
   stabilization yes statted_grp 0.03 &
-  react rxn1 all 1 0.0 2.9 mol1 mol2 rxn1_stp1_map 
-  react rxn2 all 1 0.0 5.0 mol3 mol4 rxn1_stp2_map
+  react R1 all 1 0 3.0 mol1 mol2 M-M.rxnmap &
+  react R2 all 1 0 3.0 mol3 mol4 M-P.rxnmap &
+  react R3 all 1 0 5.0 mol5 mol6 P-P.rxnmap
 \end{verbatim}
 }
 With the \textit{stabilization} keyword, the \textit{bond/react} command will
@@ -4216,10 +4215,10 @@ command with a maximum displacement of $0.03\,\mathrm{\AA{}}$ (a command that wa
 used, for instance, in \hyperref[sheared-confined-label]{Tutorial 4}). The two
 \textit{react} keywords contain specific details about the two reactions
 involved here, i.e. a transformation of \textit{mol1} into \textit{mol2} based
-on the atom map \textit{rxn1$\_$stp1$\_$map}, and a transformation of 
+on the atom map \textit{rxn1$\_$stp1$\_$map}, and a transformation of
 \textit{mol3} into \textit{mol4} based on the atom map \textit{rxn1$\_$stp2$\_$map}.
 
-Finally, let us use the \textit{fix nvt} to perform the integration of the 
+Finally, let us use the \textit{fix nvt} to perform the integration of the
 equation of motion and control the temperature of the system:
 {\normalsize
 \begin{verbatim}
@@ -4228,7 +4227,7 @@ fix mynvt statted_grp_REACT nvt $
 
 thermo 1000
 thermo_style custom step temp pe $
-  etotal press f_myrxns[1] f_myrxns[2]
+  etotal press f_myrxns[*]
 
 run 50000
 \end{verbatim}
