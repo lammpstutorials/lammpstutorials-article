@@ -5,7 +5,7 @@ import yaml
 # Import the data from the yaml file
 pattern = r"^(keywords:.*$|data:$|---$|\.\.\.$|  - \[.*\]$)"
 docs = ""
-with open("log.yaml") as f:
+with open("breakable.yaml") as f:
     for line in f:
         m = re.search(pattern, line)
         if m:
@@ -28,7 +28,7 @@ Length = np.array(Length)
 
 # Calculate the stress and the strain from the Force and Length
 Area = np.pi*5.2**2 # Angstrom^2
-Stress = Force/Area # Kcal/mol/Angstrom^3
+Stress = Force/Area # eV/Angstrom^3 
 Strain = 100*(Length-Length[0])/Length[0] # in percents
 
-np.savetxt("stress-strain.dat", np.vstack([Strain, Stress]).T)
+np.savetxt("breakable.dat", np.vstack([Strain, Stress]).T)

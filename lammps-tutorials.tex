@@ -62,6 +62,7 @@
 \definecolor{listing}{rgb}{0.95,0.95,0.95}
 \definecolor{command}{rgb}{0.15,0.15,0.15}
 \definecolor{download}{rgb}{0.039,0.616,0.851}
+\definecolor{note}{rgb}{0.92,0.98,1.00}
 
 \lstset{
   basicstyle=\small\color{command}, % Use default font + small size and command color
@@ -76,8 +77,9 @@
 }
 
 \newtcolorbox{note}{
-  colback=listing, % Background color (matches listings)
-  colframe=listing, % Set frame color to match the background
+  %basicstyle=\small\color{command}, % Use default font + small size and command color
+  colback=note, % Background color (matches listings)
+  colframe=note, % Set frame color to match the background
   boxrule=0pt, % Frame thickness
   sharp corners, % Square corners
   left=5pt, % Extra left padding
@@ -617,7 +619,7 @@ $\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$.  In the present case, we
 thus have: $\epsilon_{12} = \sqrt{1.0 \times 0.5} = 0.707$, and
 $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
 
-\paragraph{Single point energy}
+\paragraph{Single-point energy}
 
 \begin{figure}
 \centering
@@ -927,19 +929,19 @@ the atom indexes (from 1 to the total number of atoms, 1150), the atom
 types (1 or 2 here), and the positions of the atoms $x$, $y$, $z$.  The
 last three columns are image flags that keep track of which atoms
 crossed the periodic boundary.  The exact format of each line in the
-\textit{Atoms} section depends on the choice of \textit{atom\_style}, which
+\lmpcmd{Atoms} section depends on the choice of \lmpcmd{atom\_style}, which
 determines which per-atom data is set and stored internally in LAMMPS.
 
 \begin{note}
-  Instead of the \textit{write\_data} command, you can also use the
-  command \textit{write\_restart improve.min.restart} to save the state
+  Instead of the \lmpcmd{write\_data} command, you can also use the
+  command \lmpcmd{write\_restart improve.min.restart} to save the state
   of the simulation to a binary restart file.  Binary restart files are
   more compact, faster to write, contain more information and thus are
   often more convenient to use.  For example, the choice of atom style
   or pair style is recorded, so those commands do not need to be issued
   before reading the restart.  However, restart files are not expected to be
   portable across LAMMPS versions or platforms.  Thus, in this tutorial,
-  we use \textit{write\_data} so we can provide you with a reference
+  we use \lmpcmd{write\_data} so we can provide you with a reference
   copy of the data file in the solutions that will work for you,
   regardless of your LAMMPS version or platform.
 \end{note}
@@ -1065,9 +1067,9 @@ thermo 1000
 thermo_style custom step temp pe ke etotal &
   press v_n1_in v_n2_in c_sumcoor12
 
-dump mydmp all image 100 dump.md.*.ppm type type &
+dump viz all image 100 myimage.md.*.ppm type type &
   shiny 0.1 box no 0.01 view 0 0 zoom 1.8 fsaa yes
-dump_modify mydmp adiam 1 1 adiam 2 3 acolor 1 &
+dump_modify viz adiam 1 1 adiam 2 3 acolor 1 &
   turquoise acolor 2 royalblue backcolor white
 \end{lstlisting}
 The two variables \lmpcmd{n1\_in}, \lmpcmd{n2\_in}, along with the compute
@@ -1162,9 +1164,9 @@ numbers.  To do this, replace the
 \lmpcmd{dump} and \lmpcmd{dump\_modify} commands with the following lines:
 \begin{lstlisting}
 variable coor12 atom (type==1)*(c_coor12)+(type==2)*-1
-dump mydmp all image 100 dump.md.*.ppm v_coor12 type shiny 0.1 &
-  box no 0.01 view 0 0 zoom 1.8 fsaa yes
-dump_modify mydmp adiam 1 1 adiam 2 3 backcolor white &
+dump viz all image 100 myimage.md.*.ppm v_coor12 &
+  type shiny 0.1 box no 0.01 view 0 0 zoom 1.8 fsaa yes
+dump_modify viz adiam 1 1 adiam 2 3 backcolor white &
   amap -1 2 ca 0.0 4 min royalblue 0 turquoise 1 yellow max red
 \end{lstlisting}
 Run LAMMPS again.  Now, the atoms of type 1 are colored based on the value
@@ -1177,26 +1179,28 @@ all assigned a value of -1, and will therefore always be colored their default b
 \label{carbon-nanotube-label}
 
 % "classical" or rather "conventional molecular"?
-In this tutorial, the system of interest is a small, single walled
+% SG: "conventional" is indeed better
+In this tutorial, the system of interest is a small, single-walled
 carbon nanotube (CNT) in an empty box (Fig.\,\ref{fig:CNT}).  The CNT is
-strained by keeping atoms at one end in place and moving atoms at the
+strained by fixing atoms at one end and moving atoms at the
 other end with constant velocity.  To illustrate the difference between
-classical \cite{typelabel_paper} and reactive force fields, this
-tutorial is divided into two parts: in the first part, a classical force
+conventional \cite{typelabel_paper} and reactive force fields, this
+tutorial is divided into two parts: in the first part, a conventional molecular force
 field (called OPLS-AA \cite{jorgensenDevelopmentTestingOPLS1996}) is
-used and the bonds between the atoms of the CNT are unbreakable, in the
+used and the bonds between the atoms of the CNT are unbreakable. In the
 second part, a reactive force field (called AIREBO
 \cite{stuart2000reactive}) is used, allowing for the breaking of
 chemical bonds when the CNT experiences large strain.
 
-To set up this tutorial, select ``Start Tutorial 2'' from the
-``Tutorials'' menu of LAMMPS--GUI and follow the instructions.  This
-will select, and -- if needed -- create, a folder, and place several
-files into it.  The initial input file, set up for a single point energy
+To set up this tutorial, select \guicmd{Start Tutorial 2} from the
+\guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions. This will
+select a folder, create one if necessary, and place several files into it.
+The initial input file, set up for a single-point energy
 calculation, will also be loaded into the editor under the name
-\flecmd{unbreakable.lmp}.  Additional files are a data file with a CNT
-\flecmd{unbreakable.data} topology and geometry and scripts and files
-for the second part of the tutorial.
+\flecmd{unbreakable.lmp}.  Additional files are a data file containing the
+CNT topology and geometry, named \flecmd{unbreakable.data}, a parameters file
+named \flecmd{unbreakable.inc}, as well as the scripts required for the second part
+of the tutorial.
 
 \begin{figure}
 \centering
@@ -1207,20 +1211,19 @@ for the second part of the tutorial.
 \end{figure}
 
 \subsubsection{Unbreakable bonds}
-With most classical molecular dynamics force fields, the chemical bonds
-between the atoms are set at the start of the simulation. Regardless of
-the forces applied to the atoms, the bonds remain unchanged during the
-simulation. The bonds between neighbor atoms typically consist of
-springs with given equilibrium distances $r_0$ and a constant
-$k_\text{b}$: $U_\text{b} = k_\text{b} \left( r - r_0
-\right)^2$. Additionally, angular and dihedral constraints are usually
-applied to maintain the relative orientations of neighboring atoms.
+
+With most conventional molecular force fields, the chemical bonds between
+atoms are defined at the start of the simulation and remain fixed, regardless
+of the forces applied to the atoms.  These bonds are typically modeled as springs
+with equilibrium distances $r_0$ and force constants $k_\text{b}$:
+$U_\text{b} = k_\text{b} \left( r - r_0 \right)^2$.  Additionally, angular and
+dihedral constraints are often imposed to preserve the molecular structure
+by maintaining the relative orientations of neighboring atoms.
 
 \paragraph{The LAMMPS input}
-After completing the setup the editor should have the following content:
-\begin{lstlisting}
-variable T equal 300
 
+After completing the setup, the editor should display the following content:
+\begin{lstlisting}
 units real
 atom_style molecular
 boundary f f f
@@ -1233,97 +1236,90 @@ improper_style harmonic
 special_bonds lj 0.0 0.0 0.5
 
 read_data unbreakable.data
-
-pair_coeff 1 1 0.066 3.4
-bond_coeff 1 469.0 1.4
-angle_coeff 1 63.0 120.0
-dihedral_coeff 1 0 7.25 0 0
-improper_coeff 1 5 180.0
+include unbreakable.inc
 
 run 0 post no
 \end{lstlisting}
-The chosen unit system is \textit{real} (therefore distances are in
-Ångstrom, time in femtosecond, and energies in kcal/mol), the
-\textit{atom\_style} is molecular (therefore atoms are point particles
-that can be bonded with each other), and the boundary conditions are
+The chosen unit system is \lmpcmd{real} (therefore distances are in
+Ångstrom, times in femtosecond, and energies in kcal/mol), the
+\lmpcmd{atom\_style} is \lmpcmd{molecular} (therefore atoms are point particles
+that can form bonds with each other), and the boundary conditions are
 fixed.  The boundary conditions do not matter here, as the box
 boundaries were placed far from the CNT.  Just like in the previous
 tutorial, \hyperref[lennard-jones-label]{Lennard-Jones fluid}, the pair
-style is \textit{lj/cut} (i.e.~a Lennard-Jones potential with cutoff)
-and its cutoff is set to 14 Ångstroms, which means that only the atoms
-closer than that interact through the Lennard-Jones potential.
+style is \lmpcmd{lj/cut} (i.e.~a Lennard-Jones potential with cutoff)
+and its cutoff is set to 14~Ångströms, which means that only the atoms
+closer than this distance interact through the Lennard-Jones potential.
 
-The \textit{bond\_style}, \textit{angle\_style},
-\textit{dihedral\_style}, and \textit{improper\_style} commands specify
-the different potentials used to restrain the relative positions of the
-atoms.  The \textit{special\_bonds} command sets the weighting factors
-for the Lennard-Jones interaction between atoms directly connected by
+The \lmpcmd{bond\_style}, \lmpcmd{angle\_style},
+\lmpcmd{dihedral\_style}, and \lmpcmd{improper\_style} commands specify
+the different potentials used to constrain the relative positions of the
+atoms.  The \lmpcmd{special\_bonds} command sets the weighting factors
+for the Lennard-Jones interactions between atoms directly connected by
 one bond, two bonds, and three bonds, respectively.  This is done for
-convenience when parameterizing the force constants for bond, angles and
+convenience when parameterizing the force constants for bonds, angles, and
 so on.  By excluding the non-bonded (Lennard-Jones) interactions for
-these pairs, they do not need to be taken into account when determining
+these pairs, those interactions do not need to be considered when determining
 the force constants.
 
-The last command, \textit{read\_data}, imports the
-\flecmd{unbreakable.data} file which contains information about the box
+The \lmpcmd{read\_data} command imports the
+\href{\filepath tutorial2/unbreakable.data}{\dwlcmd{unbreakable.data}}
+file, which contains information about the box
 size, atom positions, as well as the identity of the atoms that are
-linked by \textit{bonds}, \textit{angles}, \textit{dihedrals}, and
-\textit{impropers} interactions.  It was created using VMD and TopoTools
-\cite{kohlmeyer2017topotools}.  The details of the format of the
+linked by \lmpcmd{bonds}, \lmpcmd{angles}, \lmpcmd{dihedrals}, and
+\lmpcmd{impropers} interactions.  This file was created using VMD and TopoTools
+\cite{kohlmeyer2017topotools}.  The format details of the
 different sections in a data file change with different settings.  In
-particular, the \textit{Atoms} section may have a different number of
-columns or they may represent different properties when the
-\textit{atom\_style} is changed.  To help users, LAMMPS and tools like
-VMD + TopoTools will add a comment (here \textit{\# molecular}) to the
-\textit{Atoms} header line in the data files indicating the intended
-\textit{atom\_style}.  LAMMPS will print a warning when the chosen atom
+particular, the \lmpcmd{Atoms} section may have a different number of
+columns, or the columns may represent different properties when the
+\lmpcmd{atom\_style} is changed.  To help users, LAMMPS and tools like
+VMD and TopoTools will add a comment (here \lmpcmd{\# molecular}) to the
+\lmpcmd{Atoms} header line in the data files that indicates the intended
+\lmpcmd{atom\_style}.  LAMMPS will print a warning when the chosen atom
 style does not match what is written in that comment.
 
-This data file does not contain any sections with potential parameters
-and thus we need to specify the parameters of both, the bonded and
-non-bonded potentials in the input.  The parameters we use are taken
-from the OPLS-AA (Optimised Potentials for Liquid Simulations-All-Atom)
-force field \cite{jorgensenDevelopmentTestingOPLS1996}.
+This data file does not contain any sections with potential parameters; thus,
+we need to specify the parameters of both the bonded and
+non-bonded potentials.  The parameters we use are taken
+from the OPLS-AA (Optimized Potentials for Liquid Simulations-All-Atom)
+force field \cite{jorgensenDevelopmentTestingOPLS1996}, and are given
+in a separate \lmpcmd{unbreakable.inc} file. This file must be placed within the same
+directory as the input file \flecmd{unbreakable.lmp}, and contains the following lines:
 \begin{lstlisting}
 pair_coeff 1 1 0.066 3.4
 bond_coeff 1 469 1.4
 angle_coeff 1 63 120
 dihedral_coeff 1 0 7.25 0 0
 improper_coeff 1 5 180
-
-run 0 post no
 \end{lstlisting}
 % AK: the english here reads a bit "quirky". Jake, any ideas as a native speaker?
-The \textit{pair\_coeff} command sets the parameters for non-bonded
+The \lmpcmd{pair\_coeff} command sets the parameters for non-bonded
 Lennard-Jones interactions atom type 1 to
 $\epsilon_{11} = 0.066 \, \text{kcal/mol}$ and
-$\sigma_{11} = 3.4 \, \text{\AA{}}$.  The \textit{bond\_coeff} provides
-the equilibrium distance $r_0= 1.4 \, \text{\AA{}}$ as well as the
+$\sigma_{11} = 3.4 \, \text{\AA{}}$.  The \lmpcmd{bond\_coeff} provides
+the equilibrium distance $r_0= 1.4 \, \text{\AA{}}$ and the
 spring constant $k_\text{b} = 469 \, \text{kcal/mol/\AA{}}^2$ for the
-harmonic potential imposed between two neighboring carbon atoms, where
-the potential is $U_\text{b} = k_\text{b} ( r - r_0)^2$. The
-\textit{angle\_coeff} gives the equilibrium angle $\theta_0$ and
-constant for the potential between three neighbor atoms :
+harmonic potential imposed between two neighboring carbon atoms.  The potential
+is given by $U_\text{b} = k_\text{b} ( r - r_0)^2$. The
+\lmpcmd{angle\_coeff} gives the equilibrium angle $\theta_0$ and
+constant for the potential between three neighboring atoms :
 $U_\theta = k_\theta ( \theta - \theta_0)^2$. The
-\textit{dihedral\_coeff} and \textit{improper\_coeff} give the potential
+\lmpcmd{dihedral\_coeff} and \lmpcmd{improper\_coeff} define the potentials
 for the constraints between 4 atoms.
 
 Rather than copying the contents of the file into the input, we
-incorporate it using the \textit{include} command.
-\begin{lstlisting}
-include parameters.inc
-\end{lstlisting}
-Using \textit{include} allows to conveniently reuse the parameter settings
-in other inputs, or switch them with others. This will become more general
-when using type labels \cite{typelabel_paper} which is shown in the next
-tutorial.
+incorporate it using the \lmpcmd{include} command.  Using \lmpcmd{include} allows
+us to conveniently reuse the parameter settings
+in other inputs or switch them with others.  This will become more general
+when using type labels, which is shown in the next
+tutorial \cite{typelabel_paper}.
 
 \paragraph{Prepare the initial state}
 
 In this tutorial, a deformation will be applied to the CNT by displacing
-the atoms located at its edges. To achieve this, we will first isolate the
-atoms at the two edges and place them into groups named \textit{rtop} and
-\textit{rbot}, respectively. Add the following lines to \flecmd{input.lmp}:
+the atoms located at its edges.  To achieve this, we will first isolate the
+atoms at the two edges and place them into groups named \lmpcmd{rtop} and
+\lmpcmd{rbot}.  Add the following lines to \flecmd{unbreakable.lmp}:
 \begin{lstlisting}
 group carbon_atoms type 1
 variable xmax equal bound(carbon_atoms,xmax)-0.5
@@ -1333,16 +1329,16 @@ region rbot block INF ${xmin} INF INF INF INF
 region rmid block ${xmin} ${xmax} INF INF INF INF
 \end{lstlisting}
 The first command includes all the atoms of type 1 (i.e.~all the atoms here)
-in a group named \textit{carbon\_atoms}.
+in a group named \lmpcmd{carbon\_atoms}.
 The variable $x_\text{max}$ corresponds to the coordinate of the
-last atoms along $x$ minus 0.5 Ångstroms, and $x_\text{min}$ to the coordinate
-of the first atoms along $x$ plus 0.5 Ångstroms. Then, three regions are defined
-and correspond respectively to: $x < x_\text{min}$, (\textit{rbot}, for region
-bottom), $x_\text{min} > x > x_\text{max}$ (\textit{rmid}, for region middle),
-and $x > x_\text{max}$ (\textit{rtop}, for region top).
+last atoms along $x$ minus 0.5~Ångströms, and $x_\text{min}$ to the coordinate
+of the first atoms along $x$ plus 0.5~Ångströms.  Then, three regions are defined,
+corresponding to the following: $x < x_\text{min}$, (\lmpcmd{rbot}, for region
+bottom), $x_\text{min} > x > x_\text{max}$ (\lmpcmd{rmid}, for region middle),
+and $x > x_\text{max}$ (\lmpcmd{rtop}, for region top).
 
-Finally, let us define 3 groups of atoms corresponding to the atoms located
-in each of the 3 regions, respectively, by adding to \flecmd{input.lmp}:
+Finally, let us define 3 groups of atoms corresponding to the atoms
+in each of the 3 regions by adding to \flecmd{unbreakable.lmp}:
 \begin{lstlisting}
 group cnt_top region rtop
 group cnt_bot region rbot
@@ -1351,165 +1347,143 @@ set group cnt_top mol 1
 set group cnt_bot mol 2
 set group cnt_mid mol 3
 \end{lstlisting}
-With the three \textit{set} commands we assign different (otherwise unused)
-molecule IDs to atoms in those three groups.  We will use this later to
-color these groups of atoms differently.
+With the three \lmpcmd{set} commands, we assign unique, otherwise unused
+molecule IDs to atoms in those three groups.  We will use this IDs later to
+assign different colors to these groups of atoms.
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{CNT-underformed}
-\caption{CNT with the atoms from the \textit{cnt\_mid} group in pink,
-and the atoms from the \textit{cnt\_top} and the \textit{cnt\_bot}
-groups in white.}
-\label{fig:CNT-underformed}
+\includegraphics[width=\linewidth]{CNT-unbreakable}
+\caption{The unbreakable CNT simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}
+before the removal of atoms (top), after the removal of 10 atoms from the \lmpcmd{rmid}
+region (middle), and after deformation (bottom).}
+\label{fig:CNT-unbreakable}
 \end{figure}
 
 Run the simulation using LAMMPS. The number of atoms in each group is given in
-the \textit{Output} window.  It is an important check to make sure that the number
-of atoms in each group corresponds to what is expected, just like here:
+the \guicmd{Output} window.  It is an important check to make sure that the number
+of atoms in each group corresponds to what is expected, as shown here:
 \begin{lstlisting}
 10 atoms in group cnt_top
 10 atoms in group cnt_bot
 680 atoms in group cnt_mid
 \end{lstlisting}
-The atoms from the \textit{cnt\_top} and \textit{cnt\_bot} groups are
-represented in white in Fig.\,\ref{fig:CNT-underformed}, and the atoms from
-the \textit{cnt\_mid} group in pink.
 
 Finally, to start from a less ideal state and create a system with some defects,
-let us randomly delete a small fraction of the carbon atoms. To avoid deleting
-atoms that are too close to the edges, let us define a new region name \textit{rdel}
-that starts $2\,\text{\AA{}}$ from the CNT edges.
+let us randomly delete a small fraction of the carbon atoms.  To avoid deleting
+atoms that are too close to the edges, let us define a new region named \lmpcmd{rdel}
+that starts at $2\,\text{\AA{}}$ from the CNT edges:
 \begin{lstlisting}
 variable xmax_del equal ${xmax}-2
 variable xmin_del equal ${xmin}+2
-region rdel block ${xmin_del} ${xmax_del} &
-    INF INF INF INF
+region rdel block ${xmin_del} ${xmax_del} INF INF INF INF
 group rdel region rdel
-delete_atoms random fraction 0.02 no rdel &
-    NULL 482793 bond yes
+delete_atoms random fraction 0.02 no rdel NULL 2793 bond yes
 \end{lstlisting}
-The \textit{delete\_atoms} command randomly deletes $2\,\%$ of the atoms from
-the \textit{rdel} group (i.e.~about 10 atoms) (Fig.\,\ref{fig:CNT-underformed-deleted}).
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{CNT-underformed-deleted}
-\caption{Same CNT as in Fig.\,\ref{fig:CNT-underformed}, but with 10 deleted atoms.
-The 10 deleted atoms were chosen randomly from the central part of the CNT.}
-\label{fig:CNT-underformed-deleted}
-\end{figure}
+The \lmpcmd{delete\_atoms} command randomly deletes $2\,\%$ of the atoms from
+the \lmpcmd{rdel} group, here about 10 atoms (compare the top
+and the middle panels in Fig.\,\ref{fig:CNT-unbreakable}).
 
 \paragraph{The molecular dynamics}
 
-Let us give an initial temperature to the atoms of \textit{cnt\_mid}:
+Let us give an initial temperature to the atoms of the group \lmpcmd{cnt\_mid}:
 \begin{lstlisting}
 reset_atoms id sort yes
-velocity cnt_mid create ${T} 48455 &
-    mom yes rot yes
+velocity cnt_mid create 300 48455 mom yes rot yes
 \end{lstlisting}
-Re-setting the atom IDs is necessary before using the \textit{velocity} command
-when atoms were deleted, which is done here with the \textit{reset\_atoms} command.
-The \textit{velocity} command gives initial velocities to the atoms of the middle
-group \textit{cnt\_mid}, ensuring an initial temperature of $300\,\text{K}$
+Re-setting the atom IDs is necessary before using the \lmpcmd{velocity} command
+when atoms were deleted, which is done here with the \lmpcmd{reset\_atoms} command.
+The \lmpcmd{velocity} command gives initial velocities to the atoms of the middle
+group \lmpcmd{cnt\_mid}, ensuring an initial temperature of $T = 300\,\text{K}$
 for these atoms.
 
 Let us specify the thermalization and the dynamics of the system. Add the following
-lines into \flecmd{input.lmp}:
+lines into \flecmd{unbreakable.lmp}:
 \begin{lstlisting}
-fix mynve all nve
-compute Tmid cnt_mid temp
-fix myber cnt_mid temp/berendsen ${T} ${T} 100.0
-fix_modify myber temp Tmid
+fix mynve1 cnt_top nve
+fix mynve2 cnt_bot nve
+fix mynvt cnt_mid nvt temp 300 300 100
 \end{lstlisting}
-% AK: why temp/berendsen? This seems particularly unsuitable for this system
-% it is designed for bulk systems that are in equilibrium, so that you
-% can do an "almost" NVE while removing extra kinetic energy from noise.
-The \textit{fix nve}
-is applied to all atoms so that all atom positions are recalculated at every step,
-and a \textit{Berendsen} thermostat is applied to the atoms of the group
-\textit{cnt\_mid} only \cite{berendsen1984molecular}.
-% AK This is incorrect. Any thermostat will thermostat only the group
-% and define its internal temperature compute for the same group.
-%
-%The
-%\textit{fix\_modify myber} ensures that the \textit{fix Berendsen} uses the
-%temperature of the group \textit{cnt\_mid} as an input, instead of the
-%temperature of the whole system. This is necessary to make sure that the frozen
-%edges won't bias the temperature. Note that the atoms of the edges do not need
-%a thermostat because their motion will be restrained, see below.
-
+The \lmpcmd{fix nve} are applied to the atoms of \lmpcmd{cnt\_top} and
+\lmpcmd{cnt\_bot}, respectively, and will ensure that the positions of the atoms
+from these groups are recalculated at every step.  The \lmpcmd{fix nvt} does the
+same for the \lmpcmd{cnt\_mid} group, while also applying a Nos\'e-Hoover thermostat
+with desired temperature of 300\,K \cite{nose1984unified, hoover1985canonical}.
 To restrain the motion of the atoms at the edges, let us add the following
-commands to \flecmd{input.lmp}:
+commands to \flecmd{unbreakable.lmp}:
 \begin{lstlisting}
 fix mysf1 cnt_top setforce 0 0 0
 fix mysf2 cnt_bot setforce 0 0 0
 velocity cnt_top set 0 0 0
 velocity cnt_bot set 0 0 0
 \end{lstlisting}
-The two \textit{setforce} commands cancel the forces applied on the atoms of the
-two edges, respectively. The cancellation of the forces is done at every step,
+The two \lmpcmd{setforce} commands cancel the forces applied on the atoms of the
+two edges, respectively.  The cancellation of the forces is done at every step,
 and along all 3 directions of space, $x$, $y$, and $z$, due to the use of
-\textit{0 0 0}. The two \textit{velocity} commands set the initial velocities
-along $x$, $y$, and $z$ to 0 for the atoms of \textit{cnt\_top} and
-\textit{cnt\_bot}, respectively. As a consequence of these last four commands,
+\lmpcmd{0 0 0}.  The two \lmpcmd{velocity} commands set the initial velocities
+along $x$, $y$, and $z$ to 0 for the atoms of \lmpcmd{cnt\_top} and
+\lmpcmd{cnt\_bot}, respectively.  As a consequence of these last four commands,
 the atoms of the edges will remain immobile during the simulation (or at least
 they would if no other command was applied to them).
 
-On a side note, the \textit{velocity set}
-commands impose the velocity of a group of atoms at the start of a run but do
-not enforce the velocity during the entire simulation. When \textit{velocity set}
-is used in combination with \textit{setforce 0 0 0}, as is the case here, the
-atoms won't feel any force during the entire simulation. According to the Newton
-equation, no force means no acceleration, meaning that the initial velocity
-will persist during the entire simulation, thus producing a constant velocity motion.
+\begin{note}
+  The \lmpcmd{velocity set}
+  commands impose the velocity of a group of atoms at the start of a run but do
+  not enforce the velocity during the entire simulation. When \lmpcmd{velocity set}
+  is used in combination with \lmpcmd{setforce 0 0 0}, as is the case here, the
+  atoms won't feel any force during the entire simulation.  According to the Newton
+  equation, no force means no acceleration, meaning that the initial velocity
+  will persist during the entire simulation, thus producing a constant velocity motion.
+\end{note}
 
 \paragraph{Outputs}
 Next, to measure the strain and stress applied to the CNT, let us create a
-variable for the distance $L$ between the two edges, as well as  a variable $F$
-for the force applied on the edges:
+variable for the distance $L_\text{cnt}$ between the two edges,
+as well as a variable $F_\text{cnt}$ for the force applied on the edges:
 \begin{lstlisting}
-variable L equal &
-    xcm(cnt_top,x)-xcm(cnt_bot,x)
-variable F equal f_mysf1[1]-f_mysf2[1]
+variable Lcnt equal xcm(cnt_top,x)-xcm(cnt_bot,x)
+variable Fcnt equal f_mysf1[1]-f_mysf2[1]
 \end{lstlisting}
-Here, the force is extracted from the fixes \textit{mysf1} and \textit{mysf2}
-using \textit{f\_}, similarly to the use of \textit{v\_} to call a variable,
-and \textit{c\_} to call a compute, as seen in \hyperref[lennard-jones-label]{Tutorial 1}.
+Here, the force is extracted from the fixes \lmpcmd{mysf1} and \lmpcmd{mysf2}
+using \lmpcmd{f\_}, similarly to the use of \lmpcmd{v\_} to call a variable,
+and \lmpcmd{c\_} to call a compute, as seen in \hyperref[lennard-jones-label]{Tutorial 1}.
 
-Let us also add a \textit{dump image} command to visualize the system
+Let us also add a \lmpcmd{dump image} command to visualize the system
 every 500 steps:
 \begin{lstlisting}
-dump mydmp all image 500 dump.*.ppm molecule type &
-    shiny 0.1 box no 0.01 view 0 90 zoom 1.8
-dump_modify mydmp acolor 1 pink &
-    adiam 1 1 backcolor white
+dump viz all image 500 myimage-*.ppm element type size &
+  1000 400 zoom 6 shiny 0.3 fsaa yes bond atom 0.8 &
+  view 0 90 box no 0.0 axes no 0.0 0.0
+dump_modify viz pad 9 backcolor white adiam 1 0.85 bdiam 1 1.0
 \end{lstlisting}
 Let us run a small equilibration step to bring the system to the required
 temperature before applying any deformation:
 \begin{lstlisting}
+compute Tmid cnt_mid temp
 thermo 100
-thermo_style custom step temp etotal v_L v_F
+thermo_style custom step temp etotal v_Lcnt v_Fcnt
 thermo_modify temp Tmid line yaml
 
 timestep 1.0
 run 5000
 \end{lstlisting}
-With the \textit{thermo\_modify} command, we specify to LAMMPS that the
-temperature $T_\mathrm{mid}$ must be outputted, instead of the
-temperature of the entire system. This choice is motivated by the presence of
+With the \lmpcmd{thermo\_modify} command, we specify to LAMMPS that the
+temperature $T_\mathrm{mid}$ of the middle group, \lmpcmd{cnt\_mid},
+must be outputted, instead of the temperature of the entire system.
+This choice is motivated by the presence of
 frozen parts with an effective temperature of 0\,K, which makes the average
-temperature of the entire system less relevant. The \textit{thermo\_modify}
+temperature of the entire system less relevant.  The \lmpcmd{thermo\_modify}
 command also imposes the use of the YAML format that can easily be read by
 Python (see below).
 
 Let us impose a constant velocity deformation on the CNT
 by combining the \textit{velocity set} command with previously defined
-\textit{fix setforce}. Add the following lines in the \flecmd{input.lmp} file,
-right after the last \textit{run 5000} command:
+\lmpcmd{fix setforce}.  Add the following lines in the \lmpcmd{unbreakable.lmp}
+file, right after the last \lmpcmd{run 5000} command:
 \begin{lstlisting}
 velocity cnt_top set 0.0005 0 0
 velocity cnt_bot set -0.0005 0 0
+
 run 10000
 \end{lstlisting}
 The chosen velocity for the deformation is $100\,\text{m/s}$, or
@@ -1517,222 +1491,197 @@ $0.001\,\text{\AA{}/fs}$.
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{CNT-lenght-unbreakable}
-\caption{Evolution of the length $L$ of the CNT with time. The CNT starts
-deforming at $t = 5\,\text{ps}$.}
-\label{fig:CNT-unbreakable-lenght}
+\includegraphics[width=\linewidth]{CNT-unbreakable-length-energy}
+\caption{a) Evolution of the length $L_\text{cnt}$ of the CNT with time,
+as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
+The CNT starts deforming at $t = 5\,\text{ps}$, and $L_\text{cnt-0}$ is the
+CNT initial length. b) Evolution of the total energy $E_\text{tot}$ of the system
+with time $t$. Here, the potential is OPLS-AA, and the CNT is unbreakable.}
+\label{fig:CNT-unbreakable-LE}
 \end{figure}
 
-Run the simulation using LAMMPS. As can be seen from the variable $L$, the length
-of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.\,\ref{fig:CNT-unbreakable-lenght}),
-as expected from the imposed constant velocity. What you observe in the \textit{Slide Show}
-windows should resembles Fig.\,\ref{fig:CNT-deformed-unbreakable}. The total energy of the system
+Run the simulation using LAMMPS.  As can be seen from the variable $L_\text{cnt}$, the length
+of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.\,\ref{fig:CNT-unbreakable-LE}\,a),
+as expected from the imposed constant velocity.  What you observe in the \guicmd{Slide Show}
+windows should resembles Fig.\,\ref{fig:CNT-unbreakable}.  The total energy of the system
 shows a non-linear increase with $t$ once the deformation starts, which is expected
 from the typical dependency of bond energy with bond distance,
-$U_\text{b} = k_\text{b} \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-energy}).
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{CNT-deformed-unbreakable}
-\caption{CNT before (top) and after (bottom) deformation.}
-\label{fig:CNT-deformed-unbreakable}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{CNT-energy-unbreakable}
-\caption{Evolution of the total energy $E_\text{tot}$ of the system with time $t$.
-The CNT starts deforming at $t = 5\,\text{ps}$. The potential is OPLS-AA.}
-\label{fig:CNT-unbreakable-energy}
-\end{figure}
+$U_\text{b} = k_\text{b} \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-LE}\,b).
 
 \paragraph{Importing YAML log file into Python}
 
-Let us import the simulation data into Python, and generate the stress-strain curve.
-Here, the stress is defined as $F/A$, where $A = \pi r^2$ is the surface area of the
-CNT, and $r=5.2$\,\AA{} the CNT radius. The strain is defined as $(L-L_0)/L_0$,
-where $L_0$ is the initial CNT length.
+Let us import the simulation data into Python, and generate a stress-strain curve.
+Here, the stress is defined as $F_\text{cnt}/A_\text{cnt}$,
+where $A_\text{cnt} = \pi r_\text{cnt}^2$ is the surface area of the
+CNT, and $r_\text{cnt}=5.2$\,\AA{} the CNT radius.  The strain is defined
+as $(L_\text{cnt}-L_\text{cnt-0})/L_\text{cnt-0}$, where $L_\text{cnt-0}$ is the initial CNT length.
 
-Right-click inside the \textit{Output} window, and select
-\textit{Export YAML data to file}. Call the output \textit{log.yaml}, and save
-it within \textit{unbreakable-bonds}. Download this script
-\href{\filepath tutorial2/unbreakable-bonds/yaml-reader.py}{\dwlcmd{yaml-reader.py}} as well, and save it
-within \flrcmd{unbreakable-bonds/}. The \flecmd{yaml-reader.py} first imports
-the \textit{log.yaml} file. Then, a certain pattern is
-identified and stored as a string character named \textit{docs}. The string is
-then converted into a list, and $F$ and $L$ are extracted. The stress and strain
+Right-click inside the \guicmd{Output} window, and select
+\guicmd{Export YAML data to file}.  Call the output \flecmd{unbreakable.yaml}, and save
+it within the same folder as the input files, where a Python script named
+\href{\filepath tutorial2/yaml-reader.py}{\dwlcmd{yaml-reader.py}} should also
+be located.  When executed using Python, this .py file first imports
+the \flecmd{unbreakable.yaml} file.  Then, a certain pattern is
+identified and stored as a string character named `docs'.  The string is
+then converted into a list, and $F_\text{cnt}$ and $L_\text{cnt}$
+are extracted.  The stress and strain
 are then calculated, and the result is saved in a data file using the
-NumPy \textit{savetxt} function. \textit{thermo[0]} can be used to access the
-information from the first minimization run, and \textit{thermo[1]} from
-the second MD run. The data extracted from the \textit{log.yaml} file can
-then be used to plot the stress-strain curve, see
-Fig.\,\ref{fig:CNT-stress-strain-unbreakable}.
+NumPy `savetxt' function.  `thermo[0]' can be used to access the
+information from the first minimization run, and `thermo[1]' to access the
+information from the second MD run.  The data extracted from
+the \flecmd{unbreakable.yaml} file can then be used to plot the stress-strain
+curve, see Fig.\,\ref{fig:CNT-stress-strain-unbreakable}.
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{CNT-stress-strain-unbreakable}
-\caption{Stress applied on the CNT during deformation $F/A$, where $F$ is the force
-and $A$ the CNT surface area, as a function of the strain $(L-L_0/L_0)$, where
-$L$ is the CNT length and $L_0$ the CNT initial length. The potential is OPLS-AA.}
+\includegraphics[width=0.55\linewidth]{CNT-unbreakable-stress-strain}
+\caption{Stress applied on the CNT during deformation, $F_\text{cnt}/A_\text{cnt}$,
+where $F_\text{cnt}$ is the force and $A_\text{cnt}$ the CNT surface area,
+as a function of the strain, $\Delta L_\text{cnt} = (L_\text{cnt}-L_\text{cnt-0}/L_\text{cnt-0})$, where
+$L_\text{cnt}$ is the CNT length and $L_\text{cnt-0}$ the CNT initial length,
+as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
+Here, the potential is OPLS-AA, and the CNT is unbreakable.}
 \label{fig:CNT-stress-strain-unbreakable}
 \end{figure}
 
 \subsubsection{Breakable bonds}
 
-When using a classical force field, as we just did, the bonds between the atoms
-are non-breakable. Let us perform a similar simulation and deform a small
-CNT again, but this time using a reactive force field that allows for the bonds
+When using a conventional molecular force field, as we have just done, the bonds between the atoms
+are non-breakable.  Let us perform a similar simulation and deform a small
+CNT again, but this time with a reactive force field that allows bonds
 to break if the applied deformation is large enough.
 
 \paragraph{Input file initialization}
-Create a second folder called \flrcmd{breakable-bonds/} next to
-\flrcmd{unbreakable-bonds/}, and create a new input file in it called
-\flecmd{input.lmp}. Type into \flecmd{input.lmp}:
-\begin{lstlisting}
-# Initialisation
-variable T equal 300
 
-units metal
-atom_style atomic
-boundary p p p
-pair_style airebo 2.5 1 1
+Open the input named 
+\href{\filepath tutorial2/breakable.lmp}{\dwlcmd{breakable.lmp}} that should have
+been downloaded next to \lmpcmd{unbreakable.lmp} during the tutorial setup.
+There are only a few differences with the previous input.  First, the \lmpcmd{metal}
+units system is used instead of \lmpcmd{real}, which is
+required by the AIREBO force field.  A second difference is the use of the
+\lmpcmd{atom\_style atomic} instead of \lmpcmd{molecular}, since no explicit
+bond information is required with AIREBO. The following commands are
+setting up the AIREBO force field:
+\begin{lstlisting}
+pair_style airebo 3.0
+pair_coeff * * CH.airebo C
 \end{lstlisting}
-\textit{metal} instead of \textit{real}, a choice that is imposed by the
-AIREBO force field. A second difference is the use of the
-\textit{atom\_style atomic} instead of \textit{molecular}, since no explicit
-bond information is required with AIREBO.
+Here, \href{\filepath tutorial2/CH.airebo}{\dwlcmd{CH.airebo}} is the file
+containing the parameters for AIREBO, and must be placed next
+to \lmpcmd{breakable.lmp}.
+
+\begin{note}
+  With the \lmpcmd{metal} units system, times are in picoseconds ($10^{-12}$\,s)
+  instead of femtoseconds ($10^{-15}$\,s) in the case of the \lmpcmd{real} units system.
+  It is important to keep this in mind when setting parameters that are expressed
+  in time unit, such as the timestep or the time constant of the thermostat.
+\end{note}
 
 \paragraph{Adapt the topology file}
 
-Since \textit{bond}, \textit{angle}, and \textit{dihedral} do not need to be
+Since bonds, angles, and dihedrals do not need to be
 explicitly set when using AIREBO, some simplification must be made to the
-\flecmd{.data} file. Download the new \flecmd{.data}
-file named \href{\filepath tutorial2/breakable-bonds/cnt_atom.data}{\dwlcmd{cnt\_atom.data}},
-and place it within \flrcmd{breakable-bonds/}. Just like \textit{cnt\_molecular.data},
-the \flecmd{cnt\_atom.data} contains the information
+\flecmd{.data} file.  The new \flecmd{.data}
+file is named \href{\filepath tutorial2/breakable.data}{\dwlcmd{breakable.data}},
+and must be placed within the same folder as the input file.  Just like \flecmd{unbreakable.data},
+the \flecmd{breakable.data} contains the information
 required for placing the atoms in the box, but no bond/angle/dihedral information.
-Another difference between \flecmd{cnt\_molecular.data} and \flecmd{cnt\_atom.data}
-is that, here, a larger distance of 120 Ångstroms was used for the box size along
-the \textit{x} axis, to allow for larger deformation.
-
-\paragraph{Use of AIREBO potential}
-
-Then, let us import the LAMMPS data file, and set the pair coefficients by adding
-the following lines into \flecmd{input.lmp}:
-\begin{lstlisting}
-# System definition
-read_data cnt_atom.data
-pair_coeff * * CH.airebo C
-\end{lstlisting}
-Here, there is one atom type, which we impose to be `carbon' by using
-the letter \textit{C}. Download the \href{\filepath tutorial2/breakable-bonds/CH.airebo}{\dwlcmd{CH.airebo}}
-file and place it within the \textit{breakable-bonds/} folder. The rest of the
-\flecmd{input.lmp} is very similar to the previous one:
-
-\begin{lstlisting}
-group carbon_atoms type 1
-
-variable xmax equal bound(carbon_atoms,xmax)-0.5
-variable xmin equal bound(carbon_atoms,xmin)+0.5
-region rtop block ${xmax} INF INF INF INF INF
-region rbot block INF ${xmin} INF INF INF INF
-region rmid block ${xmin} ${xmax} INF INF INF INF
-
-group cnt_top region rtop
-group cnt_bot region rbot
-group cnt_mid region rmid
-
-variable xmax_del equal ${xmax}-2
-variable xmin_del equal ${xmin}+2
-region rdel block ${xmin_del} ${xmax_del} INF INF INF INF
-
-group rdel region rdel
-delete_atoms random fraction 0.02 no rdel NULL 482793
-
-reset_atoms id sort yes
-velocity cnt_mid create ${T} 48455 mom yes rot yes
-fix mynve all nve
-compute Tmid cnt_mid temp
-fix myber cnt_mid temp/berendsen ${T} ${T} 0.1
-fix_modify myber temp Tmid
-\end{lstlisting}
+Another difference between the \flecmd{unbreakable.data} and \flecmd{breakable.data} files
+is that, here, a larger distance of 120~Ångströms was used for the box size along
+the $x$ axis, to allow for larger deformation of the CNT.
 
 \paragraph{Start the simulation}
-Here, let us impose a constant velocity deformation using the atoms of one
-edge while maintaining the other edge fixed (note that for the unbreakable CNT,
-the motion was imposed on the 2 edges). As an equilibration step, let us set the
-velocity to 0 for the atoms of both edges. Add the following lines into
-the \flecmd{input.lmp} file:
+
+Here, let us perform a similar deformation as the previous one. 
+In \lmpcmd{breakable.lmp}, replace the \lmpcmd{run 0 post no} line with:
 \begin{lstlisting}
 fix mysf1 cnt_bot setforce 0 0 0
 fix mysf2 cnt_top setforce 0 0 0
 velocity cnt_bot set 0 0 0
 velocity cnt_top set 0 0 0
 
-variable L equal &
-    xcm(cnt_top,x)-xcm(cnt_bot,x)
-variable F equal f_mysf1[1]-f_mysf2[1]
+variable Lcnt equal xcm(cnt_top,x)-xcm(cnt_bot,x)
+variable Fcnt equal f_mysf1[1]-f_mysf2[1]
 
-dump mydmp all image 5000 dump.*.jpg type type &
-    shiny 0.1 box no 0.01 view 0 90 zoom 1.8
-dump_modify mydmp acolor 1 pink &
-    adiam 1 1 backcolor white
+dump viz all image 500 myimage.*.ppm type type size 1000 400 &
+  zoom 4 shiny 0.3 adiam 1.5 box no 0.01 view 0 90 &
+  shiny 0.1 fsaa yes
+dump_modify viz pad 5 backcolor white acolor 1 gray
 
+compute Tmid cnt_mid temp
 thermo 100
-thermo_style custom step temp etotal v_L v_F
+thermo_style custom step temp etotal v_Lcnt v_Fcnt
 thermo_modify temp Tmid line yaml
 
 timestep 0.0005
-run 5000
+run 10000
 \end{lstlisting}
-Note the relatively small timestep of $0.0005\,\text{ps}$ used. A reactive force
-field usually requires a smaller timestep than a classical one. When running
-\flecmd{input.lmp} with LAMMPS, you can see that the temperature deviates
+Note the relatively small timestep of $0.0005$\,ps ($= 0.5$\,fs) used. Reactive force
+fields like AIREBO usually require a smaller timestep than conventional ones.  When running
+\flecmd{breakable.lmp} with LAMMPS, you can see that the temperature deviates
 from the target temperature of $300\,\text{K}$ at the start of the equilibration,
 but that after a few steps, it reaches the target value.
 
+\begin{note}
+  Bonds cannot be displayed by the \lmpcmd{dump image} when using
+  the \lmpcmd{atom\_style atomic}, as it contains no bonds. A tip for displaying bonds
+  with the present system is provided at the end of the tutorial.
+\end{note}
+
 \paragraph{Launch the deformation}
-After equilibration, let us set the velocity of one of the edges equal to
-$15~\text{m/s}$ and run for a longer duration than previously. Add the following
-lines into \flecmd{input.lmp}:
+
+After equilibration, let us set the velocity of the edges equal to
+$75~\text{m/s}$ (or $0.75~\text{\AA{}/fs}$) and run for a longer duration than
+previously. Add the following lines into \flecmd{breakable.lmp}:
 \begin{lstlisting}
-velocity cnt_top set 0.15 0 0
-run 280000
+velocity cnt_top set 0.75 0 0
+velocity cnt_bot set -0.75 0 0
+
+run 30000
 \end{lstlisting}
-Run the simulation. Some bonds are expected to break at approximately
-two-thirds of the simulation (Fig.\,\ref{fig:CNT-deformed-breakable}).
+Run the simulation.  Some bonds are expected to break before the end of the
+simulation (Fig.\,\ref{fig:CNT-deformed-breakable}).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-deformed-breakable}
-\caption{CNT with broken bonds. Here, the \textit{DynamicBonds} representation
-of VMD is used to properly visualize the bond breaking.}
+\caption{CNT with broken bonds. This image was geenrated using
+VMD \cite{vmd_home,humphrey1996vmd} with the \guicmd{DynamicBonds} representation.}
 \label{fig:CNT-deformed-breakable}
 \end{figure}
 
-Looking at the evolution of the energy, one can see that it is initially
-increasing with the deformation. When bonds break, the energy relaxes abruptly,
+Looking at the evolution of the energy, one can see that the total energy $E_\text{tot}$ is initially increasing with the deformation. When bonds break, the energy relaxes abruptly,
 as can be seen near $t=110~\text{ps}$ and again near $t=130~\text{ps}$ in
-Fig.\,\ref{fig:CNT-breakable-energy}. Using the same script as previously to
+Fig.\,\ref{fig:CNT-deformed-breakable}\,a. Using the same script as previously to
 import the data into Python, the stress-strain
-curve can be generated, see Fig.\,\ref{fig:CNT-stress-strain-breakable}.
+curve can be generated, see Fig.\,\ref{fig:CNT-deformed-breakable}\,b.
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{CNT-energy-breakable}
-\caption{Evolution of the total energy $E_\text{tot}$ of the CNT with time $t$.
-The potential is AIREBO.}
-\label{fig:CNT-breakable-energy}
+\includegraphics[width=\linewidth]{CNT-breakable-stress-energy}
+\caption{a) Evolution of the total energy $E_\text{tot}$ of the CNT with time $t$.
+b) Stress applied on the CNT during deformation, $F_\text{cnt}/A_\text{cnt}$,
+where $F_\text{cnt}$ is the force and $A_\text{cnt}$ the CNT surface area,
+as a function of the strain, $\Delta L_\text{cnt} = (L_\text{cnt}-L_\text{cnt-0}/L_\text{cnt-0})$, where
+$L_\text{cnt}$ is the CNT length and $L_\text{cnt-0}$ the CNT initial length,
+as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
+Here, the potential is AIREBO, and the CNT is breakable.}
+\label{fig:CNT-breakable-energy-stress}
 \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{CNT-stress-strain-breakable}
-    \caption{Stress applied on the CNT during deformation $F/A$, where $F$ is the force
-    and $A$ the CNT surface area, as a function of the strain $(L-L_0/L_0)$, where
-    $L$ is the CNT length and $L_0$ the CNT initial length. The potential is AIREBO.}
-    \label{fig:CNT-stress-strain-breakable}
-    \end{figure}
+\paragraph{Tip: bonds representation with AIREBO}
+
+In the following input file,
+\href{\filepath tutorial2/breakable-with-tip.lmp}{\dwlcmd{breakable-with-tip.lmp}},
+a trick is used to represent bonds while using AIREBO.  A detailled
+explanation of the script is beyong the scope of the present tutorial.
+In short, the trick is to use AIREBO with the molecular atom
+style, and use the \lmpcmd{bond/break} command to update the status of the bonds
+during the simulation:
+\begin{lstlisting}
+fix break all bond/break 1000 1 2.5
+\end{lstlisting}
+% S.G.: we could write a bit more about it
 
 \subsection{Tutorial 3: Polymer in water}
 \label{all-atoms-label}
@@ -1777,7 +1726,7 @@ file called \flecmd{input.lmp}. Copy the following lines into it:
      coul 0.0 0.0 1.0 angle yes
 \end{lstlisting}
 With the unit style \textit{real}, masses are in grams per mole, distances in
-Ångstroms, time in femtoseconds, and energies in kcal/mole. With the \textit{atom\_style full}, each atom is a dot with a mass and a charge that can be linked by bonds, angles, dihedrals, and/or impropers. The \textit{bond\_style},
+Ångströms, time in femtoseconds, and energies in kcal/mole. With the \textit{atom\_style full}, each atom is a dot with a mass and a charge that can be linked by bonds, angles, dihedrals, and/or impropers. The \textit{bond\_style},
 \textit{angle\_style}, and \textit{dihedral\_style} commands define the potentials
 for the bonds, angles, and dihedrals used in the simulation, here \textit{harmonic}.
 Finally, the \textit{special\_bonds} command, which was already seen in
@@ -1983,7 +1932,7 @@ Add the following line into \flecmd{input.lmp}:
 \begin{lstlisting}
  delete_atoms overlap 2.0 H2O PEG mol yes
 \end{lstlisting}
-Here the value of 2 Ångstroms for the overlap cutoff was fixed arbitrarily and can
+Here the value of 2 Ångströms for the overlap cutoff was fixed arbitrarily and can
 be chosen through trial and error. If the cutoff is too small, the simulation will
 crash. If the cutoff is too large, too many water molecules will unnecessarily be
 deleted.
