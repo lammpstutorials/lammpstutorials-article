@@ -1710,39 +1710,40 @@ dynamics simulations are compared with force spectroscopy experiments \cite{lies
 
 In this tutorial, the water reservoir is first prepared in the absence of the polymer.
 A rectangular box of water is created and equilibrated at ambient temperature and
-ambient pressure. The SPC/Fw water model is used \cite{wu2006flexible}, which is
+pressure.  The SPC/Fw water model is used \cite{wu2006flexible}, which is
 a flexible variant of the rigid SPC (simple point charge) model \cite{berendsen1981interaction}.
-Create a folder called \flrcmd{pureH2O/}. Inside this folder, create an empty text
-file called \flecmd{input.lmp}. Copy the following lines into it:
+To set up this tutorial, select \guicmd{Start Tutorial 3} from the
+\guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.
+The editor should display the following content corresponding to \flecmd{water.lmp}:
 \begin{lstlisting}
- units real
- atom_style full
- bond_style harmonic
- angle_style harmonic
- dihedral_style harmonic
- pair_style lj/cut/coul/long 10
- kspace_style pppm 1e-5
- special_bonds lj 0.0 0.0 0.5 &
-     coul 0.0 0.0 1.0 angle yes
+units real
+atom_style full
+bond_style harmonic
+angle_style harmonic
+dihedral_style harmonic
+pair_style lj/cut/coul/long 10
+kspace_style ewald 1e-5
+special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 angle yes
 \end{lstlisting}
-With the unit style \textit{real}, masses are in grams per mole, distances in
-Ångströms, time in femtoseconds, and energies in kcal/mole. With the \textit{atom\_style full}, each atom is a dot with a mass and a charge that can be linked by bonds, angles, dihedrals, and/or impropers. The \textit{bond\_style},
-\textit{angle\_style}, and \textit{dihedral\_style} commands define the potentials
-for the bonds, angles, and dihedrals used in the simulation, here \textit{harmonic}.
-Finally, the \textit{special\_bonds} command, which was already seen in
+With the unit style \lmpcmd{real}, masses are in grams per mole, distances in
+Ångströms, time in femtoseconds, and energies in kcal/mole. With the \lmpcmd{atom\_style full},
+each atom is a dot with a mass and a charge that can be linked by bonds, angles,
+dihedrals, and/or impropers.  The \lmpcmd{bond\_style},
+\lmpcmd{angle\_style}, and \lmpcmd{dihedral\_style} commands define the potentials
+for the bonds, angles, and dihedrals used in the simulation, here \lmpcmd{harmonic}.
+With the \lmpcmd{pair\_style} named \lmpcmd{lj/cut/coul/long}, atoms interact through
+both a Lennard-Jones (LJ) potential and Coulomb interactions.  The value of $10\,\text{\AA{}}$ is the cutoff,
+and the \lmpcmd{ewald} command defines the long-range solver for the Coulomb
+interactions \cite{ewald1921berechnung}.  Finally, the \lmpcmd{special\_bonds} command, which was already seen in
 \hyperref[carbon-nanotube-label]{tutorial 2}, sets the LJ and Coulomb weighting
-factors for the interaction between neighboring atoms. With the \textit{pair\_style}
-named \textit{lj/cut/coul/long}, atoms interact through both a Lennard-Jones (LJ)
-potential and Coulomb interactions. The value of $10\,\text{\AA{}}$ is the cutoff.
-Finally, the \textit{kspace} command defines the long-range solver for the Coulomb
-interactions. The \textit{pppm} style refers to particle-particle particle-mesh \cite{luty1996calculating}.
+factors for the interaction between neighboring atoms.
 
-Then, let us create a 3D simulation box of dimensions $9 \times 3 \times 3 \; \text{nm}^3$,
+Let us create a 3D simulation box of dimensions $6 \times 3 \times 3 \; \text{nm}^3$,
 and make space for 8 atom types (2 for the water, 6 for the polymer), 7 bond types
 (1 for the water, 6 for the polymer), 8 angle types (1 for the water, 7 for the polymer),
-and 4 dihedral types (only for the polymer). Copy the following lines into \flecmd{input.lmp}:
+and 4 dihedral types (only for the polymer). Copy the following lines into \flecmd{water.lmp}:
 \begin{lstlisting}
- region box block -45 45 -15 15 -15 15
+ region box block -30 30 -15 15 -15 15
  create_box 8 box &
  bond/types 7 &
  angle/types 8 &
@@ -1752,51 +1753,50 @@ and 4 dihedral types (only for the polymer). Copy the following lines into \flec
  extra/dihedral/per/atom 10 &
  extra/special/per/atom 14
 \end{lstlisting}
-The \textit{extra/x/per/atom} commands are here for
-memory allocation. We will use a file named \flecmd{PARM.lmp} that contains
+The \lmpcmd{extra/x/per/atom} commands are here for
+memory allocation.  We will use a file named
+\href{\filepath tutorial3/parameters.inc}{\dwlcmd{parameters.inc}} that contains
 all the parameters (masses, interaction energies, bond equilibrium
-distances, etc). In \flecmd{input.lmp}, add the following line:
+distances, etc).  In \flecmd{water.lmp}, add the following line:
 \begin{lstlisting}
- include ../PARM.lmp
+include parameters.inc
 \end{lstlisting}
 
-Download and save the
-\href{\filepath tutorial3/PARM.lmp}{\dwlcmd{PARM.lmp}}
-file next to the \textit{pureH2O/} folder. This example uses type labels, which
-are strings that map to each of the numeric atom types, bond types, angles types,
-etc. in the simulation. Type labels can be any string defined by the user, and we
-will use the atom types from the GROMOS 54A7 force field. In this example, the atom
-types are defined in \flecmd{PARM.lmp}, within which the \textit{mass}
-and \textit{pair\_coeff} of atoms of types OW and HW are for water and the remaining
-atom types are for the polymer molecule. Similarly, the \textit{bond\_coeff OW-HW}
-and \textit{angle\_coeff HW-OW-HW} are for water, while all the other parameters
-are for the polymer.
+\begin{note}
+This tutorial uses type labels \cite{typelabel_paper} to map each of the
+numeric atom types with a string (see the \flecmd{parameters.inc} file):
+\begin{lstlisting}
+labelmap atom 1 OE 2 C 3 HC 4 H 5 CPos 6 OAlc 7 OW 8 HW
+\end{lstlisting}
+Therefore, the oxygen and hydrogen atoms of water (respectively types 7 and 8)
+can be referred to as `OW' and `HW', respectively.  Similar maps are used for 
+the bond types, angle types, and dihedral types.
+\end{note}
 
 Let us create water molecules. To do so, let us import a molecule template called
-\flecmd{H2O-SPCFw.mol} and then randomly create 1050 molecules. Add the following
-lines into \flecmd{input.lmp}:
+\flecmd{water.mol} and then randomly create 700 molecules.  Add the following
+lines into \flecmd{water.lmp}:
 \begin{lstlisting}
- molecule h2omol H2O-SPCFw.mol
- create_atoms 0 random 1050 87910 NULL mol &
-     h2omol 454756 overlap 1.0 maxtry 50
+molecule h2omol water.mol
+create_atoms 0 random 700 87910 NULL mol h2omol 454756 &
+  overlap 1.0 maxtry 50
 \end{lstlisting}
-The \textit{overlap 1} option of the \textit{create\_atoms} command ensures
+The \lmpcmd{overlap 1.0} option of the \lmpcmd{create\_atoms} command ensures
 that no atoms are placed exactly in the same position, as this would cause the
-simulation to crash. The \textit{maxtry 50} asks LAMMPS to try at most 50 times
+simulation to crash. The \lmpcmd{maxtry 50} asks LAMMPS to try at most 50 times
 to insert the molecules, which is useful in case some insertion attempts are
-rejected due to overlap. In some cases, depending on the system and the values
-of \textit{overlap} and \textit{maxtry}, LAMMPS may not create the desired number
-of molecules. Always check the number of created atoms in the \textit{log} file
-after starting the simulation:
+rejected due to overlap.  In some cases, depending on the system and the values
+of \lmpcmd{overlap} and \lmpcmd{maxtry}, LAMMPS may not create the desired number
+of molecules.  Always check the number of created atoms in the \lmpcmd{log} file
+(or in the \guicmd{Output} window), where you should see:
 \begin{lstlisting}
- Created 3150 atoms
+Created 2100 atoms
 \end{lstlisting}
-When LAMMPS fails to create the desired number of molecules, a WARNING appears
-in the \textit{log} file. The molecule template called
-\href{\filepath tutorial3/pureH2O/H2O-SPCFw.mol}{\dwlcmd{H2O-SPCFw.mol}}
-must be downloaded and saved in the \flrcmd{pureH2O/} folder. This template contains
+When LAMMPS fails to create the desired number of molecules, a WARNING appears.
+The molecule template called \href{\filepath tutorial3/water.mol}{\dwlcmd{water.mol}}
+must be downloaded and saved next to \lmpcmd{water.lmp}.  This template contains
 the necessary structural information of a water molecule, such as the number of
-atoms, or the IDs of the atoms that are connected by bonds, angles, etc.
+atoms, or the IDs of the atoms that are connected by bonds and angles.
 
 Then, let us organize the atoms of types OW and HW of the water molecules in a
 group named \textit{H2O} and perform a small energy minimization. The energy
@@ -2149,6 +2149,7 @@ These lines are used to define the most basic parameters, including the
 potential. Here, \textit{lj/cut/tip4p/long} imposes a Lennard-Jones potential with
 a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential.
 
+% S.G. To fix, this was removed from tutorial 3 : The \textit{pppm} style refers to particle-particle particle-mesh . \cite{luty1996calculating}
 So far, the commands are relatively similar to those in the previous tutorial,
 \hyperref[all-atoms-label]{Polymer in water}, with two major differences: the use
 of \textit{lj/cut/tip4p/long} instead of \textit{lj/cut/coul/long}, and \textit{pppm/tip4p}

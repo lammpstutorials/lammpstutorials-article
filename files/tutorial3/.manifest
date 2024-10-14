@@ -7,6 +7,9 @@
 peg.mol
 water.mol
 parameters.inc
+water.lmp
+merge.lmp
+pull.lmp
 
 # 2) solution files
 # only downloaded on request
