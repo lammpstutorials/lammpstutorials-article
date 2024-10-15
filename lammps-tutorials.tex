@@ -62,7 +62,9 @@
 \definecolor{listing}{rgb}{0.95,0.95,0.95}
 \definecolor{command}{rgb}{0.15,0.15,0.15}
 \definecolor{download}{rgb}{0.039,0.616,0.851}
-\definecolor{note}{rgb}{0.92,0.98,1.00}
+%\definecolor{note}{rgb}{0.92,0.98,1.00}
+\definecolor{note}{rgb}{1,0.988,0.93}
+\definecolor{note_listing}{rgb}{0.94,0.925,0.86}
 
 \lstset{
   basicstyle=\small\color{command}, % Use default font + small size and command color
@@ -88,9 +90,13 @@
   bottom=5pt, % Extra bottom padding
 }
 
+\renewcommand{\floatpagefraction}{0.8} % At least 80% of a page must be used by floats
+\renewcommand{\textfraction}{0.1} % At least 10% of a page must contain text
+
 % \renewcommand{\emph}[1]{\underline{#1}} % make \emph{} use underline instead of italic
 % S.G.: I went back to italic since all the other italic commands were replaced
 \newcommand{\lmpcmd}[1]{\hspace{0pt}\colorbox{listing}{\textcolor{command}{\small{#1}}}\hspace{0pt}} % lammps command
+\newcommand{\lmpcmdnote}[1]{\hspace{0pt}\colorbox{note_listing}{\textcolor{command}{\small{#1}}}\hspace{0pt}} % lammps command inside note
 \newcommand{\flrcmd}[1]{\textcolor{command}{\texttt{#1}}} % folder in monopace
 \newcommand{\flecmd}[1]{\textcolor{command}{\texttt{#1}}} % files name in monopace
 %\newcommand{\guicmd}[1]{\textcolor{command}{\texttt{\enquote{#1}}}} % LAMMPS-GUI commands in quotation monopace
@@ -933,17 +939,16 @@ crossed the periodic boundary.  The exact format of each line in the
 determines which per-atom data is set and stored internally in LAMMPS.
 
 \begin{note}
-  Instead of the \lmpcmd{write\_data} command, you can also use the
-  command \lmpcmd{write\_restart improve.min.restart} to save the state
-  of the simulation to a binary restart file.  Binary restart files are
-  more compact, faster to write, contain more information and thus are
-  often more convenient to use.  For example, the choice of atom style
-  or pair style is recorded, so those commands do not need to be issued
-  before reading the restart.  However, restart files are not expected to be
-  portable across LAMMPS versions or platforms.  Thus, in this tutorial,
-  we use \lmpcmd{write\_data} so we can provide you with a reference
-  copy of the data file in the solutions that will work for you,
-  regardless of your LAMMPS version or platform.
+Instead of the \lmpcmdnote{write\_data} command, you can also use the
+\lmpcmdnote{write\_restart} command to save the state
+of the simulation to a binary restart file.  Binary restart files are
+more compact, faster to write, and contain more information, making them often
+more convenient to use.  For example, the choice of \lmpcmdnote{atom\_style}
+or \lmpcmdnote{pair\_style} is recorded, so those commands do not need to be issued
+before reading the restart.  Note however that restart files are not expected to be
+portable across LAMMPS versions or platforms.  Therefore, in these tutorials,
+and with the exception of \hyperref[all-atom-label]{Tutorial 3}, we primarily use \lmpcmdnote{write\_data} to provide you with a reference
+copy of the data file that works regardless of your LAMMPS version and platform.
 \end{note}
 
 \paragraph{Restarting from a saved configuration}
@@ -1427,10 +1432,10 @@ the atoms of the edges will remain immobile during the simulation (or at least
 they would if no other command was applied to them).
 
 \begin{note}
-  The \lmpcmd{velocity set}
+  The \lmpcmdnote{velocity set}
   commands impose the velocity of a group of atoms at the start of a run but do
-  not enforce the velocity during the entire simulation. When \lmpcmd{velocity set}
-  is used in combination with \lmpcmd{setforce 0 0 0}, as is the case here, the
+  not enforce the velocity during the entire simulation. When \lmpcmdnote{velocity set}
+  is used in combination with \lmpcmdnote{setforce 0 0 0}, as is the case here, the
   atoms won't feel any force during the entire simulation.  According to the Newton
   equation, no force means no acceleration, meaning that the initial velocity
   will persist during the entire simulation, thus producing a constant velocity motion.
@@ -1571,8 +1576,8 @@ containing the parameters for AIREBO, and must be placed next
 to \lmpcmd{breakable.lmp}.
 
 \begin{note}
-  With the \lmpcmd{metal} units system, times are in picoseconds ($10^{-12}$\,s)
-  instead of femtoseconds ($10^{-15}$\,s) in the case of the \lmpcmd{real} units system.
+  With the \lmpcmdnote{metal} units system, times are in picoseconds ($10^{-12}$\,s)
+  instead of femtoseconds ($10^{-15}$\,s) in the case of the \lmpcmdnote{real} units system.
   It is important to keep this in mind when setting parameters that are expressed
   in time unit, such as the timestep or the time constant of the thermostat.
 \end{note}
@@ -1623,9 +1628,10 @@ from the target temperature of $300\,\text{K}$ at the start of the equilibration
 but that after a few steps, it reaches the target value.
 
 \begin{note}
-  Bonds cannot be displayed by the \lmpcmd{dump image} when using
-  the \lmpcmd{atom\_style atomic}, as it contains no bonds. A tip for displaying bonds
-  with the present system is provided at the end of the tutorial.
+  Bonds cannot be displayed by the \lmpcmdnote{dump image} when using
+  the \lmpcmdnote{atom\_style atomic}, as it contains no bonds.
+  A tip for displaying bonds with the present system is provided at
+  the end of the tutorial.
 \end{note}
 
 \paragraph{Launch the deformation}
@@ -1765,9 +1771,7 @@ include parameters.inc
 \begin{note}
 This tutorial uses type labels \cite{typelabel_paper} to map each of the
 numeric atom types with a string (see the \flecmd{parameters.inc} file):
-\begin{lstlisting}
-labelmap atom 1 OE 2 C 3 HC 4 H 5 CPos 6 OAlc 7 OW 8 HW
-\end{lstlisting}
+\lmpcmdnote{labelmap atom 1 OE 2 C 3 HC 4 H 5 CPos 6 OAlc 7 OW 8 HW}
 Therefore, the oxygen and hydrogen atoms of water (respectively types 7 and 8)
 can be referred to as `OW' and `HW', respectively.  Similar maps are used for 
 the bond types, angle types, and dihedral types.
@@ -1799,82 +1803,85 @@ the necessary structural information of a water molecule, such as the number of
 atoms, or the IDs of the atoms that are connected by bonds and angles.
 
 Then, let us organize the atoms of types OW and HW of the water molecules in a
-group named \textit{H2O} and perform a small energy minimization. The energy
-minimization is mandatory here given the small \textit{overlap} value of 1 Ångstrom
-chosen in the \textit{create\_atoms} command. Add the following lines into \flecmd{input.lmp}:
+group named \lmpcmd{H2O} and perform a small energy minimization.  The energy
+minimization is mandatory here because of the small \lmpcmd{overlap} value
+of 1~Ångstrom chosen in the \lmpcmd{create\_atoms} command.  Add the following lines into \flecmd{water.lmp}:
 \begin{lstlisting}
- group H2O type OW HW
- minimize 1.0e-4 1.0e-6 100 1000
- reset_timestep 0
+group H2O type OW HW
+minimize 1.0e-4 1.0e-6 100 1000
+reset_timestep 0
 \end{lstlisting}
-In general, resetting the step of the simulation to 0 using the
-\textit{reset\_timestep} command is optional.
-It is used here because the number of iterations performed by the \textit{minimize}
-command is usually not a round number (since the minimization stops when one of
-four criteria is reached). Let us use the \textit{fix npt} to control the temperature
-of the molecules with a Nosé-Hoover thermostat and the pressure of the system with
-a Nosé-Hoover barostat \cite{nose1984unified, hoover1985canonical, martyna1994constant},
-by adding the following line into \flecmd{input.lmp}:
+Resetting the step of the simulation to 0 using the
+\lmpcmd{reset\_timestep} command is optional.
+It is used here because the number of iterations performed by the \lmpcmd{minimize}
+command is usually not a round number, since the minimization stops when one of
+four criteria is reached.  We will use \lmpcmd{fix npt} to control the temperature
+and pressure of the molecules with a Nosé-Hoover thermostat and barostat,
+respectively \cite{nose1984unified, hoover1985canonical, martyna1994constant}.
+Add the following line into \flecmd{water.lmp}:
 \begin{lstlisting}
- fix mynpt all npt temp 300 300 100 &
-     iso 1 1 1000
+fix mynpt all npt temp 300 300 100 iso 1 1 1000
 \end{lstlisting}
-The \textit{fix npt} allows us to impose both a temperature of $300\,\text{K}$
+The \lmpcmd{fix npt} allows us to impose both a temperature of $300\,\text{K}$
 (with a damping constant of $100\,\text{fs}$), and a pressure of 1 atmosphere
-(with a damping constant of $1000\,\text{fs}$). With the \textit{iso} keyword,
+(with a damping constant of $1000\,\text{fs}$).  With the \lmpcmd{iso} keyword,
 the three dimensions of the box will be re-scaled simultaneously.
 
-Let us output the system into images by adding the following commands to \flecmd{input.lmp}:
+Let us output the system into images by adding the following commands to \flecmd{water.lmp}:
 \begin{lstlisting}
- dump mydmp all image 1000 dump.*.ppm type &
-     type shiny 0.1 box no 0.01 &
-     view 0 90 zoom 1.8
- dump_modify mydmp backcolor white &
-   acolor OW red acolor HW white &
-   adiam OW 3 adiam HW 1.5
+dump viz all image 250 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 0 90 zoom 3 size 1000 500
+dump_modify viz backcolor white &
+  acolor OW red acolor HW white &
+  adiam OW 3 adiam HW 1.5
 \end{lstlisting}
-Let us also extract the volume and density in the terminal every 1000 steps:
+Let us also extract the volume and density every 500 steps:
 \begin{lstlisting}
- variable myvol equal vol
- variable myoxy equal count(H2O)/3
- variable myrho equal ${myoxy}/v_myvol
- thermo 1000
- thermo_style custom step temp etotal &
-     v_myvol v_myrho
+variable myvol equal vol
+variable myoxy equal count(H2O)/3
+variable rho equal ${myoxy}/v_myvol
+thermo 500
+thermo_style custom step temp etotal v_myvol v_rho
 \end{lstlisting}
-The variable \textit{myoxy} corresponds to the number of atoms divided by 3, i.e.
-the number of molecules, and the variable \textit{myrho} is the number of molecules
-divided by the volume of the simulation box, i.e.~the density (in $\mathrm{\AA{}}^{-3}$).
+The variable \lmpcmd{myoxy} represents the number of atoms divided by 3, which
+corresponds to the number of molecules, and the variable \lmpcmd{myrho} is
+the number of molecules divided by the volume of the simulation box,
+that is, the density (in $\mathrm{\AA{}}^{-3}$).
 
-Finally, let us set the timestep to 1.0 fs, and run the simulation for 20 ps by
-adding the following lines into \flecmd{input.lmp}:
+Finally, let us set the timestep to 1.0 fs, and run the simulation for 10 ps by
+adding the following lines into \flecmd{water.lmp}:
 \begin{lstlisting}
- timestep 1.0
- run 20000
+timestep 1.0
+run 10000
 
- write_data H2O.data
+write_restart water.restart
 \end{lstlisting}
-% S.G. may be a binary restart file could be used here to illustrate the new functionalities of the GUI?
-The final state is written into \flecmd{H2O.data}. From the value of \textit{myrho},
-it should be clear that the system is quickly reaching its equilibrium
-density (see a snapshot of the equilibrated system in Fig.\,\ref{fig:PEG-water},
-and the evolution of the density in Fig.\,\ref{fig:PEG-density}).
+The final state is written into a binary file named \flecmd{water.restart}.
+Run the input using LAMMPS.  From the value of \lmpcmd{myrho}, it is clear that the system is quickly reaching its equilibrium density (see a snapshot of the equilibrated
+system in Fig.\,\ref{fig:PEG-water}, and the evolution of the density
+in Fig.\,\ref{fig:PEG-density}).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-water}
-\caption{Water reservoir after equilibration. Oxygen atoms are in red, and hydrogen
-atoms are in white.}
+\caption{The water reservoir from \hyperref[all-atom-label]{Tutorial 3}
+after equilibration.  Oxygen atoms are in red, and hydrogen atoms are in white.}
 \label{fig:PEG-water}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-density}
-\caption{Evolution of the density $\rho$ of water with time $t$. The density
-quickly reaches a plateau.}
+\caption{Evolution of the density $\rho$ of water with time $t$ during
+\hyperref[all-atom-label]{Tutorial 3}.}
 \label{fig:PEG-density}
 \end{figure}
+
+\begin{note}
+The binary file created by the \lmpcmdnote{write\_restart} command contains the
+complete state of the simulation, including atomic positions, velocities, and box dimensions (similar to \lmpcmdnote{write\_data}), but also the groups,
+the compute, or the \lmpcmdnote{atom\_style}. Use the \guicmd{Inspect Restart} option of the LAMMPS-GUI to vizualize the content saved in \flecmd{water.restart}.
+\end{note}
 
 \subsubsection{Solvating the PEG in water}
 Now that the water reservoir is equilibrated, we can safely include the PEG polymer
