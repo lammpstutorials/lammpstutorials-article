@@ -1,24 +1,10 @@
 
-units real
-atom_style full
-bond_style harmonic
-angle_style harmonic
-dihedral_style harmonic
-pair_style lj/cut/coul/long 10
 kspace_style ewald 1e-5
-special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 angle yes dihedral yes
-
-read_data water.data &
-    extra/bond/per/atom 3 &
-    extra/angle/per/atom 6 &
-    extra/dihedral/per/atom 10 &
-    extra/special/per/atom 14
-include parameters.inc
+read_restart water.restart
 
 molecule pegmol peg.mol
 create_atoms 0 single 0 0 0 mol pegmol 454756
 
-group H2O type OW HW
 group PEG type C CPos H HC OAlc OE
 
 delete_atoms overlap 2.0 H2O PEG mol yes
@@ -35,11 +21,12 @@ dump_modify viz backcolor white &
  adiam C 2.8 adiam CPos 2.8 adiam OAlc 2.6 &
  adiam H 1.4 adiam HC 1.4 adiam OE 2.6
 
-fix mynpt all npt temp 300 300 100 x 1 1 1000
+#fix mynpt all npt temp 300 300 100 x 1 1 1000
 fix myrct PEG recenter 0 0 0 shift all
 timestep 1.0
 
 thermo 500
 run 10000
 
-write_data merge.data
+write_restart merge.restart
+# write_data merge.data # uncomment to write a .data file as well

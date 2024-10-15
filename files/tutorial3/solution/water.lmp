@@ -43,4 +43,6 @@ thermo_style custom step temp etotal v_myvol v_rho
 
 timestep 1.0
 run 10000
-write_data water.data
+
+write_restart water.restart
+# write_data water.data # uncomment to write a .data file as well
