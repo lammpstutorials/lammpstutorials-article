@@ -52,8 +52,8 @@ more useful for everyone.
 
 ## License
 
-This project is licensed under the XXX License - see the 
-[LICENSE](LICENSE) file for details.
+This project is licensed under the [Creative Commons BY 4.0](https://creativecommons.org/licenses/by/4.0/) License.
+For more details, see the [LICENSE](LICENSE) file.
 
 ## Authors
 
