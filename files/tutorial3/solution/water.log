@@ -1,0 +1,157 @@
+  using 8 OpenMP thread(s) per MPI task
+using multi-threaded neighbor list subroutines
+Created orthogonal box = (-30 -15 -15) to (30 15 15)
+  1 by 1 by 1 MPI processor grid
+Read molecule template h2omol:
+# LAMMPS input script by Simon Gravelle
+  1 molecules
+  0 fragments
+  3 atoms with max type 8
+  2 bonds with max type 7
+  1 angles with max type 8
+  0 dihedrals with max type 0
+  0 impropers with max type 0
+Created 2100 atoms
+  using lattice units in orthogonal box = (-30 -15 -15) to (30 15 15)
+  create_atoms CPU = 0.088 seconds
+2100 atoms in group H2O
+Ewald initialization ...
+  using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
+  G vector (1/distance) = 0.28881149
+  estimated absolute RMS force accuracy = 0.0034563405
+  estimated relative force accuracy = 1.0408667e-05
+  KSpace vectors: actual max1d max3d = 3022 16 17968
+                  kxmax kymax kzmax  = 16 9 9
+Generated 28 of 28 mixed pair_coeff terms from geometric mixing rule
+Last active /omp style is kspace_style ewald/omp
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 12
+  ghost atom cutoff = 12
+  binsize = 6, bins = 10 5 5
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair lj/cut/coul/long/omp, perpetual
+      attributes: half, newton on, omp
+      pair build: half/bin/newton/omp
+      stencil: half/bin/3d
+      bin: standard
+Setting up cg style minimization ...
+  Unit style    : real
+  Current step  : 0
+Per MPI rank memory allocation (min/avg/max) = 46.98 | 46.98 | 46.98 Mbytes
+   Step          Temp          E_pair         E_mol          TotEng         Press     
+         0   0              520342.85      0.13488644     520342.99      2656685.8    
+       100   0             -6332.4642      411.42816     -5921.036      -1883.181     
+Loop time of 3.21758 on 8 procs for 100 steps with 2100 atoms
+
+828.8% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = max iterations
+  Energy initial, next-to-last, final = 
+      520342.987209895  -5911.52715167419   -5921.0359942555
+  Force two-norm initial, final = 3220164.1 123.08691
+  Force max component initial, final = 1654816.4 17.707104
+  Final line search alpha, max atom move = 0.0047101361 0.083402869
+  Iterations, force evaluations = 100 158
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0.44225    | 0.44225    | 0.44225    |   0.0 | 13.74
+Bond    | 0.011378   | 0.011378   | 0.011378   |   0.0 |  0.35
+Kspace  | 2.6926     | 2.6926     | 2.6926     |   0.0 | 83.69
+Neigh   | 0.018753   | 0.018753   | 0.018753   |   0.0 |  0.58
+Comm    | 0.017596   | 0.017596   | 0.017596   |   0.0 |  0.55
+Output  | 7.2863e-05 | 7.2863e-05 | 7.2863e-05 |   0.0 |  0.00
+Modify  | 0.017875   | 0.017875   | 0.017875   |   0.0 |  0.56
+Other   |            | 0.01702    |            |       |  0.53
+
+Nlocal:           2100 ave        2100 max        2100 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           7475 ave        7475 max        7475 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:         294918 ave      294918 max      294918 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 294918
+Ave neighs/atom = 140.43714
+Ave special neighs/atom = 2
+Neighbor list builds = 5
+Dangerous builds = 0
+Ewald initialization ...
+  using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
+  G vector (1/distance) = 0.28881149
+  estimated absolute RMS force accuracy = 0.0034563405
+  estimated relative force accuracy = 1.0408667e-05
+  KSpace vectors: actual max1d max3d = 3022 16 17968
+                  kxmax kymax kzmax  = 16 9 9
+Generated 28 of 28 mixed pair_coeff terms from geometric mixing rule
+Last active /omp style is kspace_style ewald/omp
+Setting up Verlet run ...
+  Unit style    : real
+  Current step  : 0
+  Time step     : 1
+Per MPI rank memory allocation (min/avg/max) = 45.85 | 45.85 | 45.85 Mbytes
+   Step          Temp          TotEng        v_myvol         v_rho     
+         0   0             -5921.036       54000          0.012962963  
+       500   215.76434     -4747.1351      48135.544      0.014542268  
+      1000   299.82607     -3501.1905      45284.898      0.015457692  
+      1500   302.25121     -3698.8564      42381.486      0.016516646  
+      2000   308.41484     -3686.3517      39946.687      0.017523356  
+      2500   308.21826     -3893.5237      37780.604      0.018528026  
+      3000   284.54314     -4118.6971      35880.276      0.019509326  
+      3500   293.97162     -4162.3696      34188.346      0.020474813  
+      4000   305.82622     -4250.5373      32071.046      0.021826541  
+      4500   301.26312     -4294.6912      30604.797      0.022872232  
+      5000   291.75756     -4390.4337      29127.085      0.024032615  
+      5500   303.35507     -4346.8046      28070.378      0.02493732   
+      6000   288.67954     -4476.2029      26978.016      0.025947053  
+      6500   297.85608     -4503.8424      25824.673      0.027105861  
+      7000   284.91545     -4728.8505      24854.979      0.028163371  
+      7500   298.22888     -4637.7383      24148.811      0.028986934  
+      8000   292.61485     -4686.0507      23560.484      0.029710765  
+      8500   301.03953     -4560.152       23325.497      0.030010079  
+      9000   300.57016     -4682.3893      22312.354      0.031372754  
+      9500   301.33034     -4692.1637      22297.236      0.031394025  
+     10000   302.4249      -4680.6064      22208.491      0.031519477  
+Loop time of 134.82 on 8 procs for 10000 steps with 2100 atoms
+
+Performance: 6.409 ns/day, 3.745 hours/ns, 74.173 timesteps/s, 155.763 katom-step/s
+803.1% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 29.707     | 29.707     | 29.707     |   0.0 | 22.03
+Bond    | 0.74874    | 0.74874    | 0.74874    |   0.0 |  0.56
+Kspace  | 89.81      | 89.81      | 89.81      |   0.0 | 66.61
+Neigh   | 4.0298     | 4.0298     | 4.0298     |   0.0 |  2.99
+Comm    | 1.4768     | 1.4768     | 1.4768     |   0.0 |  1.10
+Output  | 5.3664     | 5.3664     | 5.3664     |   0.0 |  3.98
+Modify  | 3.4889     | 3.4889     | 3.4889     |   0.0 |  2.59
+Other   |            | 0.1924     |            |       |  0.14
+
+Nlocal:           2100 ave        2100 max        2100 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:          11836 ave       11836 max       11836 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:         717830 ave      717830 max      717830 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 717830
+Ave neighs/atom = 341.82381
+Ave special neighs/atom = 2
+Neighbor list builds = 554
+Dangerous builds = 0
+System init for write_data ...
+Ewald initialization ...
+  using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
+  G vector (1/distance) = 0.29640281
+  estimated absolute RMS force accuracy = 0.003839648
+  estimated relative force accuracy = 1.1562986e-05
+  KSpace vectors: actual max1d max3d = 1398 12 7812
+                  kxmax kymax kzmax  = 12 7 7
+Generated 28 of 28 mixed pair_coeff terms from geometric mixing rule
+Last active /omp style is kspace_style ewald/omp

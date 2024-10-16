@@ -1,0 +1,179 @@
+  using 8 OpenMP thread(s) per MPI task
+using multi-threaded neighbor list subroutines
+Reading data file ...
+  orthogonal box = (-22.309834 -11.154917 -11.154917) to (22.309834 11.154917 11.154917)
+  1 by 1 by 1 MPI processor grid
+  reading atom labelmap ...
+  reading bond labelmap ...
+  reading angle labelmap ...
+  reading dihedral labelmap ...
+  reading atoms ...
+  2100 atoms
+  reading velocities ...
+  2100 velocities
+  scanning bonds ...
+  5 = max bonds/atom
+  scanning angles ...
+  7 = max angles/atom
+  orthogonal box = (-22.309834 -11.154917 -11.154917) to (22.309834 11.154917 11.154917)
+  1 by 1 by 1 MPI processor grid
+  reading bonds ...
+  1400 bonds
+  reading angles ...
+  700 angles
+Finding 1-2 1-3 1-4 neighbors ...
+  special bond factors lj:    0        0        0.5     
+  special bond factors coul:  0        0        1       
+     2 = max # of 1-2 neighbors
+     1 = max # of 1-3 neighbors
+     1 = max # of 1-4 neighbors
+  1400 = # of 1-3 neighbors before angle trim
+  1400 = # of 1-3 neighbors after angle trim
+  1400 = # of 1-4 neighbors before dihedral trim
+  0 = # of 1-4 neighbors after dihedral trim
+    16 = max # of special neighbors
+  special bonds CPU = 0.002 seconds
+  read_data CPU = 0.063 seconds
+Read molecule template pegmol:
+PEG molecule
+  1 molecules
+  0 fragments
+  59 atoms with max type 6
+  58 bonds with max type 6
+  104 angles with max type 7
+  116 dihedrals with max type 4
+  0 impropers with max type 0
+Created 59 atoms
+  using lattice units in orthogonal box = (-22.309834 -11.154917 -11.154917) to (22.309834 11.154917 11.154917)
+  create_atoms CPU = 0.000 seconds
+2100 atoms in group H2O
+59 atoms in group PEG
+System init for delete_atoms ...
+Ewald initialization ...
+WARNING: System is not charge neutral, net charge = -0.007 (src/kspace.cpp:327)
+  using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
+  G vector (1/distance) = 0.29619569
+  estimated absolute RMS force accuracy = 0.0038164443
+  estimated relative force accuracy = 1.1493109e-05
+  KSpace vectors: actual max1d max3d = 1398 12 7812
+                  kxmax kymax kzmax  = 12 7 7
+Generated 28 of 28 mixed pair_coeff terms from geometric mixing rule
+Last active /omp style is kspace_style ewald/omp
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 12
+  ghost atom cutoff = 12
+  binsize = 6, bins = 8 4 4
+  2 neighbor lists, perpetual/occasional/extra = 1 1 0
+  (1) command delete_atoms, occasional
+      attributes: full, newton on, omp
+      pair build: full/bin/omp
+      stencil: full/bin/3d
+      bin: standard
+  (2) pair lj/cut/coul/long/omp, perpetual
+      attributes: half, newton on, omp
+      pair build: half/bin/newton/omp
+      stencil: half/bin/3d
+      bin: standard
+WARNING: Ignoring 'compress yes' for molecular system (src/delete_atoms.cpp:141)
+Deleted 93 atoms, new total = 2066
+Deleted 62 bonds, new total = 1396
+Deleted 31 angles, new total = 773
+Deleted 0 dihedrals, new total = 116
+
+CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
+
+Your simulation uses code contributions which should be cited:
+- Type Label Framework: https://doi.org/10.1021/acs.jpcb.3c08419
+The log file lists these citations in BibTeX format.
+
+CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
+
+Ewald initialization ...
+  using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
+  G vector (1/distance) = 0.29580367
+  estimated absolute RMS force accuracy = 0.0037751365
+  estimated relative force accuracy = 1.1368712e-05
+  KSpace vectors: actual max1d max3d = 1398 12 7812
+                  kxmax kymax kzmax  = 12 7 7
+Generated 28 of 28 mixed pair_coeff terms from geometric mixing rule
+Last active /omp style is kspace_style ewald/omp
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 12
+  ghost atom cutoff = 12
+  binsize = 6, bins = 8 4 4
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair lj/cut/coul/long/omp, perpetual
+      attributes: half, newton on, omp
+      pair build: half/bin/newton/omp
+      stencil: half/bin/3d
+      bin: standard
+Setting up Verlet run ...
+  Unit style    : real
+  Current step  : 0
+  Time step     : 1
+Per MPI rank memory allocation (min/avg/max) = 39.58 | 39.58 | 39.58 Mbytes
+   Step          Temp          E_pair         E_mol          TotEng         Press          Volume    
+         0   292.04142     -6906.08        841.26192     -4267.1943     -133.29779      22208.491    
+       500   298.28658     -7011.2941      813.61131     -4361.6177     -269.31726      22165.643    
+      1000   298.47509     -7068.0675      793.53481     -4437.3072      481.50467      21699.806    
+      1500   299.20591     -7017.2388      754.24855     -4421.2663      133.05223      21656.603    
+      2000   288.20776     -7004.9166      778.13225     -4452.7582     -310.6904       21798.621    
+      2500   295.68062     -7044.4038      802.18458     -4422.1948     -626.76572      21814.468    
+      3000   311.19        -7052.5776      807.73024     -4329.3569      574.0593       21888.289    
+      3500   300.13849     -7122.4913      760.70867     -4514.3184      49.422373      21853.951    
+      4000   302.67737     -6953.8422      772.36891     -4318.3813     -359.31208      22043.197    
+      4500   303.09838     -7043.774       829.56846     -4348.522      -46.131422      22092.539    
+      5000   299.63725     -7104.3302      837.34727     -4422.604      -49.054583      21841.508    
+      5500   300.26059     -7156.8959      829.9615      -4478.7185      728.13809      21741.557    
+      6000   305.21049     -7178.4288      788.6031      -4511.1414     -630.46346      21840.31     
+      6500   305.16449     -7085.6705      843.82655     -4363.4428     -768.19246      21821.17     
+      7000   297.41554     -7162.2886      824.9586      -4506.6265      681.26185      21523.218    
+      7500   307.1045      -6983.5245      772.69555     -4320.4863      81.205267      21878.449    
+      8000   301.22679     -7072.6247      805.80018     -4412.6614     -372.01075      21937.809    
+      8500   293.71928     -7209.9471      810.9105      -4591.0849     -94.535259      21485.293    
+      9000   294.21913     -7140.0469      804.04213     -4524.9763     -151.30325      21382.063    
+      9500   295.99208     -7239.6536      864.16669     -4553.5453      584.03957      21331.84     
+     10000   302.20461     -7206.7975      858.22255     -4488.3929      756.28581      21175.158    
+Loop time of 143.564 on 8 procs for 10000 steps with 2066 atoms
+
+Performance: 6.018 ns/day, 3.988 hours/ns, 69.655 timesteps/s, 143.908 katom-step/s
+751.4% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 39.858     | 39.858     | 39.858     |   0.0 | 27.76
+Bond    | 0.84586    | 0.84586    | 0.84586    |   0.0 |  0.59
+Kspace  | 75.721     | 75.721     | 75.721     |   0.0 | 52.74
+Neigh   | 5.4482     | 5.4482     | 5.4482     |   0.0 |  3.79
+Comm    | 1.7952     | 1.7952     | 1.7952     |   0.0 |  1.25
+Output  | 15.713     | 15.713     | 15.713     |   0.0 | 10.95
+Modify  | 4.0466     | 4.0466     | 4.0466     |   0.0 |  2.82
+Other   |            | 0.1353     |            |       |  0.09
+
+Nlocal:           2066 ave        2066 max        2066 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:          11794 ave       11794 max       11794 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:         728663 ave      728663 max      728663 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 728663
+Ave neighs/atom = 352.69264
+Ave special neighs/atom = 2.2168441
+Neighbor list builds = 550
+Dangerous builds = 0
+System init for write_data ...
+Ewald initialization ...
+  using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
+  G vector (1/distance) = 0.29620607
+  estimated absolute RMS force accuracy = 0.0034433013
+  estimated relative force accuracy = 1.03694e-05
+  KSpace vectors: actual max1d max3d = 1342 12 7812
+                  kxmax kymax kzmax  = 12 7 7
+Generated 28 of 28 mixed pair_coeff terms from geometric mixing rule
+Last active /omp style is kspace_style ewald/omp
