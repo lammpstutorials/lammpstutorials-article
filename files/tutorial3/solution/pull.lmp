@@ -1,18 +1,7 @@
-units real
-atom_style full
-bond_style harmonic
-angle_style harmonic
-dihedral_style harmonic
-pair_style lj/cut/coul/long 10
+
 kspace_style ewald 1e-5
-special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 angle yes dihedral yes
+read_restart merge.restart
 
-read_data merge.data
-include parameters.inc
-
-group H2O type OW HW
-group PEG type C CPos H HC OAlc OE
-#group PEG_CO type C CPos OAlc OE
 group ends type OAlc
 variable xcm equal xcm(ends,x)
 variable oxies atom type==label2type(atom,OAlc)
@@ -44,7 +33,7 @@ thermo 250
 
 dump mydmp all local 100 pull.dat index c_dphi c_prop
 
-# S.G.: would be ok if one could select only dihedral 2 
+# S.G.: a histogram would be ok if one could select only dihedral 2 
 # fix myhisto all ave/histo 100 120 15000 0 180 90 c_dphi file pull.dat ave running mode vector
 
 timestep 1.0

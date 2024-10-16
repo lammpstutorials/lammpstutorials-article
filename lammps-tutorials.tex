@@ -1924,13 +1924,12 @@ group H2O was saved by the restart and can be omitted):
 \begin{lstlisting}
 group PEG type C CPos H HC OAlc OE
 \end{lstlisting}
-Water molecules that are overlapping with the PEG must be deleted to avoid future crashing.
-Add the following line into \flecmd{input.lmp}:
+Water molecules that are overlapping with the PEG must be deleted to avoid future crashing.  Add the following line into \flecmd{merge.lmp}:
 \begin{lstlisting}
 delete_atoms overlap 2.0 H2O PEG mol yes
 \end{lstlisting}
 Here the value of 2.0~Ångströms for the overlap cutoff was fixed arbitrarily and can
-be chosen through trial and error. If the cutoff is too small, the simulation will
+be chosen through trial and error.  If the cutoff is too small, the simulation will
 crash because atoms that are too close to each other undergo forces
 that can be extremely large. If the cutoff is too large, too many water
 molecules will unnecessarily be deleted.
@@ -1964,14 +1963,14 @@ dump_modify viz backcolor white &
 thermo 500
 \end{lstlisting}
 Finally, let us perform a short equilibration and save the
-final state to a \lmpcmd{.restart} file. Add the following lines to the data file:
+final state to a \lmpcmd{.restart} file.  Add the following lines to the data file:
 \begin{lstlisting}
 timestep 1.0
 run 10000
 
 write_restart mix.restart
 \end{lstlisting}
-Run the simulation using LAMMPS. From the outputs, you can make
+Run the simulation using LAMMPS.  From the outputs, you can make
 sure that the temperature remains close to the
 target value of $300~\text{K}$ throughout the entire simulation, and that
 the volume and total energy are almost constant, indicating
@@ -1981,12 +1980,13 @@ See a snapshot of the system in Fig.\,\ref{fig:PEG-solvated}.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-solvated}
-\caption{A single PEG molecule in water. Water molecules are represented as a
+\caption{A single PEG molecule in water.  Water molecules are represented as a
 transparent continuum field for clarity.}
 \label{fig:PEG-solvated}
 \end{figure}
 
 \subsubsection{Stretching the PEG molecule}
+
 Here, a constant forcing is applied to the two ends of the PEG molecule until it
 stretches. Create a new folder next to the previously created folders, call it
 \flrcmd{pullonPEG/}, and create a new input file in it called \flecmd{input.lmp}.
