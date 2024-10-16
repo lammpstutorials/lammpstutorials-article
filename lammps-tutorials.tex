@@ -1880,14 +1880,15 @@ after equilibration.  Oxygen atoms are in red, and hydrogen atoms are in white.}
 \begin{note}
 The binary file created by the \lmpcmdnote{write\_restart} command contains the
 complete state of the simulation, including atomic positions, velocities, and box dimensions (similar to \lmpcmdnote{write\_data}), but also the groups,
-the compute, or the \lmpcmdnote{atom\_style}. Use the \guicmd{Inspect Restart} option of the LAMMPS-GUI to vizualize the content saved in \flecmd{water.restart}.
+the compute, or the \lmpcmdnote{atom\_style}.  Use the \guicmd{Inspect Restart} option of the LAMMPS-GUI to vizualize the content saved in \flecmd{water.restart}.
 \end{note}
 
 \subsubsection{Solvating the PEG in water}
-Now that the water reservoir is equilibrated, we can safely include the PEG polymer
-in the water. The PEG molecule topology was downloaded from the ATB repository
-\cite{malde2011automated, oostenbrink2004biomolecular}. It has a formula
-$\text{C}_{28}\text{H}_{58}\text{O}_{15}$, and the parameters are taken from
+
+Now that the water reservoir is equilibrated, we can safely add the PEG polymer
+to the water.  The PEG molecule topology was downloaded from the ATB repository
+\cite{malde2011automated, oostenbrink2004biomolecular}.  It has a formula
+$\text{C}_{16}\text{H}_{34}\text{O}_{9}$, and the parameters are taken from
 the GROMOS 54A7 force field \cite{schmid2011definition}.
 
 \begin{figure}
@@ -1898,84 +1899,84 @@ atoms in red, and the hydrogen atoms in white.}
 \label{fig:PEG-in-vacuum}
 \end{figure}
 
-Create a second folder alongside \flrcmd{pureH2O/} and call it \flrcmd{mergePEGH2O/}.
-Create a new blank file in it, call it \flecmd{input.lmp}. Within \flecmd{input.lmp},
-copy the same first lines as previously:
+Open the file named \flecmd{merge.lmp} that was downloaded
+alongside \lmpcmd{water.lmp} during the tutorial setup. It only contains two lines:
 \begin{lstlisting}
- units real
- atom_style full
- bond_style harmonic
- angle_style harmonic
- dihedral_style harmonic
- pair_style lj/cut/coul/long 10
- kspace_style pppm 1e-5
- special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 &
-     angle yes dihedral yes
+kspace_style ewald 1e-5
+read_restart water.restart
 \end{lstlisting}
-Then, import the previously generated data file \flecmd{H2O.data} as well as the \flecmd{PARM.lmp} file:
+Most of the commands that were initially present in \lmpcmd{water.lmp}, such as
+the \lmpcmd{units} of the \lmpcmd{atom\_style} commands do not need to be repeated,
+as they were saved within the \flecmd{.restart} file.  There is also no need to re-include the parameters from the \lmpcmd{.inc} file. The \lmpcmd{kspace\_style}
+command, however, is not saved by the \lmpcmd{write\_restart} command and must be
+repeated. 
+
+Using the molecule template for the polymer called
+\href{\filepath tutorial3/peg.mol}{\dwlcmd{peg.mol}},
+let us create a single molecule in the middle of the box by adding the following
+commands to \flecmd{merge.lmp}:
 \begin{lstlisting}
- read_data ../pureH2O/H2O.data &
-     extra/bond/per/atom 3 &
-     extra/angle/per/atom 6 &
-     extra/dihedral/per/atom 10 &
-     extra/special/per/atom 14
- include ../PARM.lmp
+molecule pegmol mol.mol
+create_atoms 0 single 0 0 0 mol pegmol 454756
 \end{lstlisting}
-Download the template called
-\href{\filepath tutorial3/mergePEGH2O/PEG-GROMOS.mol}{\dwlcmd{PEG-GROMOS.mol}}
-for the PEG molecule, and then create a single molecule in the middle of the box:
+Let us create a group for the atoms of the PEG (the previously created
+group H2O was saved by the restart and can be omitted):
 \begin{lstlisting}
- molecule pegmol PEG-GROMOS.mol
- create_atoms 0 single 0 0 0 mol pegmol 454756
-\end{lstlisting}
-Let us create 2 groups to differentiate the PEG from the H2O, by adding the following
-lines into \flecmd{input.lmp}:
-\begin{lstlisting}
- group H2O type OW HW
- group PEG type C CPos H HC OAlc OE
+group PEG type C CPos H HC OAlc OE
 \end{lstlisting}
 Water molecules that are overlapping with the PEG must be deleted to avoid future crashing.
 Add the following line into \flecmd{input.lmp}:
 \begin{lstlisting}
- delete_atoms overlap 2.0 H2O PEG mol yes
+delete_atoms overlap 2.0 H2O PEG mol yes
 \end{lstlisting}
-Here the value of 2 Ångströms for the overlap cutoff was fixed arbitrarily and can
+Here the value of 2.0~Ångströms for the overlap cutoff was fixed arbitrarily and can
 be chosen through trial and error. If the cutoff is too small, the simulation will
-crash. If the cutoff is too large, too many water molecules will unnecessarily be
-deleted.
+crash because atoms that are too close to each other undergo forces
+that can be extremely large. If the cutoff is too large, too many water
+molecules will unnecessarily be deleted.
 
-Finally, let us use the \textit{fix npt} to control the temperature, as
-well as the pressure by allowing the box size to be rescaled along the \textit{x} axis:
+Let us use the \lmpcmd{fix npt} to control the temperature, as
+well as the pressure by allowing the box size to be rescaled along the $x$ axis:
 \begin{lstlisting}
- fix mynpt all npt temp 300 300 100 x 1 1 1000
- timestep 1.0
+fix mynpt all npt temp 300 300 100 x 1 1 1000
 \end{lstlisting}
-Once more, let us create images of the systems:
+Let us also use the \lmpcmd{recenter} command to always keep the PEG at
+the position $0 0 0$:
 \begin{lstlisting}
- dump mydmp all image 1000 dump.*.ppm type &
-     type shiny 0.1 box no 0.01 &
-     view 0 90 zoom 1.8  fsaa yes bond atom 0.8
- dump_modify mydmp backcolor white &
-     acolor OW red acolor HW white &
-     acolor OE red acolor OAlc red &
-     acolor C gray acolor CPos gray &
-     acolor H white acolor HC white &
-     adiam OW 0.2 adiam HW 0.2 &
-     adiam C 3 adiam CPos 3 adiam OAlc 2.8 &
-     adiam H 1 adiam HC 1 adiam OE 2.8
- thermo 1000
+fix myrct PEG recenter 0 0 0 shift all
 \end{lstlisting}
-Finally, let us perform a short equilibration and print the
-final state in a data file. Add the following lines to the data file:
+Note that the \lmpcmd{recenter} command has no impact on the dynamics,
+it simply ensures that the system does not drift, which can be more practical for visualizing and analyzing the system
+
+Let us create images of the systems:
 \begin{lstlisting}
- run 30000
- write_data mix.data
+dump viz all image 250 myimage-*.ppm type &
+  type shiny 0.1 box no 0.01 &
+  view 0 90 zoom 3 fsaa yes bond atom 0.8 size 1000 500
+dump_modify viz backcolor white &
+  acolor OW red acolor HW white &
+  acolor OE darkred acolor OAlc darkred &
+  acolor C gray acolor CPos gray &
+  acolor H white acolor HC white &
+  adiam OW 0.2 adiam HW 0.2 &
+  adiam C 2.8 adiam CPos 2.8 adiam OAlc 2.6 &
+  adiam H 1.4 adiam HC 1.4 adiam OE 2.6
+thermo 500
 \end{lstlisting}
-From the outputs, you can make sure that the temperature remains close to the
-target value of $300~\text{K}$ throughout the entire simulation, and the that
-the volume and total energy are almost constant, suggesting
-that the system was close to equilibrium from the start. See a snapshot of the
-system in Fig.\,\ref{fig:PEG-solvated}.
+Finally, let us perform a short equilibration and save the
+final state to a \lmpcmd{.restart} file. Add the following lines to the data file:
+\begin{lstlisting}
+timestep 1.0
+run 10000
+
+write_restart mix.restart
+\end{lstlisting}
+Run the simulation using LAMMPS. From the outputs, you can make
+sure that the temperature remains close to the
+target value of $300~\text{K}$ throughout the entire simulation, and that
+the volume and total energy are almost constant, indicating
+that the system was in a reasonable configuration from the start.
+See a snapshot of the system in Fig.\,\ref{fig:PEG-solvated}.
 
 \begin{figure}
 \centering
