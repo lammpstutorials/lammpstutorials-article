@@ -62,7 +62,9 @@
 \definecolor{listing}{rgb}{0.95,0.95,0.95}
 \definecolor{command}{rgb}{0.15,0.15,0.15}
 \definecolor{download}{rgb}{0.039,0.616,0.851}
-\definecolor{note}{rgb}{0.92,0.98,1.00}
+%\definecolor{note}{rgb}{0.92,0.98,1.00}
+\definecolor{note}{rgb}{1,0.988,0.93}
+\definecolor{note_listing}{rgb}{0.94,0.925,0.86}
 
 \lstset{
   basicstyle=\small\color{command}, % Use default font + small size and command color
@@ -88,9 +90,13 @@
   bottom=5pt, % Extra bottom padding
 }
 
+\renewcommand{\floatpagefraction}{0.8} % At least 80% of a page must be used by floats
+\renewcommand{\textfraction}{0.1} % At least 10% of a page must contain text
+
 % \renewcommand{\emph}[1]{\underline{#1}} % make \emph{} use underline instead of italic
 % S.G.: I went back to italic since all the other italic commands were replaced
 \newcommand{\lmpcmd}[1]{\hspace{0pt}\colorbox{listing}{\textcolor{command}{\small{#1}}}\hspace{0pt}} % lammps command
+\newcommand{\lmpcmdnote}[1]{\hspace{0pt}\colorbox{note_listing}{\textcolor{command}{\small{#1}}}\hspace{0pt}} % lammps command inside note
 \newcommand{\flrcmd}[1]{\textcolor{command}{\texttt{#1}}} % folder in monopace
 \newcommand{\flecmd}[1]{\textcolor{command}{\texttt{#1}}} % files name in monopace
 %\newcommand{\guicmd}[1]{\textcolor{command}{\texttt{\enquote{#1}}}} % LAMMPS-GUI commands in quotation monopace
@@ -933,17 +939,16 @@ crossed the periodic boundary.  The exact format of each line in the
 determines which per-atom data is set and stored internally in LAMMPS.
 
 \begin{note}
-  Instead of the \lmpcmd{write\_data} command, you can also use the
-  command \lmpcmd{write\_restart improve.min.restart} to save the state
-  of the simulation to a binary restart file.  Binary restart files are
-  more compact, faster to write, contain more information and thus are
-  often more convenient to use.  For example, the choice of atom style
-  or pair style is recorded, so those commands do not need to be issued
-  before reading the restart.  However, restart files are not expected to be
-  portable across LAMMPS versions or platforms.  Thus, in this tutorial,
-  we use \lmpcmd{write\_data} so we can provide you with a reference
-  copy of the data file in the solutions that will work for you,
-  regardless of your LAMMPS version or platform.
+Instead of the \lmpcmdnote{write\_data} command, you can also use the
+\lmpcmdnote{write\_restart} command to save the state
+of the simulation to a binary restart file.  Binary restart files are
+more compact, faster to write, and contain more information, making them often
+more convenient to use.  For example, the choice of \lmpcmdnote{atom\_style}
+or \lmpcmdnote{pair\_style} is recorded, so those commands do not need to be issued
+before reading the restart.  Note however that restart files are not expected to be
+portable across LAMMPS versions or platforms.  Therefore, in these tutorials,
+and with the exception of \hyperref[all-atom-label]{Tutorial 3}, we primarily use \lmpcmdnote{write\_data} to provide you with a reference
+copy of the data file that works regardless of your LAMMPS version and platform.
 \end{note}
 
 \paragraph{Restarting from a saved configuration}
@@ -1427,10 +1432,10 @@ the atoms of the edges will remain immobile during the simulation (or at least
 they would if no other command was applied to them).
 
 \begin{note}
-  The \lmpcmd{velocity set}
+  The \lmpcmdnote{velocity set}
   commands impose the velocity of a group of atoms at the start of a run but do
-  not enforce the velocity during the entire simulation. When \lmpcmd{velocity set}
-  is used in combination with \lmpcmd{setforce 0 0 0}, as is the case here, the
+  not enforce the velocity during the entire simulation. When \lmpcmdnote{velocity set}
+  is used in combination with \lmpcmdnote{setforce 0 0 0}, as is the case here, the
   atoms won't feel any force during the entire simulation.  According to the Newton
   equation, no force means no acceleration, meaning that the initial velocity
   will persist during the entire simulation, thus producing a constant velocity motion.
@@ -1571,8 +1576,8 @@ containing the parameters for AIREBO, and must be placed next
 to \lmpcmd{breakable.lmp}.
 
 \begin{note}
-  With the \lmpcmd{metal} units system, times are in picoseconds ($10^{-12}$\,s)
-  instead of femtoseconds ($10^{-15}$\,s) in the case of the \lmpcmd{real} units system.
+  With the \lmpcmdnote{metal} units system, times are in picoseconds ($10^{-12}$\,s)
+  instead of femtoseconds ($10^{-15}$\,s) in the case of the \lmpcmdnote{real} units system.
   It is important to keep this in mind when setting parameters that are expressed
   in time unit, such as the timestep or the time constant of the thermostat.
 \end{note}
@@ -1623,9 +1628,10 @@ from the target temperature of $300\,\text{K}$ at the start of the equilibration
 but that after a few steps, it reaches the target value.
 
 \begin{note}
-  Bonds cannot be displayed by the \lmpcmd{dump image} when using
-  the \lmpcmd{atom\_style atomic}, as it contains no bonds. A tip for displaying bonds
-  with the present system is provided at the end of the tutorial.
+  Bonds cannot be displayed by the \lmpcmdnote{dump image} when using
+  the \lmpcmdnote{atom\_style atomic}, as it contains no bonds.
+  A tip for displaying bonds with the present system is provided at
+  the end of the tutorial.
 \end{note}
 
 \paragraph{Launch the deformation}
@@ -1645,7 +1651,7 @@ simulation (Fig.\,\ref{fig:CNT-deformed-breakable}).
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-deformed-breakable}
-\caption{CNT with broken bonds. This image was geenrated using
+\caption{CNT with broken bonds.  This image was generated using
 VMD \cite{vmd_home,humphrey1996vmd} with the \guicmd{DynamicBonds} representation.}
 \label{fig:CNT-deformed-breakable}
 \end{figure}
@@ -1710,39 +1716,40 @@ dynamics simulations are compared with force spectroscopy experiments \cite{lies
 
 In this tutorial, the water reservoir is first prepared in the absence of the polymer.
 A rectangular box of water is created and equilibrated at ambient temperature and
-ambient pressure. The SPC/Fw water model is used \cite{wu2006flexible}, which is
+pressure.  The SPC/Fw water model is used \cite{wu2006flexible}, which is
 a flexible variant of the rigid SPC (simple point charge) model \cite{berendsen1981interaction}.
-Create a folder called \flrcmd{pureH2O/}. Inside this folder, create an empty text
-file called \flecmd{input.lmp}. Copy the following lines into it:
+To set up this tutorial, select \guicmd{Start Tutorial 3} from the
+\guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.
+The editor should display the following content corresponding to \flecmd{water.lmp}:
 \begin{lstlisting}
- units real
- atom_style full
- bond_style harmonic
- angle_style harmonic
- dihedral_style harmonic
- pair_style lj/cut/coul/long 10
- kspace_style pppm 1e-5
- special_bonds lj 0.0 0.0 0.5 &
-     coul 0.0 0.0 1.0 angle yes
+units real
+atom_style full
+bond_style harmonic
+angle_style harmonic
+dihedral_style harmonic
+pair_style lj/cut/coul/long 10
+kspace_style ewald 1e-5
+special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 angle yes
 \end{lstlisting}
-With the unit style \textit{real}, masses are in grams per mole, distances in
-Ångströms, time in femtoseconds, and energies in kcal/mole. With the \textit{atom\_style full}, each atom is a dot with a mass and a charge that can be linked by bonds, angles, dihedrals, and/or impropers. The \textit{bond\_style},
-\textit{angle\_style}, and \textit{dihedral\_style} commands define the potentials
-for the bonds, angles, and dihedrals used in the simulation, here \textit{harmonic}.
-Finally, the \textit{special\_bonds} command, which was already seen in
+With the unit style \lmpcmd{real}, masses are in grams per mole, distances in
+Ångströms, time in femtoseconds, and energies in kcal/mole. With the \lmpcmd{atom\_style full},
+each atom is a dot with a mass and a charge that can be linked by bonds, angles,
+dihedrals, and/or impropers.  The \lmpcmd{bond\_style},
+\lmpcmd{angle\_style}, and \lmpcmd{dihedral\_style} commands define the potentials
+for the bonds, angles, and dihedrals used in the simulation, here \lmpcmd{harmonic}.
+With the \lmpcmd{pair\_style} named \lmpcmd{lj/cut/coul/long}, atoms interact through
+both a Lennard-Jones (LJ) potential and Coulomb interactions.  The value of $10\,\text{\AA{}}$ is the cutoff,
+and the \lmpcmd{ewald} command defines the long-range solver for the Coulomb
+interactions \cite{ewald1921berechnung}.  Finally, the \lmpcmd{special\_bonds} command, which was already seen in
 \hyperref[carbon-nanotube-label]{tutorial 2}, sets the LJ and Coulomb weighting
-factors for the interaction between neighboring atoms. With the \textit{pair\_style}
-named \textit{lj/cut/coul/long}, atoms interact through both a Lennard-Jones (LJ)
-potential and Coulomb interactions. The value of $10\,\text{\AA{}}$ is the cutoff.
-Finally, the \textit{kspace} command defines the long-range solver for the Coulomb
-interactions. The \textit{pppm} style refers to particle-particle particle-mesh \cite{luty1996calculating}.
+factors for the interaction between neighboring atoms.
 
-Then, let us create a 3D simulation box of dimensions $9 \times 3 \times 3 \; \text{nm}^3$,
+Let us create a 3D simulation box of dimensions $6 \times 3 \times 3 \; \text{nm}^3$,
 and make space for 8 atom types (2 for the water, 6 for the polymer), 7 bond types
 (1 for the water, 6 for the polymer), 8 angle types (1 for the water, 7 for the polymer),
-and 4 dihedral types (only for the polymer). Copy the following lines into \flecmd{input.lmp}:
+and 4 dihedral types (only for the polymer). Copy the following lines into \flecmd{water.lmp}:
 \begin{lstlisting}
- region box block -45 45 -15 15 -15 15
+ region box block -30 30 -15 15 -15 15
  create_box 8 box &
  bond/types 7 &
  angle/types 8 &
@@ -1752,351 +1759,360 @@ and 4 dihedral types (only for the polymer). Copy the following lines into \flec
  extra/dihedral/per/atom 10 &
  extra/special/per/atom 14
 \end{lstlisting}
-The \textit{extra/x/per/atom} commands are here for
-memory allocation. We will use a file named \flecmd{PARM.lmp} that contains
+The \lmpcmd{extra/x/per/atom} commands are here for
+memory allocation.  We will use a file named
+\href{\filepath tutorial3/parameters.inc}{\dwlcmd{parameters.inc}} that contains
 all the parameters (masses, interaction energies, bond equilibrium
-distances, etc). In \flecmd{input.lmp}, add the following line:
+distances, etc).  In \flecmd{water.lmp}, add the following line:
 \begin{lstlisting}
- include ../PARM.lmp
+include parameters.inc
 \end{lstlisting}
 
-Download and save the
-\href{\filepath tutorial3/PARM.lmp}{\dwlcmd{PARM.lmp}}
-file next to the \textit{pureH2O/} folder. This example uses type labels, which
-are strings that map to each of the numeric atom types, bond types, angles types,
-etc. in the simulation. Type labels can be any string defined by the user, and we
-will use the atom types from the GROMOS 54A7 force field. In this example, the atom
-types are defined in \flecmd{PARM.lmp}, within which the \textit{mass}
-and \textit{pair\_coeff} of atoms of types OW and HW are for water and the remaining
-atom types are for the polymer molecule. Similarly, the \textit{bond\_coeff OW-HW}
-and \textit{angle\_coeff HW-OW-HW} are for water, while all the other parameters
-are for the polymer.
+\begin{note}
+This tutorial uses type labels \cite{typelabel_paper} to map each of the
+numeric atom types with a string (see the \flecmd{parameters.inc} file):
+\lmpcmdnote{labelmap atom 1 OE 2 C 3 HC 4 H 5 CPos 6 OAlc 7 OW 8 HW}
+Therefore, the oxygen and hydrogen atoms of water (respectively types 7 and 8)
+can be referred to as `OW' and `HW', respectively.  Similar maps are used for 
+the bond types, angle types, and dihedral types.
+\end{note}
 
 Let us create water molecules. To do so, let us import a molecule template called
-\flecmd{H2O-SPCFw.mol} and then randomly create 1050 molecules. Add the following
-lines into \flecmd{input.lmp}:
+\flecmd{water.mol} and then randomly create 700 molecules.  Add the following
+lines into \flecmd{water.lmp}:
 \begin{lstlisting}
- molecule h2omol H2O-SPCFw.mol
- create_atoms 0 random 1050 87910 NULL mol &
-     h2omol 454756 overlap 1.0 maxtry 50
+molecule h2omol water.mol
+create_atoms 0 random 700 87910 NULL mol h2omol 454756 &
+  overlap 1.0 maxtry 50
 \end{lstlisting}
-The \textit{overlap 1} option of the \textit{create\_atoms} command ensures
+The \lmpcmd{overlap 1.0} option of the \lmpcmd{create\_atoms} command ensures
 that no atoms are placed exactly in the same position, as this would cause the
-simulation to crash. The \textit{maxtry 50} asks LAMMPS to try at most 50 times
+simulation to crash. The \lmpcmd{maxtry 50} asks LAMMPS to try at most 50 times
 to insert the molecules, which is useful in case some insertion attempts are
-rejected due to overlap. In some cases, depending on the system and the values
-of \textit{overlap} and \textit{maxtry}, LAMMPS may not create the desired number
-of molecules. Always check the number of created atoms in the \textit{log} file
-after starting the simulation:
+rejected due to overlap.  In some cases, depending on the system and the values
+of \lmpcmd{overlap} and \lmpcmd{maxtry}, LAMMPS may not create the desired number
+of molecules.  Always check the number of created atoms in the \lmpcmd{log} file
+(or in the \guicmd{Output} window), where you should see:
 \begin{lstlisting}
- Created 3150 atoms
+Created 2100 atoms
 \end{lstlisting}
-When LAMMPS fails to create the desired number of molecules, a WARNING appears
-in the \textit{log} file. The molecule template called
-\href{\filepath tutorial3/pureH2O/H2O-SPCFw.mol}{\dwlcmd{H2O-SPCFw.mol}}
-must be downloaded and saved in the \flrcmd{pureH2O/} folder. This template contains
+When LAMMPS fails to create the desired number of molecules, a WARNING appears.
+The molecule template called \href{\filepath tutorial3/water.mol}{\dwlcmd{water.mol}}
+must be downloaded and saved next to \lmpcmd{water.lmp}.  This template contains
 the necessary structural information of a water molecule, such as the number of
-atoms, or the IDs of the atoms that are connected by bonds, angles, etc.
+atoms, or the IDs of the atoms that are connected by bonds and angles.
 
 Then, let us organize the atoms of types OW and HW of the water molecules in a
-group named \textit{H2O} and perform a small energy minimization. The energy
-minimization is mandatory here given the small \textit{overlap} value of 1 Ångstrom
-chosen in the \textit{create\_atoms} command. Add the following lines into \flecmd{input.lmp}:
+group named \lmpcmd{H2O} and perform a small energy minimization.  The energy
+minimization is mandatory here because of the small \lmpcmd{overlap} value
+of 1~Ångstrom chosen in the \lmpcmd{create\_atoms} command.  Add the following lines into \flecmd{water.lmp}:
 \begin{lstlisting}
- group H2O type OW HW
- minimize 1.0e-4 1.0e-6 100 1000
- reset_timestep 0
+group H2O type OW HW
+minimize 1.0e-4 1.0e-6 100 1000
+reset_timestep 0
 \end{lstlisting}
-In general, resetting the step of the simulation to 0 using the
-\textit{reset\_timestep} command is optional.
-It is used here because the number of iterations performed by the \textit{minimize}
-command is usually not a round number (since the minimization stops when one of
-four criteria is reached). Let us use the \textit{fix npt} to control the temperature
-of the molecules with a Nosé-Hoover thermostat and the pressure of the system with
-a Nosé-Hoover barostat \cite{nose1984unified, hoover1985canonical, martyna1994constant},
-by adding the following line into \flecmd{input.lmp}:
+Resetting the step of the simulation to 0 using the
+\lmpcmd{reset\_timestep} command is optional.
+It is used here because the number of iterations performed by the \lmpcmd{minimize}
+command is usually not a round number, since the minimization stops when one of
+four criteria is reached.  We will use \lmpcmd{fix npt} to control the temperature
+and pressure of the molecules with a Nosé-Hoover thermostat and barostat,
+respectively \cite{nose1984unified, hoover1985canonical, martyna1994constant}.
+Add the following line into \flecmd{water.lmp}:
 \begin{lstlisting}
- fix mynpt all npt temp 300 300 100 &
-     iso 1 1 1000
+fix mynpt all npt temp 300 300 100 iso 1 1 1000
 \end{lstlisting}
-The \textit{fix npt} allows us to impose both a temperature of $300\,\text{K}$
+The \lmpcmd{fix npt} allows us to impose both a temperature of $300\,\text{K}$
 (with a damping constant of $100\,\text{fs}$), and a pressure of 1 atmosphere
-(with a damping constant of $1000\,\text{fs}$). With the \textit{iso} keyword,
+(with a damping constant of $1000\,\text{fs}$).  With the \lmpcmd{iso} keyword,
 the three dimensions of the box will be re-scaled simultaneously.
 
-Let us output the system into images by adding the following commands to \flecmd{input.lmp}:
+Let us output the system into images by adding the following commands to \flecmd{water.lmp}:
 \begin{lstlisting}
- dump mydmp all image 1000 dump.*.ppm type &
-     type shiny 0.1 box no 0.01 &
-     view 0 90 zoom 1.8
- dump_modify mydmp backcolor white &
-   acolor OW red acolor HW white &
-   adiam OW 3 adiam HW 1.5
+dump viz all image 250 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 0 90 zoom 3 size 1000 500
+dump_modify viz backcolor white &
+  acolor OW red acolor HW white &
+  adiam OW 3 adiam HW 1.5
 \end{lstlisting}
-Let us also extract the volume and density in the terminal every 1000 steps:
+Let us also extract the volume and density every 500 steps:
 \begin{lstlisting}
- variable myvol equal vol
- variable myoxy equal count(H2O)/3
- variable myrho equal ${myoxy}/v_myvol
- thermo 1000
- thermo_style custom step temp etotal &
-     v_myvol v_myrho
+variable myvol equal vol
+variable myoxy equal count(H2O)/3
+variable NA equal 6.022e23
+variable Atom equal 1e-10
+variable M equal 0.018
+variable rho equal ${myoxy}*${M}/(v_myvol*${NA}*${Atom}^3)
+thermo 500
+thermo_style custom step temp etotal v_myvol v_rho
 \end{lstlisting}
-The variable \textit{myoxy} corresponds to the number of atoms divided by 3, i.e.
-the number of molecules, and the variable \textit{myrho} is the number of molecules
-divided by the volume of the simulation box, i.e.~the density (in $\mathrm{\AA{}}^{-3}$).
+The variable \lmpcmd{myoxy} represents the number of atoms divided by 3 ($N_\text{oxy}$),
+which corresponds to the number of molecules, and the variable \lmpcmd{myrho} is
+the density in kg/mol:
+\begin{equation}
+\rho = \dfrac{N_\text{oxy}}{V N_\text{A}},
+\end{equation}
+where $V$ is the volume in m$^3$, $N_\text{A}$ the Avogadro number, and
+$M = 0.018$\,kg/mol the molar mass of water.
 
-Finally, let us set the timestep to 1.0 fs, and run the simulation for 20 ps by
-adding the following lines into \flecmd{input.lmp}:
+Finally, let us set the timestep to 1.0 fs, and run the simulation for 15~ps by
+adding the following lines into \flecmd{water.lmp}:
 \begin{lstlisting}
- timestep 1.0
- run 20000
+timestep 1.0
+run 15000
 
- write_data H2O.data
+write_restart water.restart
 \end{lstlisting}
-% S.G. may be a binary restart file could be used here to illustrate the new functionalities of the GUI?
-The final state is written into \flecmd{H2O.data}. From the value of \textit{myrho},
-it should be clear that the system is quickly reaching its equilibrium
-density (see a snapshot of the equilibrated system in Fig.\,\ref{fig:PEG-water},
-and the evolution of the density in Fig.\,\ref{fig:PEG-density}).
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{PEG-water}
-\caption{Water reservoir after equilibration. Oxygen atoms are in red, and hydrogen
-atoms are in white.}
-\label{fig:PEG-water}
-\end{figure}
+The final state is saved in a binary file named \flecmd{water.restart}.
+Run the input using LAMMPS.  The system reaches its equilibrium temperature
+after just a few picoseconds, and its equilibrium density after approximately
+10~picoseconds (Fig.\,\ref{fig:PEG-density}).  A snapshot of the equilibrated
+system can also be seen in Fig.\,\ref{fig:PEG-water}.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-density}
-\caption{Evolution of the density $\rho$ of water with time $t$. The density
-quickly reaches a plateau.}
+\caption{a) Temperature of the water reservoir from
+\hyperref[all-atom-label]{Tutorial 3} with time $t$.  The horizontal dashed line is
+the target temperature of 300\,K. b) Evolution of the density $\rho$.}
 \label{fig:PEG-density}
 \end{figure}
 
+\begin{note}
+The binary file created by the \lmpcmdnote{write\_restart} command contains the
+complete state of the simulation, including atomic positions, velocities, and box dimensions (similar to \lmpcmdnote{write\_data}), but also the groups,
+the compute, or the \lmpcmdnote{atom\_style}.  Use the \guicmd{Inspect Restart} option of the LAMMPS-GUI to vizualize the content saved in \flecmd{water.restart}.
+\end{note}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{PEG-water}
+\caption{The water reservoir from \hyperref[all-atom-label]{Tutorial 3}
+after equilibration.  Oxygen atoms are in red, and hydrogen atoms are in white.}
+\label{fig:PEG-water}
+\end{figure}
+
 \subsubsection{Solvating the PEG in water}
-Now that the water reservoir is equilibrated, we can safely include the PEG polymer
-in the water. The PEG molecule topology was downloaded from the ATB repository
-\cite{malde2011automated, oostenbrink2004biomolecular}. It has a formula
-$\text{C}_{28}\text{H}_{58}\text{O}_{15}$, and the parameters are taken from
+
+Now that the water reservoir is equilibrated, we can safely add the PEG polymer
+to the water.  The PEG molecule topology was downloaded from the ATB repository
+\cite{malde2011automated, oostenbrink2004biomolecular}.  It has a formula
+$\text{C}_{16}\text{H}_{34}\text{O}_{9}$, and the parameters are taken from
 the GROMOS 54A7 force field \cite{schmid2011definition}.
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{PEG-in-vacuum}
-\caption{The PEG molecule in vacuum. The carbon atoms are in gray, the oxygen
+\includegraphics[width=0.45\linewidth]{PEG-in-vacuum}
+\caption{The PEG molecule from \hyperref[all-atom-label]{Tutorial 3}.
+The carbon atoms are in gray, the oxygen
 atoms in red, and the hydrogen atoms in white.}
 \label{fig:PEG-in-vacuum}
 \end{figure}
 
-Create a second folder alongside \flrcmd{pureH2O/} and call it \flrcmd{mergePEGH2O/}.
-Create a new blank file in it, call it \flecmd{input.lmp}. Within \flecmd{input.lmp},
-copy the same first lines as previously:
+Open the file named \flecmd{merge.lmp} that was downloaded
+alongside \lmpcmd{water.lmp} during the tutorial setup. It only contain one line:
 \begin{lstlisting}
- units real
- atom_style full
- bond_style harmonic
- angle_style harmonic
- dihedral_style harmonic
- pair_style lj/cut/coul/long 10
- kspace_style pppm 1e-5
- special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 &
-     angle yes dihedral yes
+read_restart water.restart
 \end{lstlisting}
-Then, import the previously generated data file \flecmd{H2O.data} as well as the \flecmd{PARM.lmp} file:
+Most of the commands that were initially present in \lmpcmd{water.lmp}, such as
+the \lmpcmd{units} of the \lmpcmd{atom\_style} commands do not need to be repeated,
+as they were saved within the \flecmd{.restart} file.  There is also no need to
+re-include the parameters from the \lmpcmd{.inc} file.  The \lmpcmd{kspace\_style}
+command, however, is not saved by the \lmpcmd{write\_restart} command and must be
+repeated. Since Ewald summation is not the most efficient choice for such dense
+system, let us use PPPM (for particle-particle particle-mesh) for the rest
+of the tutorial. Add the following command to \flecmd{merge.lmp}:
 \begin{lstlisting}
- read_data ../pureH2O/H2O.data &
-     extra/bond/per/atom 3 &
-     extra/angle/per/atom 6 &
-     extra/dihedral/per/atom 10 &
-     extra/special/per/atom 14
- include ../PARM.lmp
+kspace_style pppm 1e-5
 \end{lstlisting}
-Download the template called
-\href{\filepath tutorial3/mergePEGH2O/PEG-GROMOS.mol}{\dwlcmd{PEG-GROMOS.mol}}
-for the PEG molecule, and then create a single molecule in the middle of the box:
-\begin{lstlisting}
- molecule pegmol PEG-GROMOS.mol
- create_atoms 0 single 0 0 0 mol pegmol 454756
-\end{lstlisting}
-Let us create 2 groups to differentiate the PEG from the H2O, by adding the following
-lines into \flecmd{input.lmp}:
-\begin{lstlisting}
- group H2O type OW HW
- group PEG type C CPos H HC OAlc OE
-\end{lstlisting}
-Water molecules that are overlapping with the PEG must be deleted to avoid future crashing.
-Add the following line into \flecmd{input.lmp}:
-\begin{lstlisting}
- delete_atoms overlap 2.0 H2O PEG mol yes
-\end{lstlisting}
-Here the value of 2 Ångströms for the overlap cutoff was fixed arbitrarily and can
-be chosen through trial and error. If the cutoff is too small, the simulation will
-crash. If the cutoff is too large, too many water molecules will unnecessarily be
-deleted.
 
-Finally, let us use the \textit{fix npt} to control the temperature, as
-well as the pressure by allowing the box size to be rescaled along the \textit{x} axis:
+Using the molecule template for the polymer called
+\href{\filepath tutorial3/peg.mol}{\dwlcmd{peg.mol}},
+let us create a single molecule in the middle of the box by adding the following
+commands to \flecmd{merge.lmp}:
 \begin{lstlisting}
- fix mynpt all npt temp 300 300 100 x 1 1 1000
- timestep 1.0
+molecule pegmol mol.mol
+create_atoms 0 single 0 0 0 mol pegmol 454756
 \end{lstlisting}
-Once more, let us create images of the systems:
+Let us create a group for the atoms of the PEG (the previously created
+group H2O was saved by the restart and can be omitted):
 \begin{lstlisting}
- dump mydmp all image 1000 dump.*.ppm type &
-     type shiny 0.1 box no 0.01 &
-     view 0 90 zoom 1.8  fsaa yes bond atom 0.8
- dump_modify mydmp backcolor white &
-     acolor OW red acolor HW white &
-     acolor OE red acolor OAlc red &
-     acolor C gray acolor CPos gray &
-     acolor H white acolor HC white &
-     adiam OW 0.2 adiam HW 0.2 &
-     adiam C 3 adiam CPos 3 adiam OAlc 2.8 &
-     adiam H 1 adiam HC 1 adiam OE 2.8
- thermo 1000
+group PEG type C CPos H HC OAlc OE
 \end{lstlisting}
-Finally, let us perform a short equilibration and print the
-final state in a data file. Add the following lines to the data file:
+Water molecules that are overlapping with the PEG must be deleted to avoid future crashing.  Add the following line into \flecmd{merge.lmp}:
 \begin{lstlisting}
- run 30000
- write_data mix.data
+delete_atoms overlap 2.0 H2O PEG mol yes
 \end{lstlisting}
-From the outputs, you can make sure that the temperature remains close to the
-target value of $300~\text{K}$ throughout the entire simulation, and the that
-the volume and total energy are almost constant, suggesting
-that the system was close to equilibrium from the start. See a snapshot of the
-system in Fig.\,\ref{fig:PEG-solvated}.
+Here the value of 2.0~Ångströms for the overlap cutoff was fixed arbitrarily and can
+be chosen through trial and error.  If the cutoff is too small, the simulation will
+crash because atoms that are too close to each other undergo forces
+that can be extremely large. If the cutoff is too large, too many water
+molecules will unnecessarily be deleted.
+
+Let us use the \lmpcmd{fix npt} to control the temperature, as
+well as the pressure by allowing the box size to be rescaled along the $x$ axis:
+\begin{lstlisting}
+fix mynpt all npt temp 300 300 100 x 1 1 1000
+\end{lstlisting}
+Let us also use the \lmpcmd{recenter} command to always keep the PEG at
+the position $0 0 0$:
+\begin{lstlisting}
+fix myrct PEG recenter 0 0 0 shift all
+\end{lstlisting}
+Note that the \lmpcmd{recenter} command has no impact on the dynamics,
+it simply ensures that the system does not drift, which can be more practical for visualizing and analyzing the system
+
+Let us create images of the systems:
+\begin{lstlisting}
+dump viz all image 250 myimage-*.ppm type &
+  type shiny 0.1 box no 0.01 &
+  view 0 90 zoom 3 fsaa yes bond atom 0.8 size 1000 500
+dump_modify viz backcolor white &
+  acolor OW red acolor HW white &
+  acolor OE darkred acolor OAlc darkred &
+  acolor C gray acolor CPos gray &
+  acolor H white acolor HC white &
+  adiam OW 0.2 adiam HW 0.2 &
+  adiam C 2.8 adiam CPos 2.8 adiam OAlc 2.6 &
+  adiam H 1.4 adiam HC 1.4 adiam OE 2.6
+thermo 500
+\end{lstlisting}
+Finally, let us perform a short equilibration and save the
+final state to a \lmpcmd{.restart} file.  Add the following lines to the data file:
+\begin{lstlisting}
+timestep 1.0
+run 10000
+
+write_restart mix.restart
+\end{lstlisting}
+Run the simulation using LAMMPS.  From the outputs, you can make
+sure that the temperature remains close to the
+target value of $300~\text{K}$ throughout the entire simulation, and that
+the volume and total energy are almost constant, indicating
+that the system was in a reasonable configuration from the start.
+See a snapshot of the system in Fig.\,\ref{fig:PEG-solvated}.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-solvated}
-\caption{A single PEG molecule in water. Water molecules are represented as a
-transparent continuum field for clarity.}
+\caption{The PEG molecule solvated in water as simulated during
+\hyperref[all-atom-label]{Tutorial 3}.}
 \label{fig:PEG-solvated}
 \end{figure}
 
 \subsubsection{Stretching the PEG molecule}
-Here, a constant forcing is applied to the two ends of the PEG molecule until it
-stretches. Create a new folder next to the previously created folders, call it
-\flrcmd{pullonPEG/}, and create a new input file in it called \flecmd{input.lmp}.
-First, let us create a variable \textit{f0} corresponding to the magnitude of the
-force we are going to apply. Copy the following line into the \flecmd{input.lmp} file:
+
+Here, a constant force is applied to both ends of the PEG molecule until it
+stretches.  Open the file named \flecmd{pull.lmp}, which 
+only contains two lines:
 \begin{lstlisting}
-variable f0 equal 5
+kspace_style pppm 1e-5
+read_restart merge.restart
 \end{lstlisting}
-The force magnitude of $1\,\text{kcal/mol/\AA{}}$ corresponds to $67.2\,\text{pN}$
-and was chosen to be large enough to overcome the thermal agitation and the entropic
-contribution from both water and PEG molecules (it was chosen by trial and error).
-Then, copy the same lines as previously:
+Next, we'll create new atom groups, each containing a single atom: the oxygen
+atoms located at the ends of the chain.  The atoms of type \lmpcmd{OAlc}
+correspond to the hydroxy (alcohol) group oxygen atoms located at the ends
+of the PEG molecule, which we will use to apply the force.  Add the
+following lines to \flecmd{pull.lmp}:
 \begin{lstlisting}
- units real
- atom_style full
- bond_style harmonic
- angle_style harmonic
- dihedral_style harmonic
- pair_style lj/cut/coul/long 10
- kspace_style pppm 1e-5
- special_bonds lj 0.0 0.0 0.5 &
-     coul 0.0 0.0 1.0 &
-     angle yes dihedral yes
+group ends type OAlc
+variable xcm equal xcm(ends,x)
+variable oxies atom type==label2type(atom,OAlc)
+variable end1 atom v_oxies*(x>v_xcm)
+variable end2 atom v_oxies*(x<v_xcm)
+group topull1 variable end1
+group topull2 variable end2
 \end{lstlisting}
-Start the simulation from the equilibrated PEG-water system and include again the
-parameter file by adding the following lines to the \flecmd{input.lmp}:
+These lines identify the oxygen atoms (\lmpcmd{OAlc}) at the ends of the PEG
+molecule and calculates their center of mass along the $x$ axis. It then
+divides these atoms into two groups, \lmpcmd{OAlc} (i.e., the OAlc atom to
+the right of the center) and \lmpcmd{OAlc} (i.e., the OAlc atom to the right
+of the center), for applying force during the stretching process.
+
+Add the following \lmpcmd{dump} command to create images of the system:
 \begin{lstlisting}
- read_data ../mergePEGH2O/mix.data
- include ../PARM.lmp
+dump viz all image 250 myimage-*.ppm type &
+  type shiny 0.1 box no 0.01 &
+  view 0 90 zoom 3 fsaa yes bond atom 0.8 size 1000 500 
+dump_modify viz backcolor white &
+  acolor OW red acolor HW white &
+  acolor OE darkred acolor OAlc darkred &
+  acolor C gray acolor CPos gray &
+  acolor H white acolor HC white &
+  adiam OW 0.2 adiam HW 0.2 &
+  adiam C 2.8 adiam CPos 2.8 adiam OAlc 2.6 &
+  adiam H 1.4 adiam HC 1.4 adiam OE 2.6
 \end{lstlisting}
-Next, let us create some useful atom groups, including H2O and PEG (as previously),
-as well as 2 groups containing a single atom each, the oxygen atoms at the ends
-of the chain. Atoms of types OAlc correspond to the hydroxy (alcohol) group oxygen
-atoms located at the ends of the PEG molecule, which we are going to use to pull
-on the PEG molecule. Add the following lines to the \flecmd{input.lmp}:
-\begin{lstlisting}
- group H2O type OW HW
- group PEG type C CPos H HC OAlc OE
- group ends type OAlc
- variable xcm equal xcm(ends,x)
- variable oxies atom type==label2type(atom,OAlc)
- variable end1 atom v_oxies*(x>v_xcm)
- variable end2 atom v_oxies*(x<v_xcm)
- group topull1 variable end1
- group topull2 variable end2
-\end{lstlisting}
-Add the following \textit{dump} command to create images of the system:
-\begin{lstlisting}
- dump mydmp all image 1000 dump.*.ppm type &
-     type shiny 0.1 box no 0.01 &
-     view 0 90 zoom 1.8 fsaa yes bond atom 0.8
- dump_modify mydmp backcolor white &
-     acolor OW red acolor HW white &
-     acolor OE red acolor OAlc red &
-     acolor C gray acolor CPos gray &
-     acolor H white acolor HC white &
-     adiam OW 0.2 adiam HW 0.2 &
-     adiam C 3 adiam CPos 3 adiam OAlc 2.8 &
-     adiam H 1 adiam HC 1 adiam OE 2.8
-\end{lstlisting}
-Let us use a single Nosé-Hoover thermostat applied to all the atoms by adding the
-following lines to \flecmd{input.lmp}:
+Let us use a single Nosé-Hoover thermostat applied to all the atoms,
+and let us keep the PEG in the center of the box, by adding
+the following lines to \flecmd{pull.lmp}:
 \begin{lstlisting}
 timestep 1.0
 fix mynvt all nvt temp 300 300 100
+fix myrct PEG recenter 0 0 0 shift all
 \end{lstlisting}
-Let us also print the end-to-end distance of the PEG,
-here defined as the distance between the groups \textit{topull1}
-and \textit{topull2}, as well as the gyration
-radius of the molecule \cite{fixmanRadiusGyrationPolymer1962a}
-by adding the following lines to \flecmd{input.lmp}:
+
+To investigate the stretching of the PEG molecule, let us compute its radius of
+gyration \cite{fixmanRadiusGyrationPolymer1962a} and the angles of its dihedral
+constraints using the following conmmands:
 \begin{lstlisting}
- variable x1 equal xcm(topull1,x)
- variable x2 equal xcm(topull2,x)
- variable y1 equal xcm(topull1,y)
-variable y2 equal xcm(topull2,y)
- variable z1 equal xcm(topull1,z)
- variable z2 equal xcm(topull2,z)
- variable delta_r equal &
-     sqrt((v_x1-v_x2)^2+(v_y1-v_y2)^2 &
-     +(v_z1-v_z2)^2)
- compute rgyr PEG gyration
- thermo_style custom step temp etotal v_delta_r c_rgyr
- thermo 1000
+compute rgyr PEG gyration
+compute prop PEG property/local dtype
+compute dphi PEG dihedral/local phi
 \end{lstlisting}
-Finally, let us simulate 30 picoseconds without any external forcing:
+The radius of gyration can be directly printed with the \lmpcmd{thermo\_style} command:
 \begin{lstlisting}
- run 30000
+thermo_style custom step temp etotal c_rgyr
+thermo 250
+dump mydmp all local 100 pull.dat index c_dphi c_prop
 \end{lstlisting}
-This first run will serve as a benchmark to quantify later the changes induced
-by the forcing. Then, let us apply a forcing on the 2 selected oxygen atoms using two
-\textit{add\_force} commands, and run for an extra 30 ps:
+Since the dihedral angle $\phi$ is returned as a vector by the compute
+\lmpcmd{dihedral/local} command, it needs to be printed to a file using
+the \lmpcmd{dump} command.
+
+Finally, let us simulate 15 picoseconds without any external force:
 \begin{lstlisting}
- fix myaf1 topull1 addforce ${f0} 0 0
- fix myaf2 topull2 addforce -${f0} 0 0
- run 30000
+run 15000
 \end{lstlisting}
-Run the \flecmd{input.lmp} file using LAMMPS. From the generated images of the system,
-you should see that the PEG molecule eventually aligns
-in the direction of the force (as seen in Fig.\,\ref{fig:PEG-in-water}).
-The evolutions of the end-to-end distance and of the gyration radius over
-time show that the PEG is adjusting to the external forcing in less than
-$10~\text{ps}$ (Fig.\,\ref{fig:PEG-distance}).
+This initial run will serve as a benchmark to quantify the changes caused by
+the applied force in later steps. Next, let us apply a force to the two selected
+oxygen atoms using two \lmpcmd{add\_force} commands, and then run the simulation
+for an extra 15~ps:
+\begin{lstlisting}
+fix myaf1 topull1 addforce 10 0 0
+fix myaf2 topull2 addforce -10 0 0
+run 15000
+\end{lstlisting}
+The force magnitude of $10\,\text{kcal/mol/\AA{}}$ corresponds to $0.67\,\text{nN}$
+and was selected to be sufficiently large to overcome both thermal agitation and
+the entropic contributions from both the water and PEG molecules.
+
+Run the \flecmd{pull.lmp} file using LAMMPS. From the generated images of the system,
+you should observe that the PEG molecule eventually aligns
+in the direction of the applied force (as seen in Fig.\,\ref{fig:PEG-in-water}).
+The evolutions of the radius of gyration over
+time indicates that the PEG quickly adjusts to the external force
+(Fig.\,\ref{fig:PEG-distance}\,a).  Additionally, from the values of the dihedral angles
+printed in the \flecmd{pull.dat} file, you can create a histogram
+of dihedral angles for a specific type. For example, the angle $\phi$ for dihedrals
+of type 1 (C-C-OE-C) is shown in Fig.\,\ref{fig:PEG-distance}\,b.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-in-water}
-\caption{PEG molecule stretched along the $x$ direction in water. Water molecules
-are represented as a transparent continuum field for clarity.}
+\caption{PEG molecule stretched along the $x$ direction in water
+as simulated during \hyperref[all-atom-label]{Tutorial 3}.}
 \label{fig:PEG-in-water}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-distance}
-\caption{a) Evolution of the end-to-end distance $d_\text{end-to-end}$ of the
-PEG with time $t$. The forcing starts at $t = 5\,\text{ps}$. b) Evolution of
-the gyration radius $R_\text{gyr}$ of the PEG molecule.}
+\caption{a) Evolution of
+the radius of gyration $R_\text{gyr}$ of the PEG molecule
+from \hyperref[all-atom-label]{Tutorial 3}, with the force
+applied starting at $t = 15\,\text{ps}$. b) Histograms of the dihedral angles of type 2
+in the absence (orange) and in the presence (blue) of the applied force.}
 \label{fig:PEG-distance}
 \end{figure}
 
@@ -2149,6 +2165,7 @@ These lines are used to define the most basic parameters, including the
 potential. Here, \textit{lj/cut/tip4p/long} imposes a Lennard-Jones potential with
 a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential.
 
+% S.G. To fix, this was removed from tutorial 3 : The \textit{pppm} style refers to particle-particle particle-mesh . \cite{luty1996calculating}
 So far, the commands are relatively similar to those in the previous tutorial,
 \hyperref[all-atoms-label]{Polymer in water}, with two major differences: the use
 of \textit{lj/cut/tip4p/long} instead of \textit{lj/cut/coul/long}, and \textit{pppm/tip4p}
