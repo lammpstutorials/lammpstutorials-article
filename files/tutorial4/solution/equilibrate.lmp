@@ -1,0 +1,38 @@
+
+boundary p p f
+units real
+atom_style full
+bond_style harmonic
+angle_style harmonic
+pair_style lj/cut/tip4p/long O H O−H H−O−H 0.1546 12.0
+kspace_style pppm/tip4p 1.0e−5
+kspace_modify slab 3.0
+
+read_data minimize.data
+
+include parameters.inc
+include groups.inc
+
+fix mynvt all nvt temp 300 300 100
+fix myshk H2O shake 1.0e−5 200 0 b O−H a H−O−H
+fix myrct all recenter NULL NULL 0
+timestep 1.0
+
+dump mydmp all image 200 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 90 0 zoom 1.8
+dump_modify mydmp backcolor white &
+  acolor O red adiam O 2 &
+  acolor H white adiam H 1 &
+  acolor Na+ blue adiam Na+ 2.5 &
+  acolor Cl− cyan adiam Cl− 3 &
+  acolor WALL gray adiam WALL 3
+thermo 500
+
+variable walltopz equal xcm(walltop,z)
+variable wallbotz equal xcm(wallbot,z)
+variable deltaz equal v_walltopz−v_wallbotz
+fix myat1 all ave/time 100 1 100 v_deltaz file interwall_distance.dat
+
+run 30000
+
+write_data equilibrate.data nocoeff
