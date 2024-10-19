@@ -34,7 +34,7 @@ compute dphi PEG dihedral/local phi
 thermo_style custom step temp etotal c_rgyr # c_mphi
 thermo 250
 
-dump mydmp all local 100 pull.dat index c_dphi c_prop
+dump mydmp all local 50 pull.dat index c_dphi c_prop
 
 # S.G.: a histogram would be ok if one could select only dihedral 2 
 # fix myhisto all ave/histo 100 120 15000 0 180 90 c_dphi file pull.dat ave running mode vector
