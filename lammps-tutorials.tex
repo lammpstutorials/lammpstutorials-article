@@ -1798,7 +1798,7 @@ Created 2100 atoms
 \end{lstlisting}
 When LAMMPS fails to create the desired number of molecules, a WARNING appears.
 The molecule template called \href{\filepath tutorial3/water.mol}{\dwlcmd{water.mol}}
-must be downloaded and saved next to \lmpcmd{water.lmp}.  This template contains
+must be downloaded and saved next to \flecmd{water.lmp}.  This template contains
 the necessary structural information of a water molecule, such as the number of
 atoms, or the IDs of the atoms that are connected by bonds and angles.
 
@@ -1880,8 +1880,10 @@ the target temperature of 300\,K. b) Evolution of the density $\rho$.}
 
 \begin{note}
 The binary file created by the \lmpcmdnote{write\_restart} command contains the
-complete state of the simulation, including atomic positions, velocities, and box dimensions (similar to \lmpcmdnote{write\_data}), but also the groups,
-the compute, or the \lmpcmdnote{atom\_style}.  Use the \guicmd{Inspect Restart} option of the LAMMPS-GUI to vizualize the content saved in \flecmd{water.restart}.
+complete state of the simulation, including atomic positions, velocities, and
+box dimensions (similar to \lmpcmdnote{write\_data}), but also the groups,
+the compute, or the \lmpcmdnote{atom\_style}.  Use the \guicmd{Inspect Restart}
+option of the LAMMPS-GUI to vizualize the content saved in \flecmd{water.restart}.
 \end{note}
 
 \begin{figure}
@@ -1910,14 +1912,14 @@ atoms in red, and the hydrogen atoms in white.}
 \end{figure}
 
 Open the file named \flecmd{merge.lmp} that was downloaded
-alongside \lmpcmd{water.lmp} during the tutorial setup. It only contain one line:
+alongside \flecmd{water.lmp} during the tutorial setup. It only contain one line:
 \begin{lstlisting}
 read_restart water.restart
 \end{lstlisting}
-Most of the commands that were initially present in \lmpcmd{water.lmp}, such as
+Most of the commands that were initially present in \flecmd{water.lmp}, such as
 the \lmpcmd{units} of the \lmpcmd{atom\_style} commands do not need to be repeated,
 as they were saved within the \flecmd{.restart} file.  There is also no need to
-re-include the parameters from the \lmpcmd{.inc} file.  The \lmpcmd{kspace\_style}
+re-include the parameters from the \flecmd{.inc} file.  The \lmpcmd{kspace\_style}
 command, however, is not saved by the \lmpcmd{write\_restart} command and must be
 repeated. Since Ewald summation is not the most efficient choice for such dense
 system, let us use PPPM (for particle-particle particle-mesh) for the rest
@@ -2123,99 +2125,98 @@ in the absence (orange) and in the presence (blue) of the applied force.}
 \centering
 \includegraphics[width=0.55\linewidth]{NANOSHEAR}
 \caption{The electrolyte confined in a nanometer slit pore as simulated during
-\hyperref[sheared-confined-label]{Tutorial 4}. $\text{Na}^+$ ions are represented
+\hyperref[sheared-confined-label]{Tutorial 4}.  $\text{Na}^+$ ions are represented
 as purple spheres, $\text{Cl}^-$ ions as cyan spheres, water molecules are colored
-in red and white, and the walls are colored in gray. The arrows indicate the
+in red and white, and the walls are colored in gray.  The arrows indicate the
 imposed lateral motion of the walls.}
 \label{fig:NANOSHEAR}
 \end{figure}
 
 \noindent The objective of this tutorial is to simulate an electrolyte
-nanoconfined and sheared by two walls (Fig.\,\ref{fig:NANOSHEAR}). The density
+nanoconfined and sheared between two walls (Fig.\,\ref{fig:NANOSHEAR}).  The density
 and velocity profiles of the fluid in the direction normal to the walls are
 extracted to highlight the effect of confining a fluid on its local properties.
-This tutorial illustrates some key aspects of combining a fluid and a solid in
-the same simulation. A major difference from the previous tutorial,
+This tutorial demonstrates key concepts of combining a fluid and a solid in
+the same simulation.  A major difference from the previous tutorial,
 \hyperref[all-atoms-label]{Polymer in water}, is that here a rigid four-point
-water model named TIP4P is used \cite{abascal2005general}. TIP4P is one of
-the most common water models due to its high accuracy.
+water model named TIP4P/2005 is used \cite{abascal2005general}.
+
+\begin{note}
+Four-point water models such as TIP4P/2005 are widely used as they offer a
+good compromise between accuracy and computational cost \cite{kadaoluwa2021systematic}.
+\end{note}
 
 \subsubsection{System preparation}
-The fluid and walls must first be generated and then equilibrated at a reasonable
-temperature and pressure.
+
+The fluid and walls must first be generated, followed by equilibration at the
+desired temperature and pressure.
 
 \paragraph{System generation}
-Create a new folder called \flrcmd{systemcreation/}. Within
-\flrcmd{systemcreation/}, open a blank file called \flecmd{input.lmp}, and
-copy the following lines into it:
+
+To set up this tutorial, select \guicmd{Start Tutorial 4} from the
+\guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.
+The editor should display the following content corresponding to \flecmd{create.lmp}:
 \begin{lstlisting}
 boundary p p f
 units real
 atom_style full
 bond_style harmonic
 angle_style harmonic
-pair_style lj/cut/tip4p/long O H O-H H-O-H &
-    0.1546 12.0
-kspace_style pppm/tip4p 1.0e-4
+pair_style lj/cut/tip4p/long O H O-H H-O-H 0.1546 12.0
+kspace_style pppm/tip4p 1.0e-5
 kspace_modify slab 3.0
 \end{lstlisting}
-
 These lines are used to define the most basic parameters, including the
-\textit{atom}, \textit{bond}, and \textit{angle} styles, as well as interaction
-potential. Here, \textit{lj/cut/tip4p/long} imposes a Lennard-Jones potential with
+\lmpcmd{atom}, \lmpcmd{bond}, and \lmpcmd{angle} styles, as well as interaction
+potential.  Here, \lmpcmd{lj/cut/tip4p/long} imposes a Lennard-Jones potential with
 a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential.
 
-% S.G. To fix, this was removed from tutorial 3 : The \textit{pppm} style refers to particle-particle particle-mesh . \cite{luty1996calculating}
 So far, the commands are relatively similar to those in the previous tutorial,
 \hyperref[all-atoms-label]{Polymer in water}, with two major differences: the use
-of \textit{lj/cut/tip4p/long} instead of \textit{lj/cut/coul/long}, and \textit{pppm/tip4p}
-instead of \textit{pppm}. When using \textit{lj/cut/tip4p/long} and \textit{pppm/tip4p},
+of \lmpcmd{lj/cut/tip4p/long} instead of \lmpcmd{lj/cut/coul/long}, and \lmpcmd{pppm/tip4p}
+instead of \lmpcmd{pppm}.  When using \lmpcmd{lj/cut/tip4p/long} and \lmpcmd{pppm/tip4p},
 the interactions resemble the conventional Lennard-Jones and Coulomb interactions,
-except that they are specifically designed for the four-point water model. Therefore,
-LAMMPS automatically creates a four-point water molecule using atoms of type O as
-oxygen and atoms of type H as hydrogen. The fourth massless atom (\textit{M}) of the
+except that they are specifically designed for the four-point water model.  As a result,
+LAMMPS automatically creates a four-point water molecule, assigning type O
+atoms as oxygen and type H atoms as hydrogen.  The fourth massless atom (M) of the
 TIP4P water molecule does not have to be defined explicitly, and the value of
-$0.1546\,\text{$\text{\AA{}}$}$ corresponds to the \textit{O-M} distance of the
-TIP4P-2005 water model \cite{abascal2005general}. All the other atoms in the simulation
-are treated normally with long-range Coulomb interactions. Another novelty, here, is
-the use of \textit{kspace\_modify slab 3.0} that is combined with the non-periodic
-boundaries along the $z$ coordinate: \textit{boundary p p f}. With the \textit{slab}
+$0.1546\,\text{$\text{\AA{}}$}$ corresponds to the O-M distance of the
+TIP4P-2005 water model \cite{abascal2005general}.  All other atoms in the simulation
+are treated as usual, with long-range Coulomb interactions.  Another novelty, here, is
+the use of \lmpcmd{kspace\_modify slab 3.0} that is combined with the non-periodic
+boundaries along the $z$ coordinate: \lmpcmd{boundary p p f}.  With the \lmpcmd{slab}
 option, the system is treated as periodical along $z$, but with an empty volume inserted
 between the periodic images of the slab, and the interactions along $z$ effectively turned off.
 
-Let us create the box by adding the following lines to \flecmd{input.lmp}:
-
+Let us create the box and the label maps by adding the following lines to \flecmd{create.lmp}:
 \begin{lstlisting}
 lattice fcc 4.04
 region box block -3 3 -3 3 -5 5
-create_box 5 box &
-bond/types 1 &
-angle/types 1 &
-extra/bond/per/atom 2 &
-extra/angle/per/atom 1 &
-extra/special/per/atom 2
+create_box 5 box bond/types 1 angle/types 1 &
+  extra/bond/per/atom 2 extra/angle/per/atom 1 &
+  extra/special/per/atom 2
 labelmap atom 1 O 2 H 3 Na+ 4 Cl- 5 WALL
 labelmap bond 1 O-H
 labelmap angle 1 H-O-H
 \end{lstlisting}
-The \textit{lattice} command defines the unit cell. Here, the face-centered cubic (fcc) lattice
+The \lmpcmd{lattice} command defines the unit cell. Here, the face-centered cubic (fcc) lattice
 with a scale factor of 4.04 has been chosen for the future positioning of the atoms
-of the walls. The \textit{region} command defines a geometric region of space. By choosing
-\textit{xlo=-3} and \textit{xhi=3}, and because we have previously chosen a lattice with a scale
+of the walls. The \lmpcmd{region} command defines a geometric region of space.  By choosing
+$\text{xlo}=-3$ and $\text{xlo}=3$, and because we have previously chosen a lattice with a scale
 factor of 4.04, the region box extends from $-12.12~\text{\AA{}}$ to $12.12~\text{\AA{}}$
-along the $x$ direction. The \textit{create\_box} command creates a simulation box with
+along the $x$ direction.  The \lmpcmd{create\_box} command creates a simulation box with
 5 types of atoms: the oxygen and hydrogen of the water molecules, the two ions ($\text{Na}^+$,
-$\text{Cl}^-$), and the atom of the walls. The \textit{create\_box} command extends over 6
-lines thanks to the $\&$ character. The second and third lines are used to indicate that the
+$\text{Cl}^-$), and the atom of the walls.  The \lmpcmd{create\_box} command extends over 6
+lines thanks to the $\&$ character.  The second and third lines are used to indicate that the
 simulation contains 1 type of bond and 1 type of angle (both required by the water molecule).
-The parameters for these bond and angle constraints will be given later. The three last
-lines are for memory allocation. The \textit{labelmap} command assigns alphanumeric type labels
+The parameters for these bond and angle constraints will be given later.  The three last
+lines are for memory allocation.  The \lmpcmd{labelmap} command assigns alphanumeric type labels
 to each numeric atom type, bond type, and angle type.
 
-Now, we can add atoms to the system. First, let us create two sub-regions corresponding
+Now, we can add atoms to the system.  First, let us create two sub-regions corresponding
 respectively to the two solid walls, and create a larger region from the union of the
-two regions. Then, let us create atoms of type WALL within the two regions. Add the
-following lines to \flecmd{input.lmp}:
+two regions.  Then, let us create atoms of type WALL within the two regions.  Add the
+following lines to \flecmd{create.lmp}:
 \begin{lstlisting}
 region rbotwall block -3 3 -3 3 -4 -3
 region rtopwall block -3 3 -3 3 3 4
@@ -2223,52 +2224,52 @@ region rwall union 2 rbotwall rtopwall
 create_atoms WALL region rwall
 \end{lstlisting}
 Atoms will be placed in the positions of the previously defined lattice, thus
-forming fcc solids. To add the water molecules, first download the molecule
-template called \href{\filepath tutorial4/RigidH2O.txt}{\dwlcmd{RigidH2O.txt}}
-and place it within \flrcmd{systemcreation/}. The template contains all the
+forming fcc solids.
+
+To add the water molecules, the molecule
+template called \href{\filepath water.mol}{\dwlcmd{water.mol}}
+must be located next to \flecmd{}.  The template contains all the
 necessary information concerning the water molecule, such as atom positions,
-bonds, and angles. Add the following lines to \flecmd{input.lmp}:
+bonds, and angles.  Add the following lines to \flecmd{create.lmp}:
 \begin{lstlisting}
 region rliquid block INF INF INF INF -2 2
-molecule h2omol RigidH2O.txt
+molecule h2omol water.mol
 create_atoms 0 region rliquid mol h2omol 482793
 \end{lstlisting}
-Within the last three lines, a \textit{region} named \textit{rliquid} is
-created based on the last defined lattice, \textit{fcc 4.04}. \textit{rliquid}
-will be used for depositing the water molecules. The \textit{molecule} command
-opens up the molecule template called \flecmd{RigidH2O.txt}, and names the
-associated molecule \textit{h2omol}. The new molecules are placed on the
-\textit{fcc 4.04} lattice by the \textit{create\_atoms} command. The first
-parameter is 0, meaning that the atom IDs from the \flecmd{RigidH2O.txt} file
-will be used. The number \textit{482793} is a seed that is required by LAMMPS,
+Within the last three lines, a \lmpcmd{region} named \lmpcmd{rliquid} is
+created based on the last defined lattice, \lmpcmd{fcc 4.04}. \lmpcmd{rliquid}
+will be used for depositing the water molecules. The \lmpcmd{molecule} command
+opens up the molecule template called \flecmd{water.mol}, and names the
+associated molecule \lmpcmd{h2omol}.  The new molecules are placed on the
+\lmpcmd{fcc 4.04} lattice by the \lmpcmd{create\_atoms} command.  The first
+parameter is 0, meaning that the atom IDs from the \flecmd{water.mol} file
+will be used. The number \lmpcmd{482793} is a seed that is required by LAMMPS,
 it can be any positive integer.
 
 Finally, let us create 30 ions (15 $\text{Na}^+$ and 15 $\text{Cl}^-$) in between
-the water molecules, by adding the following commands to \flecmd{input.lmp}:
+the water molecules, by adding the following commands to \flecmd{create.lmp}:
 \begin{lstlisting}
-create_atoms Na+ random 15 52802 rliquid &
-    overlap 0.3 maxtry 500
-create_atoms Cl- random 15 90182 rliquid &
-    overlap 0.3 maxtry 500
+create_atoms Na+ random 15 5802 rliquid overlap 0.3 maxtry 500
+create_atoms Cl- random 15 9012 rliquid overlap 0.3 maxtry 500
 set type Na+ charge 1
 set type Cl- charge -1
 \end{lstlisting}
-Each \textit{create\_atoms} command will add 15 ions at random positions
-within the \textit{rliquid} region, ensuring that there is no \textit{overlap}
+Each \lmpcmd{create\_atoms} command will add 15 ions at random positions
+within the \lmpcmd{rliquid} region, ensuring that there is no \lmpcmd{overlap}
 with existing molecules. Feel free to increase or decrease the salt concentration
 by changing the number of desired ions. To keep the system charge neutral,
 always insert the same number of $\text{Na}^+$ and $\text{Cl}^-$, unless there
 are other charges in the system. The charges of the newly added ions are specified
-by the two \textit{set} commands.
+by the two \lmpcmd{set} commands.
 
 Before starting the simulation, we still need to define the parameters of the
 simulation: the mass of the 5 atom types (O, H, $\text{Na}^+$, $\text{Cl}^-$,
 and wall), the pairwise interaction parameters (here, the parameters for the
 Lennard-Jones potential), and the bond and angle parameters. Copy the following
-lines into \flecmd{input.lmp}:
+lines into \flecmd{create.lmp}:
 \begin{lstlisting}
-include ../PARM.lmp
-include ../GROUP.lmp
+include parameters.inc
+include groups.inc
 \end{lstlisting}
 Create a new text file called \flecmd{PARM.lmp} next to the \flrcmd{systemcreation/}
 folder. Copy the following lines into \flecmd{PARM.lmp}:
@@ -2285,6 +2286,9 @@ pair_coeff Na+ Na+ 0.04690 2.4299
 pair_coeff Cl- Cl- 0.1500 4.04470
 pair_coeff WALL WALL 11.697 2.574
 pair_coeff O WALL 0.4 2.86645
+
+bond_coeff O-H 0 0.9572
+angle_coeff H-O-H 0 104.52
 \end{lstlisting}
 Each \textit{mass} command assigns a mass in grams/mole to an atom type.
 Each \textit{pair\_coeff} assigns respectively the depth of the LJ potential
@@ -2384,7 +2388,7 @@ bond_style harmonic
 angle_style harmonic
 pair_style lj/cut/tip4p/long O H O-H H-O-H &
     0.1546 12.0
-kspace_style pppm/tip4p 1.0e-4
+kspace_style pppm/tip4p 1.0e-5
 kspace_modify slab 3.0
 
 read_data ../systemcreation/system.data
@@ -2402,7 +2406,7 @@ timestep ($0.5\,\text{fs}$) and a low temperature of $T = 1\,\text{K}$:
 \begin{lstlisting}
 fix mynve fluid nve/limit 0.1
 fix myber fluid temp/berendsen 1 1 100
-fix myshk H2O shake 1.0e-4 200 0 b O-H a H-O-H
+fix myshk H2O shake 1.0e-5 200 0 b O-H a H-O-H
 timestep 0.5
 \end{lstlisting}
 Just like \textit{fix nve}, the \textit{fix nve/limit} command performs constant
@@ -2483,7 +2487,7 @@ bond_style harmonic
 angle_style harmonic
 pair_style lj/cut/tip4p/long O H O-H H-O-H &
     0.1546 12.0
-kspace_style pppm/tip4p 1.0e-4
+kspace_style pppm/tip4p 1.0e-5
 kspace_modify slab 3.0
 
 read_data ../minimization/system.data
@@ -2493,7 +2497,7 @@ include ../GROUP.lmp
 
 fix mynve all nve
 fix myber all temp/berendsen 300 300 100
-fix myshk H2O shake 1.0e-4 200 0 b O-H a H-O-H
+fix myshk H2O shake 1.0e-5 200 0 b O-H a H-O-H
 fix myrct all recenter NULL NULL 0
 timestep 1.0
 \end{lstlisting}
@@ -2555,9 +2559,8 @@ units real
 atom_style full
 bond_style harmonic
 angle_style harmonic
-pair_style lj/cut/tip4p/long O H O-H H-O-H &
-    0.1546 12.0
-kspace_style pppm/tip4p 1.0e-4
+pair_style lj/cut/tip4p/long O H O-H H-O-H 0.1546 12.0
+kspace_style pppm/tip4p 1.0e-5
 kspace_modify slab 3.0
 \end{lstlisting}
 Let us import the previously equilibrated data, include the parameter and group
@@ -2575,7 +2578,7 @@ fix_modify myber1 temp Tfluid
 compute Twall wall temp/partial 0 1 1
 fix myber2 wall temp/berendsen 300 300 100
 fix_modify myber2 temp Twall
-fix myshk H2O shake 1.0e-4 200 0 b O-H a H-O-H
+fix myshk H2O shake 1.0e-5 200 0 b O-H a H-O-H
 fix myrct all recenter NULL NULL 0
 \end{lstlisting}
 One difference with the previous input is that, here, two thermostats are used,
