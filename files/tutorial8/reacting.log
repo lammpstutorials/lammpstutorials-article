@@ -1,0 +1,387 @@
+LAMMPS (29 Aug 2024 - Development - patch_29Aug2024-566-g224468d946-modified)
+# 20 styrene molecules
+# three reactions defined
+
+units real
+
+boundary p p p
+
+atom_style full
+
+kspace_style pppm 1.0e-4
+
+pair_style lj/class2/coul/long 8.5
+
+angle_style class2
+
+bond_style class2
+
+dihedral_style class2
+
+improper_style class2
+
+special_bonds lj/coul 0 0 1
+pair_modify tail yes mix sixthpower
+
+variable T equal 530
+
+read_data composite.data    extra/bond/per/atom 5   extra/angle/per/atom 15   extra/dihedral/per/atom 15   extra/improper/per/atom 25   extra/special/per/atom 25
+Reading data file ...
+  orthogonal box = (-43.564937 -24.84 -24.84) to (43.564937 24.84 24.84)
+  4 by 2 by 4 MPI processor grid
+  reading atom labelmap ...
+  reading bond labelmap ...
+  reading angle labelmap ...
+  reading dihedral labelmap ...
+  reading improper labelmap ...
+  reading atoms ...
+  17040 atoms
+  reading velocities ...
+  17040 velocities
+  scanning bonds ...
+  8 = max bonds/atom
+  scanning angles ...
+  18 = max angles/atom
+  scanning dihedrals ...
+  27 = max dihedrals/atom
+  scanning impropers ...
+  26 = max impropers/atom
+  orthogonal box = (-43.564937 -24.84 -24.84) to (43.564937 24.84 24.84)
+  4 by 2 by 4 MPI processor grid
+  reading bonds ...
+  17568 bonds
+  reading angles ...
+  27144 angles
+  reading dihedrals ...
+  38304 dihedrals
+  reading impropers ...
+  9048 impropers
+Finding 1-2 1-3 1-4 neighbors ...
+  special bond factors lj:    0        0        1       
+  special bond factors coul:  0        0        1       
+     3 = max # of 1-2 neighbors
+     6 = max # of 1-3 neighbors
+    34 = max # of special neighbors
+  special bonds CPU = 0.003 seconds
+  read_data CPU = 0.422 seconds
+
+molecule mol1 2styrene_unreacted.molecule_template
+Read molecule template mol1:
+2styrene_unreacted
+  1 molecules
+  0 fragments
+  32 atoms with max type 4
+  32 bonds with max type 11
+  48 angles with max type 19
+  64 dihedrals with max type 21
+  16 impropers with max type 9
+molecule mol2 2styrene_reacted.molecule_template
+Read molecule template mol2:
+2styrene_reacted
+  1 molecules
+  0 fragments
+  32 atoms with max type 6
+  33 bonds with max type 13
+  54 angles with max type 22
+  79 dihedrals with max type 19
+  14 impropers with max type 8
+molecule mol3 chain_plus_styrene_unreacted.molecule_template
+Read molecule template mol3:
+chain_plus_styrene_unreacted
+  1 molecules
+  0 fragments
+  46 atoms with max type 6
+  47 bonds with max type 13
+  75 angles with max type 22
+  105 dihedrals with max type 21
+  21 impropers with max type 9
+molecule mol4 chain_plus_styrene_reacted.molecule_template
+Read molecule template mol4:
+chain_plus_styrene_reacted
+  1 molecules
+  0 fragments
+  46 atoms with max type 6
+  48 bonds with max type 13
+  81 angles with max type 22
+  121 dihedrals with max type 19
+  19 impropers with max type 8
+molecule mol5 chain_chain_unreacted.molecule_template
+Read molecule template mol5:
+chain_chain_unreacted
+  1 molecules
+  0 fragments
+  50 atoms with max type 6
+  51 bonds with max type 13
+  84 angles with max type 22
+  118 dihedrals with max type 19
+  20 impropers with max type 8
+molecule mol6 chain_chain_reacted.molecule_template
+Read molecule template mol6:
+chain_chain_reacted
+  1 molecules
+  0 fragments
+  50 atoms with max type 6
+  52 bonds with max type 13
+  90 angles with max type 22
+  135 dihedrals with max type 19
+  18 impropers with max type 3
+
+thermo 100
+
+ dump 1 all xyz 5 test_vis.xyz
+ dump_modify 1 types labels
+
+fix rxn1 all bond/react stabilization yes statted_grp .03  react rxn1 all 1 0 3.0 mol1 mol2 2styrene_map stabilize_steps 100  react rxn2 all 1 0 3.0 mol3 mol4 chain_plus_styrene_map stabilize_steps 100  react rxn3 all 1 0 5.0 mol5 mol6 chain_chain_map stabilize_steps 100
+dynamic group bond_react_MASTER_group defined
+dynamic group statted_grp_REACT defined
+
+fix 1 statted_grp_REACT nvt temp $T $T 100
+fix 1 statted_grp_REACT nvt temp 530 $T 100
+fix 1 statted_grp_REACT nvt temp 530 530 100
+
+fix 4 bond_react_MASTER_group temp/rescale 1 $T $T 1 1
+fix 4 bond_react_MASTER_group temp/rescale 1 530 $T 1 1
+fix 4 bond_react_MASTER_group temp/rescale 1 530 530 1 1
+
+thermo_style custom step temp press density f_rxn1[*]
+
+dump mydmp all image 1000 dump.mixing.*.ppm   type type shiny 0.1 box no 0.01   view 90 0 zoom 3 fsaa yes bond atom 0.5
+dump_modify mydmp backcolor white   acolor cp gray acolor c=1 gray   acolor c= gray acolor c1 gray   acolor c2 gray acolor c3 gray   adiam cp 0.3 adiam c=1 0.3   adiam c= 0.3 adiam c1 0.3   adiam c2 0.3 adiam c3 0.3   acolor hc white adiam hc 0.15
+
+run 10000
+
+CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
+
+Your simulation uses code contributions which should be cited:
+
+- Type Label Framework: https://doi.org/10.1021/acs.jpcb.3c08419
+
+@Article{Gissinger24,
+ author = {Jacob R. Gissinger, Ilia Nikiforov, Yaser Afshar, Brendon Waters, Moon-ki Choi, Daniel S. Karls, Alexander Stukowski, Wonpil Im, Hendrik Heinz, Axel Kohlmeyer, and Ellad B. Tadmor},
+ title = {Type Label Framework for Bonded Force Fields in LAMMPS},
+ journal = {J. Phys. Chem. B},
+ year =    2024,
+ volume =  128,
+ number =  13,
+ pages =   {3282--3297}
+}
+
+- fix bond/react: reacter.org doi:10.1016/j.polymer.2017.09.038, doi:10.1021/acs.macromol.0c02012, doi:10.1016/j.cpc.2024.109287
+
+@Article{Gissinger17,
+ author = {J. R. Gissinger and B. D. Jensen and K. E. Wise},
+ title = {Modeling Chemical Reactions in Classical Molecular Dynamics Simulations},
+ journal = {Polymer},
+ year =    2017,
+ volume =  128,
+ pages =   {211--217}
+}
+
+@Article{Gissinger20,
+ author = {J. R. Gissinger, B. D. Jensen, K. E. Wise},
+ title = {{REACTER}: A Heuristic Method for Reactive Molecular Dynamics},
+ journal = {Macromolecules},
+ year =    2020,
+ volume =  53,
+ number =  22,
+ pages =   {9953--9961}
+}
+
+@Article{Gissinger24,
+ author = {J. R. Gissinger, B. D. Jensen, K. E. Wise},
+ title = {Molecular Modeling of Reactive Systems with REACTER},
+ journal = {Computer Physics Communications},
+ year =    2024,
+ volume =  304,
+ number =  109287
+}
+
+CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
+
+PPPM initialization ...
+WARNING: System is not charge neutral, net charge = 211.0002 (../kspace.cpp:327)
+  using 12-bit tables for long-range coulomb (../kspace.cpp:342)
+  G vector (1/distance) = 0.23127035
+  grid = 24 15 15
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.027453738
+  estimated relative force accuracy = 8.2676115e-05
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 1430 192
+Generated 21 of 21 mixed pair_coeff terms from sixthpower/sixthpower mixing rule
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 10.5
+  ghost atom cutoff = 10.5
+  binsize = 5.25, bins = 17 10 10
+  2 neighbor lists, perpetual/occasional/extra = 1 1 0
+  (1) pair lj/class2/coul/long, perpetual
+      attributes: half, newton on
+      pair build: half/bin/newton
+      stencil: half/bin/3d
+      bin: standard
+  (2) fix bond/react, occasional, copy from (1)
+      attributes: half, newton on
+      pair build: copy
+      stencil: none
+      bin: none
+WARNING: Inconsistent image flags (../domain.cpp:1051)
+Per MPI rank memory allocation (min/avg/max) = 32.51 | 32.79 | 33.02 Mbytes
+   Step          Temp          Press         Density       f_rxn1[1]      f_rxn1[2]      f_rxn1[3]   
+         0   298.3984      -24144.161      0.90138966     0              0              0            
+       100   317.12543     -23641.373      0.90138966     10             0              0            
+       200   342.36604     -22254.575      0.90138966     18             1              0            
+       300   375.87897     -25699.25       0.90138966     39             1              0            
+       400   399.29506     -33571.288      0.90138966     46             2              1            
+       500   428.64868     -22351.337      0.90138966     51             2              1            
+       600   464.68131     -22345.484      0.90138966     62             2              3            
+       700   487.35323     -24882.257      0.90138966     72             5              3            
+       800   511.89447     -28279.283      0.90138966     79             5              7            
+       900   526.87566     -23173.782      0.90138966     91             5              8            
+      1000   537.34262     -35844.62       0.90138966     108            6              11           
+      1100   533.6426      -24228.593      0.90138966     117            7              14           
+      1200   532.76962     -21273.253      0.90138966     130            7              14           
+      1300   526.35883     -72351.302      0.90138966     144            9              21           
+      1400   523.46226     -23945.752      0.90138966     152            10             24           
+      1500   527.3631      -64236.774      0.90138966     163            10             29           
+      1600   530.68611     -22190.24       0.90138966     170            11             32           
+      1700   537.89254     -29548.003      0.90138966     177            16             39           
+      1800   530.00797     -25225.436      0.90138966     185            18             41           
+      1900   525.65296     -23490.831      0.90138966     192            18             47           
+      2000   527.39485     -27701.027      0.90138966     203            18             52           
+      2100   523.45448     -42546.811      0.90138966     209            19             58           
+      2200   535.89151     -21568.627      0.90138966     216            21             60           
+      2300   531.07864     -57525.741      0.90138966     225            24             68           
+      2400   524.26329     -23892.95       0.90138966     231            26             73           
+      2500   524.61444     -86341.258      0.90138966     238            26             82           
+      2600   534.68257     -70198.049      0.90138966     244            26             87           
+      2700   530.98793     -42534.012      0.90138966     247            26             92           
+      2800   533.76332     -27608.667      0.90138966     251            27             97           
+      2900   533.78979     -41702.798      0.90138966     253            29             103          
+      3000   525.16978     -22643.037      0.90138966     258            30             106          
+      3100   517.48036     -21000.425      0.90138966     259            30             108          
+      3200   529.2017      -21346.664      0.90138966     265            30             110          
+      3300   536.10912     -31231.711      0.90138966     272            32             117          
+      3400   537.02725     -37911.193      0.90138966     277            33             121          
+      3500   530.93259     -22396.607      0.90138966     277            35             125          
+      3600   528.13469     -21814.173      0.90138966     280            35             128          
+      3700   517.83078     -21200.667      0.90138966     284            36             128          
+      3800   525.54451     -23435.456      0.90138966     287            37             130          
+      3900   528.83527     -22071.802      0.90138966     287            39             133          
+      4000   537.43715     -36020.512      0.90138966     290            39             135          
+      4100   530.78254     -24825.789      0.90138966     293            40             138          
+      4200   526.54868     -46742.244      0.90138966     296            41             141          
+      4300   527.72543     -74744.878      0.90138966     299            41             148          
+      4400   533.09653     -23792.778      0.90138966     301            41             153          
+      4500   533.64141     -21470.574      0.90138966     306            41             154          
+      4600   530.84648     -29037.25       0.90138966     307            41             157          
+      4700   530.85489     -60822.345      0.90138966     308            43             161          
+      4800   532.46792     -22572.514      0.90138966     308            44             165          
+      4900   524.76672     -72738.064      0.90138966     311            44             167          
+      5000   528.8476      -23472.633      0.90138966     315            46             169          
+      5100   527.37093     -54242.805      0.90138966     316            46             174          
+      5200   530.94909     -22246.038      0.90138966     318            48             174          
+      5300   527.34005     -24186.731      0.90138966     320            49             181          
+      5400   531.88397     -32729.466      0.90138966     322            52             184          
+      5500   526.73417     -47147.786      0.90138966     323            52             189          
+      5600   525.7216      -23295.304      0.90138966     328            54             190          
+      5700   530.76543     -22402.358      0.90138966     328            54             196          
+      5800   535.6975      -22368.925      0.90138966     331            55             196          
+      5900   530.55763     -21638.175      0.90138966     332            57             198          
+      6000   529.38145     -22888.751      0.90138966     333            57             200          
+      6100   529.62406     -23678.819      0.90138966     336            58             204          
+      6200   531.95386     -75223.663      0.90138966     341            58             207          
+      6300   531.31459     -22650.93       0.90138966     342            58             208          
+      6400   531.17242     -27525.187      0.90138966     345            58             209          
+      6500   532.22945     -91380.639      0.90138966     348            58             213          
+      6600   524.07873     -53387.097      0.90138966     348            58             216          
+      6700   534.41485     -22598.316      0.90138966     349            58             219          
+      6800   532.89836     -26773.814      0.90138966     352            58             221          
+      6900   536.22206     -32284.66       0.90138966     353            58             223          
+      7000   530.87667     -49147.627      0.90138966     355            58             225          
+      7100   527.93607     -47776.383      0.90138966     356            58             229          
+      7200   530.98785     -58656.392      0.90138966     357            58             231          
+      7300   527.78316     -23610.615      0.90138966     357            58             232          
+      7400   530.52885     -24456.803      0.90138966     358            58             233          
+      7500   530.65299     -40913.27       0.90138966     358            58             236          
+      7600   529.31749     -25470.141      0.90138966     358            59             237          
+      7700   535.84625     -24654.775      0.90138966     359            60             239          
+      7800   531.48742     -51482.795      0.90138966     360            60             241          
+      7900   521.18081     -22084.569      0.90138966     362            60             241          
+      8000   527.19381     -24435.541      0.90138966     363            61             242          
+      8100   532.01622     -43831.411      0.90138966     364            63             245          
+      8200   531.06166     -22882.364      0.90138966     364            63             246          
+      8300   529.57507     -29375.044      0.90138966     366            64             248          
+      8400   526.67675     -23603.747      0.90138966     368            64             249          
+      8500   531.4078      -22447.002      0.90138966     368            64             250          
+      8600   531.71212     -21890.035      0.90138966     368            64             250          
+      8700   525.28344     -47288.401      0.90138966     371            64             251          
+      8800   531.39889     -22603.362      0.90138966     372            64             252          
+      8900   536.34939     -22957.113      0.90138966     372            64             252          
+      9000   530.93354     -22354.201      0.90138966     372            64             252          
+      9100   531.2901      -37969.088      0.90138966     372            64             255          
+      9200   526.72025     -22193.415      0.90138966     372            64             256          
+      9300   528.57921     -31480.012      0.90138966     372            64             258          
+      9400   527.23533     -23284.755      0.90138966     372            64             258          
+      9500   534.65424     -23868.947      0.90138966     372            64             259          
+      9600   530.63723     -22709.023      0.90138966     373            64             259          
+      9700   526.41068     -25546.075      0.90138966     374            64             261          
+      9800   526.43333     -30328.764      0.90138966     376            65             262          
+      9900   525.67087     -23250.215      0.90138966     376            65             264          
+     10000   528.06194     -23265.101      0.90138966     379            66             265          
+Loop time of 71.0111 on 32 procs for 10000 steps with 17040 atoms
+
+Performance: 12.167 ns/day, 1.973 hours/ns, 140.823 timesteps/s, 2.400 Matom-step/s
+96.0% CPU use with 32 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 12.268     | 14.868     | 17.567     |  42.0 | 20.94
+Bond    | 6.6011     | 8.1636     | 9.7583     |  34.9 | 11.50
+Kspace  | 3.6564     | 7.8569     | 11.907     |  91.6 | 11.06
+Neigh   | 6.5738     | 6.611      | 6.653      |   0.9 |  9.31
+Comm    | 3.3416     | 3.3948     | 3.4689     |   1.8 |  4.78
+Output  | 2.3606     | 3.0113     | 4.0848     |  25.5 |  4.24
+Modify  | 25.656     | 26.675     | 27.333     |   8.6 | 37.56
+Other   |            | 0.4307     |            |       |  0.61
+
+Nlocal:          532.5 ave         620 max         455 min
+Histogram: 3 2 5 4 2 6 4 2 2 2
+Nghost:        4655.94 ave        4832 max        4422 min
+Histogram: 1 3 1 5 3 3 3 7 2 4
+Neighs:         103459 ave      127103 max       79654 min
+Histogram: 4 3 2 5 1 3 6 3 2 3
+
+Total # of neighbors = 3310698
+Ave neighs/atom = 194.28979
+Ave special neighs/atom = 9.9558685
+Neighbor list builds = 1630
+Dangerous builds = 0
+
+write_restart restart_longrun
+System init for write_restart ...
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb (../kspace.cpp:342)
+  G vector (1/distance) = 0.23127035
+  grid = 24 15 15
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.027453738
+  estimated relative force accuracy = 8.2676115e-05
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 1430 192
+Generated 21 of 21 mixed pair_coeff terms from sixthpower/sixthpower mixing rule
+write_data restart_longrun.data nofix
+System init for write_data ...
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb (../kspace.cpp:342)
+  G vector (1/distance) = 0.23127035
+  grid = 24 15 15
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.027453738
+  estimated relative force accuracy = 8.2676115e-05
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 1430 192
+Generated 21 of 21 mixed pair_coeff terms from sixthpower/sixthpower mixing rule
+Total wall time: 0:01:11

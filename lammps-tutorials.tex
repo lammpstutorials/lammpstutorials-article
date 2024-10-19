@@ -3972,9 +3972,9 @@ and $x_0 = 5~\mathrm{\AA{}}$.}
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{REACT}
-\caption{Polymer melt made in nylon and carbon nanotubes (CNTs) simulated during
-\hyperref[bond-react-label]{Tutorial 8}. The water molecules (in red and white)
-are created by the polymerization of nylon simulation using REACTER.}
+\caption{Initial configuration for \hyperref[bond-react-label]{Tutorial 8}.
+The system consists of 1000 styrene molecules packed around a single-walled
+CNT with a total system density of 0.9 g/cm$^3$.}
 \label{fig:REACT}
 \end{figure}
 
@@ -4210,13 +4210,12 @@ fix myrxns all bond/react &
 \end{verbatim}
 }
 With the \textit{stabilization} keyword, the \textit{bond/react} command will
-try to stabilize the atoms involved in the reaction using the nve/limit
+try to stabilize the atoms involved in the reaction using the \textit{nve/limit}
 command with a maximum displacement of $0.03\,\mathrm{\AA{}}$ (a command that was
-used, for instance, in \hyperref[sheared-confined-label]{Tutorial 4}). The two
-\textit{react} keywords contain specific details about the two reactions
-involved here, i.e. a transformation of \textit{mol1} into \textit{mol2} based
-on the atom map \textit{rxn1$\_$stp1$\_$map}, and a transformation of
-\textit{mol3} into \textit{mol4} based on the atom map \textit{rxn1$\_$stp2$\_$map}.
+used, for instance, in \hyperref[sheared-confined-label]{Tutorial 4}). The three
+\textit{react} keywords contain specific details about the three reactions
+involved here, e.g. a transformation of \textit{mol1} into \textit{mol2} based
+on the atom map \textit{M-M.rxnmap}.
 
 Finally, let us use the \textit{fix nvt} to perform the integration of the
 equation of motion and control the temperature of the system:
@@ -4235,7 +4234,8 @@ run 50000
 Here, in addition, the \textit{thermo custom} command was called and was
 asked to print the cumulative reaction counts from \textit{fix myrxns}.
 The number of reaction, $N_r$, can be seen to increase with time
-(Fig.\,\ref{fig:evolution-reacting})
+(Fig.\,\ref{fig:evolution-reacting}). The final configuration with polymer
+chain unwrapped from the simulation box is shown in Fig.\,\ref{fig:REACTED_VMD}).
 
 \begin{figure}
 \centering
@@ -4243,6 +4243,17 @@ The number of reaction, $N_r$, can be seen to increase with time
 \caption{Evolution of the reaction counts, $\text{N}_r$,
 as a function of the time, $t$, during the reaction.}
 \label{fig:evolution-reacting}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{REACTED_VMD}
+    \caption{Polymer composite model of polystyrene and a CNT created in
+    \hyperref[bond-react-label]{Tutorial 8} by in-situ polymerization of
+    styrene using REACTER. The polymer chains are shown unwrapped from
+    the simulation box and the CNT (red) is also shifted along its axis
+    for visibility. Image rendered using VMD.}
+    \label{fig:REACTED_VMD}
 \end{figure}
 
 \section*{Author Contributions}
