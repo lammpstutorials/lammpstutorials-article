@@ -21,7 +21,7 @@ dump_modify viz backcolor white &
  adiam C 2.8 adiam CPos 2.8 adiam OAlc 2.6 &
  adiam H 1.4 adiam HC 1.4 adiam OE 2.6
 
-#fix mynpt all npt temp 300 300 100 x 1 1 1000
+fix mynpt all npt temp 300 300 100 x 1 1 1000
 fix myrct PEG recenter 0 0 0 shift all
 timestep 1.0
 

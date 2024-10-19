@@ -7,7 +7,6 @@ variable xcm equal xcm(ends,x)
 variable oxies atom type==label2type(atom,OAlc)
 variable end1 atom v_oxies*(x>v_xcm)
 variable end2 atom v_oxies*(x<v_xcm)
-
 group topull1 variable end1
 group topull2 variable end2
 
@@ -23,6 +22,10 @@ dump_modify viz backcolor white &
   adiam C 2.8 adiam CPos 2.8 adiam OAlc 2.6 &
   adiam H 1.4 adiam HC 1.4 adiam OE 2.6
 
+timestep 1.0
+fix mynvt all nvt temp 300 300 100
+fix myrct PEG recenter 0 0 0 shift all
+
 compute rgyr PEG gyration
 compute prop PEG property/local dtype
 compute dphi PEG dihedral/local phi
@@ -35,10 +38,6 @@ dump mydmp all local 100 pull.dat index c_dphi c_prop
 
 # S.G.: a histogram would be ok if one could select only dihedral 2 
 # fix myhisto all ave/histo 100 120 15000 0 180 90 c_dphi file pull.dat ave running mode vector
-
-timestep 1.0
-fix mynvt all nvt temp 300 300 100
-fix myrct PEG recenter 0 0 0 shift all
 
 run 15000
 

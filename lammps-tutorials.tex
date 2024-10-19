@@ -1987,109 +1987,100 @@ transparent continuum field for clarity.}
 
 \subsubsection{Stretching the PEG molecule}
 
-Here, a constant forcing is applied to the two ends of the PEG molecule until it
-stretches. Create a new folder next to the previously created folders, call it
-\flrcmd{pullonPEG/}, and create a new input file in it called \flecmd{input.lmp}.
-First, let us create a variable \textit{f0} corresponding to the magnitude of the
-force we are going to apply. Copy the following line into the \flecmd{input.lmp} file:
+Here, a constant force is applied to both ends of the PEG molecule until it
+stretches.  Open the file named \flecmd{pull.lmp}.  Similar to \flecmd{merge.lmp},
+it only contains two lines:
 \begin{lstlisting}
-variable f0 equal 5
+kspace_style ewald 1e-5
+read_restart merge.restart
 \end{lstlisting}
-The force magnitude of $1\,\text{kcal/mol/\AA{}}$ corresponds to $67.2\,\text{pN}$
-and was chosen to be large enough to overcome the thermal agitation and the entropic
-contribution from both water and PEG molecules (it was chosen by trial and error).
-Then, copy the same lines as previously:
+Next, we'll create new atom groups, each containing a single atom: the oxygen
+atoms located at the ends of the chain.  The atoms of type \lmpcmd{OAlc}
+correspond to the hydroxy (alcohol) group oxygen atoms located at the ends
+of the PEG molecule, which we will use to apply the force.  Add the
+following lines to \flecmd{pull.lmp}:
 \begin{lstlisting}
- units real
- atom_style full
- bond_style harmonic
- angle_style harmonic
- dihedral_style harmonic
- pair_style lj/cut/coul/long 10
- kspace_style pppm 1e-5
- special_bonds lj 0.0 0.0 0.5 &
-     coul 0.0 0.0 1.0 &
-     angle yes dihedral yes
+group ends type OAlc
+variable xcm equal xcm(ends,x)
+variable oxies atom type==label2type(atom,OAlc)
+variable end1 atom v_oxies*(x>v_xcm)
+variable end2 atom v_oxies*(x<v_xcm)
+group topull1 variable end1
+group topull2 variable end2
 \end{lstlisting}
-Start the simulation from the equilibrated PEG-water system and include again the
-parameter file by adding the following lines to the \flecmd{input.lmp}:
+These lines identify the oxygen atoms (\lmpcmd{OAlc}) at the ends of the PEG
+molecule and calculates their center of mass along the $x$ axis. It then
+divides these atoms into two groups, \lmpcmd{OAlc} (i.e., the OAlc atom to
+the right of the center) and \lmpcmd{OAlc} (i.e., the OAlc atom to the right
+of the center), for applying force during the stretching process.
+
+Add the following \lmpcmd{dump} command to create images of the system:
 \begin{lstlisting}
- read_data ../mergePEGH2O/mix.data
- include ../PARM.lmp
+dump viz all image 250 myimage-*.ppm type &
+  type shiny 0.1 box no 0.01 &
+  view 0 90 zoom 3 fsaa yes bond atom 0.8 size 1000 500 
+dump_modify viz backcolor white &
+  acolor OW red acolor HW white &
+  acolor OE darkred acolor OAlc darkred &
+  acolor C gray acolor CPos gray &
+  acolor H white acolor HC white &
+  adiam OW 0.2 adiam HW 0.2 &
+  adiam C 2.8 adiam CPos 2.8 adiam OAlc 2.6 &
+  adiam H 1.4 adiam HC 1.4 adiam OE 2.6
 \end{lstlisting}
-Next, let us create some useful atom groups, including H2O and PEG (as previously),
-as well as 2 groups containing a single atom each, the oxygen atoms at the ends
-of the chain. Atoms of types OAlc correspond to the hydroxy (alcohol) group oxygen
-atoms located at the ends of the PEG molecule, which we are going to use to pull
-on the PEG molecule. Add the following lines to the \flecmd{input.lmp}:
-\begin{lstlisting}
- group H2O type OW HW
- group PEG type C CPos H HC OAlc OE
- group ends type OAlc
- variable xcm equal xcm(ends,x)
- variable oxies atom type==label2type(atom,OAlc)
- variable end1 atom v_oxies*(x>v_xcm)
- variable end2 atom v_oxies*(x<v_xcm)
- group topull1 variable end1
- group topull2 variable end2
-\end{lstlisting}
-Add the following \textit{dump} command to create images of the system:
-\begin{lstlisting}
- dump mydmp all image 1000 dump.*.ppm type &
-     type shiny 0.1 box no 0.01 &
-     view 0 90 zoom 1.8 fsaa yes bond atom 0.8
- dump_modify mydmp backcolor white &
-     acolor OW red acolor HW white &
-     acolor OE red acolor OAlc red &
-     acolor C gray acolor CPos gray &
-     acolor H white acolor HC white &
-     adiam OW 0.2 adiam HW 0.2 &
-     adiam C 3 adiam CPos 3 adiam OAlc 2.8 &
-     adiam H 1 adiam HC 1 adiam OE 2.8
-\end{lstlisting}
-Let us use a single Nosé-Hoover thermostat applied to all the atoms by adding the
-following lines to \flecmd{input.lmp}:
+Let us use a single Nosé-Hoover thermostat applied to all the atoms,
+and let us keep the PEG in the center of the box, by adding
+the following lines to \flecmd{pull.lmp}:
 \begin{lstlisting}
 timestep 1.0
 fix mynvt all nvt temp 300 300 100
+fix myrct PEG recenter 0 0 0 shift all
 \end{lstlisting}
-Let us also print the end-to-end distance of the PEG,
-here defined as the distance between the groups \textit{topull1}
-and \textit{topull2}, as well as the gyration
-radius of the molecule \cite{fixmanRadiusGyrationPolymer1962a}
-by adding the following lines to \flecmd{input.lmp}:
+
+To investigate the stretching of the PEG molecule, let us compute its radius of
+gyration \cite{fixmanRadiusGyrationPolymer1962a} and the angles of its dihedral
+constraints using the following conmmands:
 \begin{lstlisting}
- variable x1 equal xcm(topull1,x)
- variable x2 equal xcm(topull2,x)
- variable y1 equal xcm(topull1,y)
-variable y2 equal xcm(topull2,y)
- variable z1 equal xcm(topull1,z)
- variable z2 equal xcm(topull2,z)
- variable delta_r equal &
-     sqrt((v_x1-v_x2)^2+(v_y1-v_y2)^2 &
-     +(v_z1-v_z2)^2)
- compute rgyr PEG gyration
- thermo_style custom step temp etotal v_delta_r c_rgyr
- thermo 1000
+compute rgyr PEG gyration
+compute prop PEG property/local dtype
+compute dphi PEG dihedral/local phi
 \end{lstlisting}
-Finally, let us simulate 30 picoseconds without any external forcing:
+The radius of gyration can be directly printed with the \lmpcmd{thermo\_style} command:
 \begin{lstlisting}
- run 30000
+thermo_style custom step temp etotal c_rgyr
+thermo 250
+dump mydmp all local 100 pull.dat index c_dphi c_prop
 \end{lstlisting}
-This first run will serve as a benchmark to quantify later the changes induced
-by the forcing. Then, let us apply a forcing on the 2 selected oxygen atoms using two
-\textit{add\_force} commands, and run for an extra 30 ps:
+Since the dihedral angle $\phi$ is returned as a vector by the compute
+\lmpcmd{dihedral/local} command, it needs to be printed to a file using
+the \lmpcmd{dump} command.
+
+Finally, let us simulate 15 picoseconds without any external force:
 \begin{lstlisting}
- fix myaf1 topull1 addforce ${f0} 0 0
- fix myaf2 topull2 addforce -${f0} 0 0
- run 30000
+run 15000
 \end{lstlisting}
-Run the \flecmd{input.lmp} file using LAMMPS. From the generated images of the system,
-you should see that the PEG molecule eventually aligns
-in the direction of the force (as seen in Fig.\,\ref{fig:PEG-in-water}).
-The evolutions of the end-to-end distance and of the gyration radius over
-time show that the PEG is adjusting to the external forcing in less than
-$10~\text{ps}$ (Fig.\,\ref{fig:PEG-distance}).
+This initial run will serve as a benchmark to quantify the changes caused by
+the applied force in later steps. Next, let us apply a force to the two selected
+oxygen atoms using two \lmpcmd{add\_force} commands, and then run the simulation
+for an extra 15~ps:
+\begin{lstlisting}
+fix myaf1 topull1 addforce 10 0 0
+fix myaf2 topull2 addforce -10 0 0
+run 15000
+\end{lstlisting}
+The force magnitude of $10\,\text{kcal/mol/\AA{}}$ corresponds to $0.67\,\text{nN}$
+and was selected to be sufficiently large to overcome both thermal agitation and
+the entropic contributions from both the water and PEG molecules.
+
+Run the \flecmd{pull.lmp} file using LAMMPS. From the generated images of the system,
+you should observe that the PEG molecule eventually aligns
+in the direction of the applied force (as seen in Fig.\,\ref{fig:PEG-in-water}).
+The evolutions of the radius of gyration over
+time indicates that the PEG quickly adjusts to the external force
+(Fig.\,\ref{fig:PEG-distance}\,a).  Additionally, from the values of the dihedral angles
+printed in the \flecmd{pull.dat} file, you can create a histogram
+of dihedral angles for a specific type. For example, the angle $\phi$ for dihedrals
+of type 1 (C-C-OE-C) is shown in Fig.\,\ref{fig:PEG-distance}\,b.
 
 \begin{figure}
 \centering
