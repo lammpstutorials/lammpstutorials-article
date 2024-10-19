@@ -1,3 +1,2 @@
 
-kspace_style ewald 1e-5
 read_restart water.restart

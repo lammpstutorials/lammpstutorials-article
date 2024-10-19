@@ -1,5 +1,5 @@
 
-kspace_style ewald 1e-5
+kspace_style pppm 1e-5
 read_restart merge.restart
 
 group ends type OAlc

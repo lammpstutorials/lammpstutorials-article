@@ -1,25 +1,16 @@
   using 8 OpenMP thread(s) per MPI task
 using multi-threaded neighbor list subroutines
-Reading data file ...
-  orthogonal box = (-22.309834 -11.154917 -11.154917) to (22.309834 11.154917 11.154917)
+Reading restart file ...
+  restart file = 29 Aug 2024, LAMMPS = 29 Aug 2024
+  restoring atom style full from restart
+  orthogonal box = (-22.256144 -11.128072 -11.128072) to (22.256144 11.128072 11.128072)
   1 by 1 by 1 MPI processor grid
-  reading atom labelmap ...
-  reading bond labelmap ...
-  reading angle labelmap ...
-  reading dihedral labelmap ...
-  reading atoms ...
+  restoring pair style lj/cut/coul/long/omp from restart
+  restoring bond style harmonic/omp from restart
+  restoring angle style harmonic/omp from restart
+  restoring dihedral style harmonic/omp from restart
   2100 atoms
-  reading velocities ...
-  2100 velocities
-  scanning bonds ...
-  5 = max bonds/atom
-  scanning angles ...
-  7 = max angles/atom
-  orthogonal box = (-22.309834 -11.154917 -11.154917) to (22.309834 11.154917 11.154917)
-  1 by 1 by 1 MPI processor grid
-  reading bonds ...
   1400 bonds
-  reading angles ...
   700 angles
 Finding 1-2 1-3 1-4 neighbors ...
   special bond factors lj:    0        0        0.5     
@@ -27,13 +18,9 @@ Finding 1-2 1-3 1-4 neighbors ...
      2 = max # of 1-2 neighbors
      1 = max # of 1-3 neighbors
      1 = max # of 1-4 neighbors
-  1400 = # of 1-3 neighbors before angle trim
-  1400 = # of 1-3 neighbors after angle trim
-  1400 = # of 1-4 neighbors before dihedral trim
-  0 = # of 1-4 neighbors after dihedral trim
-    16 = max # of special neighbors
-  special bonds CPU = 0.002 seconds
-  read_data CPU = 0.063 seconds
+    15 = max # of special neighbors
+  special bonds CPU = 0.001 seconds
+  read_restart CPU = 0.005 seconds
 Read molecule template pegmol:
 PEG molecule
   1 molecules
@@ -44,21 +31,23 @@ PEG molecule
   116 dihedrals with max type 4
   0 impropers with max type 0
 Created 59 atoms
-  using lattice units in orthogonal box = (-22.309834 -11.154917 -11.154917) to (22.309834 11.154917 11.154917)
+  using lattice units in orthogonal box = (-22.256144 -11.128072 -11.128072) to (22.256144 11.128072 11.128072)
   create_atoms CPU = 0.000 seconds
-2100 atoms in group H2O
 59 atoms in group PEG
 System init for delete_atoms ...
-Ewald initialization ...
-WARNING: System is not charge neutral, net charge = -0.007 (src/kspace.cpp:327)
+PPPM initialization ...
   using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
-  G vector (1/distance) = 0.29619569
-  estimated absolute RMS force accuracy = 0.0038164443
-  estimated relative force accuracy = 1.1493109e-05
-  KSpace vectors: actual max1d max3d = 1398 12 7812
-                  kxmax kymax kzmax  = 12 7 7
+  G vector (1/distance) = 0.30147332
+  grid = 32 20 20
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0034375004
+  estimated relative force accuracy = 1.035193e-05
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 28431 12800
 Generated 28 of 28 mixed pair_coeff terms from geometric mixing rule
-Last active /omp style is kspace_style ewald/omp
+Unused restart file global fix info:
+  fix style: npt, fix ID: mynpt
+Last active /omp style is kspace_style pppm/omp
 Neighbor list info ...
   update: every = 1 steps, delay = 0 steps, check = yes
   max neighbors/atom: 2000, page size: 100000
@@ -77,9 +66,9 @@ Neighbor list info ...
       stencil: half/bin/3d
       bin: standard
 WARNING: Ignoring 'compress yes' for molecular system (src/delete_atoms.cpp:141)
-Deleted 93 atoms, new total = 2066
-Deleted 62 bonds, new total = 1396
-Deleted 31 angles, new total = 773
+Deleted 96 atoms, new total = 2063
+Deleted 64 bonds, new total = 1394
+Deleted 32 angles, new total = 772
 Deleted 0 dihedrals, new total = 116
 
 CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
@@ -90,15 +79,17 @@ The log file lists these citations in BibTeX format.
 
 CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
 
-Ewald initialization ...
+PPPM initialization ...
   using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
-  G vector (1/distance) = 0.29580367
-  estimated absolute RMS force accuracy = 0.0037751365
-  estimated relative force accuracy = 1.1368712e-05
-  KSpace vectors: actual max1d max3d = 1398 12 7812
-                  kxmax kymax kzmax  = 12 7 7
+  G vector (1/distance) = 0.30147173
+  grid = 32 20 20
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0033561701
+  estimated relative force accuracy = 1.0107007e-05
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 28431 12800
 Generated 28 of 28 mixed pair_coeff terms from geometric mixing rule
-Last active /omp style is kspace_style ewald/omp
+Last active /omp style is kspace_style pppm/omp
 Neighbor list info ...
   update: every = 1 steps, delay = 0 steps, check = yes
   max neighbors/atom: 2000, page size: 100000
@@ -113,67 +104,69 @@ Neighbor list info ...
       bin: standard
 Setting up Verlet run ...
   Unit style    : real
-  Current step  : 0
+  Current step  : 15000
   Time step     : 1
-Per MPI rank memory allocation (min/avg/max) = 39.58 | 39.58 | 39.58 Mbytes
+Per MPI rank memory allocation (min/avg/max) = 21.57 | 21.57 | 21.57 Mbytes
    Step          Temp          E_pair         E_mol          TotEng         Press          Volume    
-         0   292.04142     -6906.08        841.26192     -4267.1943     -133.29779      22208.491    
-       500   298.28658     -7011.2941      813.61131     -4361.6177     -269.31726      22165.643    
-      1000   298.47509     -7068.0675      793.53481     -4437.3072      481.50467      21699.806    
-      1500   299.20591     -7017.2388      754.24855     -4421.2663      133.05223      21656.603    
-      2000   288.20776     -7004.9166      778.13225     -4452.7582     -310.6904       21798.621    
-      2500   295.68062     -7044.4038      802.18458     -4422.1948     -626.76572      21814.468    
-      3000   311.19        -7052.5776      807.73024     -4329.3569      574.0593       21888.289    
-      3500   300.13849     -7122.4913      760.70867     -4514.3184      49.422373      21853.951    
-      4000   302.67737     -6953.8422      772.36891     -4318.3813     -359.31208      22043.197    
-      4500   303.09838     -7043.774       829.56846     -4348.522      -46.131422      22092.539    
-      5000   299.63725     -7104.3302      837.34727     -4422.604      -49.054583      21841.508    
-      5500   300.26059     -7156.8959      829.9615      -4478.7185      728.13809      21741.557    
-      6000   305.21049     -7178.4288      788.6031      -4511.1414     -630.46346      21840.31     
-      6500   305.16449     -7085.6705      843.82655     -4363.4428     -768.19246      21821.17     
-      7000   297.41554     -7162.2886      824.9586      -4506.6265      681.26185      21523.218    
-      7500   307.1045      -6983.5245      772.69555     -4320.4863      81.205267      21878.449    
-      8000   301.22679     -7072.6247      805.80018     -4412.6614     -372.01075      21937.809    
-      8500   293.71928     -7209.9471      810.9105      -4591.0849     -94.535259      21485.293    
-      9000   294.21913     -7140.0469      804.04213     -4524.9763     -151.30325      21382.063    
-      9500   295.99208     -7239.6536      864.16669     -4553.5453      584.03957      21331.84     
-     10000   302.20461     -7206.7975      858.22255     -4488.3929      756.28581      21175.158    
-Loop time of 143.564 on 8 procs for 10000 steps with 2066 atoms
+     15000   293.96336     -6937.5692      809.92925     -4320.8147     -324.16098      22048.535    
+     15500   303.55223     -7052.6966      800.95294     -4385.981       159.56378      22126.265    
+     16000   299.6112      -7008.7809      788.22037     -4379.0211     -521.48094      22225.118    
+     16500   297.84365     -7024.1933      799.14999     -4394.368      -549.95427      22078.839    
+     17000   304.4771      -7151.7783      828.86978     -4451.4613     -1196.0884      21797.644    
+     17500   297.2736      -7140.0735      799.15477     -4513.7472     -64.748238      21483.268    
+     18000   290.38437     -7125.4702      772.583       -4568.0599     -147.3855       21603.548    
+     18500   300.21995     -7069.3954      797.33657     -4426.7778     -858.54751      21744.808    
+     19000   304.5521      -7222.3234      892.996       -4457.4191     -299.2864       21693.475    
+     19500   300.26279     -7212.0992      892.97173     -4473.5832      317.78627      21838.822    
+     20000   296.16369     -7088.4563      790.03404     -4478.0727     -324.19543      21847.186    
+     20500   294.2846      -7173.3437      862.60611     -4501.9378     -10.865505      21688.816    
+     21000   307.82989     -7129.0355      839.23064     -4397.7499      483.90536      21507.857    
+     21500   298.67151     -7128.1414      811.38427     -4480.9935      508.12832      21488.203    
+     22000   293.33114     -7103.4785      840.9377      -4459.6014      1534.3863      21399.357    
+     22500   300.04254     -7088.2347      811.98583     -4432.0583      13.37241       21477.914    
+     23000   297.09602     -7052.5148      855.06239     -4371.3725     -99.140411      21868.119    
+     23500   304.62568     -7119.4796      835.07566     -4412.0435     -66.958474      21978.769    
+     24000   301.80283     -7134.5524      806.69856     -4472.8438      399.88923      21660.515    
+     24500   296.45896     -7156.1096      838.01791     -4495.9273      456.62139      21628.227    
+     25000   297.98494     -7041.5008      828.93835     -4381.0188      146.83299      21852.916    
+Loop time of 68.6241 on 8 procs for 10000 steps with 2063 atoms
 
-Performance: 6.018 ns/day, 3.988 hours/ns, 69.655 timesteps/s, 143.908 katom-step/s
-751.4% CPU use with 1 MPI tasks x 8 OpenMP threads
+Performance: 12.590 ns/day, 1.906 hours/ns, 145.721 timesteps/s, 300.623 katom-step/s
+713.6% CPU use with 1 MPI tasks x 8 OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 39.858     | 39.858     | 39.858     |   0.0 | 27.76
-Bond    | 0.84586    | 0.84586    | 0.84586    |   0.0 |  0.59
-Kspace  | 75.721     | 75.721     | 75.721     |   0.0 | 52.74
-Neigh   | 5.4482     | 5.4482     | 5.4482     |   0.0 |  3.79
-Comm    | 1.7952     | 1.7952     | 1.7952     |   0.0 |  1.25
-Output  | 15.713     | 15.713     | 15.713     |   0.0 | 10.95
-Modify  | 4.0466     | 4.0466     | 4.0466     |   0.0 |  2.82
-Other   |            | 0.1353     |            |       |  0.09
+Pair    | 21.648     | 21.648     | 21.648     |   0.0 | 31.55
+Bond    | 0.39399    | 0.39399    | 0.39399    |   0.0 |  0.57
+Kspace  | 25.793     | 25.793     | 25.793     |   0.0 | 37.59
+Neigh   | 2.7759     | 2.7759     | 2.7759     |   0.0 |  4.05
+Comm    | 0.82742    | 0.82742    | 0.82742    |   0.0 |  1.21
+Output  | 10.283     | 10.283     | 10.283     |   0.0 | 14.98
+Modify  | 6.8375     | 6.8375     | 6.8375     |   0.0 |  9.96
+Other   |            | 0.06478    |            |       |  0.09
 
-Nlocal:           2066 ave        2066 max        2066 min
+Nlocal:           2063 ave        2063 max        2063 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Nghost:          11794 ave       11794 max       11794 min
+Nghost:          11827 ave       11827 max       11827 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Neighs:         728663 ave      728663 max      728663 min
+Neighs:         703928 ave      703928 max      703928 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 
-Total # of neighbors = 728663
-Ave neighs/atom = 352.69264
-Ave special neighs/atom = 2.2168441
-Neighbor list builds = 550
+Total # of neighbors = 703928
+Ave neighs/atom = 341.21571
+Ave special neighs/atom = 2.2171595
+Neighbor list builds = 542
 Dangerous builds = 0
-System init for write_data ...
-Ewald initialization ...
+System init for write_restart ...
+PPPM initialization ...
   using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
-  G vector (1/distance) = 0.29620607
-  estimated absolute RMS force accuracy = 0.0034433013
-  estimated relative force accuracy = 1.03694e-05
-  KSpace vectors: actual max1d max3d = 1342 12 7812
-                  kxmax kymax kzmax  = 12 7 7
+  G vector (1/distance) = 0.30178312
+  grid = 32 20 20
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0033082643
+  estimated relative force accuracy = 9.9627396e-06
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 28431 12800
 Generated 28 of 28 mixed pair_coeff terms from geometric mixing rule
-Last active /omp style is kspace_style ewald/omp
+Last active /omp style is kspace_style pppm/omp

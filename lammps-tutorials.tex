@@ -1910,16 +1910,21 @@ atoms in red, and the hydrogen atoms in white.}
 \end{figure}
 
 Open the file named \flecmd{merge.lmp} that was downloaded
-alongside \lmpcmd{water.lmp} during the tutorial setup. It only contains two lines:
+alongside \lmpcmd{water.lmp} during the tutorial setup. It only contain one line:
 \begin{lstlisting}
-kspace_style ewald 1e-5
 read_restart water.restart
 \end{lstlisting}
 Most of the commands that were initially present in \lmpcmd{water.lmp}, such as
 the \lmpcmd{units} of the \lmpcmd{atom\_style} commands do not need to be repeated,
-as they were saved within the \flecmd{.restart} file.  There is also no need to re-include the parameters from the \lmpcmd{.inc} file. The \lmpcmd{kspace\_style}
+as they were saved within the \flecmd{.restart} file.  There is also no need to
+re-include the parameters from the \lmpcmd{.inc} file.  The \lmpcmd{kspace\_style}
 command, however, is not saved by the \lmpcmd{write\_restart} command and must be
-repeated. 
+repeated. Since Ewald summation is not the most efficient choice for such dense
+system, let us use PPPM (for particle-particle particle-mesh) for the rest
+of the tutorial. Add the following command to \flecmd{merge.lmp}:
+\begin{lstlisting}
+kspace_style pppm 1e-5
+\end{lstlisting}
 
 Using the molecule template for the polymer called
 \href{\filepath tutorial3/peg.mol}{\dwlcmd{peg.mol}},
@@ -1998,10 +2003,10 @@ See a snapshot of the system in Fig.\,\ref{fig:PEG-solvated}.
 \subsubsection{Stretching the PEG molecule}
 
 Here, a constant force is applied to both ends of the PEG molecule until it
-stretches.  Open the file named \flecmd{pull.lmp}.  Similar to \flecmd{merge.lmp},
-it only contains two lines:
+stretches.  Open the file named \flecmd{pull.lmp}, which 
+only contains two lines:
 \begin{lstlisting}
-kspace_style ewald 1e-5
+kspace_style pppm 1e-5
 read_restart merge.restart
 \end{lstlisting}
 Next, we'll create new atom groups, each containing a single atom: the oxygen
