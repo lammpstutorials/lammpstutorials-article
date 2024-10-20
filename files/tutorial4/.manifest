@@ -1,0 +1,40 @@
+# LAMMPS Tutorial manifest file. This file determines what is downloaded when.
+# comments start with a # as the first character.
+# comments and empty lines are ignored
+##############################################################################
+# 1) input file templates and data files
+# the first file will be automatically loaded
+groups.inc
+parameters.inc
+create.lmp
+minimize.lmp
+equilibrate.lmp 
+shearing.lmp
+water.mol
+
+# 2) solution files
+# only downloaded on request
+solution/groups.inc
+solution/parameters.inc
+solution/create.data
+solution/create.lmp
+solution/create.log
+solution/minimize.data
+solution/minimize.ipynb
+solution/minimize.lmp
+solution/minimize.log
+solution/equilibrate.data
+solution/equilibrate.ipynb
+solution/equilibrate.lmp
+solution/equilibrate.log
+solution/shearing-ions.dat
+solution/shearing.ipynb
+solution/shearing.lmp
+solution/shearing.log
+solution/shearing.png
+solution/shearing-wall.dat
+solution/shearing-water.dat
+solution/water.mol
+
+# 3) support files
+
