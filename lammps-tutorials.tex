@@ -2729,33 +2729,26 @@ higher than what would be measured in the absence of walls.
 \centering
 \includegraphics[width=0.55\linewidth]{SIO}
 \caption{A portion of the silicon dioxide structure as simulated during
-\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}. Atoms are colored by their charges.}
+\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  Atoms are colored by their charges.}
 \label{fig:SIO}
 \end{figure}
 
-\noindent The objective of this tutorial is to use the reactive force field ReaxFF
-to calculate the partial charges of a system undergoing deformation, as well as
+The objective of this tutorial is to demonstrate how the reactive force field ReaxFF
+can be used to calculate the partial charges of a system undergoing deformation, as well as
 the formation and breaking of chemical bonds \cite{van2001reaxff, zou2012investigation}.
-The system simulated here is a block of silicon dioxide $\text{SiO}_2$ (Fig.\,\ref{fig:SIO})
-that is deformed until rupture. Particular attention is given to the evolution of
-the atomic charges during the deformation of the structure, and the chemical
-reactions occurring due to the deformation are tracked over time.
+The system simulated in this tutorial is a block of silicon dioxide $\text{SiO}_2$ (Fig.\,\ref{fig:SIO})
+which is deformed until it ruptures.  Particular attention is paid to the evolution
+of atomic charges during the deformation of the structure, with chemical reactions
+resulting from the deformation being tracked over time.
 
 \subsubsection{Prepare and relax}
-Create a folder, name it \flrcmd{RelaxSilica/}, and download the initial topology
-of a small amorphous silica structure called
-\href{\filepath tutorial5/silica.data}{\dwlcmd{silica.data}}.
-This structure was created using a classical force field called
-Vashishta \cite{vashishta1990interaction}. If you open the \flecmd{silica.data}
-file, you will see in the Atoms section that all silicon atoms have the same
-charge $q = 1.1\,\text{e}$, and all oxygen atoms have the charge $q = -0.55\,\text{e}$.
-This is common with classical force fields and will change once ReaxFF is used.
 
 The first action we need to perform here is to relax the structure with ReaxFF,
-which we are gonna do using molecular dynamics. To make sure that the system
-equilibrates nicely, let us track some parameters over time. Create an input
-file called \flecmd{input.lmp} in \flrcmd{RelaxSilica/}, and copy the following
-lines into it:
+which we are gonna do using molecular dynamics.  As always, to make sure that the system
+equilibrates nicely, we will us track certain parameters over time. To set up this
+tutorial, select \guicmd{Start Tutorial 5} from the
+\guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.
+The editor should display the following content corresponding to \flecmd{relax.lmp}:
 \begin{lstlisting}
 units real
 atom_style full
@@ -2766,8 +2759,18 @@ mass Si 28.0855
 mass O 15.999
 \end{lstlisting}
 So far, the input is very similar to what was seen in the previous tutorials.
-Some basic parameters are defined (\textit{units}, \textit{atom\_style} and \textit{masses}),
-and the \flecmd{.data} file is imported by the \textit{read\_data} command.
+Some basic parameters are defined (\lmpcmd{units}, \lmpcmd{atom\_style} and \lmpcmd{masses}),
+and a \lmpcmd{.data} file is imported by the \lmpcmd{read\_data} command.
+
+The initial topology given by \href{\filepath tutorial5/silica.data}{\dwlcmd{silica.data}}
+is a small amorphous silica structure.  This structure was created using a force field called
+Vashishta \cite{vashishta1990interaction}.  If you open the \flecmd{silica.data}
+file, you will find in the \lmpcmd{Atoms} section that all silicon atoms have a
+charge of $q = 1.1\,\text{e}$, and all oxygen atoms have a charge of $q = -0.55\,\text{e}$.
+Assigning the same charge to all atoms of the same type is common with many
+force fields, including the force fields used in the previous tutorials. This
+changes once ReaxFF is used: the charge of each atom will adjust to its local
+environment.
 
 Now, let us copy three crucial lines into the \flecmd{input.lmp} file:
 \begin{lstlisting}
