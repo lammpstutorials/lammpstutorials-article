@@ -1,11 +1,12 @@
   using 8 OpenMP thread(s) per MPI task
 using multi-threaded neighbor list subroutines
+WARNING: Detected non-ASCII characters in input. Will try to continue by replacing with ASCII equivalents where known. (src/input.cpp:478)
 Lattice spacing in x,y,z = 4.04 4.04 4.04
 Created orthogonal box = (-12.12 -12.12 -20.2) to (12.12 12.12 20.2)
   1 by 1 by 1 MPI processor grid
 Created 432 atoms
   using lattice units in orthogonal box = (-12.12 -12.12 -20.2) to (12.12 12.12 20.2)
-  create_atoms CPU = 0.003 seconds
+  create_atoms CPU = 0.006 seconds
 Read molecule template h2omol:
 # Water molecule.
   1 molecules
@@ -17,7 +18,7 @@ Read molecule template h2omol:
   0 impropers with max type 0
 Created 1944 atoms
   using lattice units in orthogonal box = (-12.12 -12.12 -20.2) to (12.12 12.12 20.2)
-  create_atoms CPU = 0.001 seconds
+  create_atoms CPU = 0.002 seconds
 Created 15 atoms
   using lattice units in orthogonal box = (-12.12 -12.12 -20.2) to (12.12 12.12 20.2)
   create_atoms CPU = 0.004 seconds
@@ -34,25 +35,34 @@ Setting atom values ...
 30 atoms in group ions
 1974 atoms in group fluid
 432 atoms in group wall
-1198 atoms in group top
-1208 atoms in group bot
+1191 atoms in group top
+1215 atoms in group bot
 216 atoms in group walltop
 216 atoms in group wallbot
 WARNING: Ignoring 'compress yes' for molecular system (src/delete_atoms.cpp:141)
 Deleted 726 atoms, new total = 1680
 Deleted 484 bonds, new total = 812
 Deleted 242 angles, new total = 406
+
+CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
+
+Your simulation uses code contributions which should be cited:
+- Type Label Framework: https://doi.org/10.1021/acs.jpcb.3c08419
+The log file lists these citations in BibTeX format.
+
+CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
+
 WARNING: No fixes with time integration, atoms won't move (src/verlet.cpp:60)
 PPPM initialization ...
   extracting TIP4P info from pair style
   using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
-  G vector (1/distance) = 0.22477066
-  grid = 12 12 40
+  G vector (1/distance) = 0.25237451
+  grid = 18 18 60
   stencil order = 5
-  estimated absolute RMS force accuracy = 0.023314918
-  estimated relative force accuracy = 7.0212184e-05
+  estimated absolute RMS force accuracy = 0.0034985124
+  estimated relative force accuracy = 1.0535666e-05
   using double precision KISS FFT
-  3d grid and FFT values/proc = 15162 5760
+  3d grid and FFT values/proc = 39375 19440
 WARNING: Communication cutoff 0 is shorter than a bond length based estimate of 3.4358. This may lead to errors. (src/comm.cpp:731)
 WARNING: Increasing communication cutoff to 15.1118 for TIP4P pair style (src/KSPACE/pair_lj_cut_tip4p_long.cpp:497)
 Generated 9 of 10 mixed pair_coeff terms from geometric mixing rule
@@ -73,12 +83,12 @@ Setting up Verlet run ...
   Unit style    : real
   Current step  : 0
   Time step     : 1
-Per MPI rank memory allocation (min/avg/max) = 17.03 | 17.03 | 17.03 Mbytes
+Per MPI rank memory allocation (min/avg/max) = 19.16 | 19.16 | 19.16 Mbytes
    Step          Temp          E_pair         E_mol          TotEng         Press     
-         0   0              665588.16      0              665588.16      8064451.7    
-Loop time of 3.863e-06 on 8 procs for 0 steps with 1680 atoms
+         0   0              501411.03      0              501411.03      6165751.9    
+Loop time of 0.000133443 on 8 procs for 0 steps with 1680 atoms
 
-181.2% CPU use with 1 MPI tasks x 8 OpenMP threads
+81.7% CPU use with 1 MPI tasks x 8 OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
@@ -90,17 +100,17 @@ Neigh   | 0          | 0          | 0          |   0.0 |  0.00
 Comm    | 0          | 0          | 0          |   0.0 |  0.00
 Output  | 0          | 0          | 0          |   0.0 |  0.00
 Modify  | 0          | 0          | 0          |   0.0 |  0.00
-Other   |            | 3.863e-06  |            |       |100.00
+Other   |            | 0.0001334  |            |       |100.00
 
 Nlocal:           1680 ave        1680 max        1680 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Nghost:           6818 ave        6818 max        6818 min
+Nghost:           6827 ave        6827 max        6827 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Neighs:         829498 ave      829498 max      829498 min
+Neighs:         829213 ave      829213 max      829213 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 
-Total # of neighbors = 829498
-Ave neighs/atom = 493.74881
+Total # of neighbors = 829213
+Ave neighs/atom = 493.57917
 Ave special neighs/atom = 1.45
 Neighbor list builds = 0
 Dangerous builds = 0
@@ -108,12 +118,12 @@ System init for write_data ...
 PPPM initialization ...
   extracting TIP4P info from pair style
   using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
-  G vector (1/distance) = 0.22477066
-  grid = 12 12 40
+  G vector (1/distance) = 0.25237451
+  grid = 18 18 60
   stencil order = 5
-  estimated absolute RMS force accuracy = 0.023314918
-  estimated relative force accuracy = 7.0212184e-05
+  estimated absolute RMS force accuracy = 0.0034985124
+  estimated relative force accuracy = 1.0535666e-05
   using double precision KISS FFT
-  3d grid and FFT values/proc = 15162 5760
+  3d grid and FFT values/proc = 39375 19440
 Generated 9 of 10 mixed pair_coeff terms from geometric mixing rule
 Last active /omp style is kspace_style pppm/tip4p/omp

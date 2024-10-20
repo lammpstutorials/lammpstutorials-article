@@ -2227,7 +2227,7 @@ Atoms will be placed in the positions of the previously defined lattice, thus
 forming fcc solids.
 
 To add the water molecules, the molecule
-template called \href{\filepath water.mol}{\dwlcmd{water.mol}}
+template called \href{\filepath tutorial4/water.mol}{\dwlcmd{water.mol}}
 must be located next to \flecmd{}.  The template contains all the
 necessary information concerning the water molecule, such as atom positions,
 bonds, and angles.  Add the following lines to \flecmd{create.lmp}:
@@ -2262,72 +2262,76 @@ always insert the same number of $\text{Na}^+$ and $\text{Cl}^-$, unless there
 are other charges in the system. The charges of the newly added ions are specified
 by the two \lmpcmd{set} commands.
 
-Before starting the simulation, we still need to define the parameters of the
+Before starting the simulation, we need to define the parameters of the
 simulation: the mass of the 5 atom types (O, H, $\text{Na}^+$, $\text{Cl}^-$,
-and wall), the pairwise interaction parameters (here, the parameters for the
-Lennard-Jones potential), and the bond and angle parameters. Copy the following
+and wall), the pairwise interaction parameters (in this case, for the
+Lennard-Jones potential), and the bond and angle parameters.  Copy the following
 lines into \flecmd{create.lmp}:
 \begin{lstlisting}
 include parameters.inc
 include groups.inc
 \end{lstlisting}
-Create a new text file called \flecmd{PARM.lmp} next to the \flrcmd{systemcreation/}
-folder. Copy the following lines into \flecmd{PARM.lmp}:
+Both \href{\filepath tutorial4/parameters.inc}{\dwlcmd{parameters.inc}}
+and \href{\filepath tutorial4/groups.inc}{\dwlcmd{groups.inc}} files
+must be located next to \flecmd{create.lmp}.
+
+The \flecmd{parameters.inc} file contains the masses, as follows:
 \begin{lstlisting}
 mass O 15.9994
 mass H 1.008
 mass Na+ 22.990
 mass Cl- 35.453
 mass WALL 26.9815
-
+\end{lstlisting}
+Each \lmpcmd{mass} command assigns a mass in grams/mole to an atom type.
+The \flecmd{parameters.inc} file also contains the pair coefficients:
+\begin{lstlisting}
 pair_coeff O O 0.185199 3.1589
 pair_coeff H H 0.0 1.0
 pair_coeff Na+ Na+ 0.04690 2.4299
 pair_coeff Cl- Cl- 0.1500 4.04470
 pair_coeff WALL WALL 11.697 2.574
 pair_coeff O WALL 0.4 2.86645
-
-bond_coeff O-H 0 0.9572
-angle_coeff H-O-H 0 104.52
 \end{lstlisting}
-Each \textit{mass} command assigns a mass in grams/mole to an atom type.
-Each \textit{pair\_coeff} assigns respectively the depth of the LJ potential
-(in kcal/mole), and the distance (in Ångstrom) at which the particle-particle
-potential energy is 0.
-
-As already seen in previous tutorials and with the important exception of
-\textit{pair\_coeff O WALL}, only pairwise interactions between atoms of identical
-types was assigned. By default, LAMMPS calculates the pair coefficients for the
-interactions between atoms of different types (i and j) by using geometrical average:
+Each \lmpcmd{pair\_coeff} assigns the depth of the LJ potential
+(in kcal/mole), and the distance (in Ångstroms) at which the particle-particle
+potential energy is 0.  As noted in previous tutorials, with the important exception of
+\lmpcmd{pair\_coeff O WALL}, pairwise interactions were only assigned between
+atoms of identical types.  By default, LAMMPS calculates the pair coefficients for the
+interactions between atoms of different types (i and j) by using geometric average:
 $\epsilon_{ij} = (\epsilon_{ii} + \epsilon_{jj})/2$,  $\sigma_{ij} = (\sigma_{ii} + \sigma_{jj})/2$.
-If the default value of $5.941\,\text{kcal/mol}$ was kept for $\epsilon_\text{1-5}$, the solid
-walls would be extremely hydrophilic, causing the water molecule to form dense layers. As a
+However, if the default value of $5.941\,\text{kcal/mol}$ was used for $\epsilon_\text{1-5}$, the solid
+walls would be extremely hydrophilic, causing the water molecules to form dense layers.  As a
 comparison, the water-water energy $\epsilon_\text{1-1}$ is only $0.185199\,\text{kcal/mol}$.
-Therefore, the walls were made less hydrophilic by reducing the value of $\epsilon_\text{1-5}$.
+Therefore, to make the walls less hydrophilic, the value of $\epsilon_\text{O-WALL}$
+was reduced.
 
-Copy the following lines into \flecmd{PARM.lmp} as well:
+The \flecmd{parameters.inc} file also contains the following two lines:
 \begin{lstlisting}
 bond_coeff O-H 0 0.9572
 angle_coeff H-O-H 0 104.52
 \end{lstlisting}
-The \textit{bond\_coeff} command, used here for the O-H bond of the water
+The \lmpcmd{bond\_coeff} command, used here for the O-H bond of the water
 molecule, sets both the spring constant of the harmonic potential and the
-equilibrium distance of $0.9572~\text{\AA{}}$. The constant can be 0 for a
-rigid water molecule because the shape of the molecule will be preserved by
-the SHAKE algorithm (see below) \cite{ryckaert1977numerical, andersen1983rattle}.
-Similarly, the angle coefficient for the H-O-H angle of the water molecule sets
+equilibrium bond distance of $0.9572~\text{\AA{}}$.  The constant can be 0 for a
+rigid water molecule because the SHAKE algorithm will maintain the rigid
+structure of the water molecule (see below) \cite{ryckaert1977numerical, andersen1983rattle}.
+Similarly, the \lmpcmd{angle\_coeff} command for the H-O-H angle of the water molecule sets
 the force constant of the angular harmonic potential to 0 and the equilibrium
 angle to $104.52^\circ$.
 
-Let us also create another file called \flecmd{GROUP.lmp} next to
-\flecmd{PARM.lmp}, and copy the following lines into it:
+Alongside \flecmd{parameters.inc}, the \flecmd{groups.inc} file contains
+several \lmpcmd{group} commands to selects atoms based on their types:
 \begin{lstlisting}
 group H2O type O H
 group Na type Na+
 group Cl type Cl-
 group ions union Na Cl
 group fluid union H2O ions
-
+\end{lstlisting}
+The \flecmd{groups.inc} file also defines the \lmpcmd{walltop} and \lmpcmd{wallbot}
+groups, which contain the WALL atoms located in the $z > 0$ and $z < 0$ regions, respectively::
+\begin{lstlisting}
 group wall type WALL
 region rtop block INF INF INF INF 0 INF
 region rbot block INF INF INF INF INF 0
@@ -2336,70 +2340,79 @@ group bot region rbot
 group walltop intersect wall top
 group wallbot intersect wall bot
 \end{lstlisting}
-As it is now, the fluid density within the two walls is too high. To avoid
-high density and pressure, let us add the following lines into \flecmd{input.lmp}
-to delete to delete about $15~\%$ of the water molecules:
+
+Currently, the fluid density between the two walls is slightly too high.  To avoid
+excessive pressure, let us add the following lines into \flecmd{create.lmp}
+to delete about $15~\%$ of the water molecules:
 \begin{lstlisting}
-delete_atoms random fraction 0.15 yes &
-    H2O NULL 482793 mol yes
+delete_atoms random fraction 0.15 yes H2O NULL 482793 mol yes
 \end{lstlisting}
-Finally, add the following lines into \flecmd{input.lmp}:
+
+To create an image of the system, add the following \lmpcmd{dump} image
+into \flecmd{create.lmp} (see also Fig.\,\ref{fig:NANOSHEAR-system}):
+\begin{lstlisting}
+dump mydmp all image 200 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 90 0 zoom 1.8
+dump_modify mydmp backcolor white &
+  acolor O red adiam O 2 &
+  acolor H white adiam H 1 &
+  acolor Na+ blue adiam Na+ 2.5 &
+  acolor Cl- cyan adiam Cl- 3 &
+  acolor WALL gray adiam WALL 3
+\end{lstlisting}
+
+Finally, add the following lines into \flecmd{create.lmp}:
 \begin{lstlisting}
 run 0
 
-write_data system.data nocoeff
-write_dump all image dump.jpg type type
+write_data create.data nocoeff
 \end{lstlisting}
-With \textit{run 0}, the simulation will run for 0 steps, which is enough for
-creating the system and saving the final state. The \textit{write\_data}
-creates a file called \flecmd{system.data} containing the information required
-to restart the simulation from the final configuration generated by this input
-file. With the \textit{nocoeff} option, the parameters from the force field are
-not written in the \flecmd{.data} file. The \textit{write\_dump} command creates
-an image of the system (see also Fig.\,\ref{fig:NANOSHEAR-system}).
-Run the \flecmd{input.lmp} file using LAMMPS.
+The \lmpcmd{run 0} command runs the simulation for 0 steps, which is sufficient for
+creating the system and saving its state.  The \lmpcmd{write\_data} command
+generates a file called \lmpcmd{system.data} containing the information required
+to restart the simulation from the final configuration produced by this input
+file.  With the \lmpcmd{nocoeff} option, the parameters from the force field are
+not included in the \flecmd{.data} file.  Run the \flecmd{create.lmp} file using LAMMPS,
+and a file named \flecmd{create.data} will be created alongside \flecmd{create.lmp}.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{NANOSHEAR-system}
 \caption{Side view of the system. Periodic images are represented in darker colors.
 Water molecules are in red and white, $\text{Na}^+$ ions in purple, $\text{Cl}^-$
-ions in lime, and wall atoms in gray. Note the absence of atomic defect at the
+ions in lime, and wall atoms in gray.  Note the absence of atomic defect at the
 cell boundaries.}
 \label{fig:NANOSHEAR-system}
 \end{figure}
 
 \paragraph{Energy minimization}
-Let us move the atoms and place them in more energetically favorable positions
-before starting the actual molecular dynamics simulation. Let us call this step
-\textit{energy minimization}, although it is not a conventional \textit{minimization}
-as done for instance in the first tutorial; \hyperref[lennard-jones-label]{Lennard-Jones fluid}.
-Instead, a molecular dynamics simulation will be performed here, with some techniques
-employed to prevent the system from exploding due to overlapping atoms.
 
-Let us create a new folder called \flrcmd{minimization/} next to \flrcmd{systemcreation/},
-and create a new input file called \flecmd{input.lmp} in it. Copy the following lines
-in \flecmd{input.lmp}:
+Let us move the atoms and place them in more energetically favorable positions
+before starting the actual molecular dynamics simulation.  Although we refer to this step as
+\emph{energy minimization}, it is not a conventional \emph{minimization}
+like that performed in the first tutorial; \hyperref[lennard-jones-label]{Lennard-Jones fluid}.
+Instead, we will conduct a molecular dynamics simulation, employing certain techniques
+to prevent the system from exploding due to overlapping atoms.
+
+Open the \flecmd{minimize.lmp} file that was downloaded alongside
+\flecmd{create.lmp} during the tutorial setup.  It contains the following lines:
 \begin{lstlisting}
 boundary p p f
 units real
 atom_style full
 bond_style harmonic
 angle_style harmonic
-pair_style lj/cut/tip4p/long O H O-H H-O-H &
-    0.1546 12.0
+pair_style lj/cut/tip4p/long O H O-H H-O-H 0.1546 12.0
 kspace_style pppm/tip4p 1.0e-5
 kspace_modify slab 3.0
+    
+read_data create.data
 
-read_data ../systemcreation/system.data
-
-include ../PARM.lmp
-include ../GROUP.lmp
+include parameters.inc
+include groups.inc
 \end{lstlisting}
-The only difference from the previous input is that instead of creating a new
-box and new atoms, we open the previously created file \flecmd{system.data}
-located in \flrcmd{systemcreation/}. The file \flecmd{system.data} contains the
-definition of the simulation box and the positions of the atoms.
+The only difference from the previous input is that, instead of creating a new
+box and new atoms, we open the previously created \flecmd{create.data} file.
 
 Now, let us create a first simulation step using a relatively small
 timestep ($0.5\,\text{fs}$) and a low temperature of $T = 1\,\text{K}$:
@@ -2409,41 +2422,44 @@ fix myber fluid temp/berendsen 1 1 100
 fix myshk H2O shake 1.0e-5 200 0 b O-H a H-O-H
 timestep 0.5
 \end{lstlisting}
-Just like \textit{fix nve}, the \textit{fix nve/limit} command performs constant
+Similar to the \lmpcmd{fix nve} command, the \lmpcmd{fix nve/limit} command performs constant
 NVE integration to update the positions and velocities of the atoms at each
-timestep. The difference is that \textit{fix nve/limit} also limits the maximum
-distance atoms can travel at each timestep. Here, the chosen maximum distance
-is $0.1~\text{\AA{}}$. Because the \textit{fix nve/limit} is applied to the
-group \textit{fluid}, only the water molecules and ions will move.
-The \textit{fix temp/berendsen} rescales the velocities of the atoms to
-force the temperature of the system to reach the desired value of $1~\text{K}$,
-and the SHAKE algorithm is used in order to maintain the shape of the water molecules.
+timestep.  The difference is that \lmpcmd{fix nve/limit} also limits the maximum
+distance atoms can travel during each timestep, with a chosen maximum distance
+of $0.1~\text{\AA{}}$.  Since the \lmpcmd{fix nve/limit} is applied to the
+group \lmpcmd{fluid}, only the water molecules and ions will move.
+The \lmpcmd{fix temp/berendsen} command rescales the velocities of the atoms
+to ensure the system reaches the desired temperature of $1~\text{K}$.
+The SHAKE algorithm is used in order to maintain the shape of the water molecules.
 
 Let us also create images of the system and control
-the printing of thermodynamic outputs by adding the following lines to \flecmd{input.lmp}:
+the printing of thermodynamic outputs by adding the following lines
+to \flecmd{minimize.lmp}:
 \begin{lstlisting}
-dump mydmp all image 200 dump.*.jpg type type &
-    shiny 0.1 box no 0.01 view 90 0 zoom 1.8
+dump mydmp all image 200 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 90 0 zoom 1.8
 dump_modify mydmp backcolor white &
-    acolor O red adiam O 2 &
-    acolor H white adiam H 1 &
-    acolor Na+ blue adiam Na+ 2.5 &
-    acolor Cl- cyan adiam Cl- 3 &
-    acolor WALL gray adiam WALL 3
+  acolor O red adiam O 2 &
+  acolor H white adiam H 1 &
+  acolor Na+ blue adiam Na+ 2.5 &
+  acolor Cl- cyan adiam Cl- 3 &
+  acolor WALL gray adiam WALL 3
 thermo 200
 \end{lstlisting}
-Finally, let us run for 4000 steps. Add the following lines into \flecmd{input.lmp}:
+
+Let us run for 4000 steps by adding the following lines into \flecmd{minimize.lmp}:
 \begin{lstlisting}
 run 4000
 \end{lstlisting}
-When running the \flecmd{input.lmp} file with LAMMPS, you should see that the
-total energy of the system is initially very high, but rapidly decreases and
-reach a plateau (Fig.\,\ref{fig:NANOSHEAR-minimization}). From the generated image of the system,
-you will see that some of the atoms are moving, particularly those that were
-initially in problematic positions.
+When running the \flecmd{minimize.lmp} file with LAMMPS, you should observe that the
+total energy of the system is initially very high but rapidly decreases,
+eventually reaching a plateau (Fig.\,\ref{fig:NANOSHEAR-minimization}).  From the generated
+images of the system, you will notice that some of the atoms are moving, particularly
+those that were initially in problematic positions.
 
-In order to better equilibrate the system, let us perform two additional steps
-with a larger timestep and a higher imposed temperature:
+To better equilibrate the system, we will perform two additional steps
+with a larger timestep and a higher imposed temperature.  Add the following lines
+to \flecmd{minimize.lmp}:
 \begin{lstlisting}
 fix myber fluid temp/berendsen 300 300 100
 timestep 1.0
@@ -2455,14 +2471,15 @@ fix mynve fluid nve
 
 run 4000
 
-write_data system.data nocoeff
+write_data minimize.data nocoeff
 \end{lstlisting}
-For the last of the three steps, fix \textit{nve} is used instead of
-\textit{nve/limit}, which will allow for better relaxation of the atom positions.
+For the last step, since the system is reaching a more
+equilibrated step, it is no longer necessary to use the \lmpcmd{nve/limit} command.
+Instead, we use the classic \lmpcmd{fix nve} command.
 
-When running the \flecmd{input.lmp} file with LAMMPS, you should see that the
-the temperature reaches the desired value of $300\,\text{K}$. The generated file
-\flecmd{system.data} contains the final state of the system.
+When running the \flecmd{minimize.lmp} file with LAMMPS, you should observe that the
+the temperature reaches the desired value of $300\,\text{K}$.  The generated file
+\flecmd{minimize.data} contains the final state of the system.
 
 \begin{figure}
 \centering
@@ -2475,10 +2492,11 @@ consecutive steps.}
 \end{figure}
 
 \paragraph{System equilibration}
+
 Let us equilibrate further the entire system by letting both fluid and piston
-relax at ambient temperature. Create a new folder called \flrcmd{equilibration/}
+relax at ambient temperature.  Create a new folder called \flrcmd{equilibration/}
 next to the previously created folders, and create a new \flecmd{input.lmp}
-file in it. Add the following lines into \flecmd{input.lmp}:
+file in it.  Add the following lines into \flecmd{input.lmp}:
 \begin{lstlisting}
 boundary p p f
 units real

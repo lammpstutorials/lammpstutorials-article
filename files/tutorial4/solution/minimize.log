@@ -1,0 +1,290 @@
+  using 8 OpenMP thread(s) per MPI task
+using multi-threaded neighbor list subroutines
+WARNING: Detected non-ASCII characters in input. Will try to continue by replacing with ASCII equivalents where known. (src/input.cpp:478)
+Reading data file ...
+  orthogonal box = (-12.12 -12.12 -20.2) to (12.12 12.12 20.2)
+  1 by 1 by 1 MPI processor grid
+  reading atom labelmap ...
+  reading bond labelmap ...
+  reading angle labelmap ...
+  reading atoms ...
+  1680 atoms
+  reading velocities ...
+  1680 velocities
+  scanning bonds ...
+  2 = max bonds/atom
+  scanning angles ...
+  1 = max angles/atom
+  orthogonal box = (-12.12 -12.12 -20.2) to (12.12 12.12 20.2)
+  1 by 1 by 1 MPI processor grid
+  reading bonds ...
+  812 bonds
+  reading angles ...
+  406 angles
+Finding 1-2 1-3 1-4 neighbors ...
+  special bond factors lj:    0        0        0       
+  special bond factors coul:  0        0        0       
+     2 = max # of 1-2 neighbors
+     1 = max # of 1-3 neighbors
+     1 = max # of 1-4 neighbors
+     2 = max # of special neighbors
+  special bonds CPU = 0.002 seconds
+  read_data CPU = 0.042 seconds
+1218 atoms in group H2O
+15 atoms in group Na
+15 atoms in group Cl
+30 atoms in group ions
+1248 atoms in group fluid
+432 atoms in group wall
+833 atoms in group top
+847 atoms in group bot
+216 atoms in group walltop
+216 atoms in group wallbot
+Finding SHAKE clusters ...
+       0 = # of size 2 clusters
+       0 = # of size 3 clusters
+       0 = # of size 4 clusters
+     406 = # of frozen angles
+  find clusters CPU = 0.001 seconds
+
+CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
+
+Your simulation uses code contributions which should be cited:
+- Type Label Framework: https://doi.org/10.1021/acs.jpcb.3c08419
+The log file lists these citations in BibTeX format.
+
+CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
+
+PPPM initialization ...
+  extracting TIP4P info from pair style
+  using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
+  G vector (1/distance) = 0.25237451
+  grid = 18 18 60
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0034985124
+  estimated relative force accuracy = 1.0535666e-05
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 39375 19440
+WARNING: Communication cutoff 0 is shorter than a bond length based estimate of 3.4358. This may lead to errors. (src/comm.cpp:731)
+WARNING: Increasing communication cutoff to 15.1118 for TIP4P pair style (src/KSPACE/pair_lj_cut_tip4p_long.cpp:497)
+Generated 9 of 10 mixed pair_coeff terms from geometric mixing rule
+Last active /omp style is kspace_style pppm/tip4p/omp
+WARNING: Should not use fix nve/limit with fix shake or fix rattle (src/fix_nve_limit.cpp:76)
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 14.3092
+  ghost atom cutoff = 15.1118
+  binsize = 7.1546, bins = 4 4 6
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair lj/cut/tip4p/long/omp, perpetual
+      attributes: half, newton on, omp
+      pair build: half/bin/newton/omp
+      stencil: half/bin/3d
+      bin: standard
+Setting up Verlet run ...
+  Unit style    : real
+  Current step  : 0
+  Time step     : 0.5
+Per MPI rank memory allocation (min/avg/max) = 19.97 | 19.97 | 19.97 Mbytes
+   Step          Temp          E_pair         E_mol          TotEng         Press     
+         0   0              501411.03      0              501411.03     -8.4785925e+232
+       200   5360.49       -31133.813      0             -10793.052      59851.453    
+       400   2372.1353     -33466.785      0             -24465.548      18773.49     
+       600   1159.5779     -35216.972      0             -30816.871     -880.41568    
+       800   614.72171     -36388.951      0             -34056.346     -13025.22     
+      1000   356.92559     -37180.553      0             -35826.173     -18348.769    
+      1200   227.83051     -37775.504      0             -36910.985     -21276.401    
+      1400   162.83955     -38260.578      0             -37642.672     -22402.267    
+      1600   113.05415     -38579.957      0             -38150.965     -23423.21     
+      1800   77.917718     -38803.509      0             -38507.844     -23782.716    
+      2000   52.792968     -38948.535      0             -38748.209     -24240.608    
+      2200   37.151166     -39060.695      0             -38919.722     -24371.149    
+      2400   26.595757     -39136.178      0             -39035.258     -24299.742    
+      2600   17.56054      -39182.205      0             -39115.57      -24157.165    
+      2800   12.451928     -39216.075      0             -39168.825     -24085.81     
+      3000   9.1868785     -39241.971      0             -39207.111     -24238.598    
+      3200   6.6491244     -39258.603      0             -39233.372     -24197.41     
+      3400   5.4033767     -39275.036      0             -39254.533     -24165.496    
+      3600   4.1821807     -39285.921      0             -39270.051     -24119.307    
+      3800   3.1617882     -39292.972      0             -39280.975     -23947.506    
+      4000   2.6902281     -39299.91       0             -39289.702     -23968.153    
+Loop time of 90.595 on 8 procs for 4000 steps with 1680 atoms
+
+Performance: 1.907 ns/day, 12.583 hours/ns, 44.153 timesteps/s, 74.176 katom-step/s
+811.8% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 37.547     | 37.547     | 37.547     |   0.0 | 41.45
+Bond    | 0.084267   | 0.084267   | 0.084267   |   0.0 |  0.09
+Kspace  | 46.713     | 46.713     | 46.713     |   0.0 | 51.56
+Neigh   | 1.3766     | 1.3766     | 1.3766     |   0.0 |  1.52
+Comm    | 0.53695    | 0.53695    | 0.53695    |   0.0 |  0.59
+Output  | 2.2982     | 2.2982     | 2.2982     |   0.0 |  2.54
+Modify  | 1.9743     | 1.9743     | 1.9743     |   0.0 |  2.18
+Other   |            | 0.06455    |            |       |  0.07
+
+Nlocal:           1680 ave        1680 max        1680 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           6863 ave        6863 max        6863 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:         800754 ave      800754 max      800754 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 800754
+Ave neighs/atom = 476.63929
+Ave special neighs/atom = 1.45
+Neighbor list builds = 91
+Dangerous builds = 0
+PPPM initialization ...
+  extracting TIP4P info from pair style
+  using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
+  G vector (1/distance) = 0.25237451
+  grid = 18 18 60
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0034985124
+  estimated relative force accuracy = 1.0535666e-05
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 39375 19440
+Generated 9 of 10 mixed pair_coeff terms from geometric mixing rule
+Last active /omp style is kspace_style pppm/tip4p/omp
+WARNING: Should not use fix nve/limit with fix shake or fix rattle (src/fix_nve_limit.cpp:76)
+Setting up Verlet run ...
+  Unit style    : real
+  Current step  : 4000
+  Time step     : 1
+Per MPI rank memory allocation (min/avg/max) = 20.61 | 20.61 | 20.61 Mbytes
+   Step          Temp          E_pair         E_mol          TotEng         Press     
+      4000   2.6902281     -39299.91       0             -39289.702     -23968.168    
+      4200   122.86152     -38893.242      0             -38427.035     -21356.599    
+      4400   163.48422     -38649.066      0             -38028.713     -19445.149    
+      4600   183.40362     -38535.403      0             -37839.465     -19772.879    
+      4800   186.94853     -38461.074      0             -37751.685     -20169.66     
+      5000   198.13947     -38450.432      0             -37698.578     -20247.795    
+      5200   198.77746     -38443.748      0             -37689.472     -20356.505    
+      5400   195.93025     -38422.599      0             -37679.128     -20701.95     
+      5600   200.12395     -38447.212      0             -37687.827     -20909.551    
+      5800   200.96573     -38455.264      0             -37692.685     -20956.959    
+      6000   195.49133     -38444.817      0             -37703.011     -21347.97     
+      6200   199.64641     -38450.344      0             -37692.771     -21081.207    
+      6400   195.07462     -38450.406      0             -37710.181     -21254.091    
+      6600   197.86734     -38459.356      0             -37708.534     -21054.668    
+      6800   195.88601     -38461.594      0             -37718.291     -20896.57     
+      7000   201.09858     -38486.893      0             -37723.81      -21182.451    
+      7200   201.06054     -38502.155      0             -37739.217     -21966.896    
+      7400   198.51574     -38492.64       0             -37739.358     -21400.59     
+      7600   197.96167     -38500.102      0             -37748.922     -21648.612    
+      7800   195.30402     -38485.235      0             -37744.14      -20690.874    
+      8000   197.395       -38499.556      0             -37750.527     -21408.837    
+Loop time of 91.393 on 8 procs for 4000 steps with 1680 atoms
+
+Performance: 3.781 ns/day, 6.347 hours/ns, 43.767 timesteps/s, 73.529 katom-step/s
+811.5% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 38.538     | 38.538     | 38.538     |   0.0 | 42.17
+Bond    | 0.085564   | 0.085564   | 0.085564   |   0.0 |  0.09
+Kspace  | 45.738     | 45.738     | 45.738     |   0.0 | 50.05
+Neigh   | 2.0994     | 2.0994     | 2.0994     |   0.0 |  2.30
+Comm    | 0.56978    | 0.56978    | 0.56978    |   0.0 |  0.62
+Output  | 2.2107     | 2.2107     | 2.2107     |   0.0 |  2.42
+Modify  | 2.083      | 2.083      | 2.083      |   0.0 |  2.28
+Other   |            | 0.06824    |            |       |  0.07
+
+Nlocal:           1680 ave        1680 max        1680 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           6853 ave        6853 max        6853 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:         790096 ave      790096 max      790096 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 790096
+Ave neighs/atom = 470.29524
+Ave special neighs/atom = 1.45
+Neighbor list builds = 159
+Dangerous builds = 0
+PPPM initialization ...
+  extracting TIP4P info from pair style
+  using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
+  G vector (1/distance) = 0.25237451
+  grid = 18 18 60
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0034985124
+  estimated relative force accuracy = 1.0535666e-05
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 39375 19440
+Generated 9 of 10 mixed pair_coeff terms from geometric mixing rule
+Last active /omp style is kspace_style pppm/tip4p/omp
+Setting up Verlet run ...
+  Unit style    : real
+  Current step  : 8000
+  Time step     : 1
+Per MPI rank memory allocation (min/avg/max) = 20.61 | 20.61 | 20.61 Mbytes
+   Step          Temp          E_pair         E_mol          TotEng         Press     
+      8000   197.395       -38499.556      0             -37750.527     -21408.821    
+      8200   200.64233     -38513.122      0             -37751.771     -21461.133    
+      8400   198.48065     -38508.11       0             -37754.961     -21264.73     
+      8600   202.87418     -38546.368      0             -37776.547     -20878.722    
+      8800   200.73355     -38557.531      0             -37795.833     -20795.967    
+      9000   202.58017     -38556.246      0             -37787.541     -21166.088    
+      9200   195.95905     -38515.201      0             -37771.621     -21192.099    
+      9400   200.30012     -38524.54       0             -37764.487     -21257.873    
+      9600   197.37511     -38509.003      0             -37760.049     -21939.452    
+      9800   199.29499     -38529.647      0             -37773.408     -20907.04     
+     10000   201.91211     -38536.337      0             -37770.167     -21137.794    
+     10200   198.37416     -38518.971      0             -37766.226     -21261.307    
+     10400   203.64677     -38544.917      0             -37772.165     -20830.873    
+     10600   192.24889     -38513.108      0             -37783.606     -21209.353    
+     10800   200.13322     -38545.333      0             -37785.913     -21306.312    
+     11000   194.94881     -38530.708      0             -37790.961     -21089.377    
+     11200   194.73545     -38531.66       0             -37792.722     -21242.299    
+     11400   200.10866     -38546.938      0             -37787.611     -21141.061    
+     11600   203.60672     -38568.095      0             -37795.494     -20943.047    
+     11800   195.30486     -38538.801      0             -37797.703     -21283.415    
+     12000   195.26511     -38536.473      0             -37795.526     -20887.564    
+Loop time of 89.7055 on 8 procs for 4000 steps with 1680 atoms
+
+Performance: 3.853 ns/day, 6.230 hours/ns, 44.590 timesteps/s, 74.912 katom-step/s
+812.1% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 38.934     | 38.934     | 38.934     |   0.0 | 43.40
+Bond    | 0.084432   | 0.084432   | 0.084432   |   0.0 |  0.09
+Kspace  | 43.714     | 43.714     | 43.714     |   0.0 | 48.73
+Neigh   | 2.0113     | 2.0113     | 2.0113     |   0.0 |  2.24
+Comm    | 0.53076    | 0.53076    | 0.53076    |   0.0 |  0.59
+Output  | 2.4296     | 2.4296     | 2.4296     |   0.0 |  2.71
+Modify  | 1.9216     | 1.9216     | 1.9216     |   0.0 |  2.14
+Other   |            | 0.07967    |            |       |  0.09
+
+Nlocal:           1680 ave        1680 max        1680 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           6798 ave        6798 max        6798 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:         788294 ave      788294 max      788294 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 788294
+Ave neighs/atom = 469.22262
+Ave special neighs/atom = 1.45
+Neighbor list builds = 160
+Dangerous builds = 0
+System init for write_data ...
+PPPM initialization ...
+  extracting TIP4P info from pair style
+  using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
+  G vector (1/distance) = 0.25237451
+  grid = 18 18 60
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0034985124
+  estimated relative force accuracy = 1.0535666e-05
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 39375 19440
+Generated 9 of 10 mixed pair_coeff terms from geometric mixing rule
+Last active /omp style is kspace_style pppm/tip4p/omp
