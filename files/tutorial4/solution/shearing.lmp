@@ -43,9 +43,9 @@ thermo 250
 thermo_modify temp Tfluid
 thermo_style custom step temp etotal f_mysf1[1] f_mysf2[1] 
 
-compute cc1 H2O chunk/atom bin/1d z 0.0 1.0
-compute cc2 wall chunk/atom bin/1d z 0.0 1.0
-compute cc3 ions chunk/atom bin/1d z 0.0 1.0
+compute cc1 H2O chunk/atom bin/1d z 0.0 0.25
+compute cc2 wall chunk/atom bin/1d z 0.0 0.25
+compute cc3 ions chunk/atom bin/1d z 0.0 0.25
 
 fix myac1 H2O ave/chunk 10 15000 200000 &
   cc1 density/mass vx file shearing-water.dat
@@ -54,4 +54,4 @@ fix myac2 wall ave/chunk 10 15000 200000 &
 fix myac3 ions ave/chunk 10 15000 200000 &
   cc3 density/mass vx file shearing-ions.dat
 
-run 200000
+!run 200000

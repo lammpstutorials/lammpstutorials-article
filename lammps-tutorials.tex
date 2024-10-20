@@ -2444,8 +2444,14 @@ dump_modify mydmp backcolor white &
   acolor Na+ blue adiam Na+ 2.5 &
   acolor Cl- cyan adiam Cl- 3 &
   acolor WALL gray adiam WALL 3
+
+compute Tfluid fluid temp
 thermo 200
+thermo_modify temp Tfluid
 \end{lstlisting}
+The \lmpcmd{thermo\_modify} ensures that the fluid temperature \lmpcmd{Tfluid}
+is printed, and not the temperature of the entire system (which is less relevant
+with frozen walls).
 
 Let us run for 4000 steps by adding the following lines into \flecmd{minimize.lmp}:
 \begin{lstlisting}
@@ -2485,10 +2491,12 @@ energy reaches a plateau.  The generated file
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{NANOSHEAR-minimization}
-\caption{Total energy of the system $E_\text{tot}$ as a function of time $t$
-extracted from the log file using \textit{Python} and \textit{lammps\_logfile}
-\cite{sveinsson2021logfile}.  The vertical dashed lines demarcate the three
-consecutive steps.}
+\caption{a) Temperature of the fluid as a function of time $t$ during the
+minimization step of \hyperref[sheared-confined-label]{Tutorial 4}.
+The horizontal dashed line is the target temperature, $T = 300$\,K, and the
+vertical dotted lines are the transitions between the different steps
+of the minimization.  b) Total
+energy $E_\text{tot}$ of the system as a function of the time $t$.}
 \label{fig:NANOSHEAR-minimization}
 \end{figure}
 
@@ -2577,7 +2585,9 @@ should be on the order of one nanosecond.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{NANOSHEAR-equilibration}
-\caption{Distance between the walls $d$ as a function of time $t$.}
+\caption{a)~Pressure $p$ of the nanosheared electrolyte system
+simulated in \hyperref[sheared-confined-label]{Tutorial 4} as a function of the
+time $t$. b)~Distance between the walls $\Delta z$ as a function of time $t$.}
 \label{fig:NANOSHEAR-equilibration}
 \end{figure}
 
@@ -2661,9 +2671,9 @@ the \lmpcmd{chunk/atom} and \lmpcmd{ave/chunk} commands.  These commands are
 used to divide the system into bins and return the desired quantities, here the velocity
 along $x$ (\lmpcmd{vx}) within the bins.  Add the following lines to \flecmd{shearing.lmp}:
 \begin{lstlisting}
-compute cc1 H2O chunk/atom bin/1d z 0.0 1.0
-compute cc2 wall chunk/atom bin/1d z 0.0 1.0
-compute cc3 ions chunk/atom bin/1d z 0.0 1.0
+compute cc1 H2O chunk/atom bin/1d z 0.0 0.25
+compute cc2 wall chunk/atom bin/1d z 0.0 0.25
+compute cc3 ions chunk/atom bin/1d z 0.0 0.25
 
 fix myac1 H2O ave/chunk 10 15000 200000 &
   cc1 density/mass vx file shearing-water.dat
@@ -2674,29 +2684,25 @@ fix myac3 ions ave/chunk 10 15000 200000 &
 
 run 200000
 \end{lstlisting}
-Here, a bin size of $1\,\text{\AA{}}$ is used for the density profiles generated
+Here, a bin size of $0.25\,\text{\AA{}}$ is used for the density profiles generated
 by the \lmpcmd{ave/chunk} commands, and three \flecmd{.dat} files are created for
 the water, the walls, and the ions, respectively.  With values of \lmpcmd{10 15000 200000},
 the velocity \lmpcmd{vx} will be evaluated every 10 steps during the final 150,000
 steps of the simulations.  The result will be averaged and printed only once at the 200,000\,th step.
 Run the simulation using LAMMPS.  The averaged velocity and density
-profiles of the fluid are plotted in
-Figs.~\ref{fig:NANOSHEAR-velocity}-\ref{fig:NANOSHEAR-density}.  As expected for such Couette flow geometry, the fluid velocity increases linearly along $z$.
+profiles of the fluid are plotted in Fig.~\ref{fig:NANOSHEAR-profiles}.
+As expected for such Couette flow geometry, the fluid velocity increases linearly along $z$.
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{NANOSHEAR-velocity}
-\caption{Velocity profiles for water molecules and ions (blue disks), and walls
-(orange squares) along the \textit{z} axis. The line is a linear fit assuming
-that the pore size is $h = 1.8\,\text{nm}$.}
-\label{fig:NANOSHEAR-velocity}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{NANOSHEAR-density}
-\caption{Water density $\rho$ along the \textit{z} axis.}
-\label{fig:NANOSHEAR-density}
+\includegraphics[width=\linewidth]{NANOSHEAR-profiles}
+\caption{a) Water density $\rho$ along the \textit{z} axis as
+simulated in \hyperref[sheared-confined-label]{Tutorial 4}.
+b) Velocity profiles for water (blue) and walls
+(orange) along the $z$ axis.}
+% The line is a linear fit assuming
+% that the pore size is $h = 1.8\,\text{nm}$.}
+\label{fig:NANOSHEAR-profiles}
 \end{figure}
 
 From the force applied by the fluid on the solid, one can extract the stress

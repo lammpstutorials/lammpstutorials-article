@@ -26,6 +26,9 @@ dump_modify mydmp backcolor white &
   acolor Na+ blue adiam Na+ 2.5 &
   acolor Cl− cyan adiam Cl− 3 &
   acolor WALL gray adiam WALL 3
+
+compute Tfluid fluid temp
+thermo_modify temp Tfluid
 thermo 200
 
 run 4000
