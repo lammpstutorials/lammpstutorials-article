@@ -2772,26 +2772,25 @@ force fields, including the force fields used in the previous tutorials. This
 changes once ReaxFF is used: the charge of each atom will adjust to its local
 environment.
 
-Now, let us copy three crucial lines into the \flecmd{input.lmp} file:
+Next, copy the following three crucial lines into the \flecmd{relax.lmp} file:
 \begin{lstlisting}
 pair_style reaxff NULL safezone 3.0 mincap 150
-pair_coeff * * reaxCHOFe.ff Si O
-fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 &
-    reaxff maxiter 400
+pair_coeff * * reaxCHOFe.inc Si O
+fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 reaxff maxiter 400
 \end{lstlisting}
-Here, the \textit{pair\_style reaxff} is used with no control file. The
-\textit{safezone} and \textit{mincap} keywords have been added to avoid memory
-allocation issues, which sometimes can trigger the segmentation faults and
-\textit{bondchk} failed errors. The \textit{pair\_coeff} uses the
-\href{\filepath tutorial5/reaxCHOFe.ff}{\dwlcmd{reaxCHOFe.ff}}
-file, which must be downloaded and saved within \flrcmd{RelaxSilica/}. Finally, the
-\textit{fix qeq/reaxff} is used to perform charge equilibration \cite{rappe1991charge}.
-The charge equilibration occurs at every step. The values 0.0 and 10.0 are the
-low and the high cutoffs, respectively, and $1.0 \text{e} -6$ is a tolerance.
-Finally, \textit{maxiter} sets an upper limit to the number of attempts to
+In this case, the \lmpcmd{pair\_style reaxff} is used without a control file.  The
+\lmpcmd{safezone} and \lmpcmd{mincap} keywords are added to prevent
+allocation issues, which sometimes can trigger segmentation faults and
+\lmpcmd{bondchk} errors.  The \lmpcmd{pair\_coeff} command uses the
+\href{\filepath tutorial5/reaxCHOFe.inc}{\dwlcmd{reaxCHOFe.inc}}
+file, which should have been downloaded during the tutorial set up.  Finally, the
+\lmpcmd{fix qeq/reaxff} is used to perform charge equilibration \cite{rappe1991charge},
+which occurs at every step.  The values 0.0 and 10.0 represent the
+low and the high cutoffs, respectively, and $1.0 \text{e} -6$ is the tolerance.
+The \lmpcmd{maxiter} sets an upper limit to the number of attempts to
 equilibrate the charge.
 
-Then, let us add some commands to the \flecmd{input.lmp} file  to measure the
+Next, add the following commands to the \flecmd{relax.lmp} file to track the
 evolution of the charges during the simulation:
 \begin{lstlisting}
 group grpSi type Si
@@ -2799,28 +2798,24 @@ group grpO type O
 variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
 \end{lstlisting}
-Let us also print the charge in the \textit{.log} file by using \textit{thermo\_style},
-and create images of the system. Add the following lines into the \flecmd{input.lmp}:
+Let us print the charge in the \flecmd{.log} file using the
+\lmpcmd{thermo\_style} command, and create images of the system. Add the
+following lines to \flecmd{relax.lmp}:
 \begin{lstlisting}
 thermo 200
-thermo_style custom step temp etotal press &
-    vol v_qSi v_qO
+thermo_style custom step temp etotal press vol v_qSi v_qO
 dump mydmp all image 200 dump.*.jpg type type &
-    shiny 0.1 box no 0.01 view 0 0 zoom 1.8
-dump_modify mydmp backcolor white &
-    acolor Si yellow adiam Si 2.5 &
-    acolor O red adiam O 2
+  shiny 0.1 box no 0.01 view 0 0 zoom 1.8
+dump_modify mydmp backcolor white acolor Si yellow &
+  adiam Si 2.5 acolor O red adiam O 2
 \end{lstlisting}
-
-In order to also visualize the system using an external tool, VMD, let us also
-create a \textit{.lammpstrj} file for visualization:
+To also visualize the system using VMD, let us create a \lmpcmd{.lammpstrj} file:
 \begin{lstlisting}
-dump dmp all custom 200 dump.lammpstrj &
-    id typelabel q x y z
+dump dmp all custom 200 dump.lammpstrj id typelabel q x y z
 \end{lstlisting}
-The \textit{.lammpstrj} that will be created when running lammps will contain
-6 columns with respectively the atom IDs, the atom types, the atom charges ($q$),
-and finally the atom coordinates ($x$, $y$, and $z$).
+The \lmpcmd{.lammpstrj} file generated during the LAMMPS run will contain
+6 columns with respectively atom IDs, atom typelabels, atom charges ($q$),
+and atom coordinates ($x$, $y$, and $z$).
 
 Let us also use the \textit{fix reaxff/species} to evaluate what species are
 present within the simulation. It will be useful later when the system is deformed
@@ -2911,7 +2906,7 @@ mass Si 28.0855
 mass O 15.999
 
 pair_style reaxff NULL safezone 3.0 mincap 150
-pair_coeff * * ../RelaxSilica/reaxCHOFe.ff Si O
+pair_coeff * * reaxCHOFe.inc Si O
 fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 &
     reaxff maxiter 400
 \end{lstlisting}
@@ -3053,7 +3048,7 @@ read_data silica-deformed.data
 displace_atoms all move -12 0 0 # optional
 
 pair_style reaxff NULL safezone 3.0 mincap 150
-pair_coeff * * ../RelaxSilica/reaxCHOFe.ff &
+pair_coeff * * reaxCHOFe.inc &
     Si O H
 fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 &
     reaxff maxiter 400
