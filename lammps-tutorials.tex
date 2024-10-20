@@ -1079,8 +1079,8 @@ dump_modify viz adiam 1 1 adiam 2 3 acolor 1 &
 \end{lstlisting}
 The two variables \lmpcmd{n1\_in}, \lmpcmd{n2\_in}, along with the compute
 \lmpcmd{sumcoor12}, were added to the list of information printed during
-the simulation. Additionally, images of the system will be created with
-slightly less saturated colors than the default ones. 
+the simulation.  Additionally, images of the system will be created with
+slightly less saturated colors than the default ones.
 
 Finally, add the following lines to \flecmd{improved.md.lmp}:
 \begin{lstlisting}
@@ -1178,7 +1178,7 @@ Run LAMMPS again.  Now, the atoms of type 1 are colored based on the value
 of \lmpcmd{c\_coor12}, which is mapped continuously from turquoise to yellow
 and red for atoms with the highest coordination (Figure~\ref{fig:coords-viz}).
 In the definition of the variable \lmpcmd{v\_coor12}, atoms of type 2 are
-all assigned a value of -1, and will therefore always be colored their default blue. 
+all assigned a value of -1, and will therefore always be colored their default blue.
 
 \subsection{Tutorial 2: Pulling on a carbon nanotube}
 \label{carbon-nanotube-label}
@@ -1192,13 +1192,13 @@ other end with constant velocity.  To illustrate the difference between
 conventional \cite{typelabel_paper} and reactive force fields, this
 tutorial is divided into two parts: in the first part, a conventional molecular force
 field (called OPLS-AA \cite{jorgensenDevelopmentTestingOPLS1996}) is
-used and the bonds between the atoms of the CNT are unbreakable. In the
+used and the bonds between the atoms of the CNT are unbreakable.  In the
 second part, a reactive force field (called AIREBO
 \cite{stuart2000reactive}) is used, allowing for the breaking of
 chemical bonds when the CNT experiences large strain.
 
 To set up this tutorial, select \guicmd{Start Tutorial 2} from the
-\guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions. This will
+\guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.  This will
 select a folder, create one if necessary, and place several files into it.
 The initial input file, set up for a single-point energy
 calculation, will also be loaded into the editor under the name
@@ -1288,7 +1288,7 @@ we need to specify the parameters of both the bonded and
 non-bonded potentials.  The parameters we use are taken
 from the OPLS-AA (Optimized Potentials for Liquid Simulations-All-Atom)
 force field \cite{jorgensenDevelopmentTestingOPLS1996}, and are given
-in a separate \lmpcmd{unbreakable.inc} file. This file must be placed within the same
+in a separate \lmpcmd{unbreakable.inc} file.  This file must be placed within the same
 directory as the input file \flecmd{unbreakable.lmp}, and contains the following lines:
 \begin{lstlisting}
 pair_coeff 1 1 0.066 3.4
@@ -1305,10 +1305,10 @@ $\sigma_{11} = 3.4 \, \text{\AA{}}$.  The \lmpcmd{bond\_coeff} provides
 the equilibrium distance $r_0= 1.4 \, \text{\AA{}}$ and the
 spring constant $k_\text{b} = 469 \, \text{kcal/mol/\AA{}}^2$ for the
 harmonic potential imposed between two neighboring carbon atoms.  The potential
-is given by $U_\text{b} = k_\text{b} ( r - r_0)^2$. The
+is given by $U_\text{b} = k_\text{b} ( r - r_0)^2$.  The
 \lmpcmd{angle\_coeff} gives the equilibrium angle $\theta_0$ and
 constant for the potential between three neighboring atoms :
-$U_\theta = k_\theta ( \theta - \theta_0)^2$. The
+$U_\theta = k_\theta ( \theta - \theta_0)^2$.  The
 \lmpcmd{dihedral\_coeff} and \lmpcmd{improper\_coeff} define the potentials
 for the constraints between 4 atoms.
 
@@ -1365,7 +1365,7 @@ region (middle), and after deformation (bottom).}
 \label{fig:CNT-unbreakable}
 \end{figure}
 
-Run the simulation using LAMMPS. The number of atoms in each group is given in
+Run the simulation using LAMMPS.  The number of atoms in each group is given in
 the \guicmd{Output} window.  It is an important check to make sure that the number
 of atoms in each group corresponds to what is expected, as shown here:
 \begin{lstlisting}
@@ -1402,7 +1402,7 @@ The \lmpcmd{velocity} command gives initial velocities to the atoms of the middl
 group \lmpcmd{cnt\_mid}, ensuring an initial temperature of $T = 300\,\text{K}$
 for these atoms.
 
-Let us specify the thermalization and the dynamics of the system. Add the following
+Let us specify the thermalization and the dynamics of the system.  Add the following
 lines into \flecmd{unbreakable.lmp}:
 \begin{lstlisting}
 fix mynve1 cnt_top nve
@@ -1434,7 +1434,7 @@ they would if no other command was applied to them).
 \begin{note}
   The \lmpcmdnote{velocity set}
   commands impose the velocity of a group of atoms at the start of a run but do
-  not enforce the velocity during the entire simulation. When \lmpcmdnote{velocity set}
+  not enforce the velocity during the entire simulation.  When \lmpcmdnote{velocity set}
   is used in combination with \lmpcmdnote{setforce 0 0 0}, as is the case here, the
   atoms won't feel any force during the entire simulation.  According to the Newton
   equation, no force means no acceleration, meaning that the initial velocity
@@ -1500,8 +1500,8 @@ $0.001\,\text{\AA{}/fs}$.
 \caption{a) Evolution of the length $L_\text{cnt}$ of the CNT with time,
 as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
 The CNT starts deforming at $t = 5\,\text{ps}$, and $L_\text{cnt-0}$ is the
-CNT initial length. b) Evolution of the total energy $E_\text{tot}$ of the system
-with time $t$. Here, the potential is OPLS-AA, and the CNT is unbreakable.}
+CNT initial length.  b) Evolution of the total energy $E_\text{tot}$ of the system
+with time $t$.  Here, the potential is OPLS-AA, and the CNT is unbreakable.}
 \label{fig:CNT-unbreakable-LE}
 \end{figure}
 
@@ -1565,7 +1565,7 @@ There are only a few differences with the previous input.  First, the \lmpcmd{me
 units system is used instead of \lmpcmd{real}, which is
 required by the AIREBO force field.  A second difference is the use of the
 \lmpcmd{atom\_style atomic} instead of \lmpcmd{molecular}, since no explicit
-bond information is required with AIREBO. The following commands are
+bond information is required with AIREBO.  The following commands are
 setting up the AIREBO force field:
 \begin{lstlisting}
 pair_style airebo 3.0
@@ -1597,7 +1597,7 @@ the $x$ axis, to allow for larger deformation of the CNT.
 
 \paragraph{Start the simulation}
 
-Here, let us perform a similar deformation as the previous one. 
+Here, let us perform a similar deformation as the previous one.
 In \lmpcmd{breakable.lmp}, replace the \lmpcmd{run 0 post no} line with:
 \begin{lstlisting}
 fix mysf1 cnt_bot setforce 0 0 0
@@ -1621,7 +1621,7 @@ thermo_modify temp Tmid line yaml
 timestep 0.0005
 run 10000
 \end{lstlisting}
-Note the relatively small timestep of $0.0005$\,ps ($= 0.5$\,fs) used. Reactive force
+Note the relatively small timestep of $0.0005$\,ps ($= 0.5$\,fs) used.  Reactive force
 fields like AIREBO usually require a smaller timestep than conventional ones.  When running
 \flecmd{breakable.lmp} with LAMMPS, you can see that the temperature deviates
 from the target temperature of $300\,\text{K}$ at the start of the equilibration,
@@ -1656,9 +1656,9 @@ VMD \cite{vmd_home,humphrey1996vmd} with the \guicmd{DynamicBonds} representatio
 \label{fig:CNT-deformed-breakable}
 \end{figure}
 
-Looking at the evolution of the energy, one can see that the total energy $E_\text{tot}$ is initially increasing with the deformation. When bonds break, the energy relaxes abruptly,
+Looking at the evolution of the energy, one can see that the total energy $E_\text{tot}$ is initially increasing with the deformation.  When bonds break, the energy relaxes abruptly,
 as can be seen near $t=110~\text{ps}$ and again near $t=130~\text{ps}$ in
-Fig.\,\ref{fig:CNT-deformed-breakable}\,a. Using the same script as previously to
+Fig.\,\ref{fig:CNT-deformed-breakable}\,a.  Using the same script as previously to
 import the data into Python, the stress-strain
 curve can be generated, see Fig.\,\ref{fig:CNT-deformed-breakable}\,b.
 
@@ -1696,7 +1696,7 @@ fix break all bond/break 1000 1 2.5
 \centering
 \includegraphics[width=0.55\linewidth]{PEG}
 \caption{The polymer molecule (PEG - PolyEthylene Glycol) solvated in water as
-simulated during \hyperref[all-atoms-label]{Tutorial 3}. Water molecules are
+simulated during \hyperref[all-atoms-label]{Tutorial 3}.  Water molecules are
 represented as a transparent continuum field for clarity.}
 \label{fig:PEG}
 \end{figure}
@@ -1705,8 +1705,8 @@ represented as a transparent continuum field for clarity.}
 polymer (PEG - PolyEthylene Glycol) in a reservoir of water (Fig.\,\ref{fig:PEG}).
 Once the water reservoir is properly equilibrated at the desired temperature and
 pressure, the polymer molecule is added and a constant stretching force is applied
-to both ends of the polymer. The evolution of the polymer length is measured as
-a function of time. The GROMOS 54A7 force field \cite{schmid2011definition} is used
+to both ends of the polymer.  The evolution of the polymer length is measured as
+a function of time.  The GROMOS 54A7 force field \cite{schmid2011definition} is used
 for the PEG, the SPC/Fw model \cite{wu2006flexible} is used for the water, and the
 long-range Coulomb interactions are solved using the PPPM solver \cite{luty1996calculating}.
 This tutorial was inspired by a publication by Liese and coworkers, in which molecular
@@ -1732,7 +1732,7 @@ kspace_style ewald 1e-5
 special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 angle yes
 \end{lstlisting}
 With the unit style \lmpcmd{real}, masses are in grams per mole, distances in
-Ångströms, time in femtoseconds, and energies in kcal/mole. With the \lmpcmd{atom\_style full},
+Ångströms, time in femtoseconds, and energies in kcal/mole.  With the \lmpcmd{atom\_style full},
 each atom is a dot with a mass and a charge that can be linked by bonds, angles,
 dihedrals, and/or impropers.  The \lmpcmd{bond\_style},
 \lmpcmd{angle\_style}, and \lmpcmd{dihedral\_style} commands define the potentials
@@ -1747,7 +1747,7 @@ factors for the interaction between neighboring atoms.
 Let us create a 3D simulation box of dimensions $6 \times 3 \times 3 \; \text{nm}^3$,
 and make space for 8 atom types (2 for the water, 6 for the polymer), 7 bond types
 (1 for the water, 6 for the polymer), 8 angle types (1 for the water, 7 for the polymer),
-and 4 dihedral types (only for the polymer). Copy the following lines into \flecmd{water.lmp}:
+and 4 dihedral types (only for the polymer).  Copy the following lines into \flecmd{water.lmp}:
 \begin{lstlisting}
  region box block -30 30 -15 15 -15 15
  create_box 8 box &
@@ -1777,7 +1777,7 @@ can be referred to as `OW' and `HW', respectively.  Similar maps are used for
 the bond types, angle types, and dihedral types.
 \end{note}
 
-Let us create water molecules. To do so, let us import a molecule template called
+Let us create water molecules.  To do so, let us import a molecule template called
 \flecmd{water.mol} and then randomly create 700 molecules.  Add the following
 lines into \flecmd{water.lmp}:
 \begin{lstlisting}
@@ -1787,7 +1787,7 @@ create_atoms 0 random 700 87910 NULL mol h2omol 454756 &
 \end{lstlisting}
 The \lmpcmd{overlap 1.0} option of the \lmpcmd{create\_atoms} command ensures
 that no atoms are placed exactly in the same position, as this would cause the
-simulation to crash. The \lmpcmd{maxtry 50} asks LAMMPS to try at most 50 times
+simulation to crash.  The \lmpcmd{maxtry 50} asks LAMMPS to try at most 50 times
 to insert the molecules, which is useful in case some insertion attempts are
 rejected due to overlap.  In some cases, depending on the system and the values
 of \lmpcmd{overlap} and \lmpcmd{maxtry}, LAMMPS may not create the desired number
@@ -1874,7 +1874,7 @@ system can also be seen in Fig.\,\ref{fig:PEG-water}.
 \includegraphics[width=\linewidth]{PEG-density}
 \caption{a) Temperature of the water reservoir from
 \hyperref[all-atom-label]{Tutorial 3} with time $t$.  The horizontal dashed line is
-the target temperature of 300\,K. b) Evolution of the density $\rho$.}
+the target temperature of 300\,K.  b) Evolution of the density $\rho$.}
 \label{fig:PEG-density}
 \end{figure}
 
@@ -1921,9 +1921,9 @@ the \lmpcmd{units} of the \lmpcmd{atom\_style} commands do not need to be repeat
 as they were saved within the \flecmd{.restart} file.  There is also no need to
 re-include the parameters from the \flecmd{.inc} file.  The \lmpcmd{kspace\_style}
 command, however, is not saved by the \lmpcmd{write\_restart} command and must be
-repeated. Since Ewald summation is not the most efficient choice for such dense
+repeated.  Since Ewald summation is not the most efficient choice for such dense
 system, let us use PPPM (for particle-particle particle-mesh) for the rest
-of the tutorial. Add the following command to \flecmd{merge.lmp}:
+of the tutorial.  Add the following command to \flecmd{merge.lmp}:
 \begin{lstlisting}
 kspace_style pppm 1e-5
 \end{lstlisting}
@@ -1948,7 +1948,7 @@ delete_atoms overlap 2.0 H2O PEG mol yes
 Here the value of 2.0~Ångströms for the overlap cutoff was fixed arbitrarily and can
 be chosen through trial and error.  If the cutoff is too small, the simulation will
 crash because atoms that are too close to each other undergo forces
-that can be extremely large. If the cutoff is too large, too many water
+that can be extremely large.  If the cutoff is too large, too many water
 molecules will unnecessarily be deleted.
 
 Let us use the \lmpcmd{fix npt} to control the temperature, as
@@ -2026,7 +2026,7 @@ group topull1 variable end1
 group topull2 variable end2
 \end{lstlisting}
 These lines identify the oxygen atoms (\lmpcmd{OAlc}) at the ends of the PEG
-molecule and calculates their center of mass along the $x$ axis. It then
+molecule and calculates their center of mass along the $x$ axis.  It then
 divides these atoms into two groups, \lmpcmd{OAlc} (i.e., the OAlc atom to
 the right of the center) and \lmpcmd{OAlc} (i.e., the OAlc atom to the right
 of the center), for applying force during the stretching process.
@@ -2077,7 +2077,7 @@ Finally, let us simulate 15 picoseconds without any external force:
 run 15000
 \end{lstlisting}
 This initial run will serve as a benchmark to quantify the changes caused by
-the applied force in later steps. Next, let us apply a force to the two selected
+the applied force in later steps.  Next, let us apply a force to the two selected
 oxygen atoms using two \lmpcmd{add\_force} commands, and then run the simulation
 for an extra 15~ps:
 \begin{lstlisting}
@@ -2089,14 +2089,14 @@ The force magnitude of $10\,\text{kcal/mol/\AA{}}$ corresponds to $0.67\,\text{n
 and was selected to be sufficiently large to overcome both thermal agitation and
 the entropic contributions from both the water and PEG molecules.
 
-Run the \flecmd{pull.lmp} file using LAMMPS. From the generated images of the system,
+Run the \flecmd{pull.lmp} file using LAMMPS.  From the generated images of the system,
 you should observe that the PEG molecule eventually aligns
 in the direction of the applied force (as seen in Fig.\,\ref{fig:PEG-in-water}).
 The evolutions of the radius of gyration over
 time indicates that the PEG quickly adjusts to the external force
 (Fig.\,\ref{fig:PEG-distance}\,a).  Additionally, from the values of the dihedral angles
 printed in the \flecmd{pull.dat} file, you can create a histogram
-of dihedral angles for a specific type. For example, the angle $\phi$ for dihedrals
+of dihedral angles for a specific type.  For example, the angle $\phi$ for dihedrals
 of type 1 (C-C-OE-C) is shown in Fig.\,\ref{fig:PEG-distance}\,b.
 
 \begin{figure}
@@ -2199,9 +2199,9 @@ labelmap atom 1 O 2 H 3 Na+ 4 Cl- 5 WALL
 labelmap bond 1 O-H
 labelmap angle 1 H-O-H
 \end{lstlisting}
-The \lmpcmd{lattice} command defines the unit cell. Here, the face-centered cubic (fcc) lattice
+The \lmpcmd{lattice} command defines the unit cell.  Here, the face-centered cubic (fcc) lattice
 with a scale factor of 4.04 has been chosen for the future positioning of the atoms
-of the walls. The \lmpcmd{region} command defines a geometric region of space.  By choosing
+of the walls.  The \lmpcmd{region} command defines a geometric region of space.  By choosing
 $\text{xlo}=-3$ and $\text{xlo}=3$, and because we have previously chosen a lattice with a scale
 factor of 4.04, the region box extends from $-12.12~\text{\AA{}}$ to $12.12~\text{\AA{}}$
 along the $x$ direction.  The \lmpcmd{create\_box} command creates a simulation box with
@@ -2237,13 +2237,13 @@ molecule h2omol water.mol
 create_atoms 0 region rliquid mol h2omol 482793
 \end{lstlisting}
 Within the last three lines, a \lmpcmd{region} named \lmpcmd{rliquid} is
-created based on the last defined lattice, \lmpcmd{fcc 4.04}. \lmpcmd{rliquid}
-will be used for depositing the water molecules. The \lmpcmd{molecule} command
+created based on the last defined lattice, \lmpcmd{fcc 4.04}.  \lmpcmd{rliquid}
+will be used for depositing the water molecules.  The \lmpcmd{molecule} command
 opens up the molecule template called \flecmd{water.mol}, and names the
 associated molecule \lmpcmd{h2omol}.  The new molecules are placed on the
 \lmpcmd{fcc 4.04} lattice by the \lmpcmd{create\_atoms} command.  The first
 parameter is 0, meaning that the atom IDs from the \flecmd{water.mol} file
-will be used. The number \lmpcmd{482793} is a seed that is required by LAMMPS,
+will be used.  The number \lmpcmd{482793} is a seed that is required by LAMMPS,
 it can be any positive integer.
 
 Finally, let us create 30 ions (15 $\text{Na}^+$ and 15 $\text{Cl}^-$) in between
@@ -2256,10 +2256,10 @@ set type Cl- charge -1
 \end{lstlisting}
 Each \lmpcmd{create\_atoms} command will add 15 ions at random positions
 within the \lmpcmd{rliquid} region, ensuring that there is no \lmpcmd{overlap}
-with existing molecules. Feel free to increase or decrease the salt concentration
-by changing the number of desired ions. To keep the system charge neutral,
+with existing molecules.  Feel free to increase or decrease the salt concentration
+by changing the number of desired ions.  To keep the system charge neutral,
 always insert the same number of $\text{Na}^+$ and $\text{Cl}^-$, unless there
-are other charges in the system. The charges of the newly added ions are specified
+are other charges in the system.  The charges of the newly added ions are specified
 by the two \lmpcmd{set} commands.
 
 Before starting the simulation, we need to define the parameters of the
@@ -2378,7 +2378,7 @@ and a file named \flecmd{create.data} will be created alongside \flecmd{create.l
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{NANOSHEAR-system}
-\caption{Side view of the system. Periodic images are represented in darker colors.
+\caption{Side view of the system.  Periodic images are represented in darker colors.
 Water molecules are in red and white, $\text{Na}^+$ ions in purple, $\text{Cl}^-$
 ions in lime, and wall atoms in gray.  Note the absence of atomic defect at the
 cell boundaries.}
@@ -2478,7 +2478,8 @@ equilibrated step, it is no longer necessary to use the \lmpcmd{nve/limit} comma
 Instead, we use the classic \lmpcmd{fix nve} command.
 
 When running the \flecmd{minimize.lmp} file with LAMMPS, you should observe that the
-the temperature reaches the desired value of $300\,\text{K}$.  The generated file
+the temperature reaches the desired value of $300\,\text{K}$, and that the total
+energy reaches a plateau.  The generated file
 \flecmd{minimize.data} contains the final state of the system.
 
 \begin{figure}
@@ -2486,7 +2487,7 @@ the temperature reaches the desired value of $300\,\text{K}$.  The generated fil
 \includegraphics[width=\linewidth]{NANOSHEAR-minimization}
 \caption{Total energy of the system $E_\text{tot}$ as a function of time $t$
 extracted from the log file using \textit{Python} and \textit{lammps\_logfile}
-\cite{sveinsson2021logfile}. The vertical dashed lines demarcate the three
+\cite{sveinsson2021logfile}.  The vertical dashed lines demarcate the three
 consecutive steps.}
 \label{fig:NANOSHEAR-minimization}
 \end{figure}
@@ -2494,70 +2495,84 @@ consecutive steps.}
 \paragraph{System equilibration}
 
 Let us equilibrate further the entire system by letting both fluid and piston
-relax at ambient temperature.  Create a new folder called \flrcmd{equilibration/}
-next to the previously created folders, and create a new \flecmd{input.lmp}
-file in it.  Add the following lines into \flecmd{input.lmp}:
+relax at ambient temperature.  Open the \flecmd{equilibrate.lmp} file that was
+downloaded during the tutorial setup.  It contains the following lines:
 \begin{lstlisting}
 boundary p p f
 units real
 atom_style full
 bond_style harmonic
 angle_style harmonic
-pair_style lj/cut/tip4p/long O H O-H H-O-H &
-    0.1546 12.0
+pair_style lj/cut/tip4p/long O H O-H H-O-H 0.1546 12.0
 kspace_style pppm/tip4p 1.0e-5
 kspace_modify slab 3.0
 
-read_data ../minimization/system.data
+read_data minimize.data
 
-include ../PARM.lmp
-include ../GROUP.lmp
+include parameters.inc
+include groups.inc
+\end{lstlisting}
 
-fix mynve all nve
-fix myber all temp/berendsen 300 300 100
+Let us update the positions of \emph{all} the atoms and use a Nosé-Hoover
+thermostat.  Add the following lines to \flecmd{equilibrate.lmp}:
+\begin{lstlisting}
+fix mynvt all nvt temp 300 300 100
 fix myshk H2O shake 1.0e-5 200 0 b O-H a H-O-H
 fix myrct all recenter NULL NULL 0
 timestep 1.0
 \end{lstlisting}
-The fix \textit{recenter} does not influence the dynamics but will keep the
-system in the center of the box, which makes the
-visualization easier. Then, add the following lines into \flecmd{input.lmp}
-for the trajectory visualization and output:
+As mentioned previously, the \lmpcmd{fix recenter} does not influence the dynamics,
+but will keep the system in the center of the box, which makes the
+visualization easier.  Then, add the following lines into \flecmd{equilibrate.lmp}
+for the trajectory visualization:
 \begin{lstlisting}
-
-dump mydmp all image 200 dump.*.jpg type type &
-    shiny 0.1 box no 0.01 view 90 0 zoom 1.8
+dump mydmp all image 250 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 90 0 zoom 1.8
 dump_modify mydmp backcolor white &
-    acolor O red adiam O 2 &
-    acolor H white adiam H 1 &
-    acolor Na+ blue adiam Na+ 2.5 &
-    acolor Cl- cyan adiam Cl- 3 &
-    acolor WALL gray adiam WALL 3
-thermo 500
+  acolor O red adiam O 2 &
+  acolor H white adiam H 1 &
+  acolor Na+ blue adiam Na+ 2.5 &
+  acolor Cl- cyan adiam Cl- 3 &
+  acolor WALL gray adiam WALL 3
+\end{lstlisting}
+
+To monitor the system equilibration, let us print the distance between
+the two walls. Add the following lines to \flecmd{equilibrate.lmp}:
+\begin{lstlisting}
 variable walltopz equal xcm(walltop,z)
 variable wallbotz equal xcm(wallbot,z)
 variable deltaz equal v_walltopz-v_wallbotz
-fix myat1 all ave/time 100 1 100 v_deltaz &
-    file interwall_distance.dat
-\end{lstlisting}
-The first two variables extract the centers of mass of the two walls. Then,
-the \textit{deltaz} variable is used to calculate the distance between the two
-variables \textit{walltopz} and \textit{wallbotz}, i.e.~the distance between the two walls.
 
-Finally, let us add the \textit{run} command:
+thermo 250
+thermo_style custom step temp etotal press v_deltaz
+\end{lstlisting}
+The first two variables extract the centers of mass of the two walls.  The
+\lmpcmd{deltaz} variable is then used to calculate the difference between the two
+variables \lmpcmd{walltopz} and \lmpcmd{wallbotz}, i.e.~the distance between the
+two centers of mass of the walls.
+
+Finally, let us run the simulation for 30~ps by adding a \lmpcmd{run} command
+to \flecmd{equilibrate.lmp}:
 \begin{lstlisting}
 run 30000
-write_data system.data nocoeff
+
+write_data equilibrate.data nocoeff
 \end{lstlisting}
-Run the \flecmd{input.lmp} file using LAMMPS. As seen from the data printed by
-\textit{fix myat1}, the distance between the two walls reduces until it reaches
+Run the \flecmd{input.lmp} file using LAMMPS.  As seen from the values of
+\lmpcmd{deltaz}, the distance between the two walls reaches
 an equilibrium value (Fig.\,\ref{fig:NANOSHEAR-equilibration}).
 
-Note that it is generally recommended to run longer equilibration. Here, for
-instance, the slowest process in the system is probably the ionic diffusion.
-Therefore, the equilibration should in principle be longer than the time
-the ions need to diffuse over the size of the pore ($\approx 1.2\,\text{nm}$),
-i.e.~on the order of half a nanosecond.
+\begin{note}
+Note that it is generally recommended to run a longer equilibration.  In this case,
+the slowest process in the system is likely ionic diffusion.
+Therefore, the equilibration period should, in principle, exceed the time required
+for the ions to diffuse across the size of the pore, i.e.~$H_\text{pore}^2/D_\text{ions}$.
+Using $H_\text{pore} \approx 1.2~\text{nm}$ as the final pore size
+and $D_\text{ions} \approx 1.5 \cdot 10^{-9}~\text{m}^2/\text{s}$
+as the typical diffusion coefficient for sodium chloride in water at room
+temperature \cite{mills1955remeasurement}, one finds that the equilibration
+should be on the order of one nanosecond.
+\end{note}
 
 \begin{figure}
 \centering
@@ -2569,8 +2584,8 @@ i.e.~on the order of half a nanosecond.
 \subsubsection{Imposed shearing}
 
 From the equilibrated configuration, let us impose a lateral motion on the two
-walls and shear the electrolyte. In a new folder called \flrcmd{shearing/},
-create a new \flecmd{input.lmp} file that starts like the previous ones:
+walls and shear the electrolyte.  Open the last input file named \flecmd{shearing.lmp}.
+It starts with the following lines:
 \begin{lstlisting}
 boundary p p f
 units real
@@ -2580,88 +2595,93 @@ angle_style harmonic
 pair_style lj/cut/tip4p/long O H O-H H-O-H 0.1546 12.0
 kspace_style pppm/tip4p 1.0e-5
 kspace_modify slab 3.0
+
+read_data equilibrate.data
+
+include parameters.inc
+include groups.inc
 \end{lstlisting}
-Let us import the previously equilibrated data, include the parameter and group
-files, and then deal with the dynamics of the system.
+
+To address the dynamics of the system, add the following lines to
+\flecmd{shearing.lmp}:
 \begin{lstlisting}
-read_data ../equilibration/system.data
-
-include ../PARM.lmp
-include ../GROUP.lmp
-
-fix mynve all nve
 compute Tfluid fluid temp/partial 0 1 1
-fix myber1 fluid temp/berendsen 300 300 100
-fix_modify myber1 temp Tfluid
+fix mynvt1 fluid nvt temp 300 300 100
+fix_modify mynvt1 temp Tfluid
+
 compute Twall wall temp/partial 0 1 1
-fix myber2 wall temp/berendsen 300 300 100
-fix_modify myber2 temp Twall
+fix mynvt2 wall nvt temp 300 300 100
+fix_modify mynvt2 temp Twall
+
 fix myshk H2O shake 1.0e-5 200 0 b O-H a H-O-H
 fix myrct all recenter NULL NULL 0
+timestep 1.0
 \end{lstlisting}
-One difference with the previous input is that, here, two thermostats are used,
-one for the fluid (\textit{myber1}) and one for the solid (\textit{myber2}).
-The use of \textit{fix\_modify} together with \textit{compute temp} ensures
-that the right temperature value is used by the thermostats. The use of
-temperature \textit{compute} with \textit{temp/partial 0 1 1} is meant to exclude
-the \textit{x} coordinate from the thermalization, which is important since a
-large velocity will be imposed along \textit{x}.
+One key difference with the previous input is that, here, two thermostats are used,
+one for the fluid (\lmpcmd{mynvt1}) and one for the solid (\lmpcmd{mynvt2}).
+The combination of \lmpcmd{fix\_modify} with \lmpcmd{compute temp} ensures
+that the correct temperature values are used by the thermostats.  Using
+\lmpcmd{compute} commands for the temperature with \lmpcmd{temp/partial 0 1 1} is
+intended to exclude the $x$ coordinate from the thermalization, which is important since a
+large velocity will be imposed along the $x$ direction.
 
 Then, let us impose the velocity of the two walls by adding the following
-commands to \flecmd{input.lmp}:
+commands to \flecmd{shearing.lmp}:
 \begin{lstlisting}
 fix mysf1 walltop setforce 0 NULL NULL
 fix mysf2 wallbot setforce 0 NULL NULL
 velocity wallbot set -2e-4 NULL NULL
 velocity walltop set 2e-4 NULL NULL
 \end{lstlisting}
-The \textit{setforce} commands cancel the forces on \textit{walltop} and
-\textit{wallbot}, respectively. Therefore the atoms of the two groups do not
-experience any force from the rest of the system. In the absence of force acting
-on those atoms, they will conserve their initial velocity. The \textit{velocity}
-commands act only once and impose the velocity of the atoms of the groups
-\textit{wallbot} and \textit{walltop}, respectively.
+The \lmpcmd{setforce} commands cancel the forces on \lmpcmd{walltop} and
+\lmpcmd{wallbot}.  As a result, the atoms in these two groups will not
+experience any forces from the rest of the system.  Consequently, in the absence of
+external forces, these atoms will conserve the initial velocities imposed by the
+two \lmpcmd{velocity} commands.
 
-Finally, let us dump the atom positions, and extract the velocity profiles using
-several \textit{ave/chunk} commands, extract the force applied on the walls, and
-then run for $200\,\text{ps}$ Add the following lines into \flecmd{input.lmp}:
+Finally, let us generate images of the systems and print the values of the
+forces exerted by the fluid on the walls, as given by \lmpcmd{f\_mysf1[1]}
+and \lmpcmd{f\_mysf2[1]}.  Add these lines to \flecmd{shearing.lmp}:
 \begin{lstlisting}
-dump mydmp all image 200 dump.*.jpg type type &
-    shiny 0.1 box no 0.01 view 90 0 zoom 1.8
+dump mydmp all image 250 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 90 0 zoom 1.8
 dump_modify mydmp backcolor white &
-    acolor O red adiam O 2 &
-    acolor H white adiam H 1 &
-    acolor Na+ blue adiam Na+ 2.5 &
-    acolor Cl- cyan adiam Cl- 3 &
-    acolor WALL gray adiam WALL 3
+  acolor O red adiam O 2 &
+  acolor H white adiam H 1 &
+  acolor Na+ blue adiam Na+ 2.5 &
+  acolor Cl- cyan adiam Cl- 3 &
+  acolor WALL gray adiam WALL 3
 
-thermo 500
+thermo 250
 thermo_modify temp Tfluid
-
+thermo_style custom step temp etotal f_mysf1[1] f_mysf2[1] 
+\end{lstlisting}
+Let us also extract the density and velocity profiles using
+the \lmpcmd{chunk/atom} and \lmpcmd{ave/chunk} commands.  These commands are
+used to divide the system into bins and return the desired quantities, here the velocity
+along $x$ (\lmpcmd{vx}) within the bins.  Add the following lines to \flecmd{shearing.lmp}:
+\begin{lstlisting}
 compute cc1 H2O chunk/atom bin/1d z 0.0 1.0
 compute cc2 wall chunk/atom bin/1d z 0.0 1.0
 compute cc3 ions chunk/atom bin/1d z 0.0 1.0
 
 fix myac1 H2O ave/chunk 10 15000 200000 &
-cc1 density/mass vx file water.profile_1A.dat
+  cc1 density/mass vx file shearing-water.dat
 fix myac2 wall ave/chunk 10 15000 200000 &
-cc2 density/mass vx file wall.profile_1A.dat
+  cc2 density/mass vx file shearing-wall.dat
 fix myac3 ions ave/chunk 10 15000 200000 &
-cc3 density/mass vx file ions.profile_1A.dat
+  cc3 density/mass vx file shearing-ions.dat
 
-fix myat1 all ave/time 10 100 1000 f_mysf1[1] &
-    f_mysf2[1] file forces.dat
-
-timestep 1.0
 run 200000
-write_data system.data nocoeff
 \end{lstlisting}
-Here, a binning of $1\,\text{\AA{}}$ is used for the density profiles generated
-by the \textit{ave/chunk} commands. For smoother profiles, you can reduce the value
-of the bins. The averaged velocity and density profiles of the fluid are plotted
-in Figs.\ref{fig:NANOSHEAR-velocity}-\ref{fig:NANOSHEAR-density}. As expected for
-such Couette flow geometry, the velocity of the fluid is found to increase linearly
-along $z$.
+Here, a bin size of $1\,\text{\AA{}}$ is used for the density profiles generated
+by the \lmpcmd{ave/chunk} commands, and three \flecmd{.dat} files are created for
+the water, the walls, and the ions, respectively.  With values of \lmpcmd{10 15000 200000},
+the velocity \lmpcmd{vx} will be evaluated every 10 steps during the final 150,000
+steps of the simulations.  The result will be averaged and printed only once at the 200,000\,th step.
+Run the simulation using LAMMPS.  The averaged velocity and density
+profiles of the fluid are plotted in
+Figs.~\ref{fig:NANOSHEAR-velocity}-\ref{fig:NANOSHEAR-density}.  As expected for such Couette flow geometry, the fluid velocity increases linearly along $z$.
 
 \begin{figure}
 \centering
@@ -2680,21 +2700,21 @@ that the pore size is $h = 1.8\,\text{nm}$.}
 \end{figure}
 
 From the force applied by the fluid on the solid, one can extract the stress
-within the fluid, which allows for the measurement of its viscosity $\dot{\eta}$
+within the fluid, which enables the measurement of its viscosity $\dot{\eta}$
 according to $\eta = \tau / \dot{\gamma}$ where $\tau$ is the stress applied by
-the fluid on the shearing wall, and $\dot{\gamma}$ the shear rate (which is
-imposed here) \cite{gravelle2021violations}. Here, the shear rate is
-approximatively $\dot{\gamma} = 16 \cdot 10^9\,\text{s}^{-1}$, and using a
-surface area of $A = 6 \cdot 10^{-18}\,\text{m}^2$, one gets an estimate for
-the shear viscosity for the confined fluid of $\eta = 6.6\,\text{mPa.s}$. The
+the fluid on the shearing wall, and $\dot{\gamma}$ the shear rate
+\cite{gravelle2021violations}.  Here, the shear rate is
+approximately $\dot{\gamma} = 16 \cdot 10^9\,\text{s}^{-1}$, and using a
+surface area of $A = 6 \cdot 10^{-18}\,\text{m}^2$, one obtains an estimate for
+the shear viscosity for the confined fluid of $\eta = 6.6\,\text{mPa.s}$.  The
 viscosity calculated at such a high shear rate may differ from the expected
-\textit{bulk} value. In general, it is recommended to use a lower value for the
-shear rate. Note that for lower shear rates, the ratio of noise-to-signal is
-larger, and longer simulations are needed. Another important point to keep in
-mind is that the viscosity of a fluid next to a solid surface is typically larger
+\emph{bulk} value.  In general, it is recommended to use a lower value for the
+shear rate.  Note that for lower shear rates, the ratio of noise-to-signal is
+larger, and longer simulations are needed.  Another important point to consider
+is that the viscosity of a fluid next to a solid surface is typically larger
 than in bulk due to interaction with the walls \cite{wolde-kidanInterplayInterfacialViscosity2021}.
-Therefore, one expects the present simulation to return a viscosity that is slightly
-larger than what would be measured in the absence of a wall.
+Therefore, one expects the present simulation to yield a viscosity that is slightly
+higher than what would be measured in the absence of walls.
 
 \subsection{Tutorial 5: Reactive silicon dioxide}
 \label{reactive-silicon-dioxide-label}
