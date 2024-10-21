@@ -30,8 +30,10 @@ compute sumcoor12 grp_t1 reduce ave c_coor12
 thermo 1000
 thermo_style custom step temp pe ke etotal press v_n1_in v_n2_in c_sumcoor12
 
-dump viz all image 100 myimage.md.*.ppm type type shiny 0.1 box no 0.01 view 0 0 zoom 1.8 fsaa yes
-dump_modify viz adiam 1 1 adiam 2 3 acolor 1 turquoise acolor 2 royalblue backcolor white
+variable coor12 atom (type==1)*(c_coor12)+(type==2)*-1
+dump viz all image 100 myimage.md.*.ppm v_coor12 type shiny 0.1 box no 0.01 view 0 0 zoom 1.8 fsaa yes
+dump_modify viz adiam 1 1 adiam 2 3 backcolor white &
+    amap -1 2 ca 0.0 4 min royalblue 0 turquoise 1 yellow max red
 
 # 5) Run
 velocity all create 1.0 49284 mom yes dist gaussian
