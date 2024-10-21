@@ -2930,12 +2930,13 @@ The only difference with the previous \flecmd{relax.lmp} file is the path to
 the \flecmd{relax.data} file. Copy the following lines into \flecmd{deform.lmp}:
 
 Next, let us use \lmpcmd{fix nvt} instead of \lmpcmd{fix npt} to apply a
-Nosé-Hoover thermostat without any barostat:
+Nosé-Hoover thermostat without a barostat:
 \begin{lstlisting}
 fix mynvt all nvt temp 300.0 300.0 100
 timestep 0.5
 \end{lstlisting}
-Here, no barostat is used because the box volume will be imposed by the \lmpcmd{fix deform}.
+Here, a barostat is not used because the change in the box volume will be imposed
+by the \lmpcmd{fix deform}.
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-deformed-charge}
@@ -2946,9 +2947,9 @@ initial values for the average charge.}
 \label{fig:SIO-deformed-charge}
 \end{figure}
 
-Let us run for 5000 steps without deformation, then apply the \textit{fix deform}
-for elongating progressively the box along \textit{x} during 25000 steps. Add
-the following line to \flecmd{input.lmp}:
+Let us run for 5000 steps without deformation, then apply the \lmpcmd{fix deform}
+to progressively elongate the box along the $x$-axis during 25000 steps.  Add
+the following line to \flecmd{deform.lmp}:
 \begin{lstlisting}
 run 5000
 
@@ -2956,19 +2957,26 @@ fix mydef all deform 1 x erate 5e-5
 
 run 25000
 
-write_data silica-deformed.data
+write_data deform.data
 \end{lstlisting}
-Run the \flecmd{input.lmp} file using LAMMPS. During the deformation, the charge
-values progressively evolve until the structure eventually breaks down. After the
+Run the \lmpcmd{deform.lmp} file using LAMMPS.  During the deformation, the charge
+values progressively evolve until the structure eventually breaks down.  After the
 structure breaks down, the charges equilibrate near new average values that differ
-from the starting averages (Fig.\,\ref{fig:SIO-deformed-charge}). The difference
+from the initial averages (Fig.\,\ref{fig:SIO-deformed-charge}).  The difference
 between the initial and the final charges can be explained by the presence of
-defects as well as new solid/vacuum interfaces, and the fact that surface atoms
-typically have different charges compared to bulk atoms. There is also a strong
-increase in temperature during the rupture of the material (Fig.\,\ref{fig:SIO-temperature}).
-At the end of the deformation, one can visualize the broken material using VMD.
-Notice the different charge values of the atoms located near the vacuum interfaces,
-compared to the atoms located in the bulk of the material (Fig.\,\ref{fig:SIO-deformed}).
+defects, as well as new solid/vacuum interfaces, and the fact that surface atoms
+typically have different charges compared to bulk atoms (Fig.\,\ref{fig:SIO-deformed}).
+There is also a sharp increase in temperature during the rupture of
+the material (Fig.\,\ref{fig:SIO-temperature}).
+
+\begin{figure}
+\includegraphics[width=\linewidth]{SIO-deformed}
+\caption{Amorphous silicon oxide after deformation. The atoms are colored by their
+charges.  Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of
+about $1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of
+about $-0.9 ~ \text{e}$ appear in blue.}
+\label{fig:SIO-deformed}
+\end{figure}
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-temperature}
@@ -2977,20 +2985,11 @@ The material ruptures near $t = 10~\text{ps}$.}
 \label{fig:SIO-temperature}
 \end{figure}
 
-\begin{figure}
-\includegraphics[width=\linewidth]{SIO-deformed}
-\caption{Amorphous silicon oxide after deformation. The atoms are colored by their
-charges. Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of
-about $1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of
-about $-0.9 ~ \text{e}$ appear in blue.}
-\label{fig:SIO-deformed}
-\end{figure}
-
-One can have a look at the charge distribution after deformation, as well as during
-the deformation (Fig.\,\ref{fig:SIO-distribution-bis}). As expected, the final
-charge distribution slightly differs from the previously calculated. If
-no new species were formed during the simulation, the \textit{species.log} file
-should resemble:
+You can examine the charge distribution after deformation, as well as during
+deformation (Fig.\,\ref{fig:SIO-distribution-bis}).  As expected, the final
+charge distribution slightly differs from the previously calculated one.  If
+no new species were formed during the simulation, the \flecmd{species.log} file
+should look like this:
 \begin{lstlisting}
 #  Timestep   No_Moles   No_Specs  O384Si192
         5            1          1          1
@@ -2998,8 +2997,8 @@ should resemble:
 #  Timestep   No_Moles   No_Specs  O384Si192
     30000            1          1          1
 \end{lstlisting}
-Sometimes, $\text{O}_2$ molecules are formed during the deformation. If this is
-the case, a new column \textit{O2} appears in the \textit{species.log} file.
+Sometimes, $\text{O}_2$ molecules are formed during the deformation.  If this occurs,
+a new column \lmpcmd{O2} appears in the \flecmd{species.log} file.
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-distribution-bis}
@@ -3010,14 +3009,13 @@ during deformation.}
 \end{figure}
 
 \subsubsection{Decorate the surface}
-In ambient conditions, some of the surface $\text{SiO}_2$ atoms are chemically
+
+Under ambient conditions, some of the surface $\text{SiO}_2$ atoms become chemically
 passivated by forming covalent bonds with hydrogen (H) atom \cite{sulpizi2012silica}.
 Let us add hydrogen atoms randomly to the cracked silica and observe how the
-system evolves.  Next to \flrcmd{RelaxSilica/} and \flrcmd{Deform/}, create a folder,
-and call it \flrcmd{Decorate/}. Then, let us modify the previously generated data
-file \flecmd{silica-deformed.data} and make space for a third atom type.
-Copy \flecmd{silica-deformed.data} from the \flrcmd{Deform/} folder, and modify
-the first lines as follows:
+system evolves.  To do so, we first need to modify the previously generated data
+file \flecmd{deform.data.data} and make space for a third atom type.
+Modify the first lines of \flecmd{deform.data} as follows:
 \begin{lstlisting}
 576 atoms
 3 atom types
@@ -3032,6 +3030,7 @@ H 1.008
 
 (...)
 \end{lstlisting}
+
 Create a file called \flecmd{input.lmp} into the \flrcmd{Decorate/} folder, and
 copy the following lines into it:
 \begin{lstlisting}
