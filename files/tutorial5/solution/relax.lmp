@@ -1,0 +1,37 @@
+
+units real
+atom_style full
+
+read_data silica.data
+
+mass Si 28.0855
+mass O 15.999
+
+pair_style reaxff NULL safezone 3.0 mincap 150
+pair_coeff * * reaxCHOFe.inc Si O
+fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 reaxff maxiter 400
+
+group grpSi type Si
+group grpO type O
+variable qSi equal charge(grpSi)/count(grpSi)
+variable qO equal charge(grpO)/count(grpO)
+
+thermo 200
+thermo_style custom step temp etotal press vol v_qSi v_qO
+dump viz all image 200 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 0 90 zoom 2.5 size 1000 500 
+dump_modify viz backcolor white acolor Si yellow &
+  adiam Si 2.5 acolor O red adiam O 2
+
+dump dmp all custom 200 relax.lammpstrj id typelabel q x y z
+
+fix myspec all reaxff/species 5 1 5 relax.species element Si O
+
+velocity all create 300.0 3482028
+fix mynpt all npt temp 300.0 300.0 100 aniso 1.0 1.0 1000
+timestep 0.5
+
+run 5000
+
+write_data relax.data
+

@@ -2804,9 +2804,9 @@ following lines to \flecmd{relax.lmp}:
 \begin{lstlisting}
 thermo 200
 thermo_style custom step temp etotal press vol v_qSi v_qO
-dump mydmp all image 200 dump.*.jpg type type &
-  shiny 0.1 box no 0.01 view 0 0 zoom 1.8
-dump_modify mydmp backcolor white acolor Si yellow &
+dump viz all image 200 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 0 90 zoom 2.5 size 1000 500
+dump_modify viz backcolor white acolor Si yellow &
   adiam Si 2.5 acolor O red adiam O 2
 \end{lstlisting}
 To also visualize the system using VMD, let us create a \lmpcmd{.lammpstrj} file:
@@ -2821,9 +2821,9 @@ Let us also use the \lmpcmd{fix reaxff/species} to evaluate what species are
 present within the simulation.  It will be useful later when the system is deformed
 and some bonds are broken:
 \begin{lstlisting}
-fix myspec all reaxff/species 5 1 5 species.log element Si O
+fix myspec all reaxff/species 5 1 5 relax.species element Si O
 \end{lstlisting}
-Here, the information will be printed every 5 steps in a file called \flecmd{species.log}.
+Here, the information will be printed every 5 steps in a file called \flecmd{relax.species}.
 Let us perform a very short run using the anisotropic NPT command and relax the
 density of the system.
 \begin{lstlisting}
@@ -2835,7 +2835,7 @@ run 5000
 
 write_data relax.data
 \end{lstlisting}
-Run the \flecmd{input.lmp} file using LAMMPS.  As seen from \flecmd{species.log},
+Run the \flecmd{relax.lmp} file using LAMMPS.  As seen from \flecmd{relax.species},
 only one species is detected, called O384Si192, representing the entire system.
 The value of the charge of the atoms can be extracted from the \flecmd{relax.lammpstrj}
 file using Python.  You can use this
@@ -2913,18 +2913,15 @@ variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
 
 thermo 200
-thermo_style custom step temp etotal &
-    press vol v_qSi v_qO
+thermo_style custom step temp etotal press vol v_qSi v_qO
 
-dump mydmp all image 200 dump.*.jpg type type &
-    shiny 0.1 box no 0.01 view 0 0 zoom 1.8
-dump_modify mydmp backcolor white &
-    acolor Si yellow adiam Si 2.5 &
-    acolor O red adiam O 2
-
+dump viz all image 200 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 0 90 zoom 2.5 size 1000 500
+dump_modify viz backcolor white acolor Si yellow &
+  adiam Si 2.5 acolor O red adiam O 2
 dump dmp all custom 200 deform.lammpstrj id typelabel q x y z
 
-fix myspec all reaxff/species 5 1 5 species.log element Si O
+fix myspec all reaxff/species 5 1 5 deform.species element Si O
 \end{lstlisting}
 The only difference with the previous \flecmd{relax.lmp} file is the path to
 the \flecmd{relax.data} file. Copy the following lines into \flecmd{deform.lmp}:
@@ -2988,7 +2985,7 @@ The material ruptures near $t = 10~\text{ps}$.}
 You can examine the charge distribution after deformation, as well as during
 deformation (Fig.\,\ref{fig:SIO-distribution-bis}).  As expected, the final
 charge distribution slightly differs from the previously calculated one.  If
-no new species were formed during the simulation, the \flecmd{species.log} file
+no new species were formed during the simulation, the \flecmd{deform.species} file
 should look like this:
 \begin{lstlisting}
 #  Timestep   No_Moles   No_Specs  O384Si192
@@ -2998,7 +2995,7 @@ should look like this:
     30000            1          1          1
 \end{lstlisting}
 Sometimes, $\text{O}_2$ molecules are formed during the deformation.  If this occurs,
-a new column \lmpcmd{O2} appears in the \flecmd{species.log} file.
+a new column \lmpcmd{O2} appears in the \flecmd{deform.species} file.
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-distribution-bis}
@@ -3067,8 +3064,7 @@ variable qH equal &
 thermo 5
 thermo_style custom step temp etotal press &
     vol v_qSi v_qO v_qH
-fix myspec all reaxff/species 5 1 5 &
-    species.log element Si O H
+fix myspec all reaxff/species 5 1 5 species.log element Si O H
 \end{lstlisting}
 Here, the $+1\text{e}-10$ was added to the denominator of the \textit{variable qH}
 to avoid dividing by 0 at the beginning of the simulation. Finally, let us
