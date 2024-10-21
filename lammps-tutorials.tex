@@ -2811,36 +2811,34 @@ dump_modify mydmp backcolor white acolor Si yellow &
 \end{lstlisting}
 To also visualize the system using VMD, let us create a \lmpcmd{.lammpstrj} file:
 \begin{lstlisting}
-dump dmp all custom 200 dump.lammpstrj id typelabel q x y z
+dump dmp all custom 200 relax.lammpstrj id typelabel q x y z
 \end{lstlisting}
 The \lmpcmd{.lammpstrj} file generated during the LAMMPS run will contain
 6 columns with respectively atom IDs, atom typelabels, atom charges ($q$),
 and atom coordinates ($x$, $y$, and $z$).
 
-Let us also use the \textit{fix reaxff/species} to evaluate what species are
-present within the simulation. It will be useful later when the system is deformed
+Let us also use the \lmpcmd{fix reaxff/species} to evaluate what species are
+present within the simulation.  It will be useful later when the system is deformed
 and some bonds are broken:
 \begin{lstlisting}
-fix myspec all reaxff/species 5 1 5 &
-    species.log element Si O
+fix myspec all reaxff/species 5 1 5 species.log element Si O
 \end{lstlisting}
-Here, the information will be printed every 5 steps in a file called \textit{species.log}.
+Here, the information will be printed every 5 steps in a file called \flecmd{species.log}.
 Let us perform a very short run using the anisotropic NPT command and relax the
 density of the system.
 \begin{lstlisting}
 velocity all create 300.0 3482028
-fix mynpt all npt temp 300.0 300.0 100 &
-    aniso 1.0 1.0 1000
+fix mynpt all npt temp 300.0 300.0 100 aniso 1.0 1.0 1000
 timestep 0.5
 
 run 5000
 
-write_data silica-relaxed.data
+write_data relax.data
 \end{lstlisting}
-Run the \flecmd{input.lmp} file using LAMMPS. As seen from \textit{species.log},
+Run the \flecmd{input.lmp} file using LAMMPS.  As seen from \flecmd{species.log},
 only one species is detected, called O384Si192, representing the entire system.
-The value of the charge of the atoms can be extracted from the \textit{dump.lammpstrj}
-file using Python. You can use this
+The value of the charge of the atoms can be extracted from the \flecmd{relax.lammpstrj}
+file using Python.  You can use this
 \href{\filepath tutorial5/dump-reader.py}{\dwlcmd{dump-reader.py}}
 script to import the charge values into Python.
 As the simulation progresses, the charge of every atom fluctuates
@@ -2866,9 +2864,9 @@ respectively.}
 \label{fig:SIO-volume}
 \end{figure}
 
-We can also plot the charge distribution $P(q)$, using the charge values
-printed in the \textit{dump.lammptrj} file (Fig.\,\ref{fig:SIO-distribution}).
-The \textit{dump.lammptrj} file can be opened using VMD. By coloring the atoms
+We can also plot the charge distribution $P(q)$ using the charge values
+printed in the \flecmd{dump.lammptrj} file (Fig.\,\ref{fig:SIO-distribution}).
+The \flecmd{dump.lammptrj} file can be opened using VMD.  By coloring the atoms
 by their charges, one can see that the atoms with the extreme-most charges are
 located at defects in the amorphous structure (here at the positions of the
 dangling oxygen groups) (Fig.\,\ref{fig:SIO-slice}).
@@ -2892,28 +2890,23 @@ then tune the \textit{Color scale} in the \textit{Color control windows}.}
 \end{figure}
 
 \subsubsection{Deform the structure}
+
 Let us apply a deformation to the structure to force some $\text{Si}-\text{O}$
-bonds to break (and eventually re-assemble). Next to \flrcmd{RelaxSilica/},
-create a folder, call it \flrcmd{Deform/} and create a file called \flecmd{input.lmp}
-in it. Copy the same lines as previously in \flecmd{input.lmp}:
+bonds to break (and eventually re-assemble).  Open the \flecmd{deform.lmp}
+file, which must constain the following lines:
 \begin{lstlisting}
 units real
 atom_style full
 
-read_data ../RelaxSilica/silica-relaxed.data
+read_data relax.data
 
 mass Si 28.0855
 mass O 15.999
 
 pair_style reaxff NULL safezone 3.0 mincap 150
 pair_coeff * * reaxCHOFe.inc Si O
-fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 &
-    reaxff maxiter 400
-\end{lstlisting}
-The only differences with the previous \flecmd{input.lmp} file are the paths to
-the \flecmd{.data} and \flecmd{.ff} files located within \flrcmd{RelaxSilica/}.
-Copy the following lines as well:
-\begin{lstlisting}
+fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 reaxff maxiter 400
+
 group grpSi type Si
 group grpO type O
 variable qSi equal charge(grpSi)/count(grpSi)
@@ -2929,19 +2922,20 @@ dump_modify mydmp backcolor white &
     acolor Si yellow adiam Si 2.5 &
     acolor O red adiam O 2
 
-dump dmp all custom 200 dump.lammpstrj &
-    id typelabel q x y z
+dump dmp all custom 200 deform.lammpstrj id typelabel q x y z
 
-fix myspec all reaxff/species 5 1 5 species.log &
-    element Si O
+fix myspec all reaxff/species 5 1 5 species.log element Si O
 \end{lstlisting}
-Then, let us use \textit{fix nvt} instead of \textit{fix npt} to apply a
-thermostat but no barostat:
+The only difference with the previous \flecmd{relax.lmp} file is the path to
+the \flecmd{relax.data} file. Copy the following lines into \flecmd{deform.lmp}:
+
+Next, let us use \lmpcmd{fix nvt} instead of \lmpcmd{fix npt} to apply a
+Nosé-Hoover thermostat without any barostat:
 \begin{lstlisting}
 fix mynvt all nvt temp 300.0 300.0 100
 timestep 0.5
 \end{lstlisting}
-Here, no barostat is used because the box volume will be imposed by the \textit{fix deform}.
+Here, no barostat is used because the box volume will be imposed by the \lmpcmd{fix deform}.
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-deformed-charge}
