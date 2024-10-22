@@ -1,0 +1,5 @@
+
+units real
+atom_style full
+
+read_data silica.data
