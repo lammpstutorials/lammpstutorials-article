@@ -2799,7 +2799,7 @@ variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
 variable vq atom q
 \end{lstlisting}
-Let us print the averaged charges \lmpcmd{qSi} and \lmpcmd{qO} using the
+To print the averaged charges \lmpcmd{qSi} and \lmpcmd{qO} using the
 \lmpcmd{thermo\_style} command, and create images of the system. Add the
 following lines to \flecmd{relax.lmp}:
 \begin{lstlisting}
@@ -2810,10 +2810,10 @@ dump viz all image 100 myimage.md.*.ppm q &
 dump_modify viz adiam Si 2.6 adiam O 2.3 backcolor white &
   amap -1 2 ca 0.0 2 min royalblue max orangered
 \end{lstlisting}
-Here, the atoms are colored by their charges \lmpcmd{q}, from royal blue
+Here, the atoms are colored by their charges \lmpcmd{q}, ranging from royal blue
 (when $q=-1\,\text{e}$) to orange-red (when $q=2\,\text{e}$).
 
-We can generate histograms of the charges for each atom types using
+You can generate histograms of the charges for each atom type using
 \lmpcmd{fix ave/histo} commands:
 \begin{lstlisting}
 fix myhis1 grpSi ave/histo 10 500 5000 -1.5 2.5 1000 &
@@ -2822,8 +2822,8 @@ fix myhis2 grpO ave/histo 10 500 5000 -1.5 2.5 1000 &
   v_vq file relax-O.histo  mode vector    
 \end{lstlisting}
 We can also use the \lmpcmd{fix reaxff/species} to evaluate what species are
-present within the simulation.  It will be useful later when the system is deformed
-and some bonds are broken:
+present within the simulation.  It will be useful later when the system is deformed,
+and bonds are broken:
 \begin{lstlisting}
 fix myspec all reaxff/species 5 1 5 relax.species element Si O
 \end{lstlisting}
@@ -2841,15 +2841,17 @@ write_data relax.data
 \end{lstlisting}
 Run the \flecmd{relax.lmp} file using LAMMPS.  As seen from \flecmd{relax.species},
 only one species is detected, called \lmpcmd{O384Si192}, representing the entire system.
-The value of the charge of the atoms can be extracted from the \flecmd{relax.lammpstrj}
-file using Python.
 
 As the simulation progresses, the charge of every atom fluctuates
 because it is adjusting to the local environment of the atom (Fig.\,\ref{fig:SIO-charge}).
-It can also be seen that the averaged charges for both silicon and oxygen
-atoms vary abruptly at the beginning of the simulation, which correlates with
-a rapid volume change of the box during which the inter-atomic distances are
-expected to quickly change (Fig.\,\ref{fig:SIO-volume}).
+It is also observed that the averaged charges for silicon and oxygen
+atoms fluctuate significantly at the beginning of the simulation, corresponding
+to a rapid change in the system volume, which causes interatomic distances to
+shift quickly (Fig.\,\ref{fig:SIO-volume}).  The atoms with the
+most extreme charges are located at structural defects,
+such as dangling oxygen groups (Fig.\,\ref{fig:SIO-slice}).
+Finally, the charge distribution $P(q)$ can be plotted using the charge values
+from the \flecmd{.histo} files (Fig.\,\ref{fig:SIO-distribution}).
 
 \begin{figure}
 \centering
@@ -2866,13 +2868,6 @@ respectively.}
 \caption{Volume of the system $V$ as a function of time $t$.}
 \label{fig:SIO-volume}
 \end{figure}
-
-We can also plot the charge distribution $P(q)$ using the charge values
-printed in the \flecmd{dump.lammptrj} file (Fig.\,\ref{fig:SIO-distribution}).
-The \flecmd{dump.lammptrj} file can be opened using VMD.  By coloring the atoms
-by their charges, one can see that the atoms with the extreme-most charges are
-located at defects in the amorphous structure (here at the positions of the
-dangling oxygen groups) (Fig.\,\ref{fig:SIO-slice}).
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-distribution}
