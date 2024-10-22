@@ -2797,27 +2797,31 @@ group grpSi type Si
 group grpO type O
 variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
+variable vq atom q
 \end{lstlisting}
-Let us print the charge in the \flecmd{.log} file using the
+Let us print the averaged charges \lmpcmd{qSi} and \lmpcmd{qO} using the
 \lmpcmd{thermo\_style} command, and create images of the system. Add the
 following lines to \flecmd{relax.lmp}:
 \begin{lstlisting}
 thermo 200
 thermo_style custom step temp etotal press vol v_qSi v_qO
-dump viz all image 200 myimage-*.ppm type type &
-  shiny 0.1 box no 0.01 view 0 90 zoom 2.5 size 1000 500
-dump_modify viz backcolor white acolor Si yellow &
-  adiam Si 2.5 acolor O red adiam O 2
+dump viz all image 100 myimage.md.*.ppm q &
+  type shiny 0.1 box no 0.01 view 0 90 zoom 2.3 size 1200 500
+dump_modify viz adiam Si 2.6 adiam O 2.3 backcolor white &
+  amap -1 2 ca 0.0 2 min royalblue max orangered
 \end{lstlisting}
-To also visualize the system using VMD, let us create a \lmpcmd{.lammpstrj} file:
-\begin{lstlisting}
-dump dmp all custom 200 relax.lammpstrj id typelabel q x y z
-\end{lstlisting}
-The \lmpcmd{.lammpstrj} file generated during the LAMMPS run will contain
-6 columns with respectively atom IDs, atom typelabels, atom charges ($q$),
-and atom coordinates ($x$, $y$, and $z$).
+Here, the atoms are colored by their charges \lmpcmd{q}, from royal blue
+(when $q=-1\,\text{e}$) to orange-red (when $q=2\,\text{e}$).
 
-Let us also use the \lmpcmd{fix reaxff/species} to evaluate what species are
+We can generate histograms of the charges for each atom types using
+\lmpcmd{fix ave/histo} commands:
+\begin{lstlisting}
+fix myhis1 grpSi ave/histo 10 500 5000 -1.5 2.5 1000 &
+  v_vq file relax-Si.histo mode vector
+fix myhis2 grpO ave/histo 10 500 5000 -1.5 2.5 1000 &
+  v_vq file relax-O.histo  mode vector    
+\end{lstlisting}
+We can also use the \lmpcmd{fix reaxff/species} to evaluate what species are
 present within the simulation.  It will be useful later when the system is deformed
 and some bonds are broken:
 \begin{lstlisting}
@@ -2827,7 +2831,7 @@ Here, the information will be printed every 5 steps in a file called \flecmd{rel
 Let us perform a very short run using the anisotropic NPT command and relax the
 density of the system.
 \begin{lstlisting}
-velocity all create 300.0 3482028
+velocity all create 300.0 32028
 fix mynpt all npt temp 300.0 300.0 100 aniso 1.0 1.0 1000
 timestep 0.5
 
@@ -2836,11 +2840,10 @@ run 5000
 write_data relax.data
 \end{lstlisting}
 Run the \flecmd{relax.lmp} file using LAMMPS.  As seen from \flecmd{relax.species},
-only one species is detected, called O384Si192, representing the entire system.
+only one species is detected, called \lmpcmd{O384Si192}, representing the entire system.
 The value of the charge of the atoms can be extracted from the \flecmd{relax.lammpstrj}
-file using Python.  You can use this
-\href{\filepath tutorial5/dump-reader.py}{\dwlcmd{dump-reader.py}}
-script to import the charge values into Python.
+file using Python.
+
 As the simulation progresses, the charge of every atom fluctuates
 because it is adjusting to the local environment of the atom (Fig.\,\ref{fig:SIO-charge}).
 It can also be seen that the averaged charges for both silicon and oxygen
