@@ -1,0 +1,43 @@
+# LAMMPS Tutorial manifest file. This file determines what is downloaded when.
+# comments start with a # as the first character.
+# comments and empty lines are ignored
+##############################################################################
+# 1) input file templates and data files
+# the first file will be automatically loaded
+decorate.lmp
+deform.lmp
+reaxCHOFe.inc
+relax.lmp
+silica.data
+
+# 2) solution files
+# only downloaded on request
+decorate-H.histo
+decorate.lmp
+decorate.log
+decorate-O.histo
+decorate.png
+decorate-Si.histo
+decorate.species
+deform.data
+deform.ipynb
+deform.lmp
+deform.log
+deform-mod.data
+deform-O.histo
+deform.png
+deform-Si.histo
+deform.species
+reaxCHOFe.inc
+relax.data
+relax.ipynb
+relax.lmp
+relax.log
+relax-O.histo
+relax.png
+relax-Si.histo
+relax.species
+silica.data
+
+# 3) support files
+
