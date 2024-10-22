@@ -2803,9 +2803,9 @@ To print the averaged charges \lmpcmd{qSi} and \lmpcmd{qO} using the
 \lmpcmd{thermo\_style} command, and create images of the system. Add the
 following lines to \flecmd{relax.lmp}:
 \begin{lstlisting}
-thermo 200
+thermo 100
 thermo_style custom step temp etotal press vol v_qSi v_qO
-dump viz all image 100 myimage.md.*.ppm q &
+dump viz all image 100 myimage-*.ppm q &
   type shiny 0.1 box no 0.01 view 0 90 zoom 2.3 size 1200 500
 dump_modify viz adiam Si 2.6 adiam O 2.3 backcolor white &
   amap -1 2 ca 0.0 2 min royalblue max orangered
@@ -2816,10 +2816,10 @@ Here, the atoms are colored by their charges \lmpcmd{q}, ranging from royal blue
 You can generate histograms of the charges for each atom type using
 \lmpcmd{fix ave/histo} commands:
 \begin{lstlisting}
-fix myhis1 grpSi ave/histo 10 500 5000 -1.5 2.5 1000 &
-  v_vq file relax-Si.histo mode vector
-fix myhis2 grpO ave/histo 10 500 5000 -1.5 2.5 1000 &
-  v_vq file relax-O.histo  mode vector    
+fix myhis1 grpSi ave/histo 10 500 5000 -1.5 2.5 1000 v_vq &
+  file relax-Si.histo mode vector
+fix myhis2 grpO ave/histo 10 500 5000 -1.5 2.5 1000 v_vq &
+  file relax-O.histo mode vector    
 \end{lstlisting}
 We can also use the \lmpcmd{fix reaxff/species} to evaluate what species are
 present within the simulation.  It will be useful later when the system is deformed,
@@ -2843,48 +2843,43 @@ Run the \flecmd{relax.lmp} file using LAMMPS.  As seen from \flecmd{relax.specie
 only one species is detected, called \lmpcmd{O384Si192}, representing the entire system.
 
 As the simulation progresses, the charge of every atom fluctuates
-because it is adjusting to the local environment of the atom (Fig.\,\ref{fig:SIO-charge}).
+because it is adjusting to the local environment of the atom (Fig.\,\ref{fig:SIO-charge}\,a).
 It is also observed that the averaged charges for silicon and oxygen
 atoms fluctuate significantly at the beginning of the simulation, corresponding
 to a rapid change in the system volume, which causes interatomic distances to
-shift quickly (Fig.\,\ref{fig:SIO-volume}).  The atoms with the
+shift quickly (Fig.\,\ref{fig:SIO-charge}\,b).  The atoms with the
 most extreme charges are located at structural defects,
 such as dangling oxygen groups (Fig.\,\ref{fig:SIO-slice}).
 Finally, the charge distribution $P(q)$ can be plotted using the charge values
-from the \flecmd{.histo} files (Fig.\,\ref{fig:SIO-distribution}).
+from the \flecmd{.histo} files (Fig.\,\ref{fig:SIO-distribution}\,a).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{SIO-charge}
-\caption{Average charge per atom of the silicon $q_\text{Si}$ (a) and oxygen
-$q_\text{O}$ (b) atoms as a function of time $t$ during equilibration.  $q_\text{Si}$
-and $q_\text{O}$ are given by the \textit{v\_qSi} and \textit{v\_qO} variables,
-respectively.}
+\caption{a) Average charge per atom of the silicon $q_\text{Si}$ atoms as
+a function of time $t$ during equilibration of the $\text{SiO}_2$ system
+from \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  b) Volume of the
+system $V$ as a function of time $t$.}
 \label{fig:SIO-charge}
 \end{figure}
 
 \begin{figure}
-\includegraphics[width=\linewidth]{SIO-volume}
-\caption{Volume of the system $V$ as a function of time $t$.}
-\label{fig:SIO-volume}
+\includegraphics[width=\linewidth]{SIO-slice}
+\caption{A slice of the amorphous silica simulated during
+\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}, where atoms are colored by their charges.
+Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of about
+$1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of about
+$-0.9~\text{e}$ appear in blue.}
+\label{fig:SIO-slice}
 \end{figure}
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-distribution}
-\caption{Probability distribution of charge of silicon (positive, blue) and oxygen
-(negative, orange) atoms during equilibration.}
+\caption{a) Probability distributions of charge of silicon (positive, blue) and oxygen
+(negative, orange) atoms during the equilibration of the $\text{SiO}_2$ system
+from \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  b) Same probability distributions
+after the deformation.}
 \label{fig:SIO-distribution}
-\end{figure}
-
-\begin{figure}
-\includegraphics[width=\linewidth]{SIO-slice}
-\caption{A slice of the amorphous silica, where atoms are colored by their charges.
-Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of about
-$1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of about
-$-0.9~\text{e}$ appear in blue. To color the atoms by their charge using VMD,
-use \textit{Charge} as the coloring method in the representation windows, and
-then tune the \textit{Color scale} in the \textit{Color control windows}.}
-\label{fig:SIO-slice}
 \end{figure}
 
 \subsubsection{Deform the structure}
@@ -2909,20 +2904,23 @@ group grpSi type Si
 group grpO type O
 variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
+variable vq atom q
 
 thermo 200
 thermo_style custom step temp etotal press vol v_qSi v_qO
+dump viz all image 100 myimage-*.ppm q &
+  type shiny 0.1 box no 0.01 view 0 90 zoom 2.3 size 1200 500
+dump_modify viz adiam Si 2.6 adiam O 2.3 backcolor white &
+  amap -1 2 ca 0.0 2 min royalblue max orangered
 
-dump viz all image 200 myimage-*.ppm type type &
-  shiny 0.1 box no 0.01 view 0 90 zoom 2.5 size 1000 500
-dump_modify viz backcolor white acolor Si yellow &
-  adiam Si 2.5 acolor O red adiam O 2
-dump dmp all custom 200 deform.lammpstrj id typelabel q x y z
-
+fix myhis1 grpSi ave/histo 10 500 5000 -1.5 2.5 1000 v_vq &
+  file deform-Si.histo mode vector
+fix myhis2 grpO ave/histo 10 500 5000 -1.5 2.5 1000 v_vq &
+  file deform-O.histo mode vector
 fix myspec all reaxff/species 5 1 5 deform.species element Si O
 \end{lstlisting}
 The only difference with the previous \flecmd{relax.lmp} file is the path to
-the \flecmd{relax.data} file. Copy the following lines into \flecmd{deform.lmp}:
+the \flecmd{relax.data} file.
 
 Next, let us use \lmpcmd{fix nvt} instead of \lmpcmd{fix npt} to apply a
 Nosé-Hoover thermostat without a barostat:
@@ -2981,7 +2979,7 @@ The material ruptures near $t = 10~\text{ps}$.}
 \end{figure}
 
 You can examine the charge distribution after deformation, as well as during
-deformation (Fig.\,\ref{fig:SIO-distribution-bis}).  As expected, the final
+deformation (Fig.\,\ref{fig:SIO-distribution}\,b).  As expected, the final
 charge distribution slightly differs from the previously calculated one.  If
 no new species were formed during the simulation, the \flecmd{deform.species} file
 should look like this:
@@ -2994,14 +2992,6 @@ should look like this:
 \end{lstlisting}
 Sometimes, $\text{O}_2$ molecules are formed during the deformation.  If this occurs,
 a new column \lmpcmd{O2} appears in the \flecmd{deform.species} file.
-
-\begin{figure}
-\includegraphics[width=\linewidth]{SIO-distribution-bis}
-\caption{Probability distribution of charge of silicon (positive, blue) and oxygen
-(negative, orange) after deformation. The stars correspond to the charge distribution
-during deformation.}
-\label{fig:SIO-distribution-bis}
-\end{figure}
 
 \subsubsection{Decorate the surface}
 

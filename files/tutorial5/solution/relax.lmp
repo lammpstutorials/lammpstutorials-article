@@ -17,15 +17,15 @@ variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
 variable vq atom q
 
-thermo 200
+thermo 100
 thermo_style custom step temp etotal press vol v_qSi v_qO
-dump viz all image 100 myimage.md.*.ppm q &
+dump viz all image 100 myimage-*.ppm q &
   type shiny 0.1 box no 0.01 view 0 90 zoom 2.3 size 1200 500
 dump_modify viz adiam Si 2.6 adiam O 2.3 backcolor white &
   amap −1 2 ca 0.0 2 min royalblue max orangered
 
 fix myhis1 grpSi ave/histo 10 500 5000 -1.5 2.5 1000 v_vq file relax-Si.histo mode vector
-fix myhis2 grpO ave/histo 10 500 5000 -1.5 2.5 1000 v_vq file relax-O.histo  mode vector
+fix myhis2 grpO ave/histo 10 500 5000 -1.5 2.5 1000 v_vq file relax-O.histo mode vector
 
 fix myspec all reaxff/species 5 1 5 relax.species element Si O
 
