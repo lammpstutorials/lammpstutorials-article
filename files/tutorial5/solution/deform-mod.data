@@ -1,7 +1,7 @@
 LAMMPS data file via write_data, version 29 Aug 2024, timestep = 30000, units = real
 
 576 atoms
-2 atom types
+3 atom types
 
 -12.1214752893284 32.70705300092579 xlo xhi
 2.3124412950013946 18.27313641659132 ylo yhi
@@ -11,11 +11,13 @@ Atom Type Labels
 
 1 Si
 2 O
+3 H
 
 Masses
 
 1 28.0855
 2 15.999
+3 1.008
 
 Atoms # full
 
