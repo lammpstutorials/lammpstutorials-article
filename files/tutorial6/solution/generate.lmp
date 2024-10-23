@@ -1,0 +1,37 @@
+
+units metal
+boundary p p p
+atom_style full
+pair_style vashishta
+neighbor 1.0 bin
+neigh_modify delay 1
+
+read_data SiO.data
+replicate 5 4 4
+
+pair_coeff * * SiO.1990.vashishta Si O
+
+dump mydmp all image 200 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 180 90 zoom 1.2 size 1000 650
+dump_modify mydmp backcolor white &
+  acolor Si yellow adiam Si 2.5 &
+  acolor O red adiam O 2
+
+thermo 1000
+thermo_style custom step temp etotal vol lx ly lz
+
+velocity all create 6000 4928459 rot yes dist gaussian
+fix npt1 all npt temp 6000 6000 0.1 iso 100 100 1
+timestep 0.001
+run 25000
+
+fix npt1 all npt temp 6000 4000 0.1 aniso 100 100 1
+run 25000
+
+fix npt1 all npt temp 4000 300 0.1 aniso 100 1 1
+run 50000
+
+fix npt1 all npt temp 300 300 0.1 aniso 1 1 1
+run 25000
+
+write_data generate.data

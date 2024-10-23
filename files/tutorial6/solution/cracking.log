@@ -1,0 +1,92 @@
+  using 8 OpenMP thread(s) per MPI task
+using multi-threaded neighbor list subroutines
+Reading data file ...
+  orthogonal box = (0.91061361 1.6226589 -1.2373349) to (24.821359 18.962919 21.822913)
+  1 by 1 by 1 MPI processor grid
+  reading atom labelmap ...
+  reading atoms ...
+  720 atoms
+  reading velocities ...
+  720 velocities
+Finding 1-2 1-3 1-4 neighbors ...
+  special bond factors lj:    0        0        0       
+  special bond factors coul:  0        0        0       
+     0 = max # of 1-2 neighbors
+     0 = max # of 1-3 neighbors
+     0 = max # of 1-4 neighbors
+     1 = max # of special neighbors
+  special bonds CPU = 0.000 seconds
+  read_data CPU = 0.020 seconds
+Reading vashishta potential file SiO.1990.vashishta with DATE: 2015-10-14
+Last active /omp style is pair_style vashishta/omp
+Neighbor list info ...
+  update: every = 1 steps, delay = 1 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 11
+  ghost atom cutoff = 11
+  binsize = 5.5, bins = 5 4 5
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair vashishta/omp, perpetual
+      attributes: full, newton on, omp
+      pair build: full/bin/omp
+      stencil: full/bin/3d
+      bin: standard
+Setting up Verlet run ...
+  Unit style    : metal
+  Current step  : 0
+  Time step     : 0.001
+Per MPI rank memory allocation (min/avg/max) = 12.52 | 12.52 | 12.52 Mbytes
+   Step          Temp          TotEng         Volume           Lx             Ly             Lz      
+         0   301.17448     -6427.659       9561.206       23.910745      17.34026       23.060247    
+      1000   279.44119     -6428.5784      9704.624       24.269406      17.34026       23.060247    
+      2000   295.50824     -6425.4113      9848.0421      24.628067      17.34026       23.060247    
+      3000   298.6945      -6419.5557      9991.4602      24.986728      17.34026       23.060247    
+      4000   282.51392     -6416.8589      10134.878      25.34539       17.34026       23.060247    
+      5000   304.60827     -6405.7082      10278.296      25.704051      17.34026       23.060247    
+      6000   298.10251     -6398.6524      10421.714      26.062712      17.34026       23.060247    
+      7000   295.81949     -6388.8453      10565.133      26.421373      17.34026       23.060247    
+      8000   319.62403     -6375.837       10708.551      26.780034      17.34026       23.060247    
+      9000   314.49787     -6368.534       10851.969      27.138695      17.34026       23.060247    
+     10000   296.82693     -6360.4751      10995.387      27.497357      17.34026       23.060247    
+     11000   287.74596     -6348.8833      11138.805      27.856018      17.34026       23.060247    
+     12000   289.74339     -6342.7617      11282.223      28.214679      17.34026       23.060247    
+     13000   301.77567     -6334.3267      11425.641      28.57334       17.34026       23.060247    
+     14000   294.91747     -6340.0743      11569.059      28.932001      17.34026       23.060247    
+     15000   294.22476     -6329.1306      11712.477      29.290663      17.34026       23.060247    
+     16000   311.42893     -6327.6932      11855.895      29.649324      17.34026       23.060247    
+     17000   303.34378     -6324.195       11999.313      30.007985      17.34026       23.060247    
+     18000   302.47749     -6319.3108      12142.732      30.366646      17.34026       23.060247    
+     19000   312.49613     -6310.5494      12286.15       30.725307      17.34026       23.060247    
+     20000   332.7128      -6323.9637      12429.568      31.083968      17.34026       23.060247    
+Loop time of 38.4353 on 8 procs for 20000 steps with 720 atoms
+
+Performance: 44.959 ns/day, 0.534 hours/ns, 520.356 timesteps/s, 374.656 katom-step/s
+773.7% CPU use with 1 MPI tasks x 8 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 33.078     | 33.078     | 33.078     |   0.0 | 86.06
+Bond    | 0.0013156  | 0.0013156  | 0.0013156  |   0.0 |  0.00
+Neigh   | 0.50724    | 0.50724    | 0.50724    |   0.0 |  1.32
+Comm    | 0.75904    | 0.75904    | 0.75904    |   0.0 |  1.97
+Output  | 2.7063     | 2.7063     | 2.7063     |   0.0 |  7.04
+Modify  | 1.3162     | 1.3162     | 1.3162     |   0.0 |  3.42
+Other   |            | 0.06739    |            |       |  0.18
+
+Nlocal:            720 ave         720 max         720 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           5018 ave        5018 max        5018 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:       241106 ave      241106 max      241106 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 241106
+Ave neighs/atom = 334.86944
+Ave special neighs/atom = 0
+Neighbor list builds = 385
+Dangerous builds = 0
+System init for write_data ...
+Last active /omp style is pair_style vashishta/omp
