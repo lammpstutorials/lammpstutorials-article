@@ -17,7 +17,7 @@ dump_modify mydmp backcolor white &
   acolor Si yellow adiam Si 2.5 &
   acolor O red adiam O 2
 
-thermo 1000
+thermo 500
 thermo_style custom step temp etotal vol lx ly lz
 
 velocity all create 6000 4928459 rot yes dist gaussian
