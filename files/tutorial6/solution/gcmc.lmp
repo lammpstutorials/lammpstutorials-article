@@ -13,9 +13,7 @@ neigh_modify delay 1
 
 read_data cracking-mod.data
 molecule h2omol H2O.mol
-lattice sc 6
-create_atoms 0 box mol h2omol 45585
-lattice none 1
+create_atoms 0 random 3 3245 NULL mol h2omol 4585 overlap 2.0 maxtry 50
 
 group SiO type Si O
 group H2O type OW HW
@@ -32,8 +30,6 @@ angle_coeff HW-OW-HW 0 104.52
 variable oxygen atom type==label2type(atom,OW)
 group oxygen dynamic all var oxygen
 variable nO equal count(oxygen)
-thermo_style custom step temp etotal v_nO
-thermo 1000
 
 fix shak H2O shake 1.0e−4 200 0 b OW-HW a HW-OW-HW mol h2omol
 
@@ -47,22 +43,21 @@ dump_modify mydmp backcolor white &
   acolor OW cyan adiam OW 2 &
   acolor HW white adiam HW 1
 
-thermo 1000
-thermo_style custom step temp etotal v_nO
-
 compute ctH2O H2O temp
-#compute ctSiO SiO temp
 compute_modify thermo_temp dynamic yes
 compute_modify ctH2O dynamic yes
 fix mynvt1 H2O nvt temp 300 300 0.1
 fix_modify mynvt1 temp ctH2O
 fix mynvt2 SiO nvt temp 300 300 0.1
-#fix_modify mynvt2 temp ctSiO
 
 timestep 0.001
 
 variable tfac equal 5.0/3.0 
 fix fgcmc H2O gcmc 100 100 0 0 65899 300 -0.5 0.1 &
   mol h2omol tfac_insert ${tfac} shake shak full_energy pressure 100
+
+thermo 200
+thermo_style custom step temp etotal v_nO &
+  f_fgcmc[3] f_fgcmc[4] f_fgcmc[5] f_fgcmc[6]
 
 run 25000
