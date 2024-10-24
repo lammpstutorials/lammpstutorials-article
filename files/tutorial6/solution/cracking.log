@@ -1,7 +1,7 @@
   using 8 OpenMP thread(s) per MPI task
 using multi-threaded neighbor list subroutines
 Reading data file ...
-  orthogonal box = (0.91061361 1.6226589 -1.2373349) to (24.821359 18.962919 21.822913)
+  orthogonal box = (2.3535666 -1.6556717 0.86165627) to (23.378406 22.241249 19.723921)
   1 by 1 by 1 MPI processor grid
   reading atom labelmap ...
   reading atoms ...
@@ -16,15 +16,24 @@ Finding 1-2 1-3 1-4 neighbors ...
      0 = max # of 1-4 neighbors
      1 = max # of special neighbors
   special bonds CPU = 0.000 seconds
-  read_data CPU = 0.020 seconds
+  read_data CPU = 0.021 seconds
 Reading vashishta potential file SiO.1990.vashishta with DATE: 2015-10-14
+
+CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
+
+Your simulation uses code contributions which should be cited:
+- Type Label Framework: https://doi.org/10.1021/acs.jpcb.3c08419
+The log file lists these citations in BibTeX format.
+
+CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
+
 Last active /omp style is pair_style vashishta/omp
 Neighbor list info ...
   update: every = 1 steps, delay = 1 steps, check = yes
   max neighbors/atom: 2000, page size: 100000
   master list distance cutoff = 11
   ghost atom cutoff = 11
-  binsize = 5.5, bins = 5 4 5
+  binsize = 5.5, bins = 4 5 4
   1 neighbor lists, perpetual/occasional/extra = 1 0 0
   (1) pair vashishta/omp, perpetual
       attributes: full, newton on, omp
@@ -35,58 +44,58 @@ Setting up Verlet run ...
   Unit style    : metal
   Current step  : 0
   Time step     : 0.001
-Per MPI rank memory allocation (min/avg/max) = 12.52 | 12.52 | 12.52 Mbytes
+Per MPI rank memory allocation (min/avg/max) = 12.55 | 12.55 | 12.55 Mbytes
    Step          Temp          TotEng         Volume           Lx             Ly             Lz      
-         0   301.17448     -6427.659       9561.206       23.910745      17.34026       23.060247    
-      1000   279.44119     -6428.5784      9704.624       24.269406      17.34026       23.060247    
-      2000   295.50824     -6425.4113      9848.0421      24.628067      17.34026       23.060247    
-      3000   298.6945      -6419.5557      9991.4602      24.986728      17.34026       23.060247    
-      4000   282.51392     -6416.8589      10134.878      25.34539       17.34026       23.060247    
-      5000   304.60827     -6405.7082      10278.296      25.704051      17.34026       23.060247    
-      6000   298.10251     -6398.6524      10421.714      26.062712      17.34026       23.060247    
-      7000   295.81949     -6388.8453      10565.133      26.421373      17.34026       23.060247    
-      8000   319.62403     -6375.837       10708.551      26.780034      17.34026       23.060247    
-      9000   314.49787     -6368.534       10851.969      27.138695      17.34026       23.060247    
-     10000   296.82693     -6360.4751      10995.387      27.497357      17.34026       23.060247    
-     11000   287.74596     -6348.8833      11138.805      27.856018      17.34026       23.060247    
-     12000   289.74339     -6342.7617      11282.223      28.214679      17.34026       23.060247    
-     13000   301.77567     -6334.3267      11425.641      28.57334       17.34026       23.060247    
-     14000   294.91747     -6340.0743      11569.059      28.932001      17.34026       23.060247    
-     15000   294.22476     -6329.1306      11712.477      29.290663      17.34026       23.060247    
-     16000   311.42893     -6327.6932      11855.895      29.649324      17.34026       23.060247    
-     17000   303.34378     -6324.195       11999.313      30.007985      17.34026       23.060247    
-     18000   302.47749     -6319.3108      12142.732      30.366646      17.34026       23.060247    
-     19000   312.49613     -6310.5494      12286.15       30.725307      17.34026       23.060247    
-     20000   332.7128      -6323.9637      12429.568      31.083968      17.34026       23.060247    
-Loop time of 38.4353 on 8 procs for 20000 steps with 720 atoms
+         0   315.30616     -6422.9954      9476.9475      21.024839      23.896921      18.862265    
+      1000   314.40986     -6418.3281      9619.1017      21.340212      23.896921      18.862265    
+      2000   305.19895     -6417.0503      9761.2559      21.655584      23.896921      18.862265    
+      3000   290.22122     -6410.5095      9903.4101      21.970957      23.896921      18.862265    
+      4000   290.45222     -6404.7785      10045.564      22.286329      23.896921      18.862265    
+      5000   320.89323     -6392.0183      10187.719      22.601702      23.896921      18.862265    
+      6000   310.20616     -6387.1654      10329.873      22.917074      23.896921      18.862265    
+      7000   296.86661     -6378.8858      10472.027      23.232447      23.896921      18.862265    
+      8000   297.92464     -6367.6875      10614.181      23.54782       23.896921      18.862265    
+      9000   281.59301     -6361.4666      10756.335      23.863192      23.896921      18.862265    
+     10000   327.19137     -6345.2258      10898.49       24.178565      23.896921      18.862265    
+     11000   299.00911     -6338.1612      11040.644      24.493937      23.896921      18.862265    
+     12000   308.18876     -6326.3002      11182.798      24.80931       23.896921      18.862265    
+     13000   292.34221     -6322.4983      11324.952      25.124683      23.896921      18.862265    
+     14000   282.21484     -6322.5689      11467.106      25.440055      23.896921      18.862265    
+     15000   300.08569     -6325.4864      11609.261      25.755428      23.896921      18.862265    
+     16000   297.40828     -6319.7046      11751.415      26.0708        23.896921      18.862265    
+     17000   288.41005     -6316.6014      11893.569      26.386173      23.896921      18.862265    
+     18000   315.47013     -6308.467       12035.723      26.701545      23.896921      18.862265    
+     19000   302.91553     -6306.4915      12177.877      27.016918      23.896921      18.862265    
+     20000   321.47552     -6305.0489      12320.032      27.332291      23.896921      18.862265    
+Loop time of 35.638 on 8 procs for 20000 steps with 720 atoms
 
-Performance: 44.959 ns/day, 0.534 hours/ns, 520.356 timesteps/s, 374.656 katom-step/s
-773.7% CPU use with 1 MPI tasks x 8 OpenMP threads
+Performance: 48.488 ns/day, 0.495 hours/ns, 561.199 timesteps/s, 404.063 katom-step/s
+768.5% CPU use with 1 MPI tasks x 8 OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 33.078     | 33.078     | 33.078     |   0.0 | 86.06
-Bond    | 0.0013156  | 0.0013156  | 0.0013156  |   0.0 |  0.00
-Neigh   | 0.50724    | 0.50724    | 0.50724    |   0.0 |  1.32
-Comm    | 0.75904    | 0.75904    | 0.75904    |   0.0 |  1.97
-Output  | 2.7063     | 2.7063     | 2.7063     |   0.0 |  7.04
-Modify  | 1.3162     | 1.3162     | 1.3162     |   0.0 |  3.42
-Other   |            | 0.06739    |            |       |  0.18
+Pair    | 30.349     | 30.349     | 30.349     |   0.0 | 85.16
+Bond    | 0.0013098  | 0.0013098  | 0.0013098  |   0.0 |  0.00
+Neigh   | 0.52153    | 0.52153    | 0.52153    |   0.0 |  1.46
+Comm    | 0.61264    | 0.61264    | 0.61264    |   0.0 |  1.72
+Output  | 2.8732     | 2.8732     | 2.8732     |   0.0 |  8.06
+Modify  | 1.2231     | 1.2231     | 1.2231     |   0.0 |  3.43
+Other   |            | 0.0571     |            |       |  0.16
 
 Nlocal:            720 ave         720 max         720 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Nghost:           5018 ave        5018 max        5018 min
+Nghost:           4660 ave        4660 max        4660 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 Neighs:              0 ave           0 max           0 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-FullNghs:       241106 ave      241106 max      241106 min
+FullNghs:       239664 ave      239664 max      239664 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 
-Total # of neighbors = 241106
-Ave neighs/atom = 334.86944
+Total # of neighbors = 239664
+Ave neighs/atom = 332.86667
 Ave special neighs/atom = 0
-Neighbor list builds = 385
+Neighbor list builds = 402
 Dangerous builds = 0
 System init for write_data ...
 Last active /omp style is pair_style vashishta/omp

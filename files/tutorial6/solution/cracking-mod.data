@@ -1,7 +1,13 @@
 LAMMPS data file via write_data, version 29 Aug 2024, timestep = 20000, units = metal
 
 720 atoms
-2 atom types
+4 atom types
+1 bond types
+1 angle types
+
+2 extra bond per atom
+1 extra angle per atom
+2 extra special per atom
 
 -0.8001592401819728 26.532131379681434 xlo xhi
 -1.6556716763246389 22.24124938792403 ylo yhi
@@ -11,11 +17,23 @@ Atom Type Labels
 
 1 Si
 2 O
+3 OW
+4 HW
+
+Bond Type Labels
+
+1 OW-HW
+
+Angle Type Labels
+
+1 HW-OW-HW
 
 Masses
 
-1 28.0855
-2 15.9994
+Si 28.0855
+O 15.9994
+OW 15.9994
+HW 1.008
 
 Atoms # full
 
