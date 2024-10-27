@@ -31,12 +31,10 @@ variable oxygen atom type==label2type(atom,OW)
 group oxygen dynamic all var oxygen
 variable nO equal count(oxygen)
 
-fix shak H2O shake 1.0e−4 200 0 b OW-HW a HW-OW-HW mol h2omol
-
-delete_atoms overlap 2 H2O SiO mol yes
+fix shak H2O shake 1.0e−5 200 0 b OW-HW a HW-OW-HW mol h2omol
 
 dump mydmp all image 200 myimage-*.ppm type type &
-  shiny 0.1 box no 0.01 view 180 90 zoom 1.2 size 1000 650
+  shiny 0.1 box no 0.01 view 180 90 zoom 1.6 size 1000 650
 dump_modify mydmp backcolor white &
   acolor Si yellow adiam Si 2.5 &
   acolor O red adiam O 2 &

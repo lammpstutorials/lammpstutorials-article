@@ -10,26 +10,17 @@ read_data generate.data
 
 pair_coeff * * SiO.1990.vashishta Si O
 
-dump mydmp all image 200 myimage-*.ppm type type &
-  shiny 0.1 box no 0.01 view 180 90 zoom 1.2 size 1000 650
-dump_modify mydmp backcolor white &
-  acolor Si yellow adiam Si 2.5 &
-  acolor O red adiam O 2
+dump viz all image 200 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 180 90 zoom 1.6 size 1000 650
+dump_modify viz backcolor white acolor Si yellow &
+  adiam Si 2.5 acolor O red adiam O 2
 
-thermo 1000
+thermo 200
 thermo_style custom step temp etotal vol lx ly lz
 
-fix nvt1 all nvt temp 300 300 0.1
-
 timestep 0.001
-thermo 1000
-
-#variable var loop 45
-#label loop
+fix nvt1 all nvt temp 300 300 0.1
 fix mydef all deform 1 x erate 0.015
-#change_box all x scale 1.005 remap
 run 20000
-#next var
-#jump cracking.lmp
 
 write_data cracking.data
