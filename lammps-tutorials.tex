@@ -3200,25 +3200,19 @@ suitable for a solid phase.  For a liquid or a gas, an isotropic barostat is
 usually the best choice.
 
 Run the simulation using LAMMPS.  From the \guicmd{Charts} window, the temperature
-evolution can be observed, showing that it closely follows the desired annealing procedure (Fig.\,\ref{fig:GCMC-temperature}).
+evolution can be observed, showing that it closely follows the desired annealing procedure (Fig.\,\ref{fig:GCMC-dimension}\,a).
 The evolution of the box dimensions over time confirms that the box
 deformed isotropically during the first stage of the simulation, followed by anisotropic deformation
-(Fig.\,\ref{fig:GCMC-dimension}).  After the simulation completes, the final
+(Fig.\,\ref{fig:GCMC-dimension}\,b).  After the simulation completes, the final
 LAMMPS topology file called \flecmd{generate.data}
 will be located next to \flecmd{generate.lmp} (Fig.\,\ref{fig:GCMC-snapshot}).
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{GCMC-temperature}
-\caption{Temperature $T$ of the system during annealing.  The vertical dashed lines
-mark the transition between the different phases of the simulation.}
-\label{fig:GCMC-temperature}
-\end{figure}
-
-\begin{figure}
-\centering
 \includegraphics[width=\linewidth]{GCMC-dimension}
-\caption{Box dimensions along $x$ (blue), $y$ (orange), and $z$ (dark) during
+\caption{a) Temperature $T$ of the system during annealing of the amorphous silica
+simulated during \hyperref[gcmc-silica-label]{Tutorial 6}.
+b) Box dimensions along $x$, $y$, and $z$ during
 annealing.  The vertical dashed lines mark the transition between the different
 phases of the simulation.}
 \label{fig:GCMC-dimension}
@@ -3483,7 +3477,7 @@ The dashed vertical line marks the beginning of the GCMC step.}
 \end{figure}
 
 When you run the simulation, the log file indicates that 840 atoms (i.e.~280 molecules)
-were added by the \textit{create\_atoms} command (the exact number you get may differ):
+were added by the \lmpcmd{create\_atoms} command (the exact number you get may differ):
 \begin{lstlisting}
 Created 840 atoms
 \end{lstlisting}
@@ -3494,14 +3488,14 @@ Deleted 774 atoms, new total = 642
 Deleted 516 bonds, new total = 44
 Deleted 258 angles, new total = 22
 \end{lstlisting}
-After just a few GCMC steps, the number of molecules starts increasing. Once the
-crack is filled with water molecules, the number of molecules reaches a plateau
-(Figs.\,\ref{fig:GCMC-number}-\ref{fig:GCMC-solvated}). The final number of
+After a few GCMC steps, the number of molecules starts increasing.  Once the
+crack is filled with water molecules, the total number of molecules reaches a plateau
+(Figs.\,\ref{fig:GCMC-number}-\ref{fig:GCMC-solvated}).  The final number of
 molecules depends on the imposed pressure, temperature, and the interaction
-between water and silica (i.e.~its hydrophilicity). Note that GCMC simulations
+between water and silica (i.e.~its hydrophilicity).  Note that GCMC simulations
 of such dense phases are usually slow to converge due to the very low probability
-of successfully inserting a molecule. Here, the short simulation duration was
-made possible by the use of a large pressure.
+of successfully inserting a molecule.  Here, the short simulation duration was
+made possible by the use of a high pressure.
 
 \begin{figure}
 \centering
