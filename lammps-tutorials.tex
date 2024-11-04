@@ -3127,23 +3127,24 @@ neighbor 1.0 bin
 neigh_modify delay 1
 \end{lstlisting}
 The main difference from some of the previous tutorials is the use of the \lmpcmd{Vashishta}
-pair style.  The Vashishta potential is a bond-angle energy-based potential, which
-determines the bonds between atoms from their relative positions \cite{vashishta1990interaction}.
+pair style.  The Vashishta potential implicitly models atomic bonds through
+energy terms dependent on interatomic distances and angles \cite{vashishta1990interaction}.
 
-The initial data file for the SiO atoms called
-\href{\filepath tutorial6/SiO.data}{\dwlcmd{SiO.data}}
-must be downloaded next to \flecmd{generate.lmp}.  This data file contains
-the coordinates of 9 atoms, their masses, and their charges.  Let us replicate
-these 9 atoms using LAMMPS, and apply an annealing procedure to
-obtain a block of amorphous silica.
-
-Next, import \flecmd{SiO.data} and replicate it
-in all three directions of space.  Add the
-following lines to \flecmd{generate.lmp}:
+Let us create a box for two atom types, \lmpcmd{Si}
+of mass 28.0855\,g/mol and \lmpcmd{O} of mass 15.9994\,g/mol.
+Add the following lines to \flecmd{generate.lmp}:
 \begin{lstlisting}
-read_data SiO.data
-replicate 5 4 4
+region box block -12 12 -12 12 -12 12
+create_box 2 box
+labelmap atom 1 Si 2 O
+mass Si 28.0855
+mass O 15.9994
+create_atoms Si random 240 5802 box overlap 2.0 maxtry 500
+create_atoms O random 480 1072 box overlap 2.0 maxtry 500
 \end{lstlisting}
+The \lmpcmd{create\_atoms} commands are used to place
+240 Si atoms, and 480 atoms, respectively.
+
 Now, specify the pair coefficients by indicating that the first atom type
 is \lmpcmd{Si} and the second is \lmpcmd{O}:
 \begin{lstlisting}
@@ -3155,17 +3156,22 @@ file is located in the same directory as \flecmd{generate.lmp}.
 Next, add a \lmpcmd{dump image} command to \flecmd{generate.lmp} to follow the
 evolution of the system with time:
 \begin{lstlisting}
-dump viz all image 200 myimage-*.ppm type type &
+dump viz all image 250 myimage-*.ppm type type &
   shiny 0.1 box no 0.01 view 180 90 zoom 1.6 size 1000 650
 dump_modify viz backcolor white acolor Si yellow &
   adiam Si 2.5 acolor O red adiam O 2
 \end{lstlisting}
-Additionally, let us also print the box dimensions, \lmpcmd{lx}, \lmpcmd{ly}, and \lmpcmd{lz}:
+Let us also print the box dimensions, \lmpcmd{lx}, \lmpcmd{ly}, and \lmpcmd{lz}:
 \begin{lstlisting}
-thermo 500
+thermo 250
 thermo_style custom step temp etotal vol lx ly lz  
 \end{lstlisting}
 
+% SG
+% FROM . Chem. Phys. 97, 2682–2689 (1992)
+% https://doi.org/10.1063/1.463056
+% 3 steps only. Say that its too fast to be correct. Show density.
+% Show rdf instead of box size?
 Finally, let us implement the annealing procedure which is
 made of four consecutive runs.  First, a $25\,\text{ps}$ phase at $T = 6000\,\text{K}$
 and isotropic pressure coupling with desired pressure $p = 100\,\text{atm}$:
