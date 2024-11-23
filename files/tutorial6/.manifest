@@ -1,0 +1,31 @@
+# LAMMPS Tutorial manifest file. This file determines what is downloaded when.
+# comments start with a # as the first character.
+# comments and empty lines are ignored
+##############################################################################
+# 1) input file templates and data files
+# the first file will be automatically loaded
+cracking.lmp
+gcmc.lmp
+generate.lmp
+H2O.mol
+SiO.1990.vashishta
+
+# 2) solution files
+# only downloaded on request
+cracking.data
+cracking-mod.data
+gcmc.lmp
+generate.data
+generate.log
+SiO.1990.vashishta
+cracking.lmp
+cracking.png
+gcmc.log
+generate.png
+cracking.log
+gcmc.png
+generate.lmp
+H2O.mol
+
+# 3) support files
+

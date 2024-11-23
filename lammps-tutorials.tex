@@ -2430,7 +2430,8 @@ of $0.1~\text{\AA{}}$.  Since the \lmpcmd{fix nve/limit} is applied to the
 group \lmpcmd{fluid}, only the water molecules and ions will move.
 The \lmpcmd{fix temp/berendsen} command rescales the velocities of the atoms
 to ensure the system reaches the desired temperature of $1~\text{K}$.
-The SHAKE algorithm is used in order to maintain the shape of the water molecules.
+The SHAKE algorithm is used in order to maintain
+the shape of the water molecules \cite{ryckaert1977numerical, andersen1983rattle}.
 
 Let us also create images of the system and control
 the printing of thermodynamic outputs by adding the following lines
@@ -2545,7 +2546,7 @@ dump_modify mydmp backcolor white &
 \end{lstlisting}
 
 To monitor the system equilibration, let us print the distance between
-the two walls. Add the following lines to \flecmd{equilibrate.lmp}:
+the two walls.  Add the following lines to \flecmd{equilibrate.lmp}:
 \begin{lstlisting}
 variable walltopz equal xcm(walltop,z)
 variable wallbotz equal xcm(wallbot,z)
@@ -2587,7 +2588,7 @@ should be on the order of one nanosecond.
 \includegraphics[width=\linewidth]{NANOSHEAR-equilibration}
 \caption{a)~Pressure $p$ of the nanosheared electrolyte system
 simulated in \hyperref[sheared-confined-label]{Tutorial 4} as a function of the
-time $t$. b)~Distance between the walls $\Delta z$ as a function of time $t$.}
+time $t$.  b)~Distance between the walls $\Delta z$ as a function of time $t$.}
 \label{fig:NANOSHEAR-equilibration}
 \end{figure}
 
@@ -2745,7 +2746,7 @@ resulting from the deformation being tracked over time.
 
 The first action we need to perform here is to relax the structure with ReaxFF,
 which we are gonna do using molecular dynamics.  As always, to make sure that the system
-equilibrates nicely, we will us track certain parameters over time. To set up this
+equilibrates nicely, we will us track certain parameters over time.  To set up this
 tutorial, select \guicmd{Start Tutorial 5} from the
 \guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.
 The editor should display the following content corresponding to \flecmd{relax.lmp}:
@@ -2798,7 +2799,7 @@ variable qO equal charge(grpO)/count(grpO)
 variable vq atom q
 \end{lstlisting}
 To print the averaged charges \lmpcmd{qSi} and \lmpcmd{qO} using the
-\lmpcmd{thermo\_style} command, and create images of the system. Add the
+\lmpcmd{thermo\_style} command, and create images of the system.  Add the
 following lines to \flecmd{relax.lmp}:
 \begin{lstlisting}
 thermo 100
@@ -3071,7 +3072,7 @@ run 2000
 next a
 jump SELF loop
 \end{lstlisting}
-Run the simulation with LAMMPS. When the simulation is over,
+Run the simulation with LAMMPS.  When the simulation is over,
 it can be seen from the \flecmd{decorate.species} file that
 all the created hydrogen atoms reacted with the $\text{SiO}_{2}$ structure to
 form surface groups (such as hydroxyl (-OH) groups).
@@ -3100,32 +3101,24 @@ O atoms with a charge of about $-0.9 ~ \text{e}$ appear in blue.}
 \centering
 \includegraphics[width=0.55\linewidth]{GCMC}
 \caption{Water molecules adsorbed in cracked silica (SiO$_2$) material as simulated
-during \hyperref[gcmc-silica-label]{Tutorial 6}. Water molecules are colored in
+during \hyperref[gcmc-silica-label]{Tutorial 6}.  Water molecules are colored in
 cyan and white, oxygen (O) atoms from SiO$_2$ in red, and silicon (Si) atoms in yellow.}
 \label{fig:GCMC}
 \end{figure}
 
 \noindent The objective of this tutorial is to combine molecular dynamics and
 grand canonical Monte Carlo simulations to compute the adsorption of water
-molecules in cracked silica material (Fig.\,\ref{fig:GCMC}). This tutorial
+molecules in cracked silica material (Fig.\,\ref{fig:GCMC}).  This tutorial
 illustrates the use of the grand canonical ensemble in molecular simulation, an
-open ensemble in which the number of atoms or molecules within the simulation
-box is not constant. When using the grand canonical ensemble, it is possible to
-impose the chemical potential (or pressure) of a given fluid in a nanoporous structure.
+open ensemble where the number of atoms or molecules in the simulation box can vary.
+By employing the grand canonical ensemble, we will set the chemical
+potential of water within a nanoporous SiO$_2$ structure.
 
 \subsubsection{Generation of the silica block}
-\noindent Let us first generate a block of amorphous silica ($\text{SiO}_2$).
-To do so, we are going to replicate a building block containing 3 Si and 6 O atoms.
-Create two folders side by side, and name them respectively \flrcmd{Potential/}
-and \flrcmd{SilicaBlock/}. The initial data file for the SiO atoms called
-\href{\filepath tutorial6/SiO.data}{\dwlcmd{SiO.data}}
-must be downloaded and saved in \flrcmd{SilicaBlock/}. This data file contains
-the coordinates of the 9 atoms, their masses, and their charges.
 
-Let us replicate these atoms using LAMMPS, and apply an annealing procedure to
-obtain a block of amorphous silica. Create a new input file called \flecmd{input.lmp}
-in the \flrcmd{SilicaBlock/} folder, and copy
-the following lines into it:
+\noindent To begin this tutorial, select \guicmd{Start Tutorial 6} from the
+\guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.
+The editor should display the following content corresponding to \flecmd{generate.lmp}:
 \begin{lstlisting}
 units metal
 boundary p p p
@@ -3134,178 +3127,186 @@ pair_style vashishta
 neighbor 1.0 bin
 neigh_modify delay 1
 \end{lstlisting}
-The main difference from some of the previous tutorials is the use of the \textit{Vashishta}
-pair style. The Vashishta potential is a bond-angle energy-based potential, it deduces
-the bonds between atoms from their relative positions \cite{vashishta1990interaction}.
+The main difference from some of the previous tutorials is the use of the \lmpcmd{Vashishta}
+pair style.  The Vashishta potential implicitly models atomic bonds through
+energy terms dependent on interatomic distances and angles \cite{vashishta1990interaction}.
 
-Let us then import the system consisting of 9 atoms, and replicate it four times
-in all three directions of space, thus creating a system with 576 atoms. Add the
-following lines into \flecmd{input.lmp}:
+Let us create a box for two atom types, \lmpcmd{Si}
+of mass 28.0855\,g/mol and \lmpcmd{O} of mass 15.9994\,g/mol.
+Add the following lines to \flecmd{generate.lmp}:
 \begin{lstlisting}
-read_data SiO.data
-replicate 4 4 4
+region box block -18.0 18.0 -9.0 9.0 -9.0 9.0
+create_box 2 box
+labelmap atom 1 Si 2 O
+mass Si 28.0855
+mass O 15.9994
+create_atoms Si random 240 5802 box overlap 2.0 maxtry 500
+create_atoms O random 480 1072 box overlap 2.0 maxtry 500
 \end{lstlisting}
-Then, let us specify the pair coefficients by indicating that the first atom type
-is \textit{Si} and the second is \textit{O}. Let us also add a dump command to
-print out the positions of the atoms every 5000 steps:
-\begin{lstlisting}
-pair_coeff * * &
-    ../Potential/SiO.1990.vashishta Si O
-\end{lstlisting}
-Download the \href{\filepath tutorial6/SiO.1990.vashishta}{\dwlcmd{SiO.1990.vashishta}},
-and copy it within the \flrcmd{Potential/} folder.
+The \lmpcmd{create\_atoms} commands are used to place
+240 Si atoms, and 480 atoms, respectively.  This corresponds to
+an initial density of approximately $2$\,g/cm$^3$, which is close
+to the expected final density of amorphous silica at 300\,K.
 
-Let us add a \textit{dump image} command to \flecmd{input.lmp} to follow the
+Now, specify the pair coefficients by indicating that the first atom type
+is \lmpcmd{Si} and the second is \lmpcmd{O}:
+\begin{lstlisting}
+pair_coeff * * SiO.1990.vashishta Si O
+\end{lstlisting}
+Ensure that the \href{\filepath tutorial6/SiO.1990.vashishta}{\dwlcmd{SiO.1990.vashishta}}
+file is located in the same directory as \flecmd{generate.lmp}.
+
+Next, add a \lmpcmd{dump image} command to \flecmd{generate.lmp} to follow the
 evolution of the system with time:
 \begin{lstlisting}
-dump mydmp all image 200 dump.*.jpg type type &
-    shiny 0.1 box no 0.01 view 0 0 zoom 1.2
-dump_modify mydmp backcolor white &
-    acolor Si yellow adiam Si 2.5 &
-    acolor O red adiam O 2
-thermo 1000
-thermo_style custom step temp etotal &
-    vol lx ly lz
+dump viz all image 250 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 180 90 zoom 3.4 size 1700 700
+dump_modify viz backcolor white &
+  acolor Si yellow adiam Si 2.5 &
+  acolor O red adiam O 2
 \end{lstlisting}
-Thanks to the \textit{thermo\_style custom} command, the box size along each direction
-will be printed in the log file.
-
-Finally, let us create the last part of our script. The annealing procedure is
-made of four consecutive runs. First, a $50\,\text{ps}$ phase at $T = 6000\,\text{K}$
-and isotropic pressure coupling with desired pressure $p = 100\,\text{atm}$:
+Let us also print the box volume and system density, alongside the
+temperature and total energy:
 \begin{lstlisting}
-velocity all create 6000 4928459 &
-    rot yes dist gaussian
-fix npt1 all npt temp 6000 6000 0.1 &
-    iso 100 100 1
+thermo 250
+thermo_style custom step temp etotal vol density 
+\end{lstlisting}
+
+% SG
+% FROM . Chem. Phys. 97, 2682–2689 (1992)
+% https://doi.org/10.1063/1.463056
+% 3 steps only. Say that its too fast to be correct. Show density.
+% Show rdf instead of box size?
+Finally, let us implement the annealing procedure which
+consists of three consecutive runs.  This procedure was inspired
+by Ref.\,\cite{della1992molecular}.  First, to melt the system,
+a $10\,\text{ps}$ phase at $T = 6000\,\text{K}$ is performed:
+\begin{lstlisting}
+velocity all create 6000 8289 rot yes dist gaussian
+fix mynvt all nvt temp 6000 6000 0.1
 timestep 0.001
-run 50000
+run 10000
 \end{lstlisting}
-Then, a second phase during which the system is cooled down from $T = 6000\,\text{K}$
-to $T = 4000\,\text{K}$. An anisotropic pressure coupling is used, allowing all
-three dimensions of the box to evolve independently from one another:
+Next, a second phase, during which the system is cooled down from $T = 6000\,\text{K}$
+to $T = 300\,\text{K}$, is implemented as follows:
 \begin{lstlisting}
-fix npt1 all npt temp 6000 4000 0.1 &
-    aniso 100 100 1
-run 50000
+fix mynvt all nvt temp 6000 300 0.1
+run 30000
 \end{lstlisting}
-Then, let us cool down the system further while also reducing the pressure, and then
-perform a small equilibration step at the final desired condition, $T = 300\,\text{K}$ and $p = 1\,\text{atm}$.
+In the third step, the system is equilibrated at the final desired
+conditions, $T = 300\,\text{K}$ and $p = 1\,\text{atm}$, 
+using an anisotropic pressure coupling:
 \begin{lstlisting}
-fix npt1 all npt temp 4000 300 0.1 &
-    aniso 100 1 1
-run 200000
-fix npt1 all npt temp 300 300 0.1 &
-    aniso 1 1 1
-run 50000
-write_data amorphousSiO.data
+unfix mynvt
+
+fix mynpt all npt temp 300 300 0.1 aniso 1 1 1
+run 10000
+
+write_data generate.data
 \end{lstlisting}
-Here, an isotropic barostat is used for the melted phase at $T = 6000\,\text{K}$,
-and an anisotropic barostat is used for all following phases. With the anisotropic
-barostat, all three directions of space are adjusted independently from one another.
-An anisotropic barostat is usually a better choice for a solid phase. For a liquid
-or a gas, an isotropic barostat is usually the best choice.
+Here, an anisotropic barostat is used.
+Anisotropic barostats adjust the dimensions independently, which is
+generally suitable for a solid phase.
 
-Run the simulation using LAMMPS. From the \textit{Charts} window, the temperature
-can be seen to follow well the desired annealing procedure (Fig.\,\ref{fig:GCMC-temperature}).
-The evolution of the box dimensions over time confirms that the box was indeed
-deformed isotropically during the first stage of the simulation, and then anisotropically
-(Fig.\,\ref{fig:GCMC-dimension}). After running
-the simulation, the final LAMMPS topology file called \flecmd{amorphousSiO.data}
-will be located in \flrcmd{SilicaBlock/} (Fig.\,\ref{fig:GCMC-snapshot}).
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{GCMC-temperature}
-\caption{Temperature $T$ of the system during annealing. The vertical dashed lines
-mark the transition between the different phases of the simulation.}
-\label{fig:GCMC-temperature}
-\end{figure}
+Run the simulation using LAMMPS.  From the \guicmd{Charts} window, the temperature
+evolution can be observed, showing that it closely follows the desired annealing procedure (Fig.\,\ref{fig:GCMC-dimension}\,a).
+The evolution of the box dimensions over time confirms that the box
+deformed during the last stage of the simulation
+(Fig.\,\ref{fig:GCMC-dimension}\,b).  After the simulation completes, the final
+LAMMPS topology file called \flecmd{generate.data}
+will be located next to \flecmd{generate.lmp} (Fig.\,\ref{fig:GCMC-snapshot}).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GCMC-dimension}
-\caption{Box dimensions along $x$ (blue), $y$ (orange), and $z$ (dark) during
-annealing. The vertical dashed lines mark the transition between the different
+\caption{a) Temperature $T$ as a function of time $t$
+during the annealing of the silica system
+from \hyperref[gcmc-silica-label]{Tutorial 6}.
+b) System density $\rho$ during
+annealing.  The vertical dashed lines mark the transition between the different
 phases of the simulation.}
 \label{fig:GCMC-dimension}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth]{GCMC-snapshot}
-\caption{Final amorphous silica ($\text{SiO}_2$). The silicon atoms are
+\includegraphics[width=0.9\linewidth]{GCMC-generate}
+\caption{Amorphous silica ($\text{SiO}_2$) simulated
+during \hyperref[gcmc-silica-label]{Tutorial 6}.  Silicon atoms are
 represented in yellow, and the oxygen atoms in red.}
 \label{fig:GCMC-snapshot}
 \end{figure}
 
 \subsubsection{Cracking the silica}
-Let us dilate the block of silica until a crack forms. Create a new folder
-called \flrcmd{Cracking/} next to \flrcmd{SilicaBlock/}, as well as a new
-\flecmd{input.lmp} file starting with familiar lines as previously:
+
+Open the \flecmd{cracking.lmp} file, which must constain the following familiar lines:
 \begin{lstlisting}
 units metal
 boundary p p p
 atom_style full
+pair_style vashishta
 neighbor 1.0 bin
 neigh_modify delay 1
 
-read_data ../SilicaBlock/amorphousSiO.data
+read_data generate.data
 
-pair_style vashishta
-pair_coeff * * &
-    ../Potential/SiO.1990.vashishta Si O
-dump dmp all atom 1000 dump.lammpstrj
+pair_coeff * * SiO.1990.vashishta Si O
+
+dump viz all image 250 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 180 90 zoom 3.4 size 1700 700
+dump_modify viz backcolor white &
+  acolor Si yellow adiam Si 2.5 &
+  acolor O red adiam O 2
+
+thermo 250
+thermo_style custom step temp etotal vol density
 \end{lstlisting}
-Let us progressively increase the size of the box in the $x$ direction, thus forcing
-the silica to deform and eventually crack. To do so, a loop based on the jump command
-is used. At every step of the loop, the box dimension over $x$ will be multiplied
-by a scaling factor 1.005. Add the following lines into the \flecmd{input.lmp}:
+
+Let us progressively increase the size of the box in the $x$ direction,
+forcing the silica to deform and eventually crack.  To achive this,
+the \lmpcmd{fix deform} command is used, with a rate
+of $0.005\,\text{ps}^{-1}$.  Add the following lines to
+the \flecmd{cracking.lmp} file:
 \begin{lstlisting}
-fix nvt1 all nvt temp 300 300 0.1
 timestep 0.001
-thermo 1000
-variable var loop 45
-label loop
-change_box all x scale 1.005 remap
-run 2000
-next var
-jump input.lmp loop
-run 20000
-write_data dilatedSiO.data
+fix nvt1 all nvt temp 300 300 0.1
+fix mydef all deform 1 x erate 0.005
+run 50000
+
+write_data cracking.data
 \end{lstlisting}
-The \textit{fix nvt} is used to control the temperature of the system, while the
-\textit{change\_box} command imposes incremental deformations of the box. Different
-scaling factors or different numbers of steps can be used to generate different
-defects in the silica. After the expansion, a final equilibration step of a duration
-of 20 picoseconds is performed. If you look at the \textit{dump.lammpstrj} file
-using VMD, you can see the expansion occurring step-by-step, and the atoms
-progressively adjusting to the box dimensions. At first, the deformations are
-reversible (elastic regime). At some point, bonds start breaking and dislocations
-appear (plastic regime). The final system is shown in Fig.\,\ref{fig:GCMC-cracked}.
+The \lmpcmd{fix nvt} command is employed to control the temperature of the system.
+As observed from the generated images, the atoms
+progressively adjust to the changing box dimensions. At some point, bonds begin to break,
+leading to the appearance of dislocations (Fig.\,\ref{fig:GCMC-cracked}).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GCMC-cracked}
-\caption{Block of silica after deformation. The silicon atoms are represented in
-yellow, and the oxygen atoms in red. Some holes are visible.}
+\caption{Block of silica from \hyperref[gcmc-silica-label]{Tutorial 6}
+after deformation.  Silicon atoms are represented in yellow,
+and the oxygen atoms in red.  The crack was induced by the
+imposed deformation of the box along the $x$-axis.}
 \label{fig:GCMC-cracked}
 \end{figure}
 
 \subsubsection{Adding water}
-\noindent In order to add the water molecules to the silica, we are going to use
-the Monte Carlo method in the grand canonical ensemble (GCMC). In short, the
-system is put into contact with a virtual reservoir of a given chemical potential
+
+\noindent To add the water molecules to the silica, we will employ
+the Monte Carlo method in the grand canonical ensemble (GCMC).  In short, the
+system is placed into contact with a virtual reservoir of a given chemical potential
 $\mu$, and multiple attempts to insert water molecules at random positions are
 made. Each attempt is either accepted or rejected based on energy considerations.
-Find more details in classical textbooks like Ref.~\citenum{frenkel2023understanding}.
+For further details, please refer to classical textbooks like Ref.~\citenum{frenkel2023understanding}.
 
 \paragraph{Using hydrid potentials}
-\noindent Create a new folder called \flrcmd{Addingwater/}. Download and save
-the water molecule template called
-\href{\filepath tutorial6/H2O.mol}{\dwlcmd{H2O.mol}}
-within the \flrcmd{Addingwater/} folder. Create a new input file called \flecmd{input.lmp}
-within \flrcmd{Addingwater/}, and copy the following lines into it:
+
+\noindent The first particularly of our system is that it
+combine water and silica, which necessitates the use
+of two force fields: Vashishta (for $\text{SiO}_2$), and
+TIP4P (for water).  Here, the TIP4P/2005 model is employed for the
+water \cite{abascal2005general}.  Open the \flecmd{gcmc.lmp} file, which
+should constain the following lines:
 \begin{lstlisting}
 units metal
 boundary p p p
@@ -3313,49 +3314,30 @@ atom_style full
 neighbor 1.0 bin
 neigh_modify delay 1
 pair_style hybrid/overlay vashishta &
-    lj/cut/tip4p/long OW HW OW-HW HW-OW-HW &
-    0.1546 10
-kspace_style pppm/tip4p 1.0e-4
+    lj/cut/tip4p/long OW HW OW-HW HW-OW-HW 0.1546 10
+kspace_style pppm/tip4p 1.0e-5
 bond_style harmonic
 angle_style harmonic
 \end{lstlisting}
-There are several differences with the previous input files used in this tutorial.
-From now on, the system will combine water and silica, and therefore two force
-fields are combined: Vashishta for $\text{SiO}_2$, and lj/cut/tip4p/long for
-TIP4P water model (here the TIP4P/2005 model is used \cite{abascal2005general}).
-Combining the two force fields is done using the \textit{hybrid/overlay} pair
-style. The PPPM solver \cite{luty1996calculating} is set with the \textit{kspace}
-command, and is used to calculate the long-range Coulomb interactions associated
-with \textit{tip4p/long}. Finally, the style for the bonds
-and angles of the water molecules are defined, although they are not important
-since TIP4P/2005 is a rigid water model.
+Combining the two force fields, Vashishta and TIP4P/2005, is achieved
+using the \lmpcmd{hybrid/overlay} pair style.  The PPPM
+solver \cite{luty1996calculating} is specified with the \lmpcmd{kspace}
+command, and is used to compute the long-range Coulomb interactions associated
+with \lmpcmd{tip4p/long}.  Finally, the style for the bonds
+and angles of the water molecules are defined; however, these specifications are
+not critical since TIP4P/2005 is a rigid water model.
 
-Before going further, we also need to make a few changes to our data file.
-Currently, \flecmd{dilatedSiO.data} only includes two atom types, but we need four.
-Copy the previously generated \flecmd{dilatedSiO.data} file within \flrcmd{Addingwater/}.
-Currently, \flecmd{dilatedSiO.data} starts with:
+The water molecule template called \href{\filepath tutorial6/H2O.mol}{\dwlcmd{H2O.mol}}
+must be downloaded and located next to \flecmd{gcmc.lmp}
+
+Before going further, we need to make a few changes to our data file.
+Currently, the \flecmd{cracking.data} file includes only two atom types, but we require four.
+Copy the previously generated \flecmd{cracking.data}, and name the duplicate \flecmd{cracking-mod.data}.
+Make the following changes to the beginning of \flecmd{cracking-mod.data}
+to ensure it matches the following format (with 4 atom types,
+1 bond type, 1 angle type, the proper type labels, and four masses):
 \begin{lstlisting}
-576 atoms
-2 atom types
-
--3.517115256285223 24.10269296788487 xlo xhi
-0.5721674106566077 20.013410300943264 ylo yhi
-1.3237302567479095 19.261847454851658 zlo zhi
-
-Masses
-
-Si 28.0855
-O 15.9994
-
-Atoms # full
-
-(...)
-\end{lstlisting}
-Make the following changes to allow for the addition of water molecules. Modify
-the file so that it looks like the following (with 4 atom types, 1 bond type,
-1 angle type, and four masses):
-\begin{lstlisting}
-576 atoms
+720 atoms
 4 atom types
 1 bond types
 1 angle types
@@ -3364,9 +3346,9 @@ the file so that it looks like the following (with 4 atom types, 1 bond type,
 1 extra angle per atom
 2 extra special per atom
 
--3.517115256285223 24.10269296788487 xlo xhi
-0.5721674106566077 20.013410300943264 ylo yhi
-1.3237302567479095 19.261847454851658 zlo zhi
+-22.470320800269317 22.470320800269317 xlo xhi
+-8.579178758211475 8.579178758211475 ylo yhi
+-8.491043517346204 8.491043517346204 zlo zhi
 
 Atom Type Labels
 
@@ -3385,41 +3367,39 @@ Angle Type Labels
 
 Masses
 
-Si 28.0855
-O 15.9994
-OW 15.9994
-HW 1.008
+1 28.0855
+2 15.9994
+3 15.9994
+4 1.008
 
 Atoms # full
 
 (...)
 \end{lstlisting}
 Doing so, we anticipate that there will be 4 atom types in the simulations,
-with O and H of $\text{H}_2\text{O}$ having types OW and HW, respectively. There
-will also be 1 bond type and 1 angle type. The extra bond, extra angle, and
-extra special lines are here for memory allocation. We can continue to fill in
-the \flecmd{input.lmp} file, by adding the system definition:
+with the oxygens and hydrogens of $\text{H}_2\text{O}$ having
+types \lmpcmd{OW} and \lmpcmd{HW}, respectively.  There
+will also be 1 bond type (\lmpcmd{OW-HW}) and 1 angle type (\lmpcmd{OW-HW-HW}).
+The \lmpcmd{extra bond}, \lmpcmd{extra angle}, and
+\lmpcmd{extra special} lines are here for memory allocation.
+
+We can now proceed to complete the \flecmd{gcmc.lmp} file by adding the system definition:
 \begin{lstlisting}
-read_data dilatedSiO.data
+read_data cracking-mod.data
 molecule h2omol H2O.mol
-lattice sc 3
-create_atoms 0 box mol h2omol 45585
-lattice none 1
+create_atoms 0 random 3 3245 NULL mol h2omol 4585 &
+  overlap 2.0 maxtry 50
 
 group SiO type Si O
 group H2O type OW HW
 \end{lstlisting}
-After reading the data file and defining the h2omol molecule from the \flecmd{H2O.txt}
-file, the \textit{create\_atoms} command is used to include some water molecules
-in the system on a simple cubic lattice. Not adding a molecule before starting
-the GCMC steps usually leads to failure. Note that here, most water molecules
-overlap with the silica. These overlapping water molecules will have to be
-deleted before starting the simulation (see below). Then, add the following
-settings to \flecmd{input.lmp}:
+After reading the data file and defining the \lmpcmd{h2omol} molecule from the \flecmd{H2O.txt}
+file, the \lmpcmd{create\_atoms} command is used to include three water molecules
+in the system.  Then, add the following \lmpcmd{pair\_coeff} (and
+\lmpcmd{bond\_coeff} and \lmpcmd{angle\_coeff}) commands
+to \flecmd{gcmc.lmp}:
 \begin{lstlisting}
-pair_coeff * * vashishta &
-    ../Potential/SiO.1990.vashishta &
-    Si O NULL NULL
+pair_coeff * * vashishta SiO.1990.vashishta Si O NULL NULL
 pair_coeff * * lj/cut/tip4p/long 0 0
 pair_coeff Si OW lj/cut/tip4p/long 0.0057 4.42
 pair_coeff O OW lj/cut/tip4p/long 0.0043 3.12
@@ -3428,120 +3408,120 @@ pair_coeff HW HW lj/cut/tip4p/long 0.0 0.0
 bond_coeff OW-HW 0 0.9572
 angle_coeff HW-OW-HW 0 104.52
 \end{lstlisting}
-The force field Vashishta applies only to Si and O of $\text{SiO}_2$,
-and not to the O and H of $\text{H}_2\text{O}$, thanks to the NULL parameters
-used for atoms of types OW and HW. Pair coefficients for the lj/cut/tip4p/long
+The force field Vashishta applies only to \lmpcmd{Si} and \lmpcmd{O} of $\text{SiO}_2$,
+and not to the \lmpcmd{OW} and \lmpcmd{HW} of $\text{H}_2\text{O}$, thanks to the \lmpcmd{NULL} parameters
+used for atoms of types \lmpcmd{OW} and \lmpcmd{HW}.  Pair coefficients for the \lmpcmd{lj/cut/tip4p/long}
 potential are defined between O($\text{H}_2\text{O}$) and between H($\text{H}_2\text{O}$)
 atoms, as well as between O($\text{SiO}_2$)-O($\text{H}_2\text{O}$) and
-Si($\text{SiO}_2$)-O($\text{H}_2\text{O}$). Therefore, the fluid-fluid and the
-fluid-solid interactions will be dealt with by the lj/cut/tip4p/long potential.
+Si($\text{SiO}_2$)-O($\text{H}_2\text{O}$). Thus,  the fluid-fluid and the
+fluid-solid interactions will be adressed with by the \lmpcmd{lj/cut/tip4p/long} potential.
+The \lmpcmd{bond\_coeff} and \lmpcmd{angle\_coeff} commands set the \lmpcmd{OW-HW}
+bond length to 0.9572\,\AA, and the \lmpcmd{HW-OW-HW}
+angle to $104.52^\circ$, respectively \cite{abascal2005general}.
 
-Add the following lines as well:
+Add the following lines to \flecmd{gcmc.lmp} as well:
 \begin{lstlisting}
 variable oxygen atom type==label2type(atom,OW)
 group oxygen dynamic all var oxygen
 variable nO equal count(oxygen)
-thermo_style custom step temp etotal v_nO
-thermo 1000
 
-fix shak H2O shake 1.0e-4 200 0 b OW-HW &
-    a HW-OW-HW mol h2omol
+fix shak H2O shake 1.0e-5 200 0 b OW-HW &
+  a HW-OW-HW mol h2omol
 \end{lstlisting}
 The number of oxygen atoms from water molecules (i.e.~the number of molecules)
-is calculated by the \textit{nO} variable, and will be printed in the log file.
-The SHAKE algorithm is used to maintain the shape of the water molecules over time,
-as seen in \hyperref[sheared-confined-label]{tutorial 4}.
+is calculated by the \lmpcmd{nO} variable.  The SHAKE algorithm is used to
+maintain the shape of the water molecules over time \cite{ryckaert1977numerical, andersen1983rattle}.
 
-Finally, let us delete the overlapping water molecules, and create images
-of the system using \textit{dump image}:
+Finally, let us create images
+of the system using \lmpcmd{dump image}:
 \begin{lstlisting}
-delete_atoms overlap 2 H2O SiO mol yes
-
-dump mydmp all image 1000 dump.*.jpg type type &
-    shiny 0.1 box yes 0.01 view 0 0 zoom 1.2
-dump_modify mydmp backcolor white &
-    acolor Si yellow adiam Si 2.5 &
-    acolor O red adiam O 2 &
-    acolor OW cyan adiam OW 2 &
-    acolor HW white adiam HW 1 &
-    boxcolor black
+dump viz all image 250 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 180 90 zoom 3.4 size 1700 700
+dump_modify viz backcolor white &
+  acolor Si yellow adiam Si 2.5 &
+  acolor O red adiam O 2 &
+  acolor OW cyan adiam OW 2 &
+  acolor HW white adiam HW 1
 \end{lstlisting}
 
 \paragraph{GCMC simulation}
-To prepare for the GCMC simulation, let us make the first equilibration step by
-adding the following lines into \flecmd{input.lmp}:
+
+To prepare for the GCMC simulation, let us add the
+following lines into \flecmd{gcmc.lmp}:
 \begin{lstlisting}
-compute_modify thermo_temp dynamic yes
 compute ctH2O H2O temp
+compute_modify thermo_temp dynamic yes
 compute_modify ctH2O dynamic yes
 fix mynvt1 H2O nvt temp 300 300 0.1
 fix_modify mynvt1 temp ctH2O
-compute ctSiO SiO temp
 fix mynvt2 SiO nvt temp 300 300 0.1
-fix_modify mynvt2 temp ctSiO
 timestep 0.001
-
-run 5000
 \end{lstlisting}
 Two different thermostats are used for $\text{SiO}_2$ and $\text{H}_2\text{O}$,
-respectively. Using separate thermostats is usually better when the system contains
-two separate species, such as a solid and a liquid. It is particularly important
+respectively.  Using separate thermostats is usually better when the system contains
+two separate species, such as a solid and a liquid.  It is particularly important
 to use two thermostats here because the number of water molecules will fluctuate
-with time. The \textit{compute\_modify} with \textit{dynamic yes} for water is
-used to specify that the number of molecules is not constant.
+with time.  The \lmpcmd{compute\_modify} command with the \lmpcmd{dynamic yes}
+option for water is used to specify that the number of molecules will not be constant.
 
 Finally, let us use the \textit{fix gcmc} and perform the grand canonical Monte
-Carlo steps. Add the following lines into \flecmd{input.lmp}:
+Carlo steps.  Add the following lines into \flecmd{gcmc.lmp}:
 \begin{lstlisting}
-variable tfac equal 5.0/3.0
-fix fgcmc H2O gcmc 100 100 0 0 65899 300 &
-    -0.5 0.1 mol h2omol tfac_insert ${tfac} &
-    group H2O shake shak full_energy &
-    pressure 10000
-run 45000
+variable tfac equal 5.0/3.0 
+fix fgcmc H2O gcmc 100 100 0 0 65899 300 -0.5 0.1 &
+  mol h2omol tfac_insert ${tfac} shake shak &
+  full_energy pressure 100
 \end{lstlisting}
-The \textit{tfac\_insert} option ensures the correct estimate for the temperature
+The \lmpcmd{tfac\_insert} option ensures the correct estimate for the temperature
 of the inserted water molecules by taking into account the internal degrees of
-freedom. Running this simulation, you should see the number of molecules increasing
-progressively. When using the pressure argument, LAMMPS ignores the value of the
+freedom.  Here, 100 insertion and deletion attemps are made every 100 steps.
+
+\begin{note}
+At a pressure of $p = 100\ \text{bar}$, the chemical potential of water
+vapor at $T = 300\ \text{K}$ can be calculated using as
+$\mu = \mu^\circ + RT \ln (\frac{p}{p_0}),$
+where $\mu_0$ is the standard chemical potential
+at $p^\circ = 1 \, \text{bar}$, \(R = 8.314\ \text{J/mol·K}\) is
+the gas constant, \(T = 300\ \text{K}\) is the temperature.
+\end{note}
+
+Finally, let us print some information and run for 25\,ps:
+\begin{lstlisting}
+thermo 250
+thermo_style custom step temp etotal v_nO &
+  f_fgcmc[3] f_fgcmc[4] f_fgcmc[5] f_fgcmc[6]
+
+run 25000
+\end{lstlisting}
+Running this simulation using LAMMPS, one can see that the number of molecules is increasing
+progressively.  When using the pressure argument, LAMMPS ignores the value of the
 chemical potential (here $\mu = -0.5\,\text{eV}$, which corresponds roughly to
 ambient conditions, i.e.~to a relative humidity $\text{RH} \approx 50\,\%$ \cite{gravelle2020multi}.)
-The large pressure value of 10000 bars was chosen to ensure that some successful
-insertions of molecules would occur during the extremely short duration of this simulation.
+The large pressure value of 100\,bars was chosen to ensure that some successful
+insertions of molecules would occur during the short duration of this simulation.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GCMC-number}
-\caption{Number of water molecules $N_\text{H2O}$ as a function of the time $t$.
-The dashed vertical line marks the beginning of the GCMC step.}
+\caption{Number of water molecules $N_\text{H2O}$ as a function of the time $t$
+as extracgted from \hyperref[gcmc-silica-label]{Tutorial 6}.}
 \label{fig:GCMC-number}
 \end{figure}
 
-When you run the simulation, the log file indicates that 840 atoms (i.e.~280 molecules)
-were added by the \textit{create\_atoms} command (the exact number you get may differ):
-\begin{lstlisting}
-Created 840 atoms
-\end{lstlisting}
-You can also see that 258 molecules were immediately deleted, leaving 24 water
-molecules (again, the exact number you get may differ):
-\begin{lstlisting}
-Deleted 774 atoms, new total = 642
-Deleted 516 bonds, new total = 44
-Deleted 258 angles, new total = 22
-\end{lstlisting}
-After just a few GCMC steps, the number of molecules starts increasing. Once the
-crack is filled with water molecules, the number of molecules reaches a plateau
-(Figs.\,\ref{fig:GCMC-number}-\ref{fig:GCMC-solvated}). The final number of
+After a few GCMC steps, the number of molecules starts increasing.  Once the
+crack is filled with water molecules, the total number of molecules reaches a plateau
+(Figs.\,\ref{fig:GCMC-number}-\ref{fig:GCMC-solvated}).  The final number of
 molecules depends on the imposed pressure, temperature, and the interaction
-between water and silica (i.e.~its hydrophilicity). Note that GCMC simulations
+between water and silica (i.e.~its hydrophilicity).  Note that GCMC simulations
 of such dense phases are usually slow to converge due to the very low probability
-of successfully inserting a molecule. Here, the short simulation duration was
-made possible by the use of a large pressure.
+of successfully inserting a molecule.  Here, the short simulation duration was
+made possible by the use of a high pressure.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GCMC-solvated}
-\caption{Snapshot of the silica system after the adsorption of water molecules.
+\caption{Snapshot of the silica system after the adsorption of water molecules
+during \hyperref[gcmc-silica-label]{Tutorial 6}.
 The oxygen atoms of the water molecules are represented in cyan, the silicon
 atoms in yellow, and the oxygen atoms of the solid in red.}
 \label{fig:GCMC-solvated}
