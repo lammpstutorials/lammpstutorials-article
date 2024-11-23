@@ -31,11 +31,11 @@ variable oxygen atom type==label2type(atom,OW)
 group oxygen dynamic all var oxygen
 variable nO equal count(oxygen)
 
-fix shak H2O shake 1.0e−5 200 0 b OW-HW a HW-OW-HW mol h2omol
+fix shak H2O shake 1.0e-5 200 0 b OW-HW a HW-OW-HW mol h2omol
 
-dump mydmp all image 200 myimage-*.ppm type type &
-  shiny 0.1 box no 0.01 view 180 90 zoom 1.6 size 1000 650
-dump_modify mydmp backcolor white &
+dump viz all image 250 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 180 90 zoom 3.8 size 1700 700
+dump_modify viz backcolor white &
   acolor Si yellow adiam Si 2.5 &
   acolor O red adiam O 2 &
   acolor OW cyan adiam OW 2 &
@@ -54,7 +54,7 @@ variable tfac equal 5.0/3.0
 fix fgcmc H2O gcmc 100 100 0 0 65899 300 -0.5 0.1 &
   mol h2omol tfac_insert ${tfac} shake shak full_energy pressure 100
 
-thermo 200
+thermo 250
 thermo_style custom step temp etotal v_nO &
   f_fgcmc[3] f_fgcmc[4] f_fgcmc[5] f_fgcmc[6]
 

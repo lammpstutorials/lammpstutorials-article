@@ -4,11 +4,20 @@ Created orthogonal box = (-18 -9 -9) to (18 9 9)
   1 by 1 by 1 MPI processor grid
 Created 240 atoms
   using lattice units in orthogonal box = (-18 -9 -9) to (18 9 9)
-  create_atoms CPU = 0.002 seconds
+  create_atoms CPU = 0.005 seconds
 Created 480 atoms
   using lattice units in orthogonal box = (-18 -9 -9) to (18 9 9)
-  create_atoms CPU = 0.026 seconds
+  create_atoms CPU = 0.027 seconds
 Reading vashishta potential file SiO.1990.vashishta with DATE: 2015-10-14
+
+CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
+
+Your simulation uses code contributions which should be cited:
+- Type Label Framework: https://doi.org/10.1021/acs.jpcb.3c08419
+The log file lists these citations in BibTeX format.
+
+CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
+
 Last active /omp style is pair_style vashishta/omp
 Neighbor list info ...
   update: every = 1 steps, delay = 1 steps, check = yes
@@ -16,22 +25,17 @@ Neighbor list info ...
   master list distance cutoff = 11
   ghost atom cutoff = 11
   binsize = 5.5, bins = 7 4 4
-  2 neighbor lists, perpetual/occasional/extra = 1 1 0
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
   (1) pair vashishta/omp, perpetual
       attributes: full, newton on, omp
       pair build: full/bin/omp
       stencil: full/bin/3d
       bin: standard
-  (2) compute rdf, occasional, half/full from (1)
-      attributes: half, newton on, omp
-      pair build: halffull/newton/omp
-      stencil: none
-      bin: none
 Setting up Verlet run ...
   Unit style    : metal
   Current step  : 0
   Time step     : 0.001
-Per MPI rank memory allocation (min/avg/max) = 15.83 | 15.83 | 15.83 Mbytes
+Per MPI rank memory allocation (min/avg/max) = 12.53 | 12.53 | 12.53 Mbytes
    Step          Temp          TotEng         Volume        Density    
          0   6000           530.47616      11664          2.0529284    
        250   11238.481     -3823.057       11664          2.0529284    
@@ -74,27 +78,27 @@ Per MPI rank memory allocation (min/avg/max) = 15.83 | 15.83 | 15.83 Mbytes
       9500   6137.399      -4955.073       11664          2.0529284    
       9750   6144.2688     -4946.7939      11664          2.0529284    
      10000   5908.2784     -4979.5925      11664          2.0529284    
-Loop time of 15.437 on 8 procs for 10000 steps with 720 atoms
+Loop time of 14.387 on 8 procs for 10000 steps with 720 atoms
 
-Performance: 55.969 ns/day, 0.429 hours/ns, 647.793 timesteps/s, 466.411 katom-step/s
-747.4% CPU use with 1 MPI tasks x 8 OpenMP threads
+Performance: 60.054 ns/day, 0.400 hours/ns, 695.074 timesteps/s, 500.453 katom-step/s
+729.6% CPU use with 1 MPI tasks x 8 OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 10.735     | 10.735     | 10.735     |   0.0 | 69.54
-Bond    | 0.0004787  | 0.0004787  | 0.0004787  |   0.0 |  0.00
-Neigh   | 1.228      | 1.228      | 1.228      |   0.0 |  7.95
-Comm    | 0.23364    | 0.23364    | 0.23364    |   0.0 |  1.51
-Output  | 1.7274     | 1.7274     | 1.7274     |   0.0 | 11.19
-Modify  | 1.4958     | 1.4958     | 1.4958     |   0.0 |  9.69
-Other   |            | 0.01691    |            |       |  0.11
+Pair    | 10.612     | 10.612     | 10.612     |   0.0 | 73.76
+Bond    | 0.00046781 | 0.00046781 | 0.00046781 |   0.0 |  0.00
+Neigh   | 1.243      | 1.243      | 1.243      |   0.0 |  8.64
+Comm    | 0.23631    | 0.23631    | 0.23631    |   0.0 |  1.64
+Output  | 1.9968     | 1.9968     | 1.9968     |   0.0 | 13.88
+Modify  | 0.28092    | 0.28092    | 0.28092    |   0.0 |  1.95
+Other   |            | 0.0172     |            |       |  0.12
 
 Nlocal:            720 ave         720 max         720 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 Nghost:           5036 ave        5036 max        5036 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Neighs:         123548 ave      123548 max      123548 min
+Neighs:              0 ave           0 max           0 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 FullNghs:       247096 ave      247096 max      247096 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
@@ -109,7 +113,7 @@ Setting up Verlet run ...
   Unit style    : metal
   Current step  : 10000
   Time step     : 0.001
-Per MPI rank memory allocation (min/avg/max) = 16.09 | 16.09 | 16.09 Mbytes
+Per MPI rank memory allocation (min/avg/max) = 12.79 | 12.79 | 12.79 Mbytes
    Step          Temp          TotEng         Volume        Density    
      10000   5908.2784     -4979.5925      11664          2.0529284    
      10250   6027.0959     -4932.7749      11664          2.0529284    
@@ -232,27 +236,27 @@ Per MPI rank memory allocation (min/avg/max) = 16.09 | 16.09 | 16.09 Mbytes
      39500   413.88319     -6335.4625      11664          2.0529284    
      39750   362.45049     -6344.2966      11664          2.0529284    
      40000   329.85819     -6353.1764      11664          2.0529284    
-Loop time of 47.9607 on 8 procs for 30000 steps with 720 atoms
+Loop time of 46.2463 on 8 procs for 30000 steps with 720 atoms
 
-Performance: 54.044 ns/day, 0.444 hours/ns, 625.512 timesteps/s, 450.369 katom-step/s
-753.7% CPU use with 1 MPI tasks x 8 OpenMP threads
+Performance: 56.048 ns/day, 0.428 hours/ns, 648.701 timesteps/s, 467.064 katom-step/s
+731.5% CPU use with 1 MPI tasks x 8 OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 34.854     | 34.854     | 34.854     |   0.0 | 72.67
-Bond    | 0.0016795  | 0.0016795  | 0.0016795  |   0.0 |  0.00
-Neigh   | 2.5218     | 2.5218     | 2.5218     |   0.0 |  5.26
-Comm    | 0.67717    | 0.67717    | 0.67717    |   0.0 |  1.41
-Output  | 5.0488     | 5.0488     | 5.0488     |   0.0 | 10.53
-Modify  | 4.8023     | 4.8023     | 4.8023     |   0.0 | 10.01
-Other   |            | 0.05472    |            |       |  0.11
+Pair    | 35.544     | 35.544     | 35.544     |   0.0 | 76.86
+Bond    | 0.0016588  | 0.0016588  | 0.0016588  |   0.0 |  0.00
+Neigh   | 2.5917     | 2.5917     | 2.5917     |   0.0 |  5.60
+Comm    | 0.64546    | 0.64546    | 0.64546    |   0.0 |  1.40
+Output  | 6.4888     | 6.4888     | 6.4888     |   0.0 | 14.03
+Modify  | 0.92258    | 0.92258    | 0.92258    |   0.0 |  1.99
+Other   |            | 0.05185    |            |       |  0.11
 
 Nlocal:            720 ave         720 max         720 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 Nghost:           4897 ave        4897 max        4897 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Neighs:         123367 ave      123367 max      123367 min
+Neighs:              0 ave           0 max           0 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 FullNghs:       246734 ave      246734 max      246734 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
@@ -267,7 +271,7 @@ Setting up Verlet run ...
   Unit style    : metal
   Current step  : 40000
   Time step     : 0.001
-Per MPI rank memory allocation (min/avg/max) = 16.09 | 16.09 | 16.09 Mbytes
+Per MPI rank memory allocation (min/avg/max) = 12.79 | 12.79 | 12.79 Mbytes
    Step          Temp          TotEng         Volume        Density    
      40000   329.85819     -6353.1764      11664          2.0529284    
      40250   363.91793     -6380.6264      10031.212      2.3870851    
@@ -310,27 +314,27 @@ Per MPI rank memory allocation (min/avg/max) = 16.09 | 16.09 | 16.09 Mbytes
      49500   307.61459     -6391.3409      10098.155      2.3712606    
      49750   295.10214     -6392.0332      10097.976      2.3713025    
      50000   288.98869     -6393.2627      10073.089      2.3771611    
-Loop time of 17.9177 on 8 procs for 10000 steps with 720 atoms
+Loop time of 17.0405 on 8 procs for 10000 steps with 720 atoms
 
-Performance: 48.221 ns/day, 0.498 hours/ns, 558.108 timesteps/s, 401.838 katom-step/s
-765.1% CPU use with 1 MPI tasks x 8 OpenMP threads
+Performance: 50.703 ns/day, 0.473 hours/ns, 586.838 timesteps/s, 422.523 katom-step/s
+746.8% CPU use with 1 MPI tasks x 8 OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 14.069     | 14.069     | 14.069     |   0.0 | 78.52
-Bond    | 0.00053416 | 0.00053416 | 0.00053416 |   0.0 |  0.00
-Neigh   | 0.20341    | 0.20341    | 0.20341    |   0.0 |  1.14
-Comm    | 0.1846     | 0.1846     | 0.1846     |   0.0 |  1.03
-Output  | 1.5859     | 1.5859     | 1.5859     |   0.0 |  8.85
-Modify  | 1.8572     | 1.8572     | 1.8572     |   0.0 | 10.37
-Other   |            | 0.01712    |            |       |  0.10
+Pair    | 14.119     | 14.119     | 14.119     |   0.0 | 82.85
+Bond    | 0.0006535  | 0.0006535  | 0.0006535  |   0.0 |  0.00
+Neigh   | 0.20696    | 0.20696    | 0.20696    |   0.0 |  1.21
+Comm    | 0.19573    | 0.19573    | 0.19573    |   0.0 |  1.15
+Output  | 2.0062     | 2.0062     | 2.0062     |   0.0 | 11.77
+Modify  | 0.49476    | 0.49476    | 0.49476    |   0.0 |  2.90
+Other   |            | 0.01737    |            |       |  0.10
 
 Nlocal:            720 ave         720 max         720 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 Nghost:           5353 ave        5353 max        5353 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Neighs:         142930 ave      142930 max      142930 min
+Neighs:              0 ave           0 max           0 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 FullNghs:       285860 ave      285860 max      285860 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
