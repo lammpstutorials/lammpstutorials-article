@@ -6,7 +6,7 @@ pair_style vashishta
 neighbor 1.0 bin
 neigh_modify delay 1
 
-region box block -16.717 16.717 -9.0 9.0 -9.0 9.0
+region box block -18.0 18.0 -9.0 9.0 -9.0 9.0
 create_box 2 box
 labelmap atom 1 Si 2 O
 mass Si 28.0855
@@ -17,16 +17,16 @@ create_atoms O random 480 1072 box overlap 2.0 maxtry 500
 pair_coeff * * SiO.1990.vashishta Si O
 
 dump viz all image 250 myimage-*.ppm type type &
-  shiny 0.1 box no 0.01 view 180 90 zoom 2.5 size 1000 450
+  shiny 0.1 box no 0.01 view 180 90 zoom 3.0 size 1000 420
 dump_modify viz backcolor white &
   acolor Si yellow adiam Si 2.5 &
   acolor O red adiam O 2
 
 thermo 250
-thermo_style custom step temp etotal density
+thermo_style custom step temp etotal vol density
 
-compute myRDF all rdf 200 Si O
-fix myat all ave/time 10 500 5000 c_myRDF[*] file rdf.dat mode vector
+# compute myRDF all rdf 200 Si O
+# fix myat all ave/time 10 500 5000 c_myRDF[*] file rdf.dat mode vector
 
 velocity all create 6000 8289 rot yes dist gaussian
 fix mynvt all nvt temp 6000 6000 0.1

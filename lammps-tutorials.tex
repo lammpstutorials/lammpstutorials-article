@@ -3134,7 +3134,7 @@ Let us create a box for two atom types, \lmpcmd{Si}
 of mass 28.0855\,g/mol and \lmpcmd{O} of mass 15.9994\,g/mol.
 Add the following lines to \flecmd{generate.lmp}:
 \begin{lstlisting}
-region box block -12 12 -12 12 -12 12
+region box block -18.0 18.0 -9.0 9.0 -9.0 9.0
 create_box 2 box
 labelmap atom 1 Si 2 O
 mass Si 28.0855
@@ -3143,7 +3143,9 @@ create_atoms Si random 240 5802 box overlap 2.0 maxtry 500
 create_atoms O random 480 1072 box overlap 2.0 maxtry 500
 \end{lstlisting}
 The \lmpcmd{create\_atoms} commands are used to place
-240 Si atoms, and 480 atoms, respectively.
+240 Si atoms, and 480 atoms, respectively.  This corresponds to
+an initial density of approximately $2$\,g/cm$^3$, which is close
+to the expected final density of amorphous silica at 300\,K.
 
 Now, specify the pair coefficients by indicating that the first atom type
 is \lmpcmd{Si} and the second is \lmpcmd{O}:
@@ -3157,14 +3159,16 @@ Next, add a \lmpcmd{dump image} command to \flecmd{generate.lmp} to follow the
 evolution of the system with time:
 \begin{lstlisting}
 dump viz all image 250 myimage-*.ppm type type &
-  shiny 0.1 box no 0.01 view 180 90 zoom 1.6 size 1000 650
-dump_modify viz backcolor white acolor Si yellow &
-  adiam Si 2.5 acolor O red adiam O 2
+  shiny 0.1 box no 0.01 view 180 90 zoom 3.0 size 1000 420
+dump_modify viz backcolor white &
+  acolor Si yellow adiam Si 2.5 &
+  acolor O red adiam O 2
 \end{lstlisting}
-Let us also print the box dimensions, \lmpcmd{lx}, \lmpcmd{ly}, and \lmpcmd{lz}:
+Let us also print the box volume and system density, alongside the
+temperature and total energy:
 \begin{lstlisting}
 thermo 250
-thermo_style custom step temp etotal vol lx ly lz  
+thermo_style custom step temp etotal vol density 
 \end{lstlisting}
 
 % SG
@@ -3172,43 +3176,41 @@ thermo_style custom step temp etotal vol lx ly lz
 % https://doi.org/10.1063/1.463056
 % 3 steps only. Say that its too fast to be correct. Show density.
 % Show rdf instead of box size?
-Finally, let us implement the annealing procedure which is
-made of four consecutive runs.  First, a $25\,\text{ps}$ phase at $T = 6000\,\text{K}$
-and isotropic pressure coupling with desired pressure $p = 100\,\text{atm}$:
+Finally, let us implement the annealing procedure which
+consists of three consecutive runs.  This procedure was inspired
+by Ref.\,\cite{della1992molecular}.  First, to melt the system,
+a $10\,\text{ps}$ phase at $T = 6000\,\text{K}$ is performed:
 \begin{lstlisting}
-velocity all create 6000 4928459 rot yes dist gaussian
-fix npt1 all npt temp 6000 6000 0.1 iso 100 100 1
+velocity all create 6000 8289 rot yes dist gaussian
+fix mynvt all nvt temp 6000 6000 0.1
 timestep 0.001
-run 25000
+run 10000
 \end{lstlisting}
-Then, a second phase during which the system is cooled down from $T = 6000\,\text{K}$
-to $T = 4000\,\text{K}$.  An anisotropic pressure coupling is used, allowing all
-three dimensions of the box to evolve independently from one another:
+Next, a second phase, during which the system is cooled down from $T = 6000\,\text{K}$
+to $T = 300\,\text{K}$, is implemented as follows:
 \begin{lstlisting}
-fix npt1 all npt temp 6000 4000 0.1 aniso 100 100 1
-run 25000
+fix mynvt all nvt temp 6000 300 0.1
+run 30000
 \end{lstlisting}
-In the third step, the system is cooled further while also reducing the
-pressure.  The final step is a short equilibration at the final desired
-condition, $T = 300\,\text{K}$ and $p = 1\,\text{atm}$:
+In the third step, the system is equilibrated at the final desired
+conditions, $T = 300\,\text{K}$ and $p = 1\,\text{atm}$, 
+using an anisotropic pressure coupling:
 \begin{lstlisting}
-fix npt1 all npt temp 4000 300 0.1 aniso 100 1 1
-run 50000
-fix npt1 all npt temp 300 300 0.1 aniso 1 1 1
-run 25000
+unfix mynvt
+
+fix mynpt all npt temp 300 300 0.1 aniso 1 1 1
+run 10000
 
 write_data generate.data
 \end{lstlisting}
-Here, an isotropic barostat is used for the melted phase at $T = 6000\,\text{K}$,
-and an anisotropic barostat is used for all following phases.
-The anisotropic barostat adjusts the dimensions independently, which is more
-suitable for a solid phase.  For a liquid or a gas, an isotropic barostat is
-usually the best choice.
+Here, an anisotropic barostat is used.
+Anisotropic barostats adjust the dimensions independently, which is
+generally suitable for a solid phase.
 
 Run the simulation using LAMMPS.  From the \guicmd{Charts} window, the temperature
 evolution can be observed, showing that it closely follows the desired annealing procedure (Fig.\,\ref{fig:GCMC-dimension}\,a).
 The evolution of the box dimensions over time confirms that the box
-deformed isotropically during the first stage of the simulation, followed by anisotropic deformation
+deformed during the last stage of the simulation
 (Fig.\,\ref{fig:GCMC-dimension}\,b).  After the simulation completes, the final
 LAMMPS topology file called \flecmd{generate.data}
 will be located next to \flecmd{generate.lmp} (Fig.\,\ref{fig:GCMC-snapshot}).
@@ -3216,9 +3218,9 @@ will be located next to \flecmd{generate.lmp} (Fig.\,\ref{fig:GCMC-snapshot}).
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GCMC-dimension}
-\caption{a) Temperature $T$ of the system during annealing of the amorphous silica
+\caption{a) Temperature $T$ of the system during annealing of the silica system
 simulated during \hyperref[gcmc-silica-label]{Tutorial 6}.
-b) Box dimensions along $x$, $y$, and $z$ during
+b) System density, $\rho$, during
 annealing.  The vertical dashed lines mark the transition between the different
 phases of the simulation.}
 \label{fig:GCMC-dimension}
