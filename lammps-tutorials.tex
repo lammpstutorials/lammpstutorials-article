@@ -3540,30 +3540,30 @@ sampling method.}
 \end{figure}
 
 \noindent The objective of this tutorial is to measure the free energy profile
-of particles across a barrier potential using two methods: free sampling and
+of particles through a barrier potential using two methods: free sampling and
 umbrella sampling \cite{kastner2011umbrella, allen2017computer, frenkel2023understanding} (Fig.\,\ref{fig:US}).
-For simplicity and to reduce computation time, the barrier potential will be
-imposed on the atoms with an additional force, mimicking the presence of a repulsive
-area in the middle of the simulation box without the need to simulate extra atoms.
+To simplify the process and minimize computation time, the barrier potential will be
+imposed on the atoms using an additional force, mimicking the presence of a repulsive
+area in the middle of the simulation box without needing to simulate additional atoms.
 The procedure is valid for more complex systems and can be adapted to many other
-situations, such as measuring the adsorption barrier near an interface, or for
-calculating a translocation barrier through a membrane
-\cite{wilson1997adsorption, makarov2009computer, gravelle2021adsorption}.
+situations, such as measuring adsorption barriers near an interface or calculating
+translocation barriers through a membrane
+\cite{wilson1997adsorption, makarov2009computer, gravelle2021adsorption, loche2022molecular}.
 
 \subsubsection{Method 1: Free sampling}
 The most direct way to calculate a free energy profile is to extract the partition
 function from a classical (i.e.~unbiased) molecular dynamics simulation, and
-then estimate the Gibbs free energy using
+then estimate the Gibbs free energy by using
 \begin{equation}
 \Delta G = -RT \ln(p/p_0),
 \label{eq:G}
 \end{equation}
 where $\Delta G$ is the free energy difference, $R$ is the gas constant, $T$
 is the temperature, $p$ is the pressure, and $p_0$ is a reference pressure.
-As an illustration, let us apply this method to an extremely simple configuration
+As an illustration, let us apply this method to a simple configuration
 that consists of a few particles diffusing in a box in the presence of a
-position-dependent repelling force that makes the center of the box a relatively
-unfavorable area to explore.
+position-dependent repulsive force that makes the center of the box a less
+favorable area to explore.
 
 \paragraph{Basic LAMMPS parameters}
 \noindent Create a folder called \textit{FreeSampling/}, and create an input
