@@ -276,7 +276,7 @@ of an external visualization tool to visualize breaking bonds, and
 demonstrates how available LAMMPS features can be used to do the same
 without an external tool.
 
-In \hyperref[all-atoms-label]{tutorial 3}, two components, liquid water
+In \hyperref[all-atom-label]{tutorial 3}, two components, liquid water
 and a polymer molecule, are merged and equilibrated.  A long-range
 solver is used to handle the electrostatic interactions accurately, and
 the system is equilibrated in the isothermal-isobaric (NPT) ensemble.  A
@@ -287,7 +287,7 @@ demonstrates the use of molecule files and type labels
 In \hyperref[sheared-confined-label]{tutorial 4}, a fluid confined by
 two walls is simulated, illustrating the specifics of simulating systems
 with fluid-solid interfaces.  This tutorial involves a slightly more
-complex water model than \hyperref[all-atoms-label]{tutorial 3}: the
+complex water model than \hyperref[all-atom-label]{tutorial 3}: the
 four-point TIP4P model.  In this tutorial, non-equilibrium MD is
 performed through the imposed shearing of the fluid by the moving walls.
 
@@ -1690,13 +1690,13 @@ fix break all bond/break 1000 1 2.5
 % S.G.: we could write a bit more about it
 
 \subsection{Tutorial 3: Polymer in water}
-\label{all-atoms-label}
+\label{all-atom-label}
 
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{PEG}
 \caption{The polymer molecule (PEG - PolyEthylene Glycol) solvated in water as
-simulated during \hyperref[all-atoms-label]{Tutorial 3}.  Water molecules are
+simulated during \hyperref[all-atom-label]{Tutorial 3}.  Water molecules are
 represented as a transparent continuum field for clarity.}
 \label{fig:PEG}
 \end{figure}
@@ -2138,7 +2138,7 @@ and velocity profiles of the fluid in the direction normal to the walls are
 extracted to highlight the effect of confining a fluid on its local properties.
 This tutorial demonstrates key concepts of combining a fluid and a solid in
 the same simulation.  A major difference from the previous tutorial,
-\hyperref[all-atoms-label]{Polymer in water}, is that here a rigid four-point
+\hyperref[all-atom-label]{Polymer in water}, is that here a rigid four-point
 water model named TIP4P/2005 is used \cite{abascal2005general}.
 
 \begin{note}
@@ -2172,7 +2172,7 @@ potential.  Here, \lmpcmd{lj/cut/tip4p/long} imposes a Lennard-Jones potential w
 a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential.
 
 So far, the commands are relatively similar to those in the previous tutorial,
-\hyperref[all-atoms-label]{Polymer in water}, with two major differences: the use
+\hyperref[all-atom-label]{Polymer in water}, with two major differences: the use
 of \lmpcmd{lj/cut/tip4p/long} instead of \lmpcmd{lj/cut/coul/long}, and \lmpcmd{pppm/tip4p}
 instead of \lmpcmd{pppm}.  When using \lmpcmd{lj/cut/tip4p/long} and \lmpcmd{pppm/tip4p},
 the interactions resemble the conventional Lennard-Jones and Coulomb interactions,
