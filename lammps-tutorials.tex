@@ -3566,12 +3566,14 @@ position-dependent repulsive force that makes the center of the box a less
 favorable area to explore.
 
 \paragraph{Basic LAMMPS parameters}
-\noindent Create a folder called \textit{FreeSampling/}, and create an input
-script called \flecmd{input.lmp} in it. Copy the following lines into it:
+
+To begin this tutorial, select \guicmd{Start Tutorial 7} from the
+\guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.
+The editor should display the following content corresponding to \flecmd{free-energy.lmp}:
 \begin{lstlisting}
 variable sigma equal 3.405
 variable epsilon equal 0.238
-variable U0 equal 1.5*${epsilon}
+variable U0 equal 2.0*${epsilon}
 variable dlt equal 0.5
 variable x0 equal 5.0
 
@@ -3581,32 +3583,31 @@ pair_style lj/cut 3.822
 pair_modify shift yes
 boundary p p p
 \end{lstlisting}
-Here, we start by defining variables for the Lennard-Jones interaction
-$\sigma$ and $\epsilon$ and for the repulsive potential $U$: $U_0$, $\delta$, and $x_0$,
-see the analytical expression below. The value of 3.822 for the cut-off was chosen to
-create a WCA, purely repulsive, potential \cite{weeks1971role}. It was calculated
-as $2^{1/6} \times 3.405$ where $3.405 = \sigma$. The potential is shifted to be
-equal to 0 at the cut-off using the \textit{pair\_modify}. The system of unit
-\textit{real}, for which energy is in kcal/mol, distance in Ångstrom, or time in
+Here, we begin by defining variables for the Lennard-Jones interaction
+$\sigma$ and $\epsilon$ and for the repulsive potential $U$, which are $U_0$, $\delta$, and $x_0$
+[see Eqs.\,(\ref{eq:U}-\ref{eq:F}) below].  The cut-off value of 3.822 was chosen
+to create a Weeks-Chandler-Andersen (WCA) potential, which is a truncated and
+purely repulsive LJ potential \cite{weeks1971role}.  It was calculated
+as $2^{1/6} \sigma$.  The potential is also shifted to be
+equal to 0 at the cut-off using the \lmpcmd{pair\_modify}.  The system of unit
+\lmpcmd{real}, in which energy is in kcal/mol, distance in Ångstrom, or time in
 femtosecond, has been chosen for practical reasons: the WHAM algorithm used in
 the second part of the tutorial automatically assumes the energy to be in kcal/mol.
 
 \paragraph{System creation and settings}
-\noindent Let us define the simulation box and randomly add atoms by copying the
-following lines into \flecmd{input.lmp}:
+
+Let us define the simulation box and randomly add atoms by addying the
+following lines to \flecmd{free-energy.lmp}:
 \begin{lstlisting}
 region myreg block -25 25 -5 5 -25 25
 create_box 1 myreg
-labelmap atom 1 A1
-create_atoms A1 random 60 34134 myreg &
-    overlap 1.5 maxtry 50
+create_atoms 1 random 200 34134 myreg overlap 3 maxtry 50
 
 mass * 39.95
 pair_coeff * * ${epsilon} ${sigma}
-neigh_modify every 1 delay 4 check yes
 \end{lstlisting}
 
-The variables $U_0$, $\delta$, and $x_0$ defined in the previous subsection are
+The variables $U_0$, $\delta$, and $x_0$, defined in the previous subsection, are
 used here to create the repulsive potential, restricting the atoms from exploring
 the center of the box:
 \begin{equation}
@@ -3614,19 +3615,19 @@ U = U_0 \left[ \arctan \left( \dfrac{x+x_0}{\delta} \right)
 - \arctan \left(\dfrac{x-x_0}{\delta} \right) \right].
 \label{eq:U}
 \end{equation}
-From the derivative of the potential with respect to $x$, we obtain the expression
+Taking the derivative of the potential with respect to $x$, we obtain the expression
 for the force that will be imposed on the atoms:
 \begin{equation}
 F= \dfrac{U_0}{\delta} \left[ \dfrac{1}{(x-x_0)^2/\delta^2+1}
 - \dfrac{1}{(x+x_0)^2/\delta^2+1} \right].
 \label{eq:F}
 \end{equation}
-Fig.\,\ref{fig:potential} shows the potential $U$ and force $F$ along the $x$ axis.
+Fig.\,\ref{fig:potential} shows the potential $U$ and force $F$ along the $x$-axis.
 With $U_0 = 1.5 \epsilon = 0.36\,\text{kcal/mol}$, $U_0$ is of the same order as the
 thermal energy $k_\text{B} T = 0.24\,\text{kcal/mol}$, where $k_\text{B} = 0.002\,\text{kcal/mol/K}$
-is the Boltzmann constant and $T = 119.8\,\text{K}$ (see below). In this case,
-particles are expected to regularly overcome the energy barrier thanks to
-the thermal agitation.
+is the Boltzmann constant and $T = 119.8\,\text{K}$ the temperature that will be
+used here.  In this case, particles are expected to regularly overcome the
+energy barrier thanks to the thermal agitation.
 
 \begin{figure}
 \centering
