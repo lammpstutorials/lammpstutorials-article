@@ -3623,11 +3623,11 @@ F = \dfrac{U_0}{\delta} \left[ \dfrac{1}{(x-x_0)^2/\delta^2+1}
 \label{eq:F}
 \end{equation}
 Fig.\,\ref{fig:potential} shows the potential $U$ and force $F$ along the $x$-axis.
-With $U_0 = 1.5 \epsilon = 0.36\,\text{kcal/mol}$, $U_0$ is of the same order as the
+With $U_0 = 1.5 \epsilon = 0.36\,\text{kcal/mol}$, $U_0$ is comparable to
 thermal energy $k_\text{B} T = 0.24\,\text{kcal/mol}$, where $k_\text{B} = 0.002\,\text{kcal/mol/K}$
-is the Boltzmann constant and $T = 119.8\,\text{K}$ the temperature that will be
-used here.  In this case, particles are expected to regularly overcome the
-energy barrier thanks to the thermal agitation.
+is the Boltzmann constant and $T = 119.8\,\text{K}$ is the temperature
+used in this simulation.  Under these conditions, particles are expected to
+frequently overcome the energy barrier due to thermal agitation.
 
 \begin{figure}
 \centering
@@ -3638,7 +3638,7 @@ $U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathr
 \label{fig:potential}
 \end{figure}
 
-Let us impose the force $F(x)$ to the atoms in the simulation
+We impose the force $F(x)$ to the atoms in the simulation
 using the \lmpcmd{fix addforce} command.  Add the following
 lines to \flecmd{free-energy.lmp}:
 \begin{lstlisting}
@@ -3648,18 +3648,19 @@ variable F atom ${U0}/((x-${x0})^2/${dlt}^2+1)/${dlt}&
     -${U0}/((x+${x0})^2/${dlt}^2+1)/${dlt}
 fix myadf all addforce v_F 0.0 0.0 energy v_U
 \end{lstlisting}
-Let us combine the \lmpcmd{fix nve} with a \lmpcmd{fix langevin} thermostat:
+Next, we combine the \lmpcmd{fix nve} with a \lmpcmd{fix langevin} thermostat:
 \begin{lstlisting}
 fix mynve all nve
 fix mylgv all langevin 119.8 119.8 50 30917
 \end{lstlisting}
-When combining these two commands, the MD simulation is effectively
-in the NVT ensemble: constant number of atoms $N$, constant volume
-$V$, and constant temperature $T$.
+When combining these two commands, the MD simulation operates
+in the NVT ensemble, maintaining a constant number of
+atoms $N$, constant volume $V$, and a temperature $T$ that
+fluctuates around a target value.
 
-To make sure that the equilibration time is sufficient, we will record the evolution of
-the number of atoms in the central (energetically unfavorable) region called \lmpcmd{mymes}
-using the \lmpcmd{n\_center} variable:
+To ensure that the equilibration time is sufficient, we will track the evolution of
+the number of atoms in the central (energetically unfavorable) region,
+referred to as \lmpcmd{mymes}, using the \lmpcmd{n\_center} variable:
 \begin{lstlisting}
 region mymes block -${x0} ${x0} INF INF INF INF
 variable n_center equal count(all,mymes)
@@ -3671,7 +3672,7 @@ dump viz all image 50000 myimage-*.ppm type type &
 dump_modify viz backcolor white acolor 1 cyan adiam 1 1 &
     boxcolor black
 \end{lstlisting}
-A \lmpcmd{dump image} was also added for system visualization.
+A \lmpcmd{dump image} command was added for system visualization.
 
 Finally, let us perform an equilibration of 500000 steps
 in total, using a timestep of $2\,\text{fs}$ (i.e.~a total duration of $1\,\text{ns}$):
@@ -3681,7 +3682,7 @@ run 500000
 \end{lstlisting}
 Run the simulation with LAMMPS. The number of atoms in the
 central region, $n_\mathrm{center}$, reaches
-its equilibrium value after approximately $0.1\,\text{ns}$
+its equilibrium value after approximately $500\,\text{ps}$
 (Fig.\,\ref{fig:US-density-evolution}).  A snapshot of the
 equilibrated system is shown in Fig.\,\ref{fig:US-system-unbiased}.
 
@@ -3707,8 +3708,8 @@ duration of the last run to obtain a better-resolved density profile.
 \centering
 \includegraphics[width=\linewidth]{US-density-evolution}
 \caption{Evolution of the number of atoms $n_\text{center}$ in the central
-region \textit{mymes} as a function of time $t$ during equilibration. The dark line
-serves as a guide for the eyes. Here, $U_0 = 0.36~\text{kcal/mol}$,
+region \lmpcmd{mymes} as a function of time $t$ during equilibration.  The dark line
+is $n_\text{center} = 22 \exp(-t/160)+5$ and serves as a guide for the eyes.  Here, $U_0 = 0.36~\text{kcal/mol}$,
 $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
 \label{fig:US-density-evolution}
 \end{figure}
