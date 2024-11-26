@@ -3618,7 +3618,7 @@ U = U_0 \left[ \arctan \left( \dfrac{x+x_0}{\delta} \right)
 Taking the derivative of the potential with respect to $x$, we obtain the expression
 for the force that will be imposed on the atoms:
 \begin{equation}
-F= \dfrac{U_0}{\delta} \left[ \dfrac{1}{(x-x_0)^2/\delta^2+1}
+F = \dfrac{U_0}{\delta} \left[ \dfrac{1}{(x-x_0)^2/\delta^2+1}
 - \dfrac{1}{(x+x_0)^2/\delta^2+1} \right].
 \label{eq:F}
 \end{equation}
@@ -3638,45 +3638,40 @@ $U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathr
 \label{fig:potential}
 \end{figure}
 
-Let us apply energy minimization to the system, and then impose the force $F(x)$
-to all of the atoms in the simulation using the \textit{addforce} command. Add
-the following lines to \flecmd{input.lmp}:
+Let us impose the force $F(x)$ to the atoms in the simulation
+using the \lmpcmd{fix addforce} command.  Add the following
+lines to \flecmd{free-energy.lmp}:
 \begin{lstlisting}
-minimize 1e-4 1e-6 100 1000
-reset_timestep 0
-
 variable U atom ${U0}*atan((x+${x0})/${dlt})&
     -${U0}*atan((x-${x0})/${dlt})
-variable F atom &
-    ${U0}/((x-${x0})^2/${dlt}^2+1)/${dlt}&
+variable F atom ${U0}/((x-${x0})^2/${dlt}^2+1)/${dlt}&
     -${U0}/((x+${x0})^2/${dlt}^2+1)/${dlt}
 fix myadf all addforce v_F 0.0 0.0 energy v_U
 \end{lstlisting}
-Finally, let us combine the \textit{fix nve} with a \textit{Langevin} thermostat
-and run a molecular dynamics simulation:
+Let us combine the \lmpcmd{fix nve} with a \lmpcmd{fix langevin} thermostat:
 \begin{lstlisting}
 fix mynve all nve
-fix mylgv all langevin 119.8 119.8 50 1530917
+fix mylgv all langevin 119.8 119.8 50 30917
 \end{lstlisting}
-With these two commands, the MD simulation
-is effectively in the NVT ensemble: constant number of atoms $N$, constant volume
+When combining these two commands, the MD simulation is effectively
+in the NVT ensemble: constant number of atoms $N$, constant volume
 $V$, and constant temperature $T$.
 
-To make sure that $1\,\text{ns}$ is long enough, we will record the evolution of
-the number of atoms in the central (energetically unfavorable) region called \textit{mymes}
-using the \textit{n\_center} variable:
+To make sure that the equilibration time is sufficient, we will record the evolution of
+the number of atoms in the central (energetically unfavorable) region called \lmpcmd{mymes}
+using the \lmpcmd{n\_center} variable:
 \begin{lstlisting}
 region mymes block -${x0} ${x0} INF INF INF INF
 variable n_center equal count(all,mymes)
 thermo_style custom step temp etotal v_n_center
 thermo 10000
 
-dump mydmp all image 5000 dump.*.jpg type type &
-    shiny 0.1 box yes 0.02 view 0 90 zoom 1.9
-dump_modify mydmp backcolor white &
-    acolor A1 cyan adiam A1 1 boxcolor black
+dump viz all image 50000 myimage-*.ppm type type &
+    shiny 0.1 box yes 0.01 view 180 90 zoom 7 size 1600 400
+dump_modify viz backcolor white acolor 1 cyan adiam 1 1 &
+    boxcolor black
 \end{lstlisting}
-A \textit{dump image} was also added for system visualization.
+A \lmpcmd{dump image} was also added for system visualization.
 
 Finally, let us perform an equilibration of 500000 steps
 in total, using a timestep of $2\,\text{fs}$ (i.e.~a total duration of $1\,\text{ns}$):
@@ -3684,34 +3679,29 @@ in total, using a timestep of $2\,\text{fs}$ (i.e.~a total duration of $1\,\text
 timestep 2.0
 run 500000
 \end{lstlisting}
-Run the simulation with LAMMPS. To ensure that the equilibration of $1\,\text{ns}$ is long
-enough, let us have a look at the evolution of the number of atoms in the central region,
-$n_\mathrm{center}$. We can see that $n_\mathrm{center}$ reaches
-its equilibrium value (which is close to 0) after about $0.1\,\text{ns}$
-(Fig.\,\ref{fig:US-density-evolution}). See also a snapshot of the equilibrated
-system in Fig.\,\ref{fig:US-system-unbiased}.
+Run the simulation with LAMMPS. The number of atoms in the
+central region, $n_\mathrm{center}$, reaches
+its equilibrium value after approximately $0.1\,\text{ns}$
+(Fig.\,\ref{fig:US-density-evolution}).  A snapshot of the
+equilibrated system is shown in Fig.\,\ref{fig:US-system-unbiased}.
 
 \paragraph{Run and data acquisition}
-Once the system is equilibrated, let us record the density profile of
-the atoms along the $x$ axis using
-the \textit{ave/chunk} command. A total of 10 density profiles will be printed.
-Add the following line to \flecmd{input.lmp}:
+
+Once the system is equilibrated, we will record the density profile of
+the atoms along the $x$ axis using the \lmpcmd{ave/chunk} command.  A total
+of 10 density profiles will be printed.  Add the following line to \flecmd{free-energy.lmp}:
 \begin{lstlisting}
-unfix myat
-undump mydmp
 reset_timestep 0
 
 compute cc1 all chunk/atom bin/1d x 0.0 1.0
 fix myac all ave/chunk 10 400000 4000000 &
-    cc1 density/number file density_profile.dat
-dump mydmp all atom 200000 dump.lammpstrj
+    cc1 density/number file free-sampling.dat
 
-thermo 100000
 run 4000000
 \end{lstlisting}
-The step count is reset to 0 using \textit{reset\_timestep} to synchronize
-with the output times of \textit{fix density/number}. Feel free to increase the
-duration of the last run for a better resolved density profile.
+The step count is reset to 0 using \lmpcmd{reset\_timestep} to synchronize it
+with the output times of \lmpcmd{fix density/number}.  Increase the
+duration of the last run to obtain a better-resolved density profile.
 
 \begin{figure}
 \centering
@@ -3740,8 +3730,8 @@ are available due to the repulsive potential).
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-system-unbiased}
-\caption{Snapshot of the system. The density of atoms is lowest in the central
-part of the box, \textit{mymes}, due to the additional force $F$. Here,
+\caption{Snapshot of the system.  The density of atoms is lowest in the central
+part of the box, \lmpcmd{mymes}, due to the additional force $F$.  Here,
 $U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
 \label{fig:US-system-unbiased}
 \end{figure}
