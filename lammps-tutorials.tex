@@ -3547,8 +3547,8 @@ imposed on the atoms using an additional force, mimicking the presence of a repu
 area in the middle of the simulation box without needing to simulate additional atoms.
 The procedure is valid for more complex systems and can be adapted to many other
 situations, such as measuring adsorption barriers near an interface or calculating
-translocation barriers through a membrane
-\cite{wilson1997adsorption, makarov2009computer, gravelle2021adsorption, loche2022molecular}.
+translocation barriers through a membrane \cite{wilson1997adsorption, makarov2009computer,
+gravelle2021adsorption, loche2022molecular, hayatifar2024probing}.
 
 \subsubsection{Method 1: Free sampling}
 The most direct way to calculate a free energy profile is to extract the partition
@@ -3561,7 +3561,7 @@ then estimate the Gibbs free energy by using
 where $\Delta G$ is the free energy difference, $R$ is the gas constant, $T$
 is the temperature, $p$ is the pressure, and $p_0$ is a reference pressure.
 As an illustration, let us apply this method to a simple configuration
-that consists of a few particles diffusing in a box in the presence of a
+that consists of a particles in a box in the presence of a
 position-dependent repulsive force that makes the center of the box a less
 favorable area to explore.
 
@@ -3574,8 +3574,8 @@ The editor should display the following content corresponding to \flecmd{free-en
 variable sigma equal 3.405
 variable epsilon equal 0.238
 variable U0 equal 1.5*${epsilon}
-variable dlt equal 0.5
-variable x0 equal 5.0
+variable dlt equal 1.0
+variable x0 equal 10.0
 
 units real
 atom_style atomic
@@ -3599,7 +3599,7 @@ the second part of the tutorial automatically assumes the energy to be in kcal/m
 Let us define the simulation box and randomly add atoms by addying the
 following lines to \flecmd{free-energy.lmp}:
 \begin{lstlisting}
-region myreg block -25 25 -5 5 -25 25
+region myreg block -50 50 -15 15 -50 50
 create_box 1 myreg
 create_atoms 1 random 200 34134 myreg overlap 3 maxtry 50
 
@@ -3634,7 +3634,7 @@ frequently overcome the energy barrier due to thermal agitation.
 \includegraphics[width=\linewidth]{US-potential}
 \caption{Potential $U$ given in Eq.\,\eqref{eq:U} (a) and force $F$ given in
 Eq.\,\eqref{eq:F} (b) as a function of the coordinate $x$. Here,
-$U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
+$U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$, and $x_0 = 10~\mathrm{\AA{}}$.}
 \label{fig:potential}
 \end{figure}
 
@@ -3651,15 +3651,16 @@ fix myadf all addforce v_F 0.0 0.0 energy v_U
 Next, we combine the \lmpcmd{fix nve} with a \lmpcmd{fix langevin} thermostat:
 \begin{lstlisting}
 fix mynve all nve
-fix mylgv all langevin 119.8 119.8 50 30917
+fix mylgv all langevin 119.8 119.8 500 30917
 \end{lstlisting}
 When combining these two commands, the MD simulation operates
 in the NVT ensemble, maintaining a constant number of
 atoms $N$, constant volume $V$, and a temperature $T$ that
 fluctuates around a target value.
+% SG: may be discuss the choice of constant "500" --> chosen for a relatiely weak coupling with thermostat (add a box?)
 
 To ensure that the equilibration time is sufficient, we will track the evolution of
-the number of atoms in the central (energetically unfavorable) region,
+the number of atoms in the central -- energetically unfavorable -- region,
 referred to as \lmpcmd{mymes}, using the \lmpcmd{n\_center} variable:
 \begin{lstlisting}
 region mymes block -${x0} ${x0} INF INF INF INF
@@ -3668,41 +3669,44 @@ thermo_style custom step temp etotal v_n_center
 thermo 10000
 
 dump viz all image 50000 myimage-*.ppm type type &
-    shiny 0.1 box yes 0.01 view 180 90 zoom 7 size 1600 400
-dump_modify viz backcolor white acolor 1 cyan adiam 1 1 &
-    boxcolor black
+    shiny 0.1 box yes 0.01 view 180 90 zoom 6 &
+    size 1600 500 fsaa yes
+dump_modify viz backcolor white acolor 1 cyan &
+    adiam 1 3 boxcolor black
 \end{lstlisting}
-A \lmpcmd{dump image} command was added for system visualization.
+A \lmpcmd{dump image} command was also added for system visualization.
 
-Finally, let us perform an equilibration of 500000 steps
-in total, using a timestep of $2\,\text{fs}$ (i.e.~a total duration of $1\,\text{ns}$):
+Finally, let us perform an equilibration of 50000 steps,
+using a timestep of $2\,\text{fs}$, corresponding to a total duration of $100\,\text{ps}$:
 \begin{lstlisting}
 timestep 2.0
-run 500000
+run 50000
 \end{lstlisting}
-Run the simulation with LAMMPS. The number of atoms in the
+Run the simulation with LAMMPS.  The number of atoms in the
 central region, $n_\mathrm{center}$, reaches
-its equilibrium value after approximately $500\,\text{ps}$
+its equilibrium value after approximately $40\,\text{ps}$
 (Fig.\,\ref{fig:US-density-evolution}).  A snapshot of the
 equilibrated system is shown in Fig.\,\ref{fig:US-system-unbiased}.
 
 \paragraph{Run and data acquisition}
 
 Once the system is equilibrated, we will record the density profile of
-the atoms along the $x$ axis using the \lmpcmd{ave/chunk} command.  A total
-of 10 density profiles will be printed.  Add the following line to \flecmd{free-energy.lmp}:
+the atoms along the $x$ axis using the \lmpcmd{ave/chunk} command.
+Add the following line to \flecmd{free-energy.lmp}:
 \begin{lstlisting}
 reset_timestep 0
 
-compute cc1 all chunk/atom bin/1d x 0.0 1.0
-fix myac all ave/chunk 10 400000 4000000 &
+thermo 200000
+
+compute cc1 all chunk/atom bin/1d x 0.0 2.0
+fix myac all ave/chunk 100 20000 2000000 &
     cc1 density/number file free-sampling.dat
 
-run 4000000
+run 2000000
 \end{lstlisting}
 The step count is reset to 0 using \lmpcmd{reset\_timestep} to synchronize it
-with the output times of \lmpcmd{fix density/number}.  Increase the
-duration of the last run to obtain a better-resolved density profile.
+with the output times of \lmpcmd{fix density/number}.  Run the simulation using
+LAMMPS.
 
 \begin{figure}
 \centering
@@ -3717,15 +3721,15 @@ $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
 \paragraph{Data analysis}
 
 Once the simulation is complete, the density profile shows that the density in the center of the box is
-about two orders of magnitude lower than inside the reservoir (Fig.\,\ref{fig:US-density}).
+about two orders of magnitude lower than inside the reservoir (Fig.\,\ref{fig:US-density}\,a).
 Next, we plot $-R T \ln(\rho/\rho_\mathrm{bulk})$ (i.e.~Eq.\,\eqref{eq:G} where
 the pressure ratio $p/p_\mathrm{bulk}$ is replaced by the density ratio
 $\rho/\rho_\mathrm{bulk}$, assuming the system behaves as an ideal gas) and compare it
-with the imposed potential $U$ from Eq.\,\eqref{eq:U} (Fig.\,\ref{fig:US-FreeSampling}).
-The reference density, $\rho_\text{bulk} = 0.0033~\text{\AA{}}^{-3}$,
+with the imposed potential $U$ from Eq.\,\eqref{eq:U} (Fig.\,\ref{fig:US-density}\,b).
+The reference density, $\rho_\text{bulk} = 0.0009~\text{\AA{}}^{-3}$,
 was estimated by measuring the density of the reservoir from the raw density
-profiles. The agreement between the MD results and the imposed energy profile
-is reasonable, despite some noise in the central part, where fewer data points
+profiles.  The agreement between the MD results and the imposed energy profile
+is excellent, despite some noise in the central part, where fewer data points
 are available due to the repulsive potential.
 
 \begin{figure}
@@ -3733,26 +3737,19 @@ are available due to the repulsive potential.
 \includegraphics[width=\linewidth]{US-system-unbiased}
 \caption{Snapshot of the system.  The density of atoms is lowest in the central
 part of the box, \lmpcmd{mymes}, due to the additional force $F$.  Here,
-$U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
+$U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$, and $x_0 = 10~\mathrm{\AA{}}$.}
 \label{fig:US-system-unbiased}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-density}
-\caption{Fluid density $\rho$ along the $x$ direction.  Here,
-$U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, $x_0 = 5~\mathrm{\AA{}}$,
-and the reference density is $\rho_\text{bulk} = 0.0033~\text{\AA{}}^{-3}$.}
+\caption{a) Fluid density $\rho$ along the $x$ direction.
+b) Potential $U$ as a function of $x$ measured using free sampling (blue disks)
+compared to the imposed potential given in Eq.\,\eqref{eq:U} (dark line).
+Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$, $x_0 = 10~\mathrm{\AA{}}$,
+and the measured reference density in the reservoir is $\rho_\text{bulk} = 0.0009~\text{\AA{}}^{-3}$.} % SG: check units of rho bulk
 \label{fig:US-density}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{US-FreeSampling}
-\caption{Potential $U$ as a function of $x$ measured using free sampling (blue disks)
-compared to the imposed potential given in Eq.\,\eqref{eq:U} (dark line). Here,
-$U_0 = 0.36~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
-\label{fig:US-FreeSampling}
 \end{figure}
 
 \paragraph{The limits of free sampling}
