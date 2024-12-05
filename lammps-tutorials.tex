@@ -3504,7 +3504,7 @@ insertions of molecules would occur during the short duration of this simulation
 \centering
 \includegraphics[width=\linewidth]{GCMC-number}
 \caption{Number of water molecules $N_\text{H2O}$ as a function of the time $t$
-as extracgted from \hyperref[gcmc-silica-label]{Tutorial 6}.}
+as extracted from \hyperref[gcmc-silica-label]{Tutorial 6}.}
 \label{fig:GCMC-number}
 \end{figure}
 
@@ -3633,7 +3633,7 @@ frequently overcome the energy barrier due to thermal agitation.
 \centering
 \includegraphics[width=\linewidth]{US-potential}
 \caption{Potential $U$ given in Eq.\,\eqref{eq:U} (a) and force $F$ given in
-Eq.\,\eqref{eq:F} (b) as a function of the coordinate $x$. Here,
+Eq.\,\eqref{eq:F} (b) as functions of the coordinate $x$. Here,
 $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$, and $x_0 = 10~\mathrm{\AA{}}$.}
 \label{fig:potential}
 \end{figure}
@@ -3774,14 +3774,15 @@ which allows for the removal of the biasing effect and ultimately deduces the
 unbiased free energy profile.
 
 \paragraph{LAMMPS input script}
-Create a new folder called \flrcmd{BiasedSampling/}, and create a new input file
-called \flecmd{input.lmp} in it, and copy the following lines:
+
+Open the file named \lmpcmd{umbrella-sampling.lmp}, which should
+contain the following lines:
 \begin{lstlisting}
 variable sigma equal 3.405
 variable epsilon equal 0.238
 variable U0 equal 10*${epsilon}
-variable dlt equal 0.5
-variable x0 equal 5.0
+variable dlt equal 1.0
+variable x0 equal 10
 variable k equal 1.5
 
 units real
@@ -3789,28 +3790,58 @@ atom_style atomic
 pair_style lj/cut 3.822
 pair_modify shift yes
 boundary p p p
+\end{lstlisting}
+The only difference with the previous case is the larger value
+for the repulsive potential $U_0$, which will make the central area
+of the system very unliky to be visited by free particles. 
 
-region myreg block -25 25 -5 5 -25 25
+Let us create a box with 2 atom types, with a single particle of type 2,
+by adding the following lines to \lmpcmd{umbrella-sampling.lmp}:
+\begin{lstlisting}
+region myreg block -50 50 -15 15 -50 50
 create_box 2 myreg
-labelmap atom 1 A1 2 A2
-create_atoms A2 single 0 0 0
-create_atoms A1 random 5 34134 myreg &
-    overlap 1.5 maxtry 50
-
+create_atoms 2 single 0 0 0
+create_atoms 1 random 199 34134 myreg overlap 3 maxtry 50
+\end{lstlisting}
+Then, let us give the same mass and LJ parameters to both atoms of types 
+1 and 2, and let us place the atoms of type 2 into a group named \lmpcmd{topull}:
+\begin{lstlisting}
 mass * 39.948
 pair_coeff * * ${epsilon} ${sigma}
-neigh_modify every 1 delay 4 check yes
 group topull type 2
-
-minimize 1e-4 1e-6 100 1000
-reset_timestep 0
-
+\end{lstlisting}
+Then, the same potential $U$ and force $F$ is applied to all the atoms,
+toguether with the same \lmpcmd{fix nve} and \lmpcmd{fix langevin}:
+\begin{lstlisting}
 variable U atom ${U0}*atan((x+${x0})/${dlt})&
     -${U0}*atan((x-${x0})/${dlt})
-variable F atom &
-    ${U0}/((x-${x0})^2/${dlt}^2+1)/${dlt}&
+variable F atom ${U0}/((x-${x0})^2/${dlt}^2+1)/${dlt}&
     -${U0}/((x+${x0})^2/${dlt}^2+1)/${dlt}
-fix pot all addforce v_F 0.0 0.0 energy v_U
+fix myadf all addforce v_F 0.0 0.0 energy v_U
+
+fix mynve all nve
+fix mylgv all langevin 119.8 119.8 500 30917
+\end{lstlisting}
+And then let us perform a short equilibration in the nvt ensemble
+to prepare for the umbrella sampling run:
+\begin{lstlisting}
+thermo 2000
+
+dump viz all image 50000 myimage-*.ppm type type &
+    shiny 0.1 box yes 0.01 view 180 90 zoom 6 &
+    size 1600 500 fsaa yes
+dump_modify viz backcolor white acolor 1 cyan &
+acolor 2 red adiam 1 3 adiam 2 3 boxcolor black
+
+timestep 2.0
+run 50000
+\end{lstlisting}
+
+
+\clearpage
+
+
+\begin{lstlisting}
 
 fix mynve all nve
 fix mylgv all langevin 119.8 119.8 50 1530917
