@@ -5,6 +5,8 @@ variable U0 equal 10*${epsilon}
 variable dlt equal 1.0
 variable x0 equal 10.0
 
+variable k equal 1.5
+
 units real
 atom_style atomic
 pair_style lj/cut 3.822
@@ -37,3 +39,15 @@ dump_modify viz backcolor white acolor 1 cyan &
 
 timestep 2.0
 run 50000
+
+variable a loop 50
+label loop
+variable xdes equal 2*${a}-50
+variable xave equal xcm(topull,x)
+fix mytth topull spring tether ${k} ${xdes} 0 0 0
+run 20000
+fix myat1 all ave/time 10 10 100 v_xave v_xdes file umbrella-sampling.${a}.dat
+run 100000
+unfix myat1
+next a
+jump SELF loop

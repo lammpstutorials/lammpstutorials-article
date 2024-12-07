@@ -3735,8 +3735,10 @@ are available due to the repulsive potential.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-system-unbiased}
-\caption{Snapshot of the system.  The density of atoms is lowest in the central
-part of the box, \lmpcmd{mymes}, due to the additional force $F$.  Here,
+\caption{Snapshot of the system simulated during the free sampling
+step of \hyperref[umbrella-sampling-label]{Tutorial 7}.
+The atoms density is the lowest in the central
+part of the box, \lmpcmd{mymes}.  Here,
 $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$, and $x_0 = 10~\mathrm{\AA{}}$.}
 \label{fig:US-system-unbiased}
 \end{figure}
@@ -3822,7 +3824,7 @@ fix myadf all addforce v_F 0.0 0.0 energy v_U
 fix mynve all nve
 fix mylgv all langevin 119.8 119.8 500 30917
 \end{lstlisting}
-And then let us perform a short equilibration in the nvt ensemble
+And then let us perform a short equilibration
 to prepare for the umbrella sampling run:
 \begin{lstlisting}
 thermo 2000
@@ -3837,6 +3839,17 @@ timestep 2.0
 run 50000
 \end{lstlisting}
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{US-system-biased}
+\caption{Snapshot of the system simulated during the umbrella sampling
+step of \hyperref[umbrella-sampling-label]{Tutorial 7}, with atoms of type 1 in cyan and the atom
+of type 2 in red. Only the atom of type 2 explores the central part of the box,
+\lmpcmd{mymes}, due to the additional biasing potential $V$. Here,
+$U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$,
+and $x_0 = 10~\mathrm{\AA{}}$.}
+\label{fig:US-system-biased}
+\end{figure}
 
 \clearpage
 
@@ -3892,15 +3905,7 @@ the particle is saved in data files (one data file per value of $x_\text{des}$).
 You can always increase the duration of the runs for better samplings. Run the
 \flecmd{input.lmp}  file using LAMMPS.
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{US-system-biased}
-\caption{Snapshot of the system with atoms of type 1 in cyan and the single atom
-of type 2 in pink. Only the atom of type 2 explores the central part of the box,
-\textit{mymes}, due to its additional biasing potential $V$. Here,
-$U_0 = 2.38~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
-\label{fig:US-system-biased}
-\end{figure}
+
 
 \paragraph{WHAM algorithm}
 \noindent To generate the free energy profile from the density distribution,
