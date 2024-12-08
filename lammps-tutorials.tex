@@ -3764,6 +3764,7 @@ the central part of the simulation box during the simulation.
 In such case, employing an enhanced sampling method is recommended, as done in the next section.
 
 \subsubsection{Method 2: Umbrella sampling}
+
 Umbrella sampling is a biased molecular dynamics method in which additional forces
 are added to a chosen atom to force it to explore the more unfavorable areas of
 the system \cite{kastner2011umbrella, allen2017computer, frenkel2023understanding}.
@@ -3793,9 +3794,11 @@ pair_style lj/cut 3.822
 pair_modify shift yes
 boundary p p p
 \end{lstlisting}
-The only difference with the previous case is the larger value
+The first difference with the previous case is the larger value
 for the repulsive potential $U_0$, which will make the central area
-of the system very unliky to be visited by free particles. 
+of the system very unliky to be visited by free particles.  The second
+difference is the addition of the $k$ variable that will be used for
+the biasing potential.
 
 Let us create a box with 2 atom types, with a single particle of type 2,
 by adding the following lines to \lmpcmd{umbrella-sampling.lmp}:
@@ -3839,6 +3842,12 @@ timestep 2.0
 run 50000
 \end{lstlisting}
 
+So far, our code resembles that of Method 1, except for the additional particle
+of type 2. Particles of type 1 and 2 are identical, having the same mass and
+Lennard-Jones parameters.  However, the particle of type 2 will additionally
+be exposed to the biasing potential $V$, forcing it to explore
+the central part of box (Fig.\,\ref{fig:US-system-biased}).
+
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-system-biased}
@@ -3851,59 +3860,48 @@ and $x_0 = 10~\mathrm{\AA{}}$.}
 \label{fig:US-system-biased}
 \end{figure}
 
-\clearpage
-
-
-\begin{lstlisting}
-
-fix mynve all nve
-fix mylgv all langevin 119.8 119.8 50 1530917
-timestep 2.0
-thermo 100000
-run 500000
-reset_timestep 0
-
-dump mydmp all image 1000000 dump.*.jpg type &
-type shiny 0.1 box yes 0.02 view 0 90 zoom 1.9
-dump_modify mydmp backcolor white &
-    acolor A1 cyan adiam A1 1 &
-    acolor A2 pink adiam A2 1 &
-    boxcolor black
-\end{lstlisting}
-So far, this code resembles that of Method 1, except for the additional particle
-of type A2. Particles of type A1 and A2
-are identical, having the same mass and Lennard-Jones parameters. However, the
-particle of type A2 will additionally be exposed to the biasing potential
-$V$ (Fig.\,){fig:US-system-biased}).
-
-Let us create a loop with 50 steps, and move progressively the center of the
-bias potential by an increment of 0.1 nm. Add the following lines to \flecmd{input.lmp}:
+Now, let us create a loop with 50 steps, and move progressively the center of the
+bias potential by an increment of 0.2 nm.  Add the following lines to \flecmd{umbrella-sampling.lmp}:
 \begin{lstlisting}
 variable a loop 50
 label loop
-variable xdes equal ${a}-25
+
+variable xdes equal 2*${a}-50
 variable xave equal xcm(topull,x)
-fix mytth topull spring tether ${k} &
-    ${xdes} 0 0 0
-run 200000
-fix myat1 all ave/time 10 10 100 v_xave &
-    v_xdes file data/position.${a}.dat
-run 1000000
+fix mytth topull spring tether ${k} ${xdes} 0 0 0
+
+run 20000
+
+fix myat1 all ave/time 10 10 100 &
+    v_xave v_xdes file umbrella-sampling.${a}.dat
+
+run 100000
 unfix myat1
 next a
 jump SELF loop
 \end{lstlisting}
-A folder called \flrcmd{data/} needs to be created within \flrcmd{BiasedSampling/}.
 The spring command serves to impose the additional harmonic potential $V$ with
-the spring constant $k$. Note that the value of $k$ should be chosen with care,
-if $k$ is too small, the particle won't follow the biasing potential center,
-and if $k$ is too large, there will be no overlapping between the different windows.
-The center of the harmonic potential $x_\text{des}$ successively takes values
-from -25 to 25. For each value of $x_\text{des}$, an equilibration step of 0.4 ns
-is performed, followed by a step of 2 ns during which the position along $x$ of
-the particle is saved in data files (one data file per value of $x_\text{des}$).
-You can always increase the duration of the runs for better samplings. Run the
-\flecmd{input.lmp}  file using LAMMPS.
+the previously defined spring constant $k$.  The center of the harmonic
+potential, $x_\text{des}$, successively takes values
+from -48 to 50.  For each value of $x_\text{des}$, an equilibration step of 40\,ps
+is performed, followed by a step of 200\,ps during which the position along $x$ of
+the particle of type 2, $x_\text{ave}$, is saved in data files named \flecmd{umbrella-sampling.i.dat},
+where i goes from 1 to 50.  Run the \flecmd{umbrella-sampling.lmp} file using LAMMPS.
+
+\begin{note}
+The value of $k$ should be chosen with care:
+if $k$ is too small the particle won't follow the biasing potential,
+and if $k$ is too large there will be no overlapping between
+the different windows, leading to poor reconstruction of the free energy profile.
+\end{note}
+
+
+
+\clearpage
+
+
+
+
 
 
 
