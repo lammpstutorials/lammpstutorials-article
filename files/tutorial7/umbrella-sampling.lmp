@@ -4,6 +4,7 @@ variable epsilon equal 0.238
 variable U0 equal 10*${epsilon}
 variable dlt equal 1.0
 variable x0 equal 10.0
+variable k equal 1.5
 
 units real
 atom_style atomic

@@ -3623,7 +3623,7 @@ F = \dfrac{U_0}{\delta} \left[ \dfrac{1}{(x-x_0)^2/\delta^2+1}
 \label{eq:F}
 \end{equation}
 Fig.\,\ref{fig:potential} shows the potential $U$ and force $F$ along the $x$-axis.
-With $U_0 = 1.5 \epsilon = 0.36\,\text{kcal/mol}$, $U_0$ is comparable to
+With $U_0 = 1.5 \epsilon = 0.36\,\text{kcal/mol}$, $U_0$ is of the same order of magnitude as the
 thermal energy $k_\text{B} T = 0.24\,\text{kcal/mol}$, where $k_\text{B} = 0.002\,\text{kcal/mol/K}$
 is the Boltzmann constant and $T = 119.8\,\text{K}$ is the temperature
 used in this simulation.  Under these conditions, particles are expected to
@@ -3757,11 +3757,11 @@ and the measured reference density in the reservoir is $\rho_\text{bulk} = 0.000
 \paragraph{The limits of free sampling}
 
 Increasing the value of $U_0$ reduces the average number of atoms in the central
-region, making it challenging to achieve good resolution for
-the free energy profile. For example, running the same simulation with $U_0 = 10 \epsilon$,
+region, making it difficult to achieve a high-resolution free energy profile.
+For example, running the same simulation with $U_0 = 10 \epsilon$,
 corresponding to $U_0 \approx 10 k_\text{B} T$, results in no atoms exploring
 the central part of the simulation box during the simulation.
-In such case, employing an enhanced sampling method is recommended, as done in the next section.
+In such a case, employing an enhanced sampling method is recommended, as done in the next section.
 
 \subsubsection{Method 2: Umbrella sampling}
 
@@ -3794,13 +3794,13 @@ pair_style lj/cut 3.822
 pair_modify shift yes
 boundary p p p
 \end{lstlisting}
-The first difference with the previous case is the larger value
-for the repulsive potential $U_0$, which will make the central area
-of the system very unliky to be visited by free particles.  The second
-difference is the addition of the $k$ variable that will be used for
+The first difference from the previous case is the larger value
+for the repulsive potential $U_0$, which makes the central area
+of the system very unlikely to be visited by free particles.  The second
+difference is the introduction of the variable $k$,  which will be used for
 the biasing potential.
 
-Let us create a box with 2 atom types, with a single particle of type 2,
+Let us create a simulation box with two atom types, including a single particle of type 2,
 by adding the following lines to \lmpcmd{umbrella-sampling.lmp}:
 \begin{lstlisting}
 region myreg block -50 50 -15 15 -50 50
@@ -3808,15 +3808,15 @@ create_box 2 myreg
 create_atoms 2 single 0 0 0
 create_atoms 1 random 199 34134 myreg overlap 3 maxtry 50
 \end{lstlisting}
-Then, let us give the same mass and LJ parameters to both atoms of types 
-1 and 2, and let us place the atoms of type 2 into a group named \lmpcmd{topull}:
+Next, we assign the same mass and LJ parameters to both atom types 
+1 and 2, and place the atoms of type 2 into a group named \lmpcmd{topull}:
 \begin{lstlisting}
 mass * 39.948
 pair_coeff * * ${epsilon} ${sigma}
 group topull type 2
 \end{lstlisting}
-Then, the same potential $U$ and force $F$ is applied to all the atoms,
-toguether with the same \lmpcmd{fix nve} and \lmpcmd{fix langevin}:
+Then, the same potential $U$ and force $F$ are applied to all the atoms,
+together with the same \lmpcmd{fix nve} and \lmpcmd{fix langevin} commands:
 \begin{lstlisting}
 variable U atom ${U0}*atan((x+${x0})/${dlt})&
     -${U0}*atan((x-${x0})/${dlt})
@@ -3827,8 +3827,8 @@ fix myadf all addforce v_F 0.0 0.0 energy v_U
 fix mynve all nve
 fix mylgv all langevin 119.8 119.8 500 30917
 \end{lstlisting}
-And then let us perform a short equilibration
-to prepare for the umbrella sampling run:
+Next, we perform a brief equilibration to prepare for the
+umbrella sampling run:
 \begin{lstlisting}
 thermo 2000
 
@@ -3843,25 +3843,25 @@ run 50000
 \end{lstlisting}
 
 So far, our code resembles that of Method 1, except for the additional particle
-of type 2. Particles of type 1 and 2 are identical, having the same mass and
-Lennard-Jones parameters.  However, the particle of type 2 will additionally
-be exposed to the biasing potential $V$, forcing it to explore
-the central part of box (Fig.\,\ref{fig:US-system-biased}).
+of type 2.  Particles of types 1 and 2 are identical, with the same mass
+and LJ parameters.  However, the particle of type 2 will also
+be exposed to the biasing potential $V$, which forces it to explore the
+central part of the box (Fig.\,\ref{fig:US-system-biased}).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-system-biased}
 \caption{Snapshot of the system simulated during the umbrella sampling
-step of \hyperref[umbrella-sampling-label]{Tutorial 7}, with atoms of type 1 in cyan and the atom
-of type 2 in red. Only the atom of type 2 explores the central part of the box,
-\lmpcmd{mymes}, due to the additional biasing potential $V$. Here,
-$U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$,
-and $x_0 = 10~\mathrm{\AA{}}$.}
+step of \hyperref[umbrella-sampling-label]{Tutorial 7}, showing type-1 atoms
+in cyan and the type-2 atom in red.  Only the type-2 atom explores the central part of the box,
+\lmpcmd{mymes}, due to the additional biasing potential $V$. Parmaeters are
+$U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$, and $x_0 = 10~\mathrm{\AA{}}$.}
 \label{fig:US-system-biased}
 \end{figure}
 
-Now, let us create a loop with 50 steps, and move progressively the center of the
-bias potential by an increment of 0.2 nm.  Add the following lines to \flecmd{umbrella-sampling.lmp}:
+Now, we create a loop with 50 steps and progressively move the center of the
+bias potential by increments of 0.2\,nm.  Add the following lines
+to \flecmd{umbrella-sampling.lmp}:
 \begin{lstlisting}
 variable a loop 50
 label loop
@@ -3880,13 +3880,14 @@ unfix myat1
 next a
 jump SELF loop
 \end{lstlisting}
-The spring command serves to impose the additional harmonic potential $V$ with
+The \lmpcmd{spring} command imposes the additional harmonic potential $V$ with
 the previously defined spring constant $k$.  The center of the harmonic
 potential, $x_\text{des}$, successively takes values
-from -48 to 50.  For each value of $x_\text{des}$, an equilibration step of 40\,ps
-is performed, followed by a step of 200\,ps during which the position along $x$ of
-the particle of type 2, $x_\text{ave}$, is saved in data files named \flecmd{umbrella-sampling.i.dat},
-where i goes from 1 to 50.  Run the \flecmd{umbrella-sampling.lmp} file using LAMMPS.
+from $-48\,\mathrm{\AA}$ to $50\,\mathrm{\AA}$.  For each value of $x_\text{des}$,
+an equilibration step of 40\,ps is performed, followed by a step
+of 200\,ps during which the position of the particle of
+type 2 along the $x$-axis, $x_\text{ave}$, is saved in data files named \flecmd{umbrella-sampling.i.dat},
+where $i$ ranges from 1 to 50.  Run the \flecmd{umbrella-sampling.lmp} file using LAMMPS.
 
 \begin{note}
 The value of $k$ should be chosen with care:
@@ -3895,57 +3896,42 @@ and if $k$ is too large there will be no overlapping between
 the different windows, leading to poor reconstruction of the free energy profile.
 \end{note}
 
-
-
-\clearpage
-
-
-
-
-
-
-
 \paragraph{WHAM algorithm}
-\noindent To generate the free energy profile from the density distribution,
-let us use the WHAM algorithm as implemented by Marc Grossfield \cite{grossfieldimplementation}.
-You can download it from \href{http://membrane.urmc.rochester.edu/?page_id=126}{Alan Grossfield}
-website, and compile it by typing in the terminal:
-\begin{lstlisting}
-cd wham
-make clean
-make
-\end{lstlisting}
-\noindent The compilation creates an executable called \textit{wham} that you can
-copy in the \flrcmd{BiasedSampling/} folder. To apply the WHAM algorithm to our
-simulation, we first need to create a metadata file. This file simply contains
+
+To generate the free energy profile from the particle positions
+saved in the \flecmd{umbrella-sampling.i.dat} files,
+we use the WHAM algorithm as implemented by Marc Grossfield \cite{grossfieldimplementation}.
+You can download it from \href{http://membrane.urmc.rochester.edu/?page_id=126}{Alan Grossfield}'s
+website.  The executable called \flecmd{wham} generated by following the instructions
+from the website must be placed next to \lmpcmd{umbrella-sampling.lmp}.  To apply the WHAM algorithm to our
+simulation, we need a \flecmd{metadata.dat} file containing:
 \begin{itemize}
 \item the paths to all the data files,
-\item the value of $x_\text{des}$,
-\item and the values of $k$.
+\item the values of $x_\text{des}$,
+\item the values of $k$.
 \end{itemize}
-Download the \href{\filepath tutorial7/metadata.dat}{\dwlcmd{metadata.dat}}
-file I have written and save it in \flrcmd{BiasedSampling/}. Then, simply run the
-following command in the terminal:
+Download the \href{\filepath tutorial7/metadata.dat}{\dwlcmd{metadata.dat}} file
+and save it next to \lmpcmd{umbrella-sampling.lmp}.  Then, run the WHAM algorithm
+by typing the following command in the terminal:
 \begin{lstlisting}
-./wham -25 25 50 1e-8 119.8 0 \
-    metadata.dat PMF.dat
+./wham -49 51 50 1e-8 119.8 0 metadata.dat umbrella-sampling.dat
 \end{lstlisting}
-where -25 and 25 are the boundaries, 50 is the number of bins, 1e-8 is the tolerance,
-and 119.8 is the temperature. A file called \textit{PMF.dat} has been created,
-containing the free energy profile in kcal/mol. Again, one can compare the result of
-the PMF with the imposed potential $U$, demonstrating excellent agreement
-(Fig.\,\ref{fig:US-freenergy}). We can see that the agreement is quite good despite
-the very short calculation time and the very high value for the energy barrier.
-Obtaining the same results with Free Sampling would require performing extremely
-long and costly simulations.
+where -50 and 50 are the boundaries, 50 is the number of bins, 1e-8 is the tolerance,
+and 119.8 is the temperature in Kelvin.  A file called \flecmd{umbrella-sampling.dat} is created,
+containing the free energy profile in kcal/mol.  The resulting PMF can be compared
+with the imposed potential $U$, showing excellent agreement
+(Fig.\,\ref{fig:US-freenergy}).  Remarkably, this excellent agreement is achieved despite
+the very short calculation time and the high value for the energy barrier.
+Achieving similar results through free sampling would require performing extremely
+long and computationally expensive simulations.
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{US-freenergy}
-\caption{Potential $U$ as a function of $x$ measured using umbrella sampling
-(blue disks) compared to the imposed potential given in Eq.\,\eqref{eq:U}
-(dark line). Here, $U_0 = 2.38~\text{kcal/mol}$, $\delta = 0.5~\mathrm{\AA{}}$,
-and $x_0 = 5~\mathrm{\AA{}}$.}
+\includegraphics[width=\linewidth]{US-free-energy}
+\caption{The potential $U$ as a function of $x$, measured using umbrella sampling
+(blue disks), is compared to the imposed potential given in Eq.\,\eqref{eq:U}
+(dark line). Parameters are $U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$,
+and $x_0 = 10~\mathrm{\AA{}}$.}
 \label{fig:US-freenergy}
 \end{figure}
 

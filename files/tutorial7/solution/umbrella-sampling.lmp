@@ -46,7 +46,7 @@ variable xave equal xcm(topull,x)
 fix mytth topull spring tether ${k} ${xdes} 0 0 0
 run 20000
 fix myat1 all ave/time 10 10 100 v_xave v_xdes file umbrella-sampling.${a}.dat
-run 100000
+run 200000
 unfix myat1
 next a
 jump SELF loop
