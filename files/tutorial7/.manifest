@@ -5,7 +5,7 @@
 # 1) input file templates and data files
 # the first file will be automatically loaded
 free-sampling.lmp
-metadata.dat
+umbrella-sampling.meta
 umbrella-sampling.lmp
 wham
 
@@ -20,7 +20,7 @@ umbrella-sampling.lmp
 umbrella-sampling.log
 umbrella-sampling.png
 wham
-metadata.dat
+umbrella-sampling.meta
 
 # 3) support files
 
