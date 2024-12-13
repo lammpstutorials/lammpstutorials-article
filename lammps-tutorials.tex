@@ -3786,7 +3786,7 @@ variable epsilon equal 0.238
 variable U0 equal 10*${epsilon}
 variable dlt equal 1.0
 variable x0 equal 10
-variable k equal 1.5
+variable k equal 0.5
 
 units real
 atom_style atomic
@@ -3797,7 +3797,7 @@ boundary p p p
 The first difference from the previous case is the larger value
 for the repulsive potential $U_0$, which makes the central area
 of the system very unlikely to be visited by free particles.  The second
-difference is the introduction of the variable $k$,  which will be used for
+difference is the introduction of the variable $k$, which will be used for
 the biasing potential.
 
 Let us create a simulation box with two atom types, including a single particle of type 2,
@@ -3859,14 +3859,13 @@ $U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$, and $x_0 = 10~\math
 \label{fig:US-system-biased}
 \end{figure}
 
-Now, we create a loop with 25 steps and progressively move the center of the
-bias potential by increments of 0.4\,nm.  Add the following lines
-to \flecmd{umbrella-sampling.lmp}:
+Now, we create a loop with 15 steps and progressively move the center of the
+bias potential by increments of 0.4\,nm.  Add the following lines to \flecmd{umbrella-sampling.lmp}:
 \begin{lstlisting}
 variable a loop 25
 label loop
 
-variable xdes equal 4*${a}-52
+variable xdes equal 4*${a}-32
 variable xave equal xcm(topull,x)
 fix mytth topull spring tether ${k} ${xdes} 0 0 0
 
@@ -3875,7 +3874,7 @@ run 20000
 fix myat1 all ave/time 10 10 100 &
     v_xave v_xdes file umbrella-sampling.${a}.dat
 
-run 100000
+run 200000
 unfix myat1
 next a
 jump SELF loop
@@ -3883,11 +3882,11 @@ jump SELF loop
 The \lmpcmd{spring} command imposes the additional harmonic potential $V$ with
 the previously defined spring constant $k$.  The center of the harmonic
 potential, $x_\text{des}$, successively takes values
-from $-48\,\mathrm{\AA}$ to $48\,\mathrm{\AA}$.  For each value of $x_\text{des}$,
+from $-28\,\mathrm{\AA}$ to $28\,\mathrm{\AA}$.  For each value of $x_\text{des}$,
 an equilibration step of 40\,ps is performed, followed by a step
-of 200\,ps during which the position of the particle of
+of 400\,ps during which the position of the particle of
 type 2 along the $x$-axis, $x_\text{ave}$, is saved in data files named \flecmd{umbrella-sampling.i.dat},
-where $i$ ranges from 1 to 25.  Run the \flecmd{umbrella-sampling.lmp} file using LAMMPS.
+where $i$ ranges from 1 to 15.  Run the \flecmd{umbrella-sampling.lmp} file using LAMMPS.
 
 \begin{note}
 The value of $k$ should be chosen with care:
@@ -3914,10 +3913,10 @@ Download the \href{\filepath tutorial7/umbrella-sampling.meta}{\dwlcmd{umbrella-
 and save it next to \lmpcmd{umbrella-sampling.lmp}.  Then, run the WHAM algorithm
 by typing the following command in the terminal:
 \begin{lstlisting}
-./wham -49 51 50 1e-8 119.8 0\
+./wham -30 30 50 1e-8 119.8 0\
     umbrella-sampling.meta umbrella-sampling.dat
 \end{lstlisting}
-where -49 and 51 are the boundaries, 50 is the number of bins, 1e-8 is the tolerance,
+where -30 and 30 are the boundaries, 50 is the number of bins, 1e-8 is the tolerance,
 and 119.8 is the temperature in Kelvin.  A file called \flecmd{umbrella-sampling.dat} is created,
 containing the free energy profile in kcal/mol.  The resulting PMF can be compared
 with the imposed potential $U$, showing excellent agreement
