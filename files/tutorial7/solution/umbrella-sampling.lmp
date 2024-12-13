@@ -4,7 +4,7 @@ variable epsilon equal 0.238
 variable U0 equal 10*${epsilon}
 variable dlt equal 1.0
 variable x0 equal 10.0
-variable k equal 0.25
+variable k equal 0.5
 
 units real
 atom_style atomic
@@ -28,7 +28,7 @@ fix myadf all addforce v_F 0.0 0.0 energy v_U
 fix mynve all nve
 fix mylgv all langevin 119.8 119.8 500 30917
 
-thermo 2000
+thermo 5000
 
 dump viz all image 50000 myimage-*.ppm type type &
     shiny 0.1 box yes 0.01 view 180 90 zoom 6 &
@@ -39,14 +39,15 @@ dump_modify viz backcolor white acolor 1 cyan &
 timestep 2.0
 run 50000
 
-variable a loop 25
+variable a loop 15
 label loop
-variable xdes equal 4*${a}-50
+variable xdes equal 4*${a}-32
 variable xave equal xcm(topull,x)
 fix mytth topull spring tether ${k} ${xdes} 0 0 0
 run 20000
+
 fix myat1 all ave/time 10 10 100 v_xave v_xdes file umbrella-sampling.${a}.dat
-run 50000
+run 200000
 unfix myat1
 next a
 jump SELF loop
