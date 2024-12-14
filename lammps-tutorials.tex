@@ -276,7 +276,7 @@ of an external visualization tool to visualize breaking bonds, and
 demonstrates how available LAMMPS features can be used to do the same
 without an external tool.
 
-In \hyperref[all-atoms-label]{tutorial 3}, two components, liquid water
+In \hyperref[all-atom-label]{tutorial 3}, two components, liquid water
 and a polymer molecule, are merged and equilibrated.  A long-range
 solver is used to handle the electrostatic interactions accurately, and
 the system is equilibrated in the isothermal-isobaric (NPT) ensemble.  A
@@ -287,7 +287,7 @@ demonstrates the use of molecule files and type labels
 In \hyperref[sheared-confined-label]{tutorial 4}, a fluid confined by
 two walls is simulated, illustrating the specifics of simulating systems
 with fluid-solid interfaces.  This tutorial involves a slightly more
-complex water model than \hyperref[all-atoms-label]{tutorial 3}: the
+complex water model than \hyperref[all-atom-label]{tutorial 3}: the
 four-point TIP4P model.  In this tutorial, non-equilibrium MD is
 performed through the imposed shearing of the fluid by the moving walls.
 
@@ -342,8 +342,8 @@ McDonald \cite{hansen2013theory}.
 \subsection{Software/system requirements}
 % AK: FIXME fill in the version dates and numbers for the next stable version
 
-The LAMMPS release version XXXAug2024 \cite{lammps_code} and the
-matching LAMMPS--GUI software version 1.6.XXX are required to follow the
+The LAMMPS release version 29Aug2024 \cite{lammps_code} and the
+matching LAMMPS--GUI software version 1.6.11 are required to follow the
 tutorials, as they use features that first appeared in these versions.
 For Linux (with x86\_64 CPU), macOS (BigSur or later), and Windows (10
 and 11) you can download a precompiled LAMMPS package from the LAMMPS
@@ -372,15 +372,8 @@ Gnuplot, Microsoft Excel, and LibreOffice Calc.  For
 visualization, suitable external tools include VMD \cite{vmd_home,humphrey1996vmd}
 and OVITO \cite{ovito_home,ovito_paper}.
 
-\hyperref[compiling-lammps-label]{Appendix \ref{compiling-lammps-label}}
-has instructions for compiling LAMMPS from source for use with this
-tutorial in case there is no suitable precompiled version available
-for your platform or environment.
-
-\hyperref[parallel-lammps-label]{Appendix \ref{parallel-lammps-label}}
-provides instructions for running LAMMPS in parallel using MPI when
-using LAMMPS executables compiled with MPI enabled, for example on HPC
-clusters.
+\hyperref[command-line-label]{Appendix \ref{command-line-label}} has instructions
+for running LAMMPS from the command line.
 
 \subsection{About LAMMPS--GUI}
 
@@ -422,11 +415,11 @@ and inputs required to follow the tutorials are available from a
 dedicated GitHub account,
 \href{https://github.com/lammpstutorials}{github.com/lammpstutorials}.
 Additionally, these files can be downloaded by clicking \guicmd{Start LAMMPS Tutorial X}
-(where \texttt{X} = 1...8) from the \guicmd{Tutorials} menu of LAMMPS-GUI.
+(where \texttt{X} = 1...8) from the \guicmd{Tutorials} menu of LAMMPS--GUI.
 
 In the following, all LAMMPS input or console commands are formatted
 with a \lmpcmd{colored background}.  Keyboard shortcuts and 
-file names are formatted in \flecmd{monospace}, and LAMMPS-GUI options and menus
+file names are formatted in \flecmd{monospace}, and LAMMPS--GUI options and menus
 are in \guicmd{quoted monospace}.
 % S.G.: I removed "folder names" because all folders will eventually be removed (TO CONTROL BEFORE SUBMITTING)
 % S.G.: I removed "Section titles" as well because it seems to be using a different style
@@ -528,7 +521,7 @@ confusion when sharing inputs with other LAMMPS users.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GUI-1.png}
-\caption{A screenshot of the LAMMPS-GUI \guicmd{Editor} window during
+\caption{A screenshot of the LAMMPS--GUI \guicmd{Editor} window during
   \hyperref[lennard-jones-label]{Tutorial 1}.  The coloring of the text
   is based on the syntax for LAMMPS input files.  The pop-up menu is the
   context menu for right-clicking on the \lmpcmd{atom\_style} line.}
@@ -536,7 +529,7 @@ confusion when sharing inputs with other LAMMPS users.
 \end{figure}
 
 Each LAMMPS command is associated with extensive online documentation
-detailing the different options for that command.  From the LAMMPS-GUI
+detailing the different options for that command.  From the LAMMPS--GUI
 editor buffer, the documentation can be accessed by
 right-clicking the line with a command, such as \lmpcmd{units lj}, and
 selecting \guicmd{View documentation for (\dots)}\,.  LAMMPS--GUI will
@@ -694,7 +687,7 @@ as the minimizer algorithm cannot find a way to lower the potential
 energy.  Except for trivial systems, minimization algorithms will find a
 local minimum rather than the global minimum.
 
-Run the minimization and observe that LAMMPS-GUI will capture the output
+Run the minimization and observe that LAMMPS--GUI will capture the output
 and update the chart in real time.  This run executes quickly (depending
 on your computer's capabilities) and LAMMPS--GUI may fail to capture some
 of the thermodynamic data (see figure \ref{fig:chart-log}).  In that
@@ -707,7 +700,7 @@ fresh, forgetting the current system and starting over from the top.
 \centering
 \includegraphics[width=0.49\linewidth]{chart-1}
 \includegraphics[width=0.497\linewidth]{output-1}
-\caption{\guicmd{Charts} (left) and \guicmd{Output} (right) windows of LAMMPS-GUI
+\caption{\guicmd{Charts} (left) and \guicmd{Output} (right) windows of LAMMPS--GUI
   after performing the minimization simulation of \hyperref[lennard-jones-label]{Tutorial 1}.}
 \label{fig:chart-log}
 \end{figure}
@@ -793,8 +786,7 @@ fix mylgv all langevin 1.0 1.0 0.1 1530917
 timestep 0.005
 run 10000
 \end{lstlisting}
-
-The new command adds a ``Langevin thermostat'' to the atoms in the group
+The new command adds a Langevin thermostat to the atoms in the group
 \lmpcmd{all}, with a desired target temperature of 1.0 temperature units
 throughout the run (the two numbers stand for the target at the beginning
 and at the end of the run, which allows for a temperature ramp if
@@ -1129,7 +1121,7 @@ variables \lmpcmd{n1\_in} and \lmpcmd{n2\_in}, you can track the number
 of atoms in each region as a function of time
 (Fig.\,\ref{fig:mixing}\,a).  To view their evolution, select the entries
 \guicmd{v\_n1\_in} or \guicmd{v\_n2\_in} in the \guicmd{Select data} drop-down
-menu in the \guicmd{Charts} window of LAMMPS-GUI.
+menu in the \guicmd{Charts} window of LAMMPS--GUI.
 
 In addition, as the mixing progresses, the average coordination number
 between atoms of types 1 and 2 increases from about $0.01$ to $0.04$
@@ -1482,7 +1474,7 @@ command also imposes the use of the YAML format that can easily be read by
 Python (see below).
 
 Let us impose a constant velocity deformation on the CNT
-by combining the \textit{velocity set} command with previously defined
+by combining the \lmpcmd{velocity set} command with previously defined
 \lmpcmd{fix setforce}.  Add the following lines in the \lmpcmd{unbreakable.lmp}
 file, right after the last \lmpcmd{run 5000} command:
 \begin{lstlisting}
@@ -1637,7 +1629,7 @@ but that after a few steps, it reaches the target value.
 \paragraph{Launch the deformation}
 
 After equilibration, let us set the velocity of the edges equal to
-$75~\text{m/s}$ (or $0.75~\text{\AA{}/fs}$) and run for a longer duration than
+$75~\text{m/s}$ (or $0.75~\text{\AA{}/ps}$) and run for a longer duration than
 previously. Add the following lines into \flecmd{breakable.lmp}:
 \begin{lstlisting}
 velocity cnt_top set 0.75 0 0
@@ -1656,7 +1648,9 @@ VMD \cite{vmd_home,humphrey1996vmd} with the \guicmd{DynamicBonds} representatio
 \label{fig:CNT-deformed-breakable}
 \end{figure}
 
-Looking at the evolution of the energy, one can see that the total energy $E_\text{tot}$ is initially increasing with the deformation.  When bonds break, the energy relaxes abruptly,
+Looking at the evolution of the energy, one can see that the total
+energy $E_\text{tot}$ is initially increasing with the deformation.  When
+bonds break, the energy relaxes abruptly,
 as can be seen near $t=110~\text{ps}$ and again near $t=130~\text{ps}$ in
 Fig.\,\ref{fig:CNT-deformed-breakable}\,a.  Using the same script as previously to
 import the data into Python, the stress-strain
@@ -1690,13 +1684,13 @@ fix break all bond/break 1000 1 2.5
 % S.G.: we could write a bit more about it
 
 \subsection{Tutorial 3: Polymer in water}
-\label{all-atoms-label}
+\label{all-atom-label}
 
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{PEG}
 \caption{The polymer molecule (PEG - PolyEthylene Glycol) solvated in water as
-simulated during \hyperref[all-atoms-label]{Tutorial 3}.  Water molecules are
+simulated during \hyperref[all-atom-label]{Tutorial 3}.  Water molecules are
 represented as a transparent continuum field for clarity.}
 \label{fig:PEG}
 \end{figure}
@@ -1883,7 +1877,7 @@ The binary file created by the \lmpcmdnote{write\_restart} command contains the
 complete state of the simulation, including atomic positions, velocities, and
 box dimensions (similar to \lmpcmdnote{write\_data}), but also the groups,
 the compute, or the \lmpcmdnote{atom\_style}.  Use the \guicmd{Inspect Restart}
-option of the LAMMPS-GUI to vizualize the content saved in \flecmd{water.restart}.
+option of the LAMMPS--GUI to vizualize the content saved in \flecmd{water.restart}.
 \end{note}
 
 \begin{figure}
@@ -2138,7 +2132,7 @@ and velocity profiles of the fluid in the direction normal to the walls are
 extracted to highlight the effect of confining a fluid on its local properties.
 This tutorial demonstrates key concepts of combining a fluid and a solid in
 the same simulation.  A major difference from the previous tutorial,
-\hyperref[all-atoms-label]{Polymer in water}, is that here a rigid four-point
+\hyperref[all-atom-label]{Polymer in water}, is that here a rigid four-point
 water model named TIP4P/2005 is used \cite{abascal2005general}.
 
 \begin{note}
@@ -2172,7 +2166,7 @@ potential.  Here, \lmpcmd{lj/cut/tip4p/long} imposes a Lennard-Jones potential w
 a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential.
 
 So far, the commands are relatively similar to those in the previous tutorial,
-\hyperref[all-atoms-label]{Polymer in water}, with two major differences: the use
+\hyperref[all-atom-label]{Polymer in water}, with two major differences: the use
 of \lmpcmd{lj/cut/tip4p/long} instead of \lmpcmd{lj/cut/coul/long}, and \lmpcmd{pppm/tip4p}
 instead of \lmpcmd{pppm}.  When using \lmpcmd{lj/cut/tip4p/long} and \lmpcmd{pppm/tip4p},
 the interactions resemble the conventional Lennard-Jones and Coulomb interactions,
@@ -3634,7 +3628,7 @@ frequently overcome the energy barrier due to thermal agitation.
 \includegraphics[width=\linewidth]{US-potential}
 \caption{Potential $U$ given in Eq.\,\eqref{eq:U} (a) and force $F$ given in
 Eq.\,\eqref{eq:F} (b) as functions of the coordinate $x$. Here,
-$U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$, and $x_0 = 10~\mathrm{\AA{}}$.}
+$U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\AA{}}$.}
 \label{fig:potential}
 \end{figure}
 
@@ -3714,7 +3708,7 @@ LAMMPS.
 \caption{Evolution of the number of atoms $n_\text{center}$ in the central
 region \lmpcmd{mymes} as a function of time $t$ during equilibration.  The dark line
 is $n_\text{center} = 22 \exp(-t/160)+5$ and serves as a guide for the eyes.  Here, $U_0 = 0.36~\text{kcal/mol}$,
-$\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
+$\delta = 0.5~\text{\AA{}}$, and $x_0 = 5~\text{\AA{}}$.}
 \label{fig:US-density-evolution}
 \end{figure}
 
@@ -3739,7 +3733,7 @@ are available due to the repulsive potential.
 step of \hyperref[umbrella-sampling-label]{Tutorial 7}.
 The atoms density is the lowest in the central
 part of the box, \lmpcmd{mymes}.  Here,
-$U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$, and $x_0 = 10~\mathrm{\AA{}}$.}
+$U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\AA{}}$.}
 \label{fig:US-system-unbiased}
 \end{figure}
 
@@ -3749,7 +3743,7 @@ $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$, and $x_0 = 10~\math
 \caption{a) Fluid density $\rho$ along the $x$ direction.
 b) Potential $U$ as a function of $x$ measured using free sampling (blue disks)
 compared to the imposed potential given in Eq.\,\eqref{eq:U} (dark line).
-Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$, $x_0 = 10~\mathrm{\AA{}}$,
+Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, $x_0 = 10~\text{\AA{}}$,
 and the measured reference density in the reservoir is $\rho_\text{bulk} = 0.0009~\text{\AA{}}^{-3}$.} % SG: check units of rho bulk
 \label{fig:US-density}
 \end{figure}
@@ -3855,7 +3849,7 @@ central part of the box (Fig.\,\ref{fig:US-system-biased}).
 step of \hyperref[umbrella-sampling-label]{Tutorial 7}, showing type-1 atoms
 in cyan and the type-2 atom in red.  Only the type-2 atom explores the central part of the box,
 \lmpcmd{mymes}, due to the additional biasing potential $V$. Parmaeters are
-$U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$, and $x_0 = 10~\mathrm{\AA{}}$.}
+$U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\AA{}}$.}
 \label{fig:US-system-biased}
 \end{figure}
 
@@ -3882,7 +3876,7 @@ jump SELF loop
 The \lmpcmd{spring} command imposes the additional harmonic potential $V$ with
 the previously defined spring constant $k$.  The center of the harmonic
 potential, $x_\text{des}$, successively takes values
-from $-28\,\mathrm{\AA}$ to $28\,\mathrm{\AA}$.  For each value of $x_\text{des}$,
+from $-28\,\text{\AA}$ to $28\,\text{\AA}$.  For each value of $x_\text{des}$,
 an equilibration step of 40\,ps is performed, followed by a step
 of 400\,ps during which the position of the particle of
 type 2 along the $x$-axis, $x_\text{ave}$, is saved in data files named \flecmd{umbrella-sampling.i.dat},
@@ -3913,7 +3907,7 @@ Download the \href{\filepath tutorial7/umbrella-sampling.meta}{\dwlcmd{umbrella-
 and save it next to \lmpcmd{umbrella-sampling.lmp}.  Then, run the WHAM algorithm
 by typing the following command in the terminal:
 \begin{lstlisting}
-./wham -30 30 50 1e-8 119.8 0\
+./wham -30 30 50 1e-8 119.8 0 \
     umbrella-sampling.meta umbrella-sampling.dat
 \end{lstlisting}
 where -30 and 30 are the boundaries, 50 is the number of bins, 1e-8 is the tolerance,
@@ -3930,8 +3924,8 @@ long and computationally expensive simulations.
 \includegraphics[width=\linewidth]{US-free-energy}
 \caption{The potential $U$ as a function of $x$, measured using umbrella sampling
 (blue disks), is compared to the imposed potential given in Eq.\,\eqref{eq:U}
-(dark line). Parameters are $U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$,
-and $x_0 = 10~\mathrm{\AA{}}$.}
+(dark line). Parameters are $U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$,
+and $x_0 = 10~\text{\AA{}}$.}
 \label{fig:US-freenergy}
 \end{figure}
 
@@ -4181,7 +4175,7 @@ fix myrxns all bond/react &
 }
 With the \textit{stabilization} keyword, the \textit{bond/react} command will
 try to stabilize the atoms involved in the reaction using the nve/limit
-command with a maximum displacement of $0.03\,\mathrm{\AA{}}$ (a command that was
+command with a maximum displacement of $0.03\,\text{\AA{}}$ (a command that was
 used, for instance, in \hyperref[sheared-confined-label]{Tutorial 4}). The two
 \textit{react} keywords contain specific details about the two reactions
 involved here, i.e. a transformation of \textit{mol1} into \textit{mol2} based
@@ -4253,140 +4247,129 @@ POs 2149742 and 2407526.
 \label{using-lammps-gui-label}
 
 \begin{note}
-  For the sake of simplicity we will refer during the tutorials to
-  keyboard shortcuts using the assignments from Linux and Windows.
-
-  Users of macOS have to use the ``Command'' key (\cmd) instead of the
-  ``Ctrl'' key for keyboard shortcuts.
+For simplicity, these tutorials reference keyboard shortcuts
+based on the assignments for Linux and Windows. {macOS} users should
+use the ``Command'' key (\cmd) in place of the
+``Ctrl'' key when using keyboard shortcuts.
 \end{note}
 
 \subsection{Installation}
 
-Precompiled versions of LAMMPS--GUI exist for Linux, {macOS}, and
-Windows.  The Linux version comes in two variants, as compressed tar
-archive (.tar.gz) and as a flatpak \cite{flatpak_home} bundle. The macOS
-version as a .dmg installer image and the Window version is an
-executable Installer package.
+Precompiled versions of LAMMPS--GUI are available for Linux, {macOS}, and
+Windows.  The Linux version is provided in two formats: as compressed tar
+archive (.tar.gz) and as a Flatpak bundle \cite{flatpak_home}.  The {macOS}
+version is distributed as a .dmg installer image, while the Windows version comes
+as an executable installer package.
 
-\subsubsection{Installing Linux .tar.gz variant}
+\subsubsection{Installing the Linux .tar.gz variant}
 
-Download the archive, e.g.~LAMMPS-Linux-x86\_64-GUI-XXXXAug2024.tar.gz,
-and unpack it.  This will create a folder LAMMPS\_GUI which contains the
-included commands that can be launched directly as ``./lammps-gui'' and
-``./lmp'' for example.  Adding this folder to the PATH environment
-variable, will make them available everywhere and without the ``./''
-prefix.
+Download the archive (e.g.,~LAMMPS-Linux-x86\_64-GUI-29Aug2024\_update1.tar.gz)
+and unpack it.  This will create a folder named LAMMPS\_GUI containing the
+included commands, which can be launched directly using ``./lammps-gui'' or
+``./lmp'', for example.  Adding this folder to the PATH environment
+variable will make these commands accessible from everywhere, without the
+need for the ``./'' prefix.
 
 \subsubsection{Installing Linux .flatpak variant}
 
-Download the bundle file and then install it with
-{
-\normalsize
-\begin{verbatim}
+Download the bundle file and then install it using the following command:
+\begin{lstlisting}
 flatpak install --user \
-    LAMMPS-Linux-x86_64-GUI-XXXAug2024.flatpak
-\end{verbatim}
-}
-This should integrate LAMMPS--GUI into your desktop environment
-(e.g.~GNOME, KDE, XFCE) and it should appear in the ``Applications''
-menu under ``Science''.  Also the ``.lmp'' file extension should have
-been registered to launch LAMMPS--GUI when opening a file with that
-extension in the desktop's file manager.
-
-It is possible to launch it from the command line with:
+    LAMMPS-Linux-x86_64-GUI-29Aug2024_update1.flatpak
+\end{lstlisting}
+This will integrate LAMMPS--GUI into your desktop environment
+(e.g.,~GNOME, KDE, XFCE) where it should appear in the ``Applications''
+menu under ``Science''.  Additionally, the ``.lmp'' file extension will be
+registered to launch LAMMPS--GUI when opening a file with this
+extension in the desktop's file manager. You can then
+launch LAMMPS--GUI from the command line using the following command:
 \begin{lstlisting}
 flatpak run org.lammps.lammps-gui
 \end{lstlisting}
-Similarly for the LAMMPS command line version:
+Similarly, for the LAMMPS command-line version, use:
 \begin{lstlisting}
-flatpak run --command=lmp \
-    org.lammps.lammps-gui -in in.melt
+flatpak run --command=lmp org.lammps.lammps-gui -in in.lmp
 \end{lstlisting}
 
-\subsubsection{Installing macOS .dmg package}
+\subsubsection{Installing the macOS .dmg package}
 
-After downloading the LAMMPS-macOS-multiarch-GUI-XXXAug2024.dmg file,
-you need double-click on it and then drag the LAMMPS\_GUI app bundle
-into the Applications folder shown in the dialog that opens.  For
-enabling command line access follow the instructions in the README.txt
+After downloading the LAMMPS-macOS-multiarch-GUI-29Aug2024\_update1.dmg file,
+double-click on it and then drag the LAMMPS\_GUI app bundle
+into the Applications folder shown in the dialog that opens.  To
+enable command-line access, follow the instructions in the README.txt
 file.
 
-After installation, LAMMPS\_GUI can be launched from the Applications
-folder, you can also drag an input file on top of it or open files with
-the ``.lmp'' extension.  The LAMMPS--GUI bundle is currently not
-cryptographically signed so macOS may initially refuse to launch it.
-But you can clear its access in the ``Security \& Privacy" system
-setting dialog.
+After installation, you can launch LAMMPS\_GUI from the Applications
+folder. Additionally, you can drag an input file onto the app or open files with the
+``.lmp'' extension.  Note that the LAMMPS--GUI bundle is currently not
+cryptographically signed, so macOS may initially prevent it from launching.
+If this happens, you can adjust the settings in the ``Security \& Privacy" system
+preferences dialog to allow access.
 
-\subsubsection{Installing Windows .exe package}
+\subsubsection{Installing the Windows .exe package}
 
-When downloading the LAMMPS-Win10-64bit-GUI-XXXAug2024.exe installer,
-Windows will suggest to delete the file since it is from an unknown
-developer and downloaded from the internet.  This is because neither the
-installer nor the LAMMPS--GUI and other applications inside have been
-cryptographically signed.  You have to tell it keep it and when
-launching the installer again confirm that you want to run it anyway.
+Download the LAMMPS-Win10-64bit-GUI-29Aug2024\_update.exe installer.
+Windows may warn you that the file is from an unknown developer
+and was downloaded from the internet.  This happens because neither the
+installer nor the LAMMPS--GUI application (or any other applications inside)
+have been cryptographically signed.  You will need to choose to keep the file,
+and when launching the installer again, confirm that you want to run it despite the warning.
 
-After installation, there should be a new entry in the start menu and
-also the ``.lmp'' extension should be registered with the Windows File
+After installation, a new entry should appear in the Start menu. Additionally,
+the ``.lmp'' file extension should be registered with  Windows File
 Explorer to open LAMMPS--GUI when opening a file with that
-extension. The ``lammps-gui'' and ``lmp'' commands should be available
-on the command line in a Command Prompt or Terminal window as well.
+extension.  The ``lammps-gui'' and ``lmp'' commands should also be available
+in the command line, either in a Command Prompt or Terminal window.
 
 \subsection{Opening, Editing, and Saving Files}
 
-LAMMPS--GUI can be launched from the command line as explained above where you
-can launch it without arguments or provide one file name as argument.  All
-other arguments are ignored. Example:
-{
-\normalsize
-\begin{verbatim}
-  lammps-gui input.lmp
-\end{verbatim}
-}
-Files can also be opened from the ``File'' menu.  There is the option
-to select a file through a dialog and then open it.  There is also a
-record of the last five opened files and entries to open them directly.
-Finally, there is the \texttt{Ctrl--O} keyboard shortcut to open a file.
+LAMMPS--GUI can be launched from the command line, as explained above, where you
+can either launch it without arguments or provide one file name as an argument.  All
+other arguments will be ignored. For example:
+\begin{lstlisting}
+lammps-gui input.lmp
+\end{lstlisting}
+Files can also be opened from the ``File'' menu.  You can select a
+file through a dialog and then open it.  Additionally, a history of
+the last five opened files is maintained, with entries to open them directly.
+Finally, the \texttt{Ctrl--O} keyboard shortcut can also be used to open a file.
 
-When integrated into a desktop environment, it also possible to open
-files with a ``.lmp'' extension or use drag-n-drop.
+When integrated into a desktop environment, it is also possible to open
+files with a ``.lmp'' extension or use drag-and-drop.
 
 For the most part, the editor window behaves like other graphical
-editors.  You can enter, delete, and copy and paste text.  When entering
-text, for the first word in a line, there will be a pop-up window with
-possible completions after typing the first two characters. You can
-change the highlight with the up and down cursor keys and select a
-completion with the enter key or using the mouse.  You can also keep
-typing and the selection in the pop-up will be refined.  For some
-commands, there will also be completion pop-ups for some of their
-keywords or if a filename is expected (then the pop-up lists files in
-the current folder).
+editors.  You can enter, delete, or copy and paste text.   When entering
+text, a pop-up window will appear with possible completions after typing
+the first two characters of the first word in a line.  You can
+navigate the highlighted options using the up and down arrow keys, and select a
+completion by pressing the Enter key or using the mouse.  You can also continue
+typing, and the selection in the pop-up will be refined.  For some
+commands, there will be completion pop-ups for their
+keywords or when a filename is expected, in which case,
+the pop-up will list files in the current folder.
 
-As soon as LAMMPS--GUI recognizes a command line, it will apply syntax
-highlighting according to some built-in categories.  This can be used as
-a hint for detecting typos, since those may cause LAMMPS--GUI not to
-recognize the syntax and thus not apply the syntax highlighting or only
-partially.  When hitting the \texttt{Tab} key, the line will be
-reformatted.  A consistent formatting can improve the readability of
+As soon as LAMMPS--GUI recognizes a command line, it applies syntax
+highlighting according to built-in categories.  This can help
+detect typos, since those may cause LAMMPS--GUI not to
+recognize the syntax and thus not apply or partially apply
+the syntax highlighting.  When you press the \texttt{Tab} key, the line will be
+reformatted.  Consistent formatting can improve the readability of
 input files, especially long and complex ones.
 
-If the file in the editor has unsaved changes an additional
-``\*modified\*'' text is shown in the window title.  The current input
-buffer can be saved be selection ``Save'' or ``Save As..'' from the
-``File'' menu.  You can also click on the ``Save'' icon on the left side
-of the status bar, and finally, there is the \texttt{Ctrl--S} keyboard
-shortcut.
-
+If the file in the editor has unsaved changes, the word 
+``\*modified\*'' will appear in the window title.  The current input
+buffer can be saved by selecting ``Save'' or ``Save As...'' from the
+``File'' menu.  You can also click the ``Save'' icon on the left side
+of the status bar, or use the \texttt{Ctrl--S} keyboard shortcut.
 
 \begin{note}
-When LAMMPS--GUI is opening a file it will \emph{switch} the working directory
-of the folder that contains the input file.  The same happens when saving to
+When LAMMPS--GUI opens a file, it will \emph{switch} the working directory
+to the folder that contains the input file.  The same happens when saving to
 a different folder than the current working directory.  The current working
-directory can be seen in the status bar on the bottom right.  This is important
-to know since LAMMPS input files often require other files for reading and may
-write output files (images, trajectory dumps, averaged data files) and usually
-expects those files to be in the same folder as the input file.
+directory can be seen in the status bar at the bottom right.  This is important
+to note because LAMMPS input files often require additional files for reading and may
+write output files (such as images, trajectory dumps, or averaged data files),
+which are typically expected to be in the same folder as the input file.
 \end{note}
 
 %The contents of the \textit{Editor} window can be saved by either using
@@ -4401,55 +4384,92 @@ expects those files to be in the same folder as the input file.
 
 \subsection{Running LAMMPS}
 
-FIXME: add section
 % mention no log file -> Output window -> Save to file
+% SG: the "no log file" is already specified in the "The Output Window" subsection, so may be unecessary?
+
+From within the LAMMPS--GUI main window, LAMMPS can be started either from
+the \guicmd{Run} menu by selecting the \guicmd{Run LAMMPS from Editor Buffer} entry,
+using the keyboard shortcut Ctrl-Enter (Command-Enter on macOS), or by clicking the
+green \guicmd{Run} button in the status bar.  While LAMMPS is running, a message on
+the left side indicates that LAMMPS is active, along with the number of active threads.
+On the right side, a progress bar is displayed, showing the estimated progress
+of the current \lmpcmd{run} or \lmpcmd{minimize} command.
 
 \subsection{Creating Snapshot Images}
 
-  To open it, use
-either \textit{Create Image} from the \textit{Run} menu, the
-\texttt{Ctrl-I} keyboard shortcut, or by clicking on the (right) palette
-button in the status bar. FIXME: add section
+Open the \guicmd{Image Viewer} using either the \guicmd{Create Image} option
+from the \guicmd{Run} menu, the \guicmd{Ctrl-I} keyboard shortcut,
+or click on the (right) palette button in the status bar. The image
+can be saved using the \guicmd{Save As...} option from the \guicmd{File} menu.
 
-\subsection{Output Window}
+\subsection{The Output Window}
 
-FIXME: add section
+By default, when starting a run, the \guicmd{Output} window opens to display the screen
+output of the running LAMMPS calculation. The text in the Output window is
+read-only and cannot be modified, but keyboard shortcuts for selecting and
+copying all or part of the text can be used to transfer it to another program:
+The keyboard shortcut \guicmd{Ctrl-S} (or \guicmd{Command-S} on {macOS}) can
+be used to save the Output buffer to a file. Additionally, the \guicmd{Select All}
+and \guicmd{Copy} functions, along with a \guicmd{Save Log to File} option, are available
+through the context menu, which can be accessed by right-clicking within the text area of the
+\guicmd{Output} window.
 
-\subsection{Graphs Window}
+\subsection{The Charts Window}
 
-FIXME: add section
-% mention export to .dat, .csv, .yml
+By default, when starting a run, a \guicmd{Charts} window opens to display
+a plot of the thermodynamic output from the LAMMPS calculation.  From the \guicmd{File}
+menu in the top-left corner, you can save an image of the
+currently displayed plot or export the data in various formats:
+plain text columns (for use with plotting tools like Gnuplot or XmGrace),
+CSV data (suitable for processing in Microsoft Excel, LibreOffice Calc,
+or Python with Pandas), or YAML (which can be imported into Python using PyYAML or Pandas).
+You can use the mouse to zoom in on the graph by holding the left button and dragging
+to select an area.  To zoom out, right-click anywhere on the graph.  You can reset the view
+by clicking the \guicmd{lens} button located next to the data drop-down menu.
 
 \subsection{Preferences}
 
-FIXME: add section
-% mention auto-save, fonts, acceleration,
+The Preferences dialog allows customization of the behavior and appearance of
+LAMMPS--GUI. Among other options:
+\begin{itemize}
+\item In the \guicmd{General Settings} tab, the \guicmd{Data update interval} setting
+allows you to define the time interval, in milliseconds, between data updates during
+a LAMMPS run.  By default, the data for the \guicmd{Charts} and \guicmd{Output}
+windows is updated every 10 milliseconds.  Set this to 100 milliseconds or more
+if LAMMPS--GUI consumes too many resources during a run.  The \guicmd{Charts update interval}
+controls the time interval between redrawing the plots in the \guicmd{Charts} window, in milliseconds.
+\item The \guicmd{Accelerators} tab enables you to select an accelerator package
+for LAMMPS to use.  Only settings supported by the LAMMPS library and local hardware
+are available.  The \guicmd{Number of threads} field allows you to set the maximum
+number of threads for accelerator packages that utilize threading.
+\item The \guicmd{Editor Settings} tab allows you to adjust the settings of the editor
+window.  Select the \guicmd{Auto-save on Run and Quit} option to automatically save changes
+made to the \flecmd{.lmp} file upon closing LAMMPS--GUI.
+\end{itemize}
+See Ref.\,\citenum{lammps_gui_docs} for a full list of options.
 
-\section{Compiling LAMMPS from Source on Linux}
-  \label{compiling-lammps-label}
-  FIXME: add section
+\section{Running LAMMPS via Command Line}
+\label{command-line-label}
 
-  % AK: For beginner we recommend CMake and a current Linux OS (at least Ubuntu 22.04LTS, RHEL 9 (and Alma, or Rocky), Fedora 39)
-  % The Linux system must support packages for software development installed and the corresponding development packages for compiling with MPI
+LAMMPS can be executed from the command line on Linux, macOS,
+as well as Windows. On Linux/macOS, first navigate to the directory containing
+the \flecmd{input.lmp} file and execute:
+\begin{lstlisting}
+lmp -in input.lmp
+\end{lstlisting}
+where \flecmd{lmp} is the LAMMPS executable.
+For parallel execution on 4 processors, use:
+\begin{lstlisting}[language=bash]
+mpirun -np 4 lmp -in input.lmp
+\end{lstlisting}
+On Windows, run the following command via Command Prompt or PowerShell:
+\begin{lstlisting}
+lmp.exe -in input.lmp
+\end{lstlisting}
+where \flecmd{lmp.exe} is the Windows executable version of LAMMPS.  See
+Ref.\,\citenum{lammps_run_docs} for a complete description on how to run
+LAMMPS.
 
-  % AK: a mostly complete list of packages for different Linux flavors can be inferred from singularity/apptainer container definition files in "tools/singularity"
-
-%Depending on your operating system (i.e.~Linux, macOS, or Windows), the procedure may differ. LAMMPS must be compiled with the following packages:
-%\begin{itemize}
-%\item MANYBODY
-%\item MOLECULE
-%\item KSPACE
-%\item RIGID
-%\item REAXFF
-%\item EXTRA-DUMP
-%\end{itemize}
-
-% AK: for non-Linux OS please refer to LAMMPS Manual.
-
-
-  \section{Running LAMMPS in Parallel with MPI}
-  \label{parallel-lammps-label}
-  FIXME: add section
 \end{appendices}
 
 \end{document}
