@@ -3634,7 +3634,7 @@ frequently overcome the energy barrier due to thermal agitation.
 \includegraphics[width=\linewidth]{US-potential}
 \caption{Potential $U$ given in Eq.\,\eqref{eq:U} (a) and force $F$ given in
 Eq.\,\eqref{eq:F} (b) as functions of the coordinate $x$. Here,
-$U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$, and $x_0 = 10~\mathrm{\AA{}}$.}
+$U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\AA{}}$.}
 \label{fig:potential}
 \end{figure}
 
@@ -3714,7 +3714,7 @@ LAMMPS.
 \caption{Evolution of the number of atoms $n_\text{center}$ in the central
 region \lmpcmd{mymes} as a function of time $t$ during equilibration.  The dark line
 is $n_\text{center} = 22 \exp(-t/160)+5$ and serves as a guide for the eyes.  Here, $U_0 = 0.36~\text{kcal/mol}$,
-$\delta = 0.5~\mathrm{\AA{}}$, and $x_0 = 5~\mathrm{\AA{}}$.}
+$\delta = 0.5~\text{\AA{}}$, and $x_0 = 5~\text{\AA{}}$.}
 \label{fig:US-density-evolution}
 \end{figure}
 
@@ -3739,7 +3739,7 @@ are available due to the repulsive potential.
 step of \hyperref[umbrella-sampling-label]{Tutorial 7}.
 The atoms density is the lowest in the central
 part of the box, \lmpcmd{mymes}.  Here,
-$U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$, and $x_0 = 10~\mathrm{\AA{}}$.}
+$U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\AA{}}$.}
 \label{fig:US-system-unbiased}
 \end{figure}
 
@@ -3749,7 +3749,7 @@ $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$, and $x_0 = 10~\math
 \caption{a) Fluid density $\rho$ along the $x$ direction.
 b) Potential $U$ as a function of $x$ measured using free sampling (blue disks)
 compared to the imposed potential given in Eq.\,\eqref{eq:U} (dark line).
-Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$, $x_0 = 10~\mathrm{\AA{}}$,
+Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, $x_0 = 10~\text{\AA{}}$,
 and the measured reference density in the reservoir is $\rho_\text{bulk} = 0.0009~\text{\AA{}}^{-3}$.} % SG: check units of rho bulk
 \label{fig:US-density}
 \end{figure}
@@ -3855,7 +3855,7 @@ central part of the box (Fig.\,\ref{fig:US-system-biased}).
 step of \hyperref[umbrella-sampling-label]{Tutorial 7}, showing type-1 atoms
 in cyan and the type-2 atom in red.  Only the type-2 atom explores the central part of the box,
 \lmpcmd{mymes}, due to the additional biasing potential $V$. Parmaeters are
-$U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$, and $x_0 = 10~\mathrm{\AA{}}$.}
+$U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\AA{}}$.}
 \label{fig:US-system-biased}
 \end{figure}
 
@@ -3882,7 +3882,7 @@ jump SELF loop
 The \lmpcmd{spring} command imposes the additional harmonic potential $V$ with
 the previously defined spring constant $k$.  The center of the harmonic
 potential, $x_\text{des}$, successively takes values
-from $-28\,\mathrm{\AA}$ to $28\,\mathrm{\AA}$.  For each value of $x_\text{des}$,
+from $-28\,\text{\AA}$ to $28\,\text{\AA}$.  For each value of $x_\text{des}$,
 an equilibration step of 40\,ps is performed, followed by a step
 of 400\,ps during which the position of the particle of
 type 2 along the $x$-axis, $x_\text{ave}$, is saved in data files named \flecmd{umbrella-sampling.i.dat},
@@ -3930,8 +3930,8 @@ long and computationally expensive simulations.
 \includegraphics[width=\linewidth]{US-free-energy}
 \caption{The potential $U$ as a function of $x$, measured using umbrella sampling
 (blue disks), is compared to the imposed potential given in Eq.\,\eqref{eq:U}
-(dark line). Parameters are $U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\mathrm{\AA{}}$,
-and $x_0 = 10~\mathrm{\AA{}}$.}
+(dark line). Parameters are $U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$,
+and $x_0 = 10~\text{\AA{}}$.}
 \label{fig:US-freenergy}
 \end{figure}
 
@@ -4181,7 +4181,7 @@ fix myrxns all bond/react &
 }
 With the \textit{stabilization} keyword, the \textit{bond/react} command will
 try to stabilize the atoms involved in the reaction using the nve/limit
-command with a maximum displacement of $0.03\,\mathrm{\AA{}}$ (a command that was
+command with a maximum displacement of $0.03\,\text{\AA{}}$ (a command that was
 used, for instance, in \hyperref[sheared-confined-label]{Tutorial 4}). The two
 \textit{react} keywords contain specific details about the two reactions
 involved here, i.e. a transformation of \textit{mol1} into \textit{mol2} based
