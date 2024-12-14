@@ -372,15 +372,8 @@ Gnuplot, Microsoft Excel, and LibreOffice Calc.  For
 visualization, suitable external tools include VMD \cite{vmd_home,humphrey1996vmd}
 and OVITO \cite{ovito_home,ovito_paper}.
 
-\hyperref[compiling-lammps-label]{Appendix \ref{compiling-lammps-label}}
-has instructions for compiling LAMMPS from source for use with this
-tutorial in case there is no suitable precompiled version available
-for your platform or environment.
-
-\hyperref[parallel-lammps-label]{Appendix \ref{parallel-lammps-label}}
-provides instructions for running LAMMPS in parallel using MPI when
-using LAMMPS executables compiled with MPI enabled, for example on HPC
-clusters.
+\hyperref[command-line-label]{Appendix \ref{command-line-label}} has instructions
+for running LAMMPS from the command line.
 
 \subsection{About LAMMPS--GUI}
 
@@ -1636,7 +1629,7 @@ but that after a few steps, it reaches the target value.
 \paragraph{Launch the deformation}
 
 After equilibration, let us set the velocity of the edges equal to
-$75~\text{m/s}$ (or $0.75~\text{\AA{}/fs}$) and run for a longer duration than
+$75~\text{m/s}$ (or $0.75~\text{\AA{}/ps}$) and run for a longer duration than
 previously. Add the following lines into \flecmd{breakable.lmp}:
 \begin{lstlisting}
 velocity cnt_top set 0.75 0 0
@@ -1655,7 +1648,9 @@ VMD \cite{vmd_home,humphrey1996vmd} with the \guicmd{DynamicBonds} representatio
 \label{fig:CNT-deformed-breakable}
 \end{figure}
 
-Looking at the evolution of the energy, one can see that the total energy $E_\text{tot}$ is initially increasing with the deformation.  When bonds break, the energy relaxes abruptly,
+Looking at the evolution of the energy, one can see that the total
+energy $E_\text{tot}$ is initially increasing with the deformation.  When
+bonds break, the energy relaxes abruptly,
 as can be seen near $t=110~\text{ps}$ and again near $t=130~\text{ps}$ in
 Fig.\,\ref{fig:CNT-deformed-breakable}\,a.  Using the same script as previously to
 import the data into Python, the stress-strain
@@ -4453,31 +4448,28 @@ made to the \flecmd{.lmp} file upon closing LAMMPS--GUI.
 \end{itemize}
 See Ref.\,\citenum{lammps_gui_docs} for a full list of options.
 
-\section{Compiling LAMMPS from Source on Linux}
-  \label{compiling-lammps-label}
-  FIXME: add section
+\section{Running LAMMPS via Command Line}
+\label{command-line-label}
 
-  % AK: For beginner we recommend CMake and a current Linux OS (at least Ubuntu 22.04LTS, RHEL 9 (and Alma, or Rocky), Fedora 39)
-  % The Linux system must support packages for software development installed and the corresponding development packages for compiling with MPI
+LAMMPS can be executed from the command line on Linux, macOS,
+as well as Windows. On Linux/macOS, first navigate to the directory containing
+the \flecmd{input.lmp} file and execute:
+\begin{lstlisting}
+lmp -in input.lmp
+\end{lstlisting}
+where \flecmd{lmp} is the LAMMPS executable.
+For parallel execution on 4 processors, use:
+\begin{lstlisting}[language=bash]
+mpirun -np 4 lmp -in input.lmp
+\end{lstlisting}
+On Windows, run the following command via Command Prompt or PowerShell:
+\begin{lstlisting}
+lmp.exe -in input.lmp
+\end{lstlisting}
+where \flecmd{lmp.exe} is the Windows executable version of LAMMPS.  See
+Ref.\,\citenum{lammps_run_docs} for a complete description on how to run
+LAMMPS.
 
-  % AK: a mostly complete list of packages for different Linux flavors can be inferred from singularity/apptainer container definition files in "tools/singularity"
-
-%Depending on your operating system (i.e.~Linux, macOS, or Windows), the procedure may differ. LAMMPS must be compiled with the following packages:
-%\begin{itemize}
-%\item MANYBODY
-%\item MOLECULE
-%\item KSPACE
-%\item RIGID
-%\item REAXFF
-%\item EXTRA-DUMP
-%\end{itemize}
-
-% AK: for non-Linux OS please refer to LAMMPS Manual.
-
-
-  \section{Running LAMMPS in Parallel with MPI}
-  \label{parallel-lammps-label}
-  FIXME: add section
 \end{appendices}
 
 \end{document}
