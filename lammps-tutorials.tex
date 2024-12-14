@@ -4390,8 +4390,16 @@ which are typically expected to be in the same folder as the input file.
 
 \subsection{Running LAMMPS}
 
-FIXME: add section
 % mention no log file -> Output window -> Save to file
+% SG: the "no log file" is already specified in the "The Output Window" subsection, so may be unecessary?
+
+From within the LAMMPS-GUI main window, LAMMPS can be started either from
+the \guicmd{Run} menu by selecting the \guicmd{Run LAMMPS from Editor Buffer} entry,
+using the keyboard shortcut Ctrl-Enter (Command-Enter on macOS), or by clicking the
+green \guicmd{Run} button in the status bar.  While LAMMPS is running, a message on
+the left side indicates that LAMMPS is active, along with the number of active threads.
+On the right side, a progress bar is displayed, showing the estimated progress
+of the current \lmpcmd{run} or \lmpcmd{minimize} command.
 
 \subsection{Creating Snapshot Images}
 
