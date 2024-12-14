@@ -793,8 +793,7 @@ fix mylgv all langevin 1.0 1.0 0.1 1530917
 timestep 0.005
 run 10000
 \end{lstlisting}
-
-The new command adds a ``Langevin thermostat'' to the atoms in the group
+The new command adds a Langevin thermostat to the atoms in the group
 \lmpcmd{all}, with a desired target temperature of 1.0 temperature units
 throughout the run (the two numbers stand for the target at the beginning
 and at the end of the run, which allows for a temperature ramp if
@@ -1482,7 +1481,7 @@ command also imposes the use of the YAML format that can easily be read by
 Python (see below).
 
 Let us impose a constant velocity deformation on the CNT
-by combining the \textit{velocity set} command with previously defined
+by combining the \lmpcmd{velocity set} command with previously defined
 \lmpcmd{fix setforce}.  Add the following lines in the \lmpcmd{unbreakable.lmp}
 file, right after the last \lmpcmd{run 5000} command:
 \begin{lstlisting}
