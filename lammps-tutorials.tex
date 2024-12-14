@@ -4427,8 +4427,24 @@ by clicking the \guicmd{lens} button located next to the data drop-down menu.
 
 \subsection{Preferences}
 
-FIXME: add section
-% mention auto-save, fonts, acceleration,
+The Preferences dialog allows customization of the behavior and appearance of
+LAMMPS--GUI. Among other options:
+\begin{itemize}
+\item In the \guicmd{General Settings} tab, the \guicmd{Data update interval} setting
+allows you to define the time interval, in milliseconds, between data updates during
+a LAMMPS run.  By default, the data for the \guicmd{Charts} and \guicmd{Output}
+windows is updated every 10 milliseconds.  Set this to 100 milliseconds or more
+if LAMMPS--GUI consumes too many resources during a run.  The \guicmd{Charts update interval}
+controls the time interval between redrawing the plots in the \guicmd{Charts} window, in milliseconds.
+\item The \guicmd{Accelerators} tab enables you to select an accelerator package
+for LAMMPS to use.  Only settings supported by the LAMMPS library and local hardware
+are available.  The \guicmd{Number of threads} field allows you to set the maximum
+number of threads for accelerator packages that utilize threading.
+\item The \guicmd{Editor Settings} tab allows you to adjust the settings of the editor
+window.  Select the \guicmd{Auto-save on Run and Quit} option to automatically save changes
+made to the \flecmd{.lmp} file upon closing LAMMPS--GUI.
+\end{itemize}
+See Ref.\,\citenum{lammps_gui_docs} for a full list of options.
 
 \section{Compiling LAMMPS from Source on Linux}
   \label{compiling-lammps-label}
