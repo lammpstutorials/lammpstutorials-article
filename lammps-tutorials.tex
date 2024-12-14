@@ -4400,7 +4400,7 @@ from the \guicmd{Run} menu, the \guicmd{Ctrl-I} keyboard shortcut,
 or click on the (right) palette button in the status bar. The image
 can be saved using the \guicmd{Save As...} option from the \guicmd{File} menu.
 
-\subsection{Output Window}
+\subsection{The Output Window}
 
 By default, when starting a run, the \guicmd{Output} window opens to display the screen
 output of the running LAMMPS calculation. The text in the Output window is
@@ -4412,10 +4412,18 @@ and \guicmd{Copy} functions, along with a \guicmd{Save Log to File} option, are 
 through the context menu, which can be accessed by right-clicking within the text area of the
 \guicmd{Output} window.
 
-\subsection{Graphs Window}
+\subsection{The Charts Window}
 
-FIXME: add section
-% mention export to .dat, .csv, .yml
+By default, when starting a run, a \guicmd{Charts} window opens to display
+a plot of the thermodynamic output from the LAMMPS calculation.  From the \guicmd{File}
+menu in the top-left corner, you can save an image of the
+currently displayed plot or export the data in various formats:
+plain text columns (for use with plotting tools like Gnuplot or XmGrace),
+CSV data (suitable for processing in Microsoft Excel, LibreOffice Calc,
+or Python with Pandas), or YAML (which can be imported into Python using PyYAML or Pandas).
+You can use the mouse to zoom in on the graph by holding the left button and dragging
+to select an area.  To zoom out, right-click anywhere on the graph.  You can reset the view
+by clicking the \guicmd{lens} button located next to the data drop-down menu.
 
 \subsection{Preferences}
 
