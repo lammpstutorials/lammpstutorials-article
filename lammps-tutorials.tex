@@ -422,11 +422,11 @@ and inputs required to follow the tutorials are available from a
 dedicated GitHub account,
 \href{https://github.com/lammpstutorials}{github.com/lammpstutorials}.
 Additionally, these files can be downloaded by clicking \guicmd{Start LAMMPS Tutorial X}
-(where \texttt{X} = 1...8) from the \guicmd{Tutorials} menu of LAMMPS-GUI.
+(where \texttt{X} = 1...8) from the \guicmd{Tutorials} menu of LAMMPS--GUI.
 
 In the following, all LAMMPS input or console commands are formatted
 with a \lmpcmd{colored background}.  Keyboard shortcuts and 
-file names are formatted in \flecmd{monospace}, and LAMMPS-GUI options and menus
+file names are formatted in \flecmd{monospace}, and LAMMPS--GUI options and menus
 are in \guicmd{quoted monospace}.
 % S.G.: I removed "folder names" because all folders will eventually be removed (TO CONTROL BEFORE SUBMITTING)
 % S.G.: I removed "Section titles" as well because it seems to be using a different style
@@ -528,7 +528,7 @@ confusion when sharing inputs with other LAMMPS users.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GUI-1.png}
-\caption{A screenshot of the LAMMPS-GUI \guicmd{Editor} window during
+\caption{A screenshot of the LAMMPS--GUI \guicmd{Editor} window during
   \hyperref[lennard-jones-label]{Tutorial 1}.  The coloring of the text
   is based on the syntax for LAMMPS input files.  The pop-up menu is the
   context menu for right-clicking on the \lmpcmd{atom\_style} line.}
@@ -536,7 +536,7 @@ confusion when sharing inputs with other LAMMPS users.
 \end{figure}
 
 Each LAMMPS command is associated with extensive online documentation
-detailing the different options for that command.  From the LAMMPS-GUI
+detailing the different options for that command.  From the LAMMPS--GUI
 editor buffer, the documentation can be accessed by
 right-clicking the line with a command, such as \lmpcmd{units lj}, and
 selecting \guicmd{View documentation for (\dots)}\,.  LAMMPS--GUI will
@@ -694,7 +694,7 @@ as the minimizer algorithm cannot find a way to lower the potential
 energy.  Except for trivial systems, minimization algorithms will find a
 local minimum rather than the global minimum.
 
-Run the minimization and observe that LAMMPS-GUI will capture the output
+Run the minimization and observe that LAMMPS--GUI will capture the output
 and update the chart in real time.  This run executes quickly (depending
 on your computer's capabilities) and LAMMPS--GUI may fail to capture some
 of the thermodynamic data (see figure \ref{fig:chart-log}).  In that
@@ -707,7 +707,7 @@ fresh, forgetting the current system and starting over from the top.
 \centering
 \includegraphics[width=0.49\linewidth]{chart-1}
 \includegraphics[width=0.497\linewidth]{output-1}
-\caption{\guicmd{Charts} (left) and \guicmd{Output} (right) windows of LAMMPS-GUI
+\caption{\guicmd{Charts} (left) and \guicmd{Output} (right) windows of LAMMPS--GUI
   after performing the minimization simulation of \hyperref[lennard-jones-label]{Tutorial 1}.}
 \label{fig:chart-log}
 \end{figure}
@@ -1129,7 +1129,7 @@ variables \lmpcmd{n1\_in} and \lmpcmd{n2\_in}, you can track the number
 of atoms in each region as a function of time
 (Fig.\,\ref{fig:mixing}\,a).  To view their evolution, select the entries
 \guicmd{v\_n1\_in} or \guicmd{v\_n2\_in} in the \guicmd{Select data} drop-down
-menu in the \guicmd{Charts} window of LAMMPS-GUI.
+menu in the \guicmd{Charts} window of LAMMPS--GUI.
 
 In addition, as the mixing progresses, the average coordination number
 between atoms of types 1 and 2 increases from about $0.01$ to $0.04$
@@ -1883,7 +1883,7 @@ The binary file created by the \lmpcmdnote{write\_restart} command contains the
 complete state of the simulation, including atomic positions, velocities, and
 box dimensions (similar to \lmpcmdnote{write\_data}), but also the groups,
 the compute, or the \lmpcmdnote{atom\_style}.  Use the \guicmd{Inspect Restart}
-option of the LAMMPS-GUI to vizualize the content saved in \flecmd{water.restart}.
+option of the LAMMPS--GUI to vizualize the content saved in \flecmd{water.restart}.
 \end{note}
 
 \begin{figure}
@@ -4288,7 +4288,7 @@ This will integrate LAMMPS--GUI into your desktop environment
 menu under ``Science''.  Additionally, the ``.lmp'' file extension will be
 registered to launch LAMMPS--GUI when opening a file with this
 extension in the desktop's file manager. You can then
-launch LAMMPS-GUI from the command line using the following command:
+launch LAMMPS--GUI from the command line using the following command:
 \begin{lstlisting}
 flatpak run org.lammps.lammps-gui
 \end{lstlisting}
@@ -4393,7 +4393,7 @@ which are typically expected to be in the same folder as the input file.
 % mention no log file -> Output window -> Save to file
 % SG: the "no log file" is already specified in the "The Output Window" subsection, so may be unecessary?
 
-From within the LAMMPS-GUI main window, LAMMPS can be started either from
+From within the LAMMPS--GUI main window, LAMMPS can be started either from
 the \guicmd{Run} menu by selecting the \guicmd{Run LAMMPS from Editor Buffer} entry,
 using the keyboard shortcut Ctrl-Enter (Command-Enter on macOS), or by clicking the
 green \guicmd{Run} button in the status bar.  While LAMMPS is running, a message on
