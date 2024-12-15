@@ -43,7 +43,7 @@ thermo_style custom step temp press density f_rxn1[*]
 
 dump mydmp all image 1000 dump.mixing.*.ppm &
   type type shiny 0.1 box no 0.01 &
-  view 90 0 zoom 3 fsaa yes bond atom 0.5
+  view 90 0 zoom 1.5 fsaa yes bond atom 0.5
 dump_modify mydmp backcolor white &
   acolor cp gray acolor c=1 gray &
   acolor c= gray acolor c1 gray &
