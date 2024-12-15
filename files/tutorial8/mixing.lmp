@@ -17,7 +17,7 @@ pair_modify tail yes mix sixthpower
 read_data CNT.data group CNT &
   extra/special/per/atom 20
 
-molecule styrene styrene.molecule_template
+molecule styrene styrene.lmpmol
 
 create_atoms 0 random 200 8305 NULL overlap 2.75 &
   maxtry 500 mol styrene 7687
