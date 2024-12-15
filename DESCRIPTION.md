@@ -12,18 +12,36 @@ more accessible to new users.
 - Tutorial 5: Reactive silicon dioxide
 - Tutorial 6: Water adsorption in silica
 - Tutorial 7: Free energy calculation
-- Tutorial 8: ?
+- Tutorial 8: Reactive Molecular Dynamics
 
 ## Files
 
-All the files corresponding to the tutorials can be found in the [files/](files/)
-folder. The Python scripts used to generate the plots are also provided.
+All the files corresponding to the tutorials can be found in the 
+[**files/**](files/) folder. The Python scripts used to generate the plots 
+are also provided.
+
+For each tutorial, a `.manifest` file lists all the files required to 
+follow the tutorial. These files can be downloaded from the LAMMPS-GUI by 
+selecting `Start Tutorial X`. The solutions to the tutorials are provided 
+within the solution repository located in each tutorial folder.
 
 ## Link
 
-Access the pdf from [this link](lammps-tutorials.pdf), or clone this repository
-and compile the tex file yourself by typing in a terminal:
+Access the `.pdf` from [this link](lammps-tutorials.pdf), or clone this repository
+and compile the `.tex` file yourself by typing in a terminal:
 
 ```
 make
 ```
+
+## Contributing
+
+We welcome contributions. If you encounter any issues, have suggestions, 
+or want to ask questions, please feel free to open an issue in this 
+repository.  Your feedback can help us improve the tutorials and make them 
+more useful for everyone.
+
+## License
+
+This project is licensed under the XXX License - see the 
+[LICENSE](LICENSE) file for details.

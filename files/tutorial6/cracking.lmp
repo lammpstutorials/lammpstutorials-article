@@ -1,0 +1,21 @@
+
+units metal
+boundary p p p
+atom_style full
+pair_style vashishta
+neighbor 1.0 bin
+neigh_modify delay 1
+
+read_data generate.data
+
+pair_coeff * * SiO.1990.vashishta Si O
+
+dump viz all image 250 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 180 90 zoom 3.0 size 1800 600
+dump_modify viz backcolor white &
+  acolor Si yellow adiam Si 2.5 &
+  acolor O red adiam O 2
+
+thermo 250
+thermo_style custom step temp etotal vol density
+

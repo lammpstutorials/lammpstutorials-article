@@ -14,39 +14,51 @@ more accessible to new users.
 
 ## Tutorials
 
-- Tutorial 1: Lennard-Jones ﬂuid
+- Tutorial 1: Lennard-Jones fluid
 - Tutorial 2: Pulling on a carbon nanotube
 - Tutorial 3: Polymer in water
 - Tutorial 4: Nanosheared electrolyte
 - Tutorial 5: Reactive silicon dioxide
 - Tutorial 6: Water adsorption in silica
 - Tutorial 7: Free energy calculation
-- Tutorial 8: ?
+- Tutorial 8: Reactive Molecular Dynamics
 
 ## Files
 
-All the files corresponding to the tutorials can be found in the [files/](files/)
-folder. The Python scripts used to generate the plots are also provided.
+All the files corresponding to the tutorials can be found in the 
+[**files/**](files/) folder. The Python scripts used to generate the plots 
+are also provided.
+
+For each tutorial, a `.manifest` file lists all the files required to 
+follow the tutorial. These files can be downloaded from the LAMMPS-GUI by 
+selecting `Start Tutorial X`. The solutions to the tutorials are provided 
+within the solution repository located in each tutorial folder.
 
 ## Link
 
-Access the pdf from [this link](lammps-tutorials.pdf), or clone this repository
-and compile the tex file yourself by typing in a terminal:
+Access the `.pdf` from [this link](lammps-tutorials.pdf), or clone this repository
+and compile the `.tex` file yourself by typing in a terminal:
 
 ```
 make
 ```
 
+## Contributing
+
+We welcome contributions. If you encounter any issues, have suggestions, 
+or want to ask questions, please feel free to open an issue in this 
+repository.  Your feedback can help us improve the tutorials and make them 
+more useful for everyone.
+
+## License
+
+This project is licensed under the [Creative Commons BY 4.0](https://creativecommons.org/licenses/by/4.0/) License.
+For more details, see the [LICENSE](LICENSE) file.
 
 ## Authors
 
-### Project creator
-
-- [Simon Gravelle](https://github.com/simongravelle),
+- [Simon Gravelle](https://github.com/simongravelle) (corresponding author),
   Univ. Grenoble Alpes, CNRS, LIPhy, 38000 Grenoble, France
-
-### Contributors
-
 - [Jacob R. Gissinger](https://www.stevens.edu/profile/jgissing),
   Stevens Institute of Technology, Hoboken, NJ 07030, USA
 - [Axel Kohlmeyer](https://sites.google.com/site/akohlmey),
@@ -59,7 +71,7 @@ make
 
 - Simon Gravelle acknowledges funding from the European Union's Horizon 2020
   research and innovation programme under the Marie Skłodowska-Curie grant
-  agreement No 101065060$.
+  agreement No 101065060.
 - Axel Kohlmeyer acknowledges financial support by Sandia National Laboratories
   under POs 2149742 and 2407526.
 

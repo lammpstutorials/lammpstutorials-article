@@ -1,0 +1,35 @@
+units metal
+atom_style atomic
+boundary f f f
+
+read_data breakable.data
+pair_style airebo 3.0
+pair_coeff * * CH.airebo C
+
+group carbon_atoms type 1
+
+variable xmax equal bound(carbon_atoms,xmax)-0.5
+variable xmin equal bound(carbon_atoms,xmin)+0.5
+region rtop block ${xmax} INF INF INF INF INF
+region rbot block INF ${xmin} INF INF INF INF
+region rmid block ${xmin} ${xmax} INF INF INF INF
+
+group cnt_top region rtop
+group cnt_bot region rbot
+group cnt_mid region rmid
+
+variable xmax_del equal ${xmax}-2
+variable xmin_del equal ${xmin}+2
+region rdel block ${xmin_del} ${xmax_del} INF INF INF INF
+
+group rdel region rdel
+delete_atoms random fraction 0.02 no rdel NULL 482793
+
+reset_atoms id sort yes
+velocity cnt_mid create 300 48455 mom yes rot yes
+
+fix mynve1 cnt_top nve
+fix mynve2 cnt_bot nve
+fix mynvt cnt_mid nvt temp 300 300 0.1
+
+run 0 post no

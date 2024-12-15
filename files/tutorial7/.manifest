@@ -1,0 +1,26 @@
+# LAMMPS Tutorial manifest file. This file determines what is downloaded when.
+# comments start with a # as the first character.
+# comments and empty lines are ignored
+##############################################################################
+# 1) input file templates and data files
+# the first file will be automatically loaded
+free-sampling.lmp
+umbrella-sampling.meta
+umbrella-sampling.lmp
+wham
+
+# 2) solution files
+# only downloaded on request
+free-sampling.dat
+free-sampling.lmp
+free-sampling.log
+free-sampling.png
+umbrella-sampling.dat
+umbrella-sampling.lmp
+umbrella-sampling.log
+umbrella-sampling.png
+wham
+umbrella-sampling.meta
+
+# 3) support files
+
