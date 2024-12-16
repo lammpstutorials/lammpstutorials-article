@@ -1,7 +1,6 @@
-  using 8 OpenMP thread(s) per MPI task
-using multi-threaded neighbor list subroutines
+LAMMPS (29 Aug 2024 - Development - patch_29Aug2024-1065-gcf05700897)
 Reading data file ...
-  orthogonal box = (7.6125683 10.612568 10.612568) to (40.387432 43.387432 43.387432)
+  orthogonal box = (-2.3164529 -26.16 -26.16) to (13.21044 26.16 26.16)
   1 by 1 by 1 MPI processor grid
   reading atom labelmap ...
   reading bond labelmap ...
@@ -9,73 +8,89 @@ Reading data file ...
   reading dihedral labelmap ...
   reading improper labelmap ...
   reading atoms ...
-  3362 atoms
+  3392 atoms
   reading velocities ...
-  3362 velocities
+  3392 velocities
   scanning bonds ...
-  9 = max bonds/atom
+  8 = max bonds/atom
   scanning angles ...
-  21 = max angles/atom
+  18 = max angles/atom
   scanning dihedrals ...
-  29 = max dihedrals/atom
+  27 = max dihedrals/atom
   scanning impropers ...
-  29 = max impropers/atom
-  orthogonal box = (7.6125683 10.612568 10.612568) to (40.387432 43.387432 43.387432)
+  26 = max impropers/atom
+  orthogonal box = (-2.3164529 -26.16 -26.16) to (13.21044 26.16 26.16)
   1 by 1 by 1 MPI processor grid
   reading bonds ...
-  3816 bonds
+  3488 bonds
   reading angles ...
-  7002 angles
+  5376 angles
   reading dihedrals ...
-  11450 dihedrals
+  7552 dihedrals
   reading impropers ...
-  1868 impropers
+  1792 impropers
 Finding 1-2 1-3 1-4 neighbors ...
   special bond factors lj:    0        0        1       
   special bond factors coul:  0        0        1       
-     4 = max # of 1-2 neighbors
+     3 = max # of 1-2 neighbors
      6 = max # of 1-3 neighbors
-    35 = max # of special neighbors
+    34 = max # of special neighbors
   special bonds CPU = 0.001 seconds
-  read_data CPU = 0.047 seconds
+  read_data CPU = 0.091 seconds
 Read molecule template mol1:
-this is a molecule template for: initial nylon crosslink, pre-reacting
+2styrene_unreacted
   1 molecules
   0 fragments
-  18 atoms with max type 8
-  16 bonds with max type 8
-  25 angles with max type 25
-  23 dihedrals with max type 33
-  2 impropers with max type 3
+  32 atoms with max type 4
+  32 bonds with max type 11
+  48 angles with max type 19
+  64 dihedrals with max type 21
+  16 impropers with max type 9
 Read molecule template mol2:
-this is a molecule template for: initial nylon crosslink, post-reacting
+2styrene_reacted
   1 molecules
   0 fragments
-  18 atoms with max type 9
-  17 bonds with max type 11
-  31 angles with max type 24
-  39 dihedrals with max type 30
-  0 impropers with max type 0
+  32 atoms with max type 6
+  33 bonds with max type 13
+  54 angles with max type 22
+  79 dihedrals with max type 19
+  14 impropers with max type 8
 Read molecule template mol3:
-this is a molecule template for: water condensation, pre-reacting
+chain_plus_styrene_unreacted
   1 molecules
   0 fragments
-  15 atoms with max type 9
-  14 bonds with max type 11
-  25 angles with max type 24
-  30 dihedrals with max type 30
-  0 impropers with max type 0
+  46 atoms with max type 6
+  47 bonds with max type 13
+  75 angles with max type 22
+  105 dihedrals with max type 21
+  21 impropers with max type 9
 Read molecule template mol4:
-this is a molecule template for: water condensation, post-reacting
+chain_plus_styrene_reacted
   1 molecules
   0 fragments
-  15 atoms with max type 11
-  13 bonds with max type 13
-  19 angles with max type 26
-  16 dihedrals with max type 29
-  2 impropers with max type 5
-WARNING: Fix bond/react: Atom affected by reaction rxn1 is too close to template edge (src/REACTION/fix_bond_react.cpp:2657)
-WARNING: Fix bond/react: Atom affected by reaction rxn2 is too close to template edge (src/REACTION/fix_bond_react.cpp:2657)
+  46 atoms with max type 6
+  48 bonds with max type 13
+  81 angles with max type 22
+  121 dihedrals with max type 19
+  19 impropers with max type 8
+Read molecule template mol5:
+chain_chain_unreacted
+  1 molecules
+  0 fragments
+  50 atoms with max type 6
+  51 bonds with max type 13
+  84 angles with max type 22
+  118 dihedrals with max type 19
+  20 impropers with max type 8
+Read molecule template mol6:
+chain_chain_reacted
+  1 molecules
+  0 fragments
+  50 atoms with max type 6
+  52 bonds with max type 13
+  90 angles with max type 22
+  135 dihedrals with max type 19
+  18 impropers with max type 3
 dynamic group bond_react_MASTER_group defined
 dynamic group statted_grp_REACT defined
 
@@ -83,32 +98,32 @@ CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
 
 Your simulation uses code contributions which should be cited:
 - Type Label Framework: https://doi.org/10.1021/acs.jpcb.3c08419
-- fix bond/react: reacter.org doi:10.1016/j.polymer.2017.09.038, doi:10.1021/acs.macromol.0c02012
+- fix bond/react: reacter.org doi:10.1016/j.polymer.2017.09.038, doi:10.1021/acs.macromol.0c02012, doi:10.1016/j.cpc.2024.109287
 The log file lists these citations in BibTeX format.
 
 CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
 
 PPPM initialization ...
-  using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
-  G vector (1/distance) = 0.33233392
-  grid = 25 25 25
+WARNING: System is not charge neutral, net charge = -0.04 (../kspace.cpp:327)
+  using 12-bit tables for long-range coulomb (../kspace.cpp:342)
+  G vector (1/distance) = 0.23923374
+  grid = 6 15 15
   stencil order = 5
-  estimated absolute RMS force accuracy = 0.0034565371
-  estimated relative force accuracy = 1.0409259e-05
+  estimated absolute RMS force accuracy = 0.01750679
+  estimated relative force accuracy = 5.2721177e-05
   using double precision KISS FFT
-  3d grid and FFT values/proc = 32768 15625
-Generated 66 of 66 mixed pair_coeff terms from sixthpower/sixthpower mixing rule
-Last active /omp style is kspace_style pppm/omp
+  3d grid and FFT values/proc = 4400 1350
+Generated 21 of 21 mixed pair_coeff terms from sixthpower/sixthpower mixing rule
 Neighbor list info ...
   update: every = 1 steps, delay = 0 steps, check = yes
   max neighbors/atom: 2000, page size: 100000
   master list distance cutoff = 10.5
   ghost atom cutoff = 10.5
-  binsize = 5.25, bins = 7 7 7
+  binsize = 5.25, bins = 3 10 10
   2 neighbor lists, perpetual/occasional/extra = 1 1 0
-  (1) pair lj/class2/coul/long/omp, perpetual
-      attributes: half, newton on, omp
-      pair build: half/bin/newton/omp
+  (1) pair lj/class2/coul/long, perpetual
+      attributes: half, newton on
+      pair build: half/bin/newton
       stencil: half/bin/3d
       bin: standard
   (2) fix bond/react, occasional, copy from (1)
@@ -120,98 +135,99 @@ Setting up Verlet run ...
   Unit style    : real
   Current step  : 0
   Time step     : 1
-Per MPI rank memory allocation (min/avg/max) = 46.05 | 46.05 | 46.05 Mbytes
-   Step          Temp          PotEng         TotEng         Press       f_myrxns[1]    f_myrxns[2]  
-         0   308.87525      49045.261      52139.729     -62.870815      0              0            
-      1000   302.00729      49004.468      52030.128      1589.9884      2              2            
-      2000   305.58256      48993.708      52055.188      176.91851      4              4            
-      3000   298.62632      48942.496      51934.284      2223.0416      5              5            
-      4000   306.51473      48976.177      52046.996      3703.7367      6              6            
-      5000   302.33035      49037.343      52066.24      -313.45755      8              8            
-      6000   303.24102      48897.206      51935.227      852.75493      8              8            
-      7000   311.41727      49033.912      52153.846     -225.91087      10             10           
-      8000   303.95726      48833.708      51878.905      2117.7964      10             10           
-      9000   300.04034      48865.766      51871.721     -2291.0239      11             11           
-     10000   299.55632      48817.487      51818.593     -704.34967      13             13           
-     11000   289.4268       48799.306      51698.929     -2649.8761      15             15           
-     12000   305.43569      48765.517      51825.525      1580.6208      17             16           
-     13000   292.39899      48713.347      51642.747      1894.0316      18             18           
-     14000   299.23041      48724.647      51722.488      1359.9785      18             18           
-     15000   302.68606      48736.889      51769.35      -156.87626      18             18           
-     16000   300.36956      48739.382      51748.635      613.23409      19             19           
-     17000   302.18882      48689.849      51717.329      2000.5481      20             20           
-     18000   299.024        48722.846      51718.619     -1337.2765      21             21           
-     19000   297.19447      48681.65       51659.093     -1033.6433      21             21           
-     20000   296.49989      48633.184      51603.669     -628.32796      21             21           
-     21000   303.39127      48743.671      51783.197     -3585.5061      22             22           
-     22000   297.91184      48626.656      51611.287     -547.93101      22             22           
-     23000   293.5944       48636.645      51578.021     -3040.8191      22             22           
-     24000   295.00211      48536.749      51492.229     -2204.1336      23             23           
-     25000   298.09393      48562.184      51548.639     -327.21856      24             24           
-     26000   298.36496      48606.212      51595.382     -3987.3122      24             24           
-     27000   301.49818      48564.055      51584.615      2118.6277      25             25           
-     28000   313.1993       48655.369      51793.157     -511.59953      26             26           
-     29000   300.57864      48459.343      51470.691     -857.84736      26             26           
-     30000   289.23232      48461.624      51359.299     -2990.2194      26             26           
-     31000   298.30018      48505.173      51493.695     -161.58531      26             26           
-     32000   305.33507      48388.879      51447.879      659.16272      26             26           
-     33000   297.40459      48513.438      51492.987     -3861.1459      26             26           
-     34000   292.54542      48535.045      51465.912      1163.7433      26             26           
-     35000   294.89155      48436.796      51391.168     -1925.355       26             26           
-     36000   300.28612      48544.995      51553.412      371.61713      26             26           
-     37000   293.95597      48452.463      51397.462     -61.175784      27             27           
-     38000   304.74597      48441.766      51494.864      671.24209      28             28           
-     39000   298.29248      48432.609      51421.053      2251.3897      29             29           
-     40000   305.9572       48392.05       51457.283     -378.56733      31             30           
-     41000   299.88753      48359.538      51363.962     -580.53942      31             31           
-     42000   304.56758      48334.606      51385.917     -932.22589      32             32           
-     43000   306.03905      48399.224      51465.277     -991.24105      32             32           
-     44000   298.21969      48383.738      51371.452      6.8405329      33             33           
-     45000   305.53626      48498.915      51559.931     -2818.3576      34             33           
-     46000   299.81972      48368.595      51372.34      -3384.2444      34             34           
-     47000   304.59274      48315.654      51367.217     -6157.9566      34             34           
-     48000   300.58315      48349.958      51361.351     -1388.2643      34             34           
-     49000   294.4607       48338.714      51288.769     -3510.574       34             34           
-     50000   303.0358       48372.508      51408.473     -1108.0786      34             34           
-Loop time of 288.917 on 8 procs for 50000 steps with 3362 atoms
+WARNING: Inconsistent image flags (../domain.cpp:1051)
+Per MPI rank memory allocation (min/avg/max) = 35.86 | 35.86 | 35.86 Mbytes
+   Step          Temp          Press         Density       f_rxn1[1]      f_rxn1[2]      f_rxn1[3]   
+         0   302.27771     -9596.9435      0.90392574     0              0              0            
+       250   389.53088     -13850.265      0.90392574     3              0              0            
+       500   485.68521     -9007.2658      0.90392574     8              0              0            
+       750   542.3226      -23248.667      0.90392574     16             0              1            
+      1000   534.7719      -12762.21       0.90392574     19             1              1            
+      1250   516.99898     -11075.439      0.90392574     24             1              3            
+      1500   543.76181     -7868.2943      0.90392574     30             1              4            
+      1750   513.87518     -25520.029      0.90392574     37             1              8            
+      2000   535.3342      -12037.406      0.90392574     41             3              12           
+      2250   531.66857     -8743.6113      0.90392574     43             4              13           
+      2500   527.99965     -12390.768      0.90392574     45             4              17           
+      2750   530.87307     -62829.341      0.90392574     47             5              20           
+      3000   521.16815     -15127.611      0.90392574     50             5              22           
+      3250   523.34123     -10305.497      0.90392574     54             5              23           
+      3500   531.02862     -8035.5586      0.90392574     56             5              23           
+      3750   537.03195     -7481.4729      0.90392574     57             7              26           
+      4000   529.24999     -131818.3       0.90392574     57             7              28           
+      4250   535.47954     -15352.285      0.90392574     62             7              31           
+      4500   530.34472     -9252.827       0.90392574     63             8              32           
+      4750   534.81427     -51105.955      0.90392574     67             8              35           
+      5000   522.77673     -58794.632      0.90392574     68             8              38           
+      5250   534.0386      -11023.165      0.90392574     69             9              38           
+      5500   533.83622     -179338.2       0.90392574     70             9              41           
+      5750   533.65206     -9994.6046      0.90392574     71             9              45           
+      6000   529.82185     -8416.1706      0.90392574     72             9              46           
+      6250   531.81262     -71335.905      0.90392574     74             9              50           
+      6500   542.45727     -208291.06      0.90392574     75             9              51           
+      6750   519.63414     -8612.4281      0.90392574     75             9              51           
+      7000   530.64062     -10287.366      0.90392574     75             9              51           
+      7250   520.41821     -8764.4035      0.90392574     75             9              52           
+      7500   531.01859     -7844.5152      0.90392574     77             11             53           
+      7750   527.27692     -9686.8375      0.90392574     77             12             54           
+      8000   536.78229     -10465.507      0.90392574     78             12             54           
+      8250   517.53142     -18790.931      0.90392574     78             12             55           
+      8500   547.23107     -11464.695      0.90392574     78             12             57           
+      8750   529.14376     -9877.1628      0.90392574     78             12             57           
+      9000   526.70037     -12063.703      0.90392574     78             12             58           
+      9250   541.9196      -8608.9846      0.90392574     79             12             59           
+      9500   516.09736     -8818.5419      0.90392574     79             13             59           
+      9750   548.34487     -26718.708      0.90392574     79             13             62           
+     10000   530.89214     -11239.132      0.90392574     79             13             62           
+Loop time of 230.245 on 1 procs for 10000 steps with 3392 atoms
 
-Performance: 14.952 ns/day, 1.605 hours/ns, 173.060 timesteps/s, 581.828 katom-step/s
-800.5% CPU use with 1 MPI tasks x 8 OpenMP threads
+Performance: 3.753 ns/day, 6.396 hours/ns, 43.432 timesteps/s, 147.322 katom-step/s
+99.4% CPU use with 1 MPI tasks x no OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 64.977     | 64.977     | 64.977     |   0.0 | 22.49
-Bond    | 41.842     | 41.842     | 41.842     |   0.0 | 14.48
-Kspace  | 89.673     | 89.673     | 89.673     |   0.0 | 31.04
-Neigh   | 10.26      | 10.26      | 10.26      |   0.0 |  3.55
-Comm    | 2.3969     | 2.3969     | 2.3969     |   0.0 |  0.83
-Output  | 0.0014998  | 0.0014998  | 0.0014998  |   0.0 |  0.00
-Modify  | 79.395     | 79.395     | 79.395     |   0.0 | 27.48
-Other   |            | 0.372      |            |       |  0.13
+Pair    | 92.741     | 92.741     | 92.741     |   0.0 | 40.28
+Bond    | 51.39      | 51.39      | 51.39      |   0.0 | 22.32
+Kspace  | 11.155     | 11.155     | 11.155     |   0.0 |  4.85
+Neigh   | 19.65      | 19.65      | 19.65      |   0.0 |  8.53
+Comm    | 0.625      | 0.625      | 0.625      |   0.0 |  0.27
+Output  | 2.331      | 2.331      | 2.331      |   0.0 |  1.01
+Modify  | 52.174     | 52.174     | 52.174     |   0.0 | 22.66
+Other   |            | 0.1784     |            |       |  0.08
 
-Nlocal:           3362 ave        3362 max        3362 min
+Nlocal:           3392 ave        3392 max        3392 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Nghost:          11353 ave       11353 max       11353 min
+Nghost:          12379 ave       12379 max       12379 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Neighs:         780474 ave      780474 max      780474 min
+Neighs:         654516 ave      654516 max      654516 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 
-Total # of neighbors = 780474
-Ave neighs/atom = 232.14575
-Ave special neighs/atom = 6.9411065
-Neighbor list builds = 2245
+Total # of neighbors = 654516
+Ave neighs/atom = 192.95873
+Ave special neighs/atom = 10.228774
+Neighbor list builds = 822
 Dangerous builds = 0
+System init for write_restart ...
+PPPM initialization ...
+  using 12-bit tables for long-range coulomb (../kspace.cpp:342)
+  G vector (1/distance) = 0.23923374
+  grid = 6 15 15
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.01750679
+  estimated relative force accuracy = 5.2721177e-05
+  using double precision KISS FFT
+  3d grid and FFT values/proc = 4400 1350
+Generated 21 of 21 mixed pair_coeff terms from sixthpower/sixthpower mixing rule
 System init for write_data ...
 PPPM initialization ...
-WARNING: System is not charge neutral, net charge = -28.47454 (src/kspace.cpp:327)
-  using 12-bit tables for long-range coulomb (src/kspace.cpp:342)
-  G vector (1/distance) = 0.33233418
-  grid = 25 25 25
+  using 12-bit tables for long-range coulomb (../kspace.cpp:342)
+  G vector (1/distance) = 0.23923374
+  grid = 6 15 15
   stencil order = 5
-  estimated absolute RMS force accuracy = 0.0034739924
-  estimated relative force accuracy = 1.0461825e-05
+  estimated absolute RMS force accuracy = 0.01750679
+  estimated relative force accuracy = 5.2721177e-05
   using double precision KISS FFT
-  3d grid and FFT values/proc = 32768 15625
-Generated 66 of 66 mixed pair_coeff terms from sixthpower/sixthpower mixing rule
-Last active /omp style is kspace_style pppm/omp
+  3d grid and FFT values/proc = 4400 1350
+Generated 21 of 21 mixed pair_coeff terms from sixthpower/sixthpower mixing rule
+Total wall time: 0:03:50
