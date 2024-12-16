@@ -30,7 +30,7 @@ molecule mol6 P-P_post.lmpmol
 
 thermo 250
 
-fix rxn1 all bond/react stabilization yes statted_grp 0.03 &
+fix rxn all bond/react stabilization yes statted_grp 0.03 &
  react R1 all 1 0 3.0 mol1 mol2 M-M.rxnmap stabilize_steps 100 &
  react R2 all 1 0 3.0 mol3 mol4 M-P.rxnmap stabilize_steps 100 &
  react R3 all 1 0 5.0 mol5 mol6 P-P.rxnmap stabilize_steps 100
@@ -39,7 +39,7 @@ fix 1 statted_grp_REACT nvt temp 530 530 100
 
 fix 4 bond_react_MASTER_group temp/rescale 1 530 530 1 1
 
-thermo_style custom step temp press density f_rxn1[*]
+thermo_style custom step temp press density f_rxn[*]
 
 dump mydmp all image 1000 dump.mixing.*.ppm &
   type type shiny 0.1 box no 0.01 &

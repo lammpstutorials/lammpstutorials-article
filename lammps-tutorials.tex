@@ -419,7 +419,7 @@ Additionally, these files can be downloaded by clicking \guicmd{Start LAMMPS Tut
 
 In the following, all LAMMPS input or console commands are formatted
 with a \lmpcmd{colored background}.  Keyboard shortcuts and
-file names are formatted in \flecmd{monospace}, and LAMMPS-GUI options and menus
+file names are formatted in \flecmd{monospace}, and LAMMPS--GUI options and menus
 are in \guicmd{quoted monospace}.
 % S.G.: I removed "folder names" because all folders will eventually be removed (TO CONTROL BEFORE SUBMITTING)
 % S.G.: I removed "Section titles" as well because it seems to be using a different style
@@ -1550,7 +1550,7 @@ to break if the applied deformation is large enough.
 
 \paragraph{Input file initialization}
 
-Open the input named 
+Open the input named
 \href{\filepath tutorial2/breakable.lmp}{\dwlcmd{breakable.lmp}} that should have
 been downloaded next to \lmpcmd{unbreakable.lmp} during the tutorial setup.
 There are only a few differences with the previous input.  First, the \lmpcmd{metal}
@@ -1767,7 +1767,7 @@ This tutorial uses type labels \cite{typelabel_paper} to map each of the
 numeric atom types with a string (see the \flecmd{parameters.inc} file):
 \lmpcmdnote{labelmap atom 1 OE 2 C 3 HC 4 H 5 CPos 6 OAlc 7 OW 8 HW}
 Therefore, the oxygen and hydrogen atoms of water (respectively types 7 and 8)
-can be referred to as `OW' and `HW', respectively.  Similar maps are used for 
+can be referred to as `OW' and `HW', respectively.  Similar maps are used for
 the bond types, angle types, and dihedral types.
 \end{note}
 
@@ -1999,7 +1999,7 @@ See a snapshot of the system in Fig.\,\ref{fig:PEG-solvated}.
 \subsubsection{Stretching the PEG molecule}
 
 Here, a constant force is applied to both ends of the PEG molecule until it
-stretches.  Open the file named \flecmd{pull.lmp}, which 
+stretches.  Open the file named \flecmd{pull.lmp}, which
 only contains two lines:
 \begin{lstlisting}
 kspace_style pppm 1e-5
@@ -2029,7 +2029,7 @@ Add the following \lmpcmd{dump} command to create images of the system:
 \begin{lstlisting}
 dump viz all image 250 myimage-*.ppm type &
   type shiny 0.1 box no 0.01 &
-  view 0 90 zoom 3 fsaa yes bond atom 0.8 size 1000 500 
+  view 0 90 zoom 3 fsaa yes bond atom 0.8 size 1000 500
 dump_modify viz backcolor white &
   acolor OW red acolor HW white &
   acolor OE darkred acolor OAlc darkred &
@@ -2399,7 +2399,7 @@ angle_style harmonic
 pair_style lj/cut/tip4p/long O H O-H H-O-H 0.1546 12.0
 kspace_style pppm/tip4p 1.0e-5
 kspace_modify slab 3.0
-    
+
 read_data create.data
 
 include parameters.inc
@@ -2659,7 +2659,7 @@ dump_modify mydmp backcolor white &
 
 thermo 250
 thermo_modify temp Tfluid
-thermo_style custom step temp etotal f_mysf1[1] f_mysf2[1] 
+thermo_style custom step temp etotal f_mysf1[1] f_mysf2[1]
 \end{lstlisting}
 Let us also extract the density and velocity profiles using
 the \lmpcmd{chunk/atom} and \lmpcmd{ave/chunk} commands.  These commands are
@@ -2812,7 +2812,7 @@ You can generate histograms of the charges for each atom type using
 fix myhis1 grpSi ave/histo 10 500 5000 -1.5 2.5 1000 v_vq &
   file relax-Si.histo mode vector
 fix myhis2 grpO ave/histo 10 500 5000 -1.5 2.5 1000 v_vq &
-  file relax-O.histo mode vector    
+  file relax-O.histo mode vector
 \end{lstlisting}
 We can also use the \lmpcmd{fix reaxff/species} to evaluate what species are
 present within the simulation.  It will be useful later when the system is deformed,
@@ -3163,7 +3163,7 @@ Let us also print the box volume and system density, alongside the
 temperature and total energy:
 \begin{lstlisting}
 thermo 250
-thermo_style custom step temp etotal vol density 
+thermo_style custom step temp etotal vol density
 \end{lstlisting}
 
 % SG
@@ -3188,7 +3188,7 @@ fix mynvt all nvt temp 6000 300 0.1
 run 30000
 \end{lstlisting}
 In the third step, the system is equilibrated at the final desired
-conditions, $T = 300\,\text{K}$ and $p = 1\,\text{atm}$, 
+conditions, $T = 300\,\text{K}$ and $p = 1\,\text{atm}$,
 using an anisotropic pressure coupling:
 \begin{lstlisting}
 unfix mynvt
@@ -3461,7 +3461,7 @@ option for water is used to specify that the number of molecules will not be con
 Finally, let us use the \textit{fix gcmc} and perform the grand canonical Monte
 Carlo steps.  Add the following lines into \flecmd{gcmc.lmp}:
 \begin{lstlisting}
-variable tfac equal 5.0/3.0 
+variable tfac equal 5.0/3.0
 fix fgcmc H2O gcmc 100 100 0 0 65899 300 -0.5 0.1 &
   mol h2omol tfac_insert ${tfac} shake shak &
   full_energy pressure 100
@@ -3802,7 +3802,7 @@ create_box 2 myreg
 create_atoms 2 single 0 0 0
 create_atoms 1 random 199 34134 myreg overlap 3 maxtry 50
 \end{lstlisting}
-Next, we assign the same mass and LJ parameters to both atom types 
+Next, we assign the same mass and LJ parameters to both atom types
 1 and 2, and place the atoms of type 2 into a group named \lmpcmd{topull}:
 \begin{lstlisting}
 mass * 39.948
@@ -3936,7 +3936,7 @@ and $x_0 = 10~\text{\AA{}}$.}
 \centering
 \includegraphics[width=\linewidth]{REACT}
 \caption{Initial configuration for \hyperref[bond-react-label]{Tutorial 8}.
-The system consists of 1000 styrene molecules packed around a single-walled
+The system consists of 200 styrene molecules packed around a single-walled
 CNT with a total system density of 0.9 g/cm$^3$.}
 \label{fig:REACT}
 \end{figure}
@@ -3983,25 +3983,21 @@ containing a periodic single-walled CNT. Add the following lines to \textit{mixi
 {\normalsize
 \begin{verbatim}
 read_data CNT.data &
-  extra/bond/per/atom 5  &
-  extra/angle/per/atom 15 &
-  extra/dihedral/per/atom 15 &
-  extra/improper/per/atom 25 &
-  extra/special/per/atom 25
+  extra/special/per/atom 20
 \end{verbatim}
 }
-The CNT is about $(1.1\,\text{nm})^3$ in diameter and $(8.7\,\text{nm})^3$ long.
-The box is $(8\,\text{nm})^3$ in the other dimensions, so filling the box with
+The CNT is about 1.1 nm in diameter and 1.6 nm long.
+The box is 5.2 nm in the other dimensions, so filling the box with
 styrene monomers will be easy.
 % S.G.: @jrgissing, here we could describe the content of nylon.data.
 % How was it created, what is the specifity of the molecules involved, etc...
 
-To add 1000 styrene molecules to the simulation box, add the following commands
+To add 200 styrene molecules to the simulation box, add the following commands
 to \textit{mixing.lmp}:
 {\normalsize
 \begin{verbatim}
 molecule styrene styrene.lmpmol
-create_atoms 0 random 1000 8305 NULL &
+create_atoms 0 random 200 8305 NULL &
 overlap 2.75 maxtry 500 mol styrene 7687
 \end{verbatim}
 }
@@ -4012,25 +4008,11 @@ minimize 1.0e-4 1.0e-6 100 1000
 reset_timestep 0
 \end{verbatim}
 }
-Then, let us use \textit{dump image} to output images every 1000 steps:
-{\normalsize
-\begin{verbatim}
-  dump mydmp all image 1000 dump.mix.*.ppm &
-    type type shiny 0.1 box no 0.01 &
-    view 90 0 zoom 3 fsaa yes bond atom 0.5
-  dump_modify mydmp backcolor white &
-    acolor cp gray acolor c=1 gray &
-    acolor c= gray acolor c1 gray &
-    acolor c2 gray acolor c3 gray &
-    adiam cp 0.3 adiam c=1 0.3 &
-    adiam c= 0.3 adiam c1 0.3 &
-    adiam c2 0.3 adiam c3 0.3 &
-    acolor hc white adiam hc 0.15
-\end{verbatim}
-}
-Then, let us density the system to a target value of  a short equilibration of system using \textit{fix npt}
-with a isotropic couplage. To speed up the equilibration of the system, let us
-impose a relatively large pressure of 1000\,atm for the first 10\,ps:
+Then, let us densify the system to a target value of 0.9 g/cm$^3$
+by manually shrinking the simulation box at a constant rate. The dimension parallel
+to the CNT axis will remain fixed, since the CNT is periodic in that direction.
+The \textit{fix halt} feature is used to stop the box shrinkage once the target density is
+reached.
 {\normalsize
 \begin{verbatim}
 velocity all create 300.0 9845 dist gaussian &
@@ -4042,22 +4024,49 @@ fix 2 all deform 1 y erate -0.0001 &
 variable rho equal density
 fix 3 all halt 10 v_rho > 0.9 error continue
 
-thermo 1000
+thermo 500
 thermo_style custom step temp pe etotal press &
-density vol
+density
 
 run 9000
 \end{verbatim}
 }
-Then, for the following 10\,ps, let us continue the equilibration
-in the same constant-volume ensemble, and write the final state of the
+For the next stage of the simulation, we will use \textit{dump image} to
+output images every 1000 steps:
+{\normalsize
+\begin{verbatim}
+dump mydmp all image 1000 dump.mix.*.ppm &
+  type type shiny 0.1 box no 0.01 &
+  view 90 0 zoom 3 fsaa yes bond atom 0.5
+dump_modify mydmp backcolor white &
+  acolor cp gray acolor c=1 gray &
+  acolor c= gray acolor c1 gray &
+  acolor c2 gray acolor c3 gray &
+  adiam cp 0.3 adiam c=1 0.3 &
+  adiam c= 0.3 adiam c1 0.3 &
+  adiam c2 0.3 adiam c3 0.3 &
+  acolor hc white adiam hc 0.15
+\end{verbatim}
+}
+For the following 10\,ps, let us equilibrate the densified system
+in the constant-volume ensemble, and write the final state of the
 system in a file named \textit{CNT-PS-mix.data}:
 {\normalsize
 \begin{verbatim}
 unfix 2
 unfix 3
+reset_timestep 0
 
-run 10000
+run 9999
+\end{verbatim}
+}
+For visualization purposes, let us move the CNT to the center of the simulation box.
+{\normalsize
+\begin{verbatim}
+fix centralize CNT recenter 0 0 0 units box &
+  shift all
+run 1
+
 write_data CNT-PS-mix.data
 \end{verbatim}
 }
@@ -4134,7 +4143,7 @@ read_data CNT-PS-mix.data &
 \end{verbatim}
 }
 Here, the \textit{read$\_$data} command is used to import \textit{cnt-nylon-mix.data}.
-Then, let us import all six molecules template using the \textit{molecule} command:
+Then, let us import all six molecules templates using the \textit{molecule} command:
 {\normalsize
 \begin{verbatim}
 molecule mol1 M-M_pre.lmpmol
@@ -4165,7 +4174,7 @@ of the system using \textit{dump image}:
 Then, using the \textit{fix bond/react},
 {\normalsize
 \begin{verbatim}
-fix myrxns all bond/react &
+fix rxn all bond/react &
   stabilization yes statted_grp 0.03 &
   react R1 all 1 0 3.0 mol1 mol2 M-M.rxnmap &
   react R2 all 1 0 3.0 mol3 mol4 M-P.rxnmap &
@@ -4173,7 +4182,7 @@ fix myrxns all bond/react &
 \end{verbatim}
 }
 With the \textit{stabilization} keyword, the \textit{bond/react} command will
-try to stabilize the atoms involved in the reaction using the \textit{nve/limit}
+stabilize the atoms involved in the reaction using the \textit{nve/limit}
 command with a maximum displacement of $0.03\,\mathrm{\AA{}}$ (a command that was
 used, for instance, in \hyperref[sheared-confined-label]{Tutorial 4}). The three
 \textit{react} keywords contain specific details about the three reactions
@@ -4185,17 +4194,17 @@ equation of motion and control the temperature of the system:
 {\normalsize
 \begin{verbatim}
 fix mynvt statted_grp_REACT nvt $
-  temp 300 300 100
+  temp 530 530 100
 
 thermo 1000
-thermo_style custom step temp pe $
-  etotal press f_myrxns[*]
+thermo_style custom step temp press $
+  density f_rxn[*]
 
-run 50000
+run 10000
 \end{verbatim}
 }
 Here, in addition, the \textit{thermo custom} command was called and was
-asked to print the cumulative reaction counts from \textit{fix myrxns}.
+asked to print the cumulative reaction counts from \textit{fix rxn}.
 The number of reaction, $N_r$, can be seen to increase with time
 (Fig.\,\ref{fig:evolution-reacting}). The final configuration with polymer
 chain unwrapped from the simulation box is shown in Fig.\,\ref{fig:REACTED_VMD}).
@@ -4366,7 +4375,7 @@ the syntax highlighting.  When you press the \texttt{Tab} key, the line will be
 reformatted.  Consistent formatting can improve the readability of
 input files, especially long and complex ones.
 
-If the file in the editor has unsaved changes, the word 
+If the file in the editor has unsaved changes, the word
 ``\*modified\*'' will appear in the window title.  The current input
 buffer can be saved by selecting ``Save'' or ``Save As...'' from the
 ``File'' menu.  You can also click the ``Save'' icon on the left side
