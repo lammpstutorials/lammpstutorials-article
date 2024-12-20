@@ -196,10 +196,10 @@
 
 \section{Introduction}
 
-Molecular simulations (MS) can be used to model a large variety of
-atomic, coarse--grained systems, including solids, fluids, polymers, and
+Molecular Simulations (MS) can be used to model a large variety of
+atomic and coarse--grained systems, including solids, fluids, polymers, and
 biomolecules, as well as complex interfaces and multi-component systems.
-Various MS methods exist -- molecular dynamics (MD) and Monte Carlo (MC)
+Various MS methods exist -- Molecular Dynamics (MD) and Monte Carlo (MC)
 being among the most commonly used.  MD is the preferred method for
 obtaining the accurate dynamics of a system, as it relies on solving
 Newton's equations of motion.  For systems with many degrees of freedom
@@ -217,7 +217,7 @@ viscosity), and mechanical responses (e.g.~elastic constant, Poisson
 ratio).  Some of these quantities can be directly compared with
 experimental data, enabling the validation of the simulated system,
 while others, available only through simulations, are often useful for
-interpreting experimental data \cite{van2008molecular}.
+interpreting experimental data~\cite{van2008molecular}.
 
 LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator)
 \cite{lammps_home} is a highly flexible and parallel open-source MS
@@ -231,34 +231,28 @@ supercomputing system.  It can efficiently handle complex and large-scale
 simulations, including hybrid MPI--OpenMP parallelization
 and MPI + GPU acceleration (for a subset of its functionality).
 
-However, LAMMPS requires users to provide detailed input files that can
-be challenging to write correctly, considering the overwhelming number
-of features and options offered by LAMMPS.  While LAMMPS has
-extensive and detailed documentation, it can be difficult for new users
-to navigate.  While it focuses on describing \emph{all} available
-features, it assumes users already know which to choose.  Many of
-the advanced features are not relevant to most users, and the defaults
-usually adequate; thus, the level of detail in the manual can become
-distracting.
-
-In addition to the intrinsic complexity of LAMMPS, performing accurate
-MS requires several complex and system-specific decisions related
-to the physics to be modeled, such as selecting the thermodynamic
+LAMMPS requires users to write detailed input files, a task that
+can be particularly challenging for new users.  Although its
+documentation extensively describes all available features~\cite{lammps_docs},
+navigating it can be challenging.  Much of the information may be
+unnecessary for common use cases, and the detailed manual can
+often feel overwhelming.  Beyond the intrinsic complexity of LAMMPS, performing accurate
+MS requires several complex, system-specific decisions regarding
+the physics to be modeled, such as selecting the thermodynamic
 ensemble (e.g.~micro-canonical, grand-canonical), determining the
 simulation duration, and choosing the sets of parameters describing the
 interactions between atoms (the so-called force field)
-\cite{van2018validation}.  These choices are independent of the
-simulation software, though they can sometimes be limited by the availability of
-features in a given package.  The tutorials presented in this
-article aim to flatten the learning curve, and help users perform
-accurate and reliable MS using LAMMPS.
+\cite{wong2016good, van2018validation, prasad2018best}.  While these choices are independent of the
+simulation software, they may occasionally be constrained by the
+features available in a given package.  The tutorials in this
+article aim to ease the learning curve and guide users in
+performing accurate, reliable MS with LAMMPS.
 
 \subsection{Scope}
 
-This set of tutorials consists of seven tutorials arranged in order of
+This set of tutorials consists of eight tutorials arranged in order of
 increasing difficulty.  The novelties associated with each tutorial are
 briefly described below.
-% S.G. update to 8 tutorials
 
 In \hyperref[lennard-jones-label]{tutorial 1}, the structure of LAMMPS
 input files is illustrated through the creation of a simple atomic
@@ -268,49 +262,54 @@ run a simple MD simulation in the microcanonical (NVE) and canonical (NVT)
 ensembles.
 
 In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system
-is introduced where atoms are connected by bonds: a small carbon
+is introduced, where atoms are connected by bonds: a small carbon
 nanotube.  The use of both classical and reactive force fields (here,
 AIREBO) is illustrated.  An external deformation is applied to the CNT,
-and its deformation is measured.  This tutorial also illustrates the use
-of an external visualization tool to visualize breaking bonds, and
-demonstrates how available LAMMPS features can be used to do the same
-without an external tool.
+and its deformation is measured.  This tutorial also demonstrates the use
+of an external tool to visualize breaking bonds, and show the possibility
+to import LAMMPS-generated YAML log files into Python. %, and
+% demonstrates how available LAMMPS features can be used to do the same
+% without an external tool. SG: I removed the last part as it not really one
+% of the main goal of tutorial 2.
 
-In \hyperref[all-atom-label]{tutorial 3}, two components, liquid water
-and a polymer molecule, are merged and equilibrated.  A long-range
+In \hyperref[all-atom-label]{tutorial 3}, two components --
+liquid water (flexible three-point model) and a polymer molecule -- are merged and equilibrated.  A long-range
 solver is used to handle the electrostatic interactions accurately, and
 the system is equilibrated in the isothermal-isobaric (NPT) ensemble.  A
-stretching force is then applied to the polymer.  This tutorial also
-demonstrates the use of molecule files and type labels
-\cite{typelabel_paper} to make molecule files more generic.
+stretching force is applied to the polymer.  Through this relatively
+complex solvated polymer system, the tutorial demonstrates how to use
+type labels to make molecule files more generic and easier to manage~\cite{typelabel_paper}.
 
-In \hyperref[sheared-confined-label]{tutorial 4}, a fluid confined by
-two walls is simulated, illustrating the specifics of simulating systems
-with fluid-solid interfaces.  This tutorial involves a slightly more
-complex water model than \hyperref[all-atom-label]{tutorial 3}: the
-four-point TIP4P model.  In this tutorial, non-equilibrium MD is
-performed through the imposed shearing of the fluid by the moving walls.
+In \hyperref[sheared-confined-label]{tutorial 4}, an electrolyte is confined between
+two walls, illustrating the specifics of simulating systems
+with fluid-solid interfaces.  The tutorial uses a slightly more
+complex water model than \hyperref[all-atom-label]{tutorial 3}: the rigid
+four-point model, TIP4P/2005~\cite{abascal2005general}.  Non-equilibrium MD is
+performed by imposing shear on the fluid through the moving walls,
+and the fluid velocity profile is extracted.
 
 In \hyperref[reactive-silicon-dioxide-label]{tutorial 5}, the ReaxFF
-reactive force field is used.  ReaxFF includes charge equilibration
-(QEq) and thus this tutorial describes a situation where the partial
-charges of the atoms adapt to their local environment and demonstrates
-how to visualize that.
+reactive force field is used, specifically designed
+to simulate chemical reactions by dynamically adjusting
+atomic interactions \cite{van2001reaxff}.  ReaxFF includes charge equilibration
+(QEq), a method that allows the partial charges of atoms
+to adjust according to their local environment.
 
 In \hyperref[gcmc-silica-label]{tutorial 6}, a Monte Carlo simulation in
-the Grand Canonical ensemble is implemented to illustrate the use of
-LAMMPS for simulating an open system that can exchange particles with a
-reservoir.
+the Grand Canonical ensemble is implemented to demonstrate how
+LAMMPS can be used to simulate an open system that exchange
+particles with a reservoir.
 
 In \hyperref[umbrella-sampling-label]{tutorial 7}, an advanced free
-energy method called umbrella sampling is implemented.  Through the
-calculation of an energy barrier, this tutorial describes a protocol
-that can be used to deal with energy landscapes that prevent their
-sampling through classical MD or MC methods.
+energy method called umbrella sampling is implemented.  By calculating
+an energy barrier, this tutorial describes a protocol
+for addressingh energy landscapes that are difficult to sample using
+classical MD or MC methods.
 
-% AK: As an additional justification for type labels, there could be an
-% 8th tutorial added showcasing fix bond/react, possibly based on one of
-% examples bundled with LAMMPS. Jake?
+In \hyperref[bond-react-label]{tutorial 8}, a CNT embedded in
+nylon-6,6 polymer melt is simulated. The
+REACTER protocol is used to model the polymerization of nylon, and the formation
+of water molecules is tracked over time~\cite{gissinger2020reacter}.
 
 \section{Prerequisites}
 
@@ -318,7 +317,7 @@ sampling through classical MD or MC methods.
 
 This set of tutorials assumes no prior knowledge of the LAMMPS software
 itself.  Completing the tutorials requires a text editor and
-a suitable LAMMPS executable.  We use LAMMPS--GUI \cite{lammps_gui_docs}
+a suitable LAMMPS executable.  We use LAMMPS--GUI~\cite{lammps_gui_docs}
 here since it has features that make it particularly convenient for
 tutorials, but other console or graphical text editors like GNU nano,
 vi/vim, Emacs, Notepad, Gedit, Visual Studio Code can also be
@@ -329,20 +328,20 @@ commands from a terminal or command--line prompt.
 In addition, prior knowledge of the theoretical basics of molecular
 simulations and statistical physics is highly beneficial.  Users may
 refer to textbooks like \textit{Understanding Molecular Simulation} by
-Daan Frenkel and Berend Smit \cite{frenkel2023understanding}, as well as
+Daan Frenkel and Berend Smit~\cite{frenkel2023understanding}, as well as
 \textit{Computer Simulation of Liquids} by Michael Allen and Dominic
-Tildesley \cite{allen2017computer}.  Additionally, to better understand
+Tildesley~\cite{allen2017computer}.  Additionally, to better understand
 the fundamental concepts behind soft matter systems simulated in these
 tutorials, users can refer to \textit{Basic Concepts for Simple and
   Complex Liquids} by Jean-Louis Barrat and Jean-Pierre Hansen
 \cite{barrat2003basic}, as well as \textit{Theory of Simple Liquids:
   with Applications to Soft Matter} by Jean-Pierre Hansen and Ian Ranald
-McDonald \cite{hansen2013theory}.
+McDonald~\cite{hansen2013theory}.
 
 \subsection{Software/system requirements}
 % AK: FIXME fill in the version dates and numbers for the next stable version
 
-The LAMMPS release version 29Aug2024 \cite{lammps_code} and the
+The LAMMPS release version 29Aug2024~\cite{lammps_code} and the
 matching LAMMPS--GUI software version 1.6.11 are required to follow the
 tutorials, as they use features that first appeared in these versions.
 For Linux (with x86\_64 CPU), macOS (BigSur or later), and Windows (10
@@ -367,10 +366,10 @@ and take advantage of new features in the most recent stable version of LAMMPS.
 For advanced tutorials, external tools are required for plotting and
 visualization, since the corresponding functionality in LAMMPS--GUI is
 limited.  Suitable external tools for plotting include Python with
-Pandas/Matplotlib \cite{van1995python,hunter2007Matplotlib}, XmGrace,
+Pandas/Matplotlib~\cite{van1995python,hunter2007Matplotlib}, XmGrace,
 Gnuplot, Microsoft Excel, and LibreOffice Calc.  For
-visualization, suitable external tools include VMD \cite{vmd_home,humphrey1996vmd}
-and OVITO \cite{ovito_home,ovito_paper}.
+visualization, suitable external tools include VMD~\cite{vmd_home,humphrey1996vmd}
+and OVITO~\cite{ovito_home,ovito_paper}.
 
 \hyperref[command-line-label]{Appendix \ref{command-line-label}} has instructions
 for running LAMMPS from the command line.
@@ -404,7 +403,7 @@ like Notepad or Gedit but offers the following enhancements specifically for LAM
 \hyperref[using-lammps-gui-label]{Appendix \ref{using-lammps-gui-label}}
 contains basic instructions for installation and using LAMMPS--GUI with
 the tutorials presented here.  A complete description of all LAMMPS--GUI
-features is in the LAMMPS manual \cite{lammps_gui_docs}.
+features is in the LAMMPS manual~\cite{lammps_gui_docs}.
 
 \section{Content and links}
 
@@ -432,7 +431,7 @@ using LAMMPS.  The system consists of a Lennard-Jones fluid composed of neutral
 particles with two different effective diameters, contained within a
 cubic box with periodic boundary conditions (Fig.\,\ref{fig:LJ}).  In
 this tutorial, the temperature of the system is maintained using a
-Langevin thermostat \cite{schneider1978molecular}, and basic quantities,
+Langevin thermostat~\cite{schneider1978molecular}, and basic quantities,
 including the potential and kinetic energies, are calculated from the
 simulation.
 
@@ -682,7 +681,7 @@ This tells LAMMPS to perform an energy minimization of the system.  That
 is, LAMMPS will compute the forces on all atoms and then update the
 positions according to a selected algorithm so that the potential energy
 decreases.  By default, LAMMPS uses the conjugate gradient (CG)
-algorithm \cite{hestenes1952methods}.  The simulation will stop as soon
+algorithm~\cite{hestenes1952methods}.  The simulation will stop as soon
 as the minimizer algorithm cannot find a way to lower the potential
 energy.  Except for trivial systems, minimization algorithms will find a
 local minimum rather than the global minimum.
@@ -790,7 +789,7 @@ The new command adds a Langevin thermostat to the atoms in the group
 \lmpcmd{all}, with a desired target temperature of 1.0 temperature units
 throughout the run (the two numbers stand for the target at the beginning
 and at the end of the run, which allows for a temperature ramp if
-they differ) \cite{schneider1978molecular}.  A \lmpcmd{damping}
+they differ)~\cite{schneider1978molecular}.  A \lmpcmd{damping}
 parameter of 0.1 is used.  The \lmpcmd{damping} parameter determines how
 rapidly the temperature is relaxed to its desired value.  In a Langevin
 thermostat, the atoms are subject to friction and random noise (in the form
@@ -1104,15 +1103,15 @@ keyword in the Langevin thermostat, which ensures that the total random
 force applied to the atoms is equal to zero.
 
 \begin{note}
-  The steps to ensure no initial linear momentum and no net random
-  force are important to prevent the system from starting to drift or move as a
-  whole.  For a bulk system with periodic boundary conditions, it is
-  expected to remain in place.  Thus, when computing the temperature from the
-  kinetic energy, we use $3N-3$ degrees of freedom since there is no
-  global translation.  In a drifting system, some of the kinetic energy is
-  due to the drift, which means the system itself cools down.  In
-  extreme cases, it can freeze and drift very fast.  This phenomenon is
-  sometimes referred to as the ``flying ice cube syndrome'' \cite{wong2016good}.
+The steps to ensure no initial linear momentum and no net random
+force are important to prevent the system from starting to drift or move as a
+whole.  For a bulk system with periodic boundary conditions, it is
+expected to remain in place.  Thus, when computing the temperature from the
+kinetic energy, we use $3N-3$ degrees of freedom since there is no
+global translation.  In a drifting system, some of the kinetic energy is
+due to the drift, which means the system itself cools down.  In
+extreme cases, it can freeze and drift very fast.  This phenomenon is
+sometimes referred to as the ``flying ice cube syndrome''~\cite{wong2016good}.
 \end{note}
 
 Run \flecmd{improved.md.lmp} and observe the mixing of the two populations
@@ -1181,9 +1180,9 @@ In this tutorial, the system of interest is a small, single-walled
 carbon nanotube (CNT) in an empty box (Fig.\,\ref{fig:CNT}).  The CNT is
 strained by fixing atoms at one end and moving atoms at the
 other end with constant velocity.  To illustrate the difference between
-conventional \cite{typelabel_paper} and reactive force fields, this
+conventional~\cite{typelabel_paper} and reactive force fields, this
 tutorial is divided into two parts: in the first part, a conventional molecular force
-field (called OPLS-AA \cite{jorgensenDevelopmentTestingOPLS1996}) is
+field (called OPLS-AA~\cite{jorgensenDevelopmentTestingOPLS1996}) is
 used and the bonds between the atoms of the CNT are unbreakable.  In the
 second part, a reactive force field (called AIREBO
 \cite{stuart2000reactive}) is used, allowing for the breaking of
@@ -1279,7 +1278,7 @@ This data file does not contain any sections with potential parameters; thus,
 we need to specify the parameters of both the bonded and
 non-bonded potentials.  The parameters we use are taken
 from the OPLS-AA (Optimized Potentials for Liquid Simulations-All-Atom)
-force field \cite{jorgensenDevelopmentTestingOPLS1996}, and are given
+force field~\cite{jorgensenDevelopmentTestingOPLS1996}, and are given
 in a separate \lmpcmd{unbreakable.inc} file.  This file must be placed within the same
 directory as the input file \flecmd{unbreakable.lmp}, and contains the following lines:
 \begin{lstlisting}
@@ -1309,7 +1308,7 @@ incorporate it using the \lmpcmd{include} command.  Using \lmpcmd{include} allow
 us to conveniently reuse the parameter settings
 in other inputs or switch them with others.  This will become more general
 when using type labels, which is shown in the next
-tutorial \cite{typelabel_paper}.
+tutorial~\cite{typelabel_paper}.
 
 \paragraph{Prepare the initial state}
 
@@ -1405,7 +1404,7 @@ The \lmpcmd{fix nve} are applied to the atoms of \lmpcmd{cnt\_top} and
 \lmpcmd{cnt\_bot}, respectively, and will ensure that the positions of the atoms
 from these groups are recalculated at every step.  The \lmpcmd{fix nvt} does the
 same for the \lmpcmd{cnt\_mid} group, while also applying a Nos\'e-Hoover thermostat
-with desired temperature of 300\,K \cite{nose1984unified, hoover1985canonical}.
+with desired temperature of 300\,K~\cite{nose1984unified, hoover1985canonical}.
 To restrain the motion of the atoms at the edges, let us add the following
 commands to \flecmd{unbreakable.lmp}:
 \begin{lstlisting}
@@ -1644,7 +1643,7 @@ simulation (Fig.\,\ref{fig:CNT-deformed-breakable}).
 \centering
 \includegraphics[width=\linewidth]{CNT-deformed-breakable}
 \caption{CNT with broken bonds.  This image was generated using
-VMD \cite{vmd_home,humphrey1996vmd} with the \guicmd{DynamicBonds} representation.}
+VMD~\cite{vmd_home,humphrey1996vmd} with the \guicmd{DynamicBonds} representation.}
 \label{fig:CNT-deformed-breakable}
 \end{figure}
 
@@ -1700,18 +1699,18 @@ polymer (PEG - PolyEthylene Glycol) in a reservoir of water (Fig.\,\ref{fig:PEG}
 Once the water reservoir is properly equilibrated at the desired temperature and
 pressure, the polymer molecule is added and a constant stretching force is applied
 to both ends of the polymer.  The evolution of the polymer length is measured as
-a function of time.  The GROMOS 54A7 force field \cite{schmid2011definition} is used
-for the PEG, the SPC/Fw model \cite{wu2006flexible} is used for the water, and the
-long-range Coulomb interactions are solved using the PPPM solver \cite{luty1996calculating}.
+a function of time.  The GROMOS 54A7 force field~\cite{schmid2011definition} is used
+for the PEG, the SPC/Fw model~\cite{wu2006flexible} is used for the water, and the
+long-range Coulomb interactions are solved using the PPPM solver~\cite{luty1996calculating}.
 This tutorial was inspired by a publication by Liese and coworkers, in which molecular
-dynamics simulations are compared with force spectroscopy experiments \cite{liese2017hydration}.
+dynamics simulations are compared with force spectroscopy experiments~\cite{liese2017hydration}.
 
 \subsubsection{Preparing the water reservoir}
 
 In this tutorial, the water reservoir is first prepared in the absence of the polymer.
 A rectangular box of water is created and equilibrated at ambient temperature and
-pressure.  The SPC/Fw water model is used \cite{wu2006flexible}, which is
-a flexible variant of the rigid SPC (simple point charge) model \cite{berendsen1981interaction}.
+pressure.  The SPC/Fw water model is used~\cite{wu2006flexible}, which is
+a flexible variant of the rigid SPC (simple point charge) model~\cite{berendsen1981interaction}.
 To set up this tutorial, select \guicmd{Start Tutorial 3} from the
 \guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.
 The editor should display the following content corresponding to \flecmd{water.lmp}:
@@ -1734,7 +1733,7 @@ for the bonds, angles, and dihedrals used in the simulation, here \lmpcmd{harmon
 With the \lmpcmd{pair\_style} named \lmpcmd{lj/cut/coul/long}, atoms interact through
 both a Lennard-Jones (LJ) potential and Coulomb interactions.  The value of $10\,\text{\AA{}}$ is the cutoff,
 and the \lmpcmd{ewald} command defines the long-range solver for the Coulomb
-interactions \cite{ewald1921berechnung}.  Finally, the \lmpcmd{special\_bonds} command, which was already seen in
+interactions~\cite{ewald1921berechnung}.  Finally, the \lmpcmd{special\_bonds} command, which was already seen in
 \hyperref[carbon-nanotube-label]{tutorial 2}, sets the LJ and Coulomb weighting
 factors for the interaction between neighboring atoms.
 
@@ -1763,7 +1762,7 @@ include parameters.inc
 \end{lstlisting}
 
 \begin{note}
-This tutorial uses type labels \cite{typelabel_paper} to map each of the
+This tutorial uses type labels~\cite{typelabel_paper} to map each of the
 numeric atom types with a string (see the \flecmd{parameters.inc} file):
 \lmpcmdnote{labelmap atom 1 OE 2 C 3 HC 4 H 5 CPos 6 OAlc 7 OW 8 HW}
 Therefore, the oxygen and hydrogen atoms of water (respectively types 7 and 8)
@@ -1811,7 +1810,7 @@ It is used here because the number of iterations performed by the \lmpcmd{minimi
 command is usually not a round number, since the minimization stops when one of
 four criteria is reached.  We will use \lmpcmd{fix npt} to control the temperature
 and pressure of the molecules with a Nosé-Hoover thermostat and barostat,
-respectively \cite{nose1984unified, hoover1985canonical, martyna1994constant}.
+respectively~\cite{nose1984unified, hoover1985canonical, martyna1994constant}.
 Add the following line into \flecmd{water.lmp}:
 \begin{lstlisting}
 fix mynpt all npt temp 300 300 100 iso 1 1 1000
@@ -1894,7 +1893,7 @@ Now that the water reservoir is equilibrated, we can safely add the PEG polymer
 to the water.  The PEG molecule topology was downloaded from the ATB repository
 \cite{malde2011automated, oostenbrink2004biomolecular}.  It has a formula
 $\text{C}_{16}\text{H}_{34}\text{O}_{9}$, and the parameters are taken from
-the GROMOS 54A7 force field \cite{schmid2011definition}.
+the GROMOS 54A7 force field~\cite{schmid2011definition}.
 
 \begin{figure}
 \centering
@@ -2049,7 +2048,7 @@ fix myrct PEG recenter 0 0 0 shift all
 \end{lstlisting}
 
 To investigate the stretching of the PEG molecule, let us compute its radius of
-gyration \cite{fixmanRadiusGyrationPolymer1962a} and the angles of its dihedral
+gyration~\cite{fixmanRadiusGyrationPolymer1962a} and the angles of its dihedral
 constraints using the following conmmands:
 \begin{lstlisting}
 compute rgyr PEG gyration
@@ -2133,11 +2132,11 @@ extracted to highlight the effect of confining a fluid on its local properties.
 This tutorial demonstrates key concepts of combining a fluid and a solid in
 the same simulation.  A major difference from the previous tutorial,
 \hyperref[all-atom-label]{Polymer in water}, is that here a rigid four-point
-water model named TIP4P/2005 is used \cite{abascal2005general}.
+water model named TIP4P/2005 is used~\cite{abascal2005general}.
 
 \begin{note}
 Four-point water models such as TIP4P/2005 are widely used as they offer a
-good compromise between accuracy and computational cost \cite{kadaoluwa2021systematic}.
+good compromise between accuracy and computational cost~\cite{kadaoluwa2021systematic}.
 \end{note}
 
 \subsubsection{System preparation}
@@ -2175,7 +2174,7 @@ LAMMPS automatically creates a four-point water molecule, assigning type O
 atoms as oxygen and type H atoms as hydrogen.  The fourth massless atom (M) of the
 TIP4P water molecule does not have to be defined explicitly, and the value of
 $0.1546\,\text{$\text{\AA{}}$}$ corresponds to the O-M distance of the
-TIP4P-2005 water model \cite{abascal2005general}.  All other atoms in the simulation
+TIP4P-2005 water model~\cite{abascal2005general}.  All other atoms in the simulation
 are treated as usual, with long-range Coulomb interactions.  Another novelty, here, is
 the use of \lmpcmd{kspace\_modify slab 3.0} that is combined with the non-periodic
 boundaries along the $z$ coordinate: \lmpcmd{boundary p p f}.  With the \lmpcmd{slab}
@@ -2309,7 +2308,7 @@ The \lmpcmd{bond\_coeff} command, used here for the O-H bond of the water
 molecule, sets both the spring constant of the harmonic potential and the
 equilibrium bond distance of $0.9572~\text{\AA{}}$.  The constant can be 0 for a
 rigid water molecule because the SHAKE algorithm will maintain the rigid
-structure of the water molecule (see below) \cite{ryckaert1977numerical, andersen1983rattle}.
+structure of the water molecule (see below)~\cite{ryckaert1977numerical, andersen1983rattle}.
 Similarly, the \lmpcmd{angle\_coeff} command for the H-O-H angle of the water molecule sets
 the force constant of the angular harmonic potential to 0 and the equilibrium
 angle to $104.52^\circ$.
@@ -2425,7 +2424,7 @@ group \lmpcmd{fluid}, only the water molecules and ions will move.
 The \lmpcmd{fix temp/berendsen} command rescales the velocities of the atoms
 to ensure the system reaches the desired temperature of $1~\text{K}$.
 The SHAKE algorithm is used in order to maintain
-the shape of the water molecules \cite{ryckaert1977numerical, andersen1983rattle}.
+the shape of the water molecules~\cite{ryckaert1977numerical, andersen1983rattle}.
 
 Let us also create images of the system and control
 the printing of thermodynamic outputs by adding the following lines
@@ -2573,7 +2572,7 @@ for the ions to diffuse across the size of the pore, i.e.~$H_\text{pore}^2/D_\te
 Using $H_\text{pore} \approx 1.2~\text{nm}$ as the final pore size
 and $D_\text{ions} \approx 1.5 \cdot 10^{-9}~\text{m}^2/\text{s}$
 as the typical diffusion coefficient for sodium chloride in water at room
-temperature \cite{mills1955remeasurement}, one finds that the equilibration
+temperature~\cite{mills1955remeasurement}, one finds that the equilibration
 should be on the order of one nanosecond.
 \end{note}
 
@@ -2713,7 +2712,7 @@ viscosity calculated at such a high shear rate may differ from the expected
 shear rate.  Note that for lower shear rates, the ratio of noise-to-signal is
 larger, and longer simulations are needed.  Another important point to consider
 is that the viscosity of a fluid next to a solid surface is typically larger
-than in bulk due to interaction with the walls \cite{wolde-kidanInterplayInterfacialViscosity2021}.
+than in bulk due to interaction with the walls~\cite{wolde-kidanInterplayInterfacialViscosity2021}.
 Therefore, one expects the present simulation to yield a viscosity that is slightly
 higher than what would be measured in the absence of walls.
 
@@ -2730,7 +2729,7 @@ higher than what would be measured in the absence of walls.
 
 The objective of this tutorial is to demonstrate how the reactive force field ReaxFF
 can be used to calculate the partial charges of a system undergoing deformation, as well as
-the formation and breaking of chemical bonds \cite{van2001reaxff, zou2012investigation}.
+the formation and breaking of chemical bonds~\cite{van2001reaxff, zou2012investigation}.
 The system simulated in this tutorial is a block of silicon dioxide $\text{SiO}_2$ (Fig.\,\ref{fig:SIO})
 which is deformed until it ruptures.  Particular attention is paid to the evolution
 of atomic charges during the deformation of the structure, with chemical reactions
@@ -2757,7 +2756,7 @@ and a \lmpcmd{.data} file is imported by the \lmpcmd{read\_data} command.
 
 The initial topology given by \href{\filepath tutorial5/silica.data}{\dwlcmd{silica.data}}
 is a small amorphous silica structure.  This structure was created using a force field called
-Vashishta \cite{vashishta1990interaction}.  If you open the \flecmd{silica.data}
+Vashishta~\cite{vashishta1990interaction}.  If you open the \flecmd{silica.data}
 file, you will find in the \lmpcmd{Atoms} section that all silicon atoms have a
 charge of $q = 1.1\,\text{e}$, and all oxygen atoms have a charge of $q = -0.55\,\text{e}$.
 Assigning the same charge to all atoms of the same type is common with many
@@ -2777,7 +2776,7 @@ allocation issues, which sometimes can trigger segmentation faults and
 \lmpcmd{bondchk} errors.  The \lmpcmd{pair\_coeff} command uses the
 \href{\filepath tutorial5/reaxCHOFe.inc}{\dwlcmd{reaxCHOFe.inc}}
 file, which should have been downloaded during the tutorial set up.  Finally, the
-\lmpcmd{fix qeq/reaxff} is used to perform charge equilibration \cite{rappe1991charge},
+\lmpcmd{fix qeq/reaxff} is used to perform charge equilibration~\cite{rappe1991charge},
 which occurs at every step.  The values 0.0 and 10.0 represent the
 low and the high cutoffs, respectively, and $1.0 \text{e} -6$ is the tolerance.
 The \lmpcmd{maxiter} sets an upper limit to the number of attempts to
@@ -2980,7 +2979,7 @@ a new column \lmpcmd{O2} appears in the \flecmd{deform.species} file.
 \subsubsection{Decorate the surface}
 
 Under ambient conditions, some of the surface $\text{SiO}_2$ atoms become chemically
-passivated by forming covalent bonds with hydrogen (H) atom \cite{sulpizi2012silica}.
+passivated by forming covalent bonds with hydrogen (H) atom~\cite{sulpizi2012silica}.
 We will add hydrogen atoms randomly to the cracked silica and observe how the
 system evolves.  To do so, we first need to modify the previously generated data
 file \flecmd{deform.data} and make space for a third atom type.
@@ -3123,7 +3122,7 @@ neigh_modify delay 1
 \end{lstlisting}
 The main difference from some of the previous tutorials is the use of the \lmpcmd{Vashishta}
 pair style.  The Vashishta potential implicitly models atomic bonds through
-energy terms dependent on interatomic distances and angles \cite{vashishta1990interaction}.
+energy terms dependent on interatomic distances and angles~\cite{vashishta1990interaction}.
 
 Let us create a box for two atom types, \lmpcmd{Si}
 of mass 28.0855\,g/mol and \lmpcmd{O} of mass 15.9994\,g/mol.
@@ -3299,7 +3298,7 @@ For further details, please refer to classical textbooks like Ref.~\citenum{fren
 combine water and silica, which necessitates the use
 of two force fields: Vashishta (for $\text{SiO}_2$), and
 TIP4P (for water).  Here, the TIP4P/2005 model is employed for the
-water \cite{abascal2005general}.  Open the \flecmd{gcmc.lmp} file, which
+water~\cite{abascal2005general}.  Open the \flecmd{gcmc.lmp} file, which
 should constain the following lines:
 \begin{lstlisting}
 units metal
@@ -3315,7 +3314,7 @@ angle_style harmonic
 \end{lstlisting}
 Combining the two force fields, Vashishta and TIP4P/2005, is achieved
 using the \lmpcmd{hybrid/overlay} pair style.  The PPPM
-solver \cite{luty1996calculating} is specified with the \lmpcmd{kspace}
+solver~\cite{luty1996calculating} is specified with the \lmpcmd{kspace}
 command, and is used to compute the long-range Coulomb interactions associated
 with \lmpcmd{tip4p/long}.  Finally, the style for the bonds
 and angles of the water molecules are defined; however, these specifications are
@@ -3411,7 +3410,7 @@ Si($\text{SiO}_2$)-O($\text{H}_2\text{O}$). Thus,  the fluid-fluid and the
 fluid-solid interactions will be adressed with by the \lmpcmd{lj/cut/tip4p/long} potential.
 The \lmpcmd{bond\_coeff} and \lmpcmd{angle\_coeff} commands set the \lmpcmd{OW-HW}
 bond length to 0.9572\,\AA, and the \lmpcmd{HW-OW-HW}
-angle to $104.52^\circ$, respectively \cite{abascal2005general}.
+angle to $104.52^\circ$, respectively~\cite{abascal2005general}.
 
 Add the following lines to \flecmd{gcmc.lmp} as well:
 \begin{lstlisting}
@@ -3424,7 +3423,7 @@ fix shak H2O shake 1.0e-5 200 0 b OW-HW &
 \end{lstlisting}
 The number of oxygen atoms from water molecules (i.e.~the number of molecules)
 is calculated by the \lmpcmd{nO} variable.  The SHAKE algorithm is used to
-maintain the shape of the water molecules over time \cite{ryckaert1977numerical, andersen1983rattle}.
+maintain the shape of the water molecules over time~\cite{ryckaert1977numerical, andersen1983rattle}.
 
 Finally, let us create images
 of the system using \lmpcmd{dump image}:
@@ -3490,7 +3489,7 @@ run 25000
 Running this simulation using LAMMPS, one can see that the number of molecules is increasing
 progressively.  When using the pressure argument, LAMMPS ignores the value of the
 chemical potential (here $\mu = -0.5\,\text{eV}$, which corresponds roughly to
-ambient conditions, i.e.~to a relative humidity $\text{RH} \approx 50\,\%$ \cite{gravelle2020multi}.)
+ambient conditions, i.e.~to a relative humidity $\text{RH} \approx 50\,\%$~\cite{gravelle2020multi}.)
 The large pressure value of 100\,bars was chosen to ensure that some successful
 insertions of molecules would occur during the short duration of this simulation.
 
@@ -3535,13 +3534,13 @@ sampling method.}
 
 \noindent The objective of this tutorial is to measure the free energy profile
 of particles through a barrier potential using two methods: free sampling and
-umbrella sampling \cite{kastner2011umbrella, allen2017computer, frenkel2023understanding} (Fig.\,\ref{fig:US}).
+umbrella sampling~\cite{kastner2011umbrella, allen2017computer, frenkel2023understanding} (Fig.\,\ref{fig:US}).
 To simplify the process and minimize computation time, the barrier potential will be
 imposed on the atoms using an additional force, mimicking the presence of a repulsive
 area in the middle of the simulation box without needing to simulate additional atoms.
 The procedure is valid for more complex systems and can be adapted to many other
 situations, such as measuring adsorption barriers near an interface or calculating
-translocation barriers through a membrane \cite{wilson1997adsorption, makarov2009computer,
+translocation barriers through a membrane~\cite{wilson1997adsorption, makarov2009computer,
 gravelle2021adsorption, loche2022molecular, hayatifar2024probing}.
 
 \subsubsection{Method 1: Free sampling}
@@ -3581,7 +3580,7 @@ Here, we begin by defining variables for the Lennard-Jones interaction
 $\sigma$ and $\epsilon$ and for the repulsive potential $U$, which are $U_0$, $\delta$, and $x_0$
 [see Eqs.\,(\ref{eq:U}-\ref{eq:F}) below].  The cut-off value of 3.822 was chosen
 to create a Weeks-Chandler-Andersen (WCA) potential, which is a truncated and
-purely repulsive LJ potential \cite{weeks1971role}.  It was calculated
+purely repulsive LJ potential~\cite{weeks1971role}.  It was calculated
 as $2^{1/6} \sigma$.  The potential is also shifted to be
 equal to 0 at the cut-off using the \lmpcmd{pair\_modify}.  The system of unit
 \lmpcmd{real}, in which energy is in kcal/mol, distance in Ångstrom, or time in
@@ -3761,12 +3760,12 @@ In such a case, employing an enhanced sampling method is recommended, as done in
 
 Umbrella sampling is a biased molecular dynamics method in which additional forces
 are added to a chosen atom to force it to explore the more unfavorable areas of
-the system \cite{kastner2011umbrella, allen2017computer, frenkel2023understanding}.
+the system~\cite{kastner2011umbrella, allen2017computer, frenkel2023understanding}.
 Here, to encourage one of the atoms to explore the central region of the box,
 we apply a potential $V$ and force it to move along the $x$-axis. The chosen path
 is called the axis of reaction. Several simulations (called windows) will be
 conducted with varying positions for the center of the applied biasing. The results
-will be analyzed using the weighted histogram analysis method (WHAM) \cite{kumar1992weighted},
+will be analyzed using the weighted histogram analysis method (WHAM)~\cite{kumar1992weighted},
 which allows for the removal of the biasing effect and ultimately deduces the
 unbiased free energy profile.
 
@@ -3893,7 +3892,7 @@ the different windows, leading to poor reconstruction of the free energy profile
 
 To generate the free energy profile from the particle positions
 saved in the \flecmd{umbrella-sampling.i.dat} files,
-we use the WHAM algorithm as implemented by Marc Grossfield \cite{grossfieldimplementation}.
+we use the WHAM algorithm as implemented by Marc Grossfield~\cite{grossfieldimplementation}.
 You can download it from \href{http://membrane.urmc.rochester.edu/?page_id=126}{Alan Grossfield}'s
 website.  The executable called \flecmd{wham} generated by following the instructions
 from the website must be placed next to \lmpcmd{umbrella-sampling.lmp}.  To apply
@@ -3944,7 +3943,7 @@ are created by the polymerization of nylon simulation using REACTER.}
 The goal of this tutorial is to create a system made of 
 carbon nanotubes (CNTs) embedded in a polymer melt made in nylon-6,6 (Fig.\,\ref{fig:REACT}). The
 REACTER protocol is used to simulate the polymerization of nylon, and the formation
-of water molecules is followed in time \cite{gissinger2020reacter, gissinger2024molecular}.
+of water molecules is followed in time~\cite{gissinger2020reacter, gissinger2024molecular}.
 In contrast with Airebo (\hyperref[carbon-nanotube-label]{Tutorial 2})
 and ReaxFF (\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}), the REACTER
 protocol relies on the use of a \textit{classical} force field.
@@ -3971,7 +3970,7 @@ pair_modify tail yes mix sixthpower
 special_bonds lj/coul 0 0 1
 \end{verbatim}
 }
-The \textit{class2} styles compute a 6/9 Lennard-Jones \cite{sun1998compass}.
+The \textit{class2} styles compute a 6/9 Lennard-Jones~\cite{sun1998compass}.
 The \textit{class2} bonds, angles, dihedrals, and impropers are used as
 well, see the documention for a description of their respective potentials.
 The \textit{mix sixthpower} imposes the following mixing rule for the calculation
@@ -4257,7 +4256,7 @@ use the ``Command'' key (\cmd) in place of the
 
 Precompiled versions of LAMMPS--GUI are available for Linux, {macOS}, and
 Windows.  The Linux version is provided in two formats: as compressed tar
-archive (.tar.gz) and as a Flatpak bundle \cite{flatpak_home}.  The {macOS}
+archive (.tar.gz) and as a Flatpak bundle~\cite{flatpak_home}.  The {macOS}
 version is distributed as a .dmg installer image, while the Windows version comes
 as an executable installer package.
 
