@@ -435,19 +435,18 @@ particles with two different effective diameters, contained within a
 cubic box with periodic boundary conditions (Fig.\,\ref{fig:LJ}).  In
 this tutorial, the temperature of the system is maintained using a
 Langevin thermostat~\cite{schneider1978molecular}, and basic quantities,
-including the potential and kinetic energies, are calculated from the
-simulation.
+including potential and kinetic energies, are calculated from the simulation.
 
 \subsubsection{My first input}
 
-To run a simulation using LAMMPS, you need to write an input script with
+To run a simulation using LAMMPS, you need to write an input script containing
 a series of commands for LAMMPS to execute.  For clarity, the
 input scripts for this tutorial will be divided into five categories,
-which will be filled out step by step.  To set up this tutorial, select
+Which will be filled out step by step.  To set up this tutorial, select
 \guicmd{Start LAMMPS Tutorial 1} from the \guicmd{Tutorials} menu of LAMMPS--GUI, and
-follow the instructions.  This will select and, if needed, create a folder,
+follow the instructions.  This will select (or create, if needed) a folder,
 place the initial input file \flecmd{initial.lmp} in it, and
-open that file in the LAMMPS--GUI editor.  The editor should display the
+open the file in the LAMMPS--GUI editor.  The editor should display the
 following content:
 \begin{lstlisting}
 # PART A - ENERGY MINIMIZATION
@@ -463,13 +462,13 @@ and ignored by LAMMPS.  LAMMPS--GUI will color such comments in red.
 These five categories are not required in every input script and do not
 necessarily need to be in that exact order.  For instance, the \lmpcmd{Settings}
 and the \lmpcmd{Visualization} categories could be inverted, or
-the \lmpcmd{Visualization} category could be omitted.  Note, however, that
+the \lmpcmd{Visualization} category could be omitted.  However, note that
 LAMMPS reads input files from top to bottom and processes each command
 \emph{immediately}.  Therefore, the \lmpcmd{Initialization} and
 \lmpcmd{System definition} categories must appear at the top of the
 input, and the \lmpcmd{Run} category must appear at the bottom.  Also, the
-specifics of some commands can change after global settings are changed, so the
-order of commands in the input script matters.
+specifics of some commands can change after global settings are modified, so the
+order of commands in the input script is important.
 
 \paragraph{Initialization}
 
