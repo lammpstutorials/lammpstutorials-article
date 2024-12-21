@@ -303,11 +303,11 @@ particles with a reservoir.
 In \hyperref[umbrella-sampling-label]{tutorial 7}, an advanced free
 energy method called umbrella sampling is implemented.  By calculating
 an energy barrier, this tutorial describes a protocol
-for addressingh energy landscapes that are difficult to sample using
+for addressing energy landscapes that are difficult to sample using
 classical MD or MC methods.
 
 In \hyperref[bond-react-label]{tutorial 8}, a CNT embedded in
-nylon-6,6 polymer melt is simulated. The
+nylon-6,6 polymer melt is simulated.  The
 REACTER protocol is used to model the polymerization of nylon, and the formation
 of water molecules is tracked over time~\cite{gissinger2020reacter}.
 
@@ -316,30 +316,31 @@ of water molecules is tracked over time~\cite{gissinger2020reacter}.
 \subsection{Background knowledge}
 
 This set of tutorials assumes no prior knowledge of the LAMMPS software
-itself.  Completing the tutorials requires a text editor and
-a suitable LAMMPS executable.  We use LAMMPS--GUI~\cite{lammps_gui_docs}
-here since it has features that make it particularly convenient for
-tutorials, but other console or graphical text editors like GNU nano,
-vi/vim, Emacs, Notepad, Gedit, Visual Studio Code can also be
-used.  LAMMPS can be executed directly from LAMMPS--GUI
-or from the command line, which requires some familiarity with executing
-commands from a terminal or command--line prompt.
+itself.  To complete the tutorials, a text editor and a suitable LAMMPS
+executable are required.  We use LAMMPS--GUI~\cite{lammps_gui_docs}
+here, as it offers features that make it particularly convenient for
+tutorials, but other console or graphical text editors, such as GNU nano,
+vi/vim, Emacs, Notepad, Gedit, and Visual Studio Code, can also be
+used.  LAMMPS can be executed either directly from
+LAMMPS--GUI (\hyperref[using-lammps-gui-label]{Appendix~\ref{using-lammps-gui-label}})
+or from the command line (\hyperref[command-line-label]{Appendix~\ref{command-line-label}}),
+the latter of which requires some familiarity with executing commands
+from a terminal or command-line prompt.
 
 In addition, prior knowledge of the theoretical basics of molecular
 simulations and statistical physics is highly beneficial.  Users may
-refer to textbooks like \textit{Understanding Molecular Simulation} by
+refer to textbooks such as \textit{Understanding Molecular Simulation} by
 Daan Frenkel and Berend Smit~\cite{frenkel2023understanding}, as well as
 \textit{Computer Simulation of Liquids} by Michael Allen and Dominic
-Tildesley~\cite{allen2017computer}.  Additionally, to better understand
-the fundamental concepts behind soft matter systems simulated in these
-tutorials, users can refer to \textit{Basic Concepts for Simple and
+Tildesley~\cite{allen2017computer}.  To better understand
+the fundamental concepts behind the soft matter systems simulated in these
+tutorials, users can also refer to \textit{Basic Concepts for Simple and
   Complex Liquids} by Jean-Louis Barrat and Jean-Pierre Hansen
 \cite{barrat2003basic}, as well as \textit{Theory of Simple Liquids:
   with Applications to Soft Matter} by Jean-Pierre Hansen and Ian Ranald
 McDonald~\cite{hansen2013theory}.
 
 \subsection{Software/system requirements}
-% AK: FIXME fill in the version dates and numbers for the next stable version
 
 The LAMMPS release version 29Aug2024~\cite{lammps_code} and the
 matching LAMMPS--GUI software version 1.6.11 are required to follow the
@@ -371,7 +372,7 @@ Gnuplot, Microsoft Excel, and LibreOffice Calc.  For
 visualization, suitable external tools include VMD~\cite{vmd_home,humphrey1996vmd}
 and OVITO~\cite{ovito_home,ovito_paper}.
 
-\hyperref[command-line-label]{Appendix \ref{command-line-label}} has instructions
+\hyperref[command-line-label]{Appendix~\ref{command-line-label}} has instructions
 for running LAMMPS from the command line.
 
 \subsection{About LAMMPS--GUI}
@@ -400,7 +401,7 @@ like Notepad or Gedit but offers the following enhancements specifically for LAM
   \item Use of wizard dialogs to set up tutorials
 \end{itemize}
 
-\hyperref[using-lammps-gui-label]{Appendix \ref{using-lammps-gui-label}}
+\hyperref[using-lammps-gui-label]{Appendix~\ref{using-lammps-gui-label}}
 contains basic instructions for installation and using LAMMPS--GUI with
 the tutorials presented here.  A complete description of all LAMMPS--GUI
 features is in the LAMMPS manual~\cite{lammps_gui_docs}.
@@ -1934,7 +1935,8 @@ group H2O was saved by the restart and can be omitted):
 \begin{lstlisting}
 group PEG type C CPos H HC OAlc OE
 \end{lstlisting}
-Water molecules that are overlapping with the PEG must be deleted to avoid future crashing.  Add the following line into \flecmd{merge.lmp}:
+Water molecules that are overlapping with the PEG must be deleted to avoid future
+crashing.  Add the following line into \flecmd{merge.lmp}:
 \begin{lstlisting}
 delete_atoms overlap 2.0 H2O PEG mol yes
 \end{lstlisting}
@@ -2106,7 +2108,7 @@ as simulated during \hyperref[all-atom-label]{Tutorial 3}.}
 \caption{a) Evolution of
 the radius of gyration $R_\text{gyr}$ of the PEG molecule
 from \hyperref[all-atom-label]{Tutorial 3}, with the force
-applied starting at $t = 15\,\text{ps}$. b) Histograms of the dihedral angles of type 2
+applied starting at $t = 15\,\text{ps}$.  b) Histograms of the dihedral angles of type 2
 in the absence (orange) and in the presence (blue) of the applied force.}
 \label{fig:PEG-distance}
 \end{figure}
@@ -2760,7 +2762,7 @@ Vashishta~\cite{vashishta1990interaction}.  If you open the \flecmd{silica.data}
 file, you will find in the \lmpcmd{Atoms} section that all silicon atoms have a
 charge of $q = 1.1\,\text{e}$, and all oxygen atoms have a charge of $q = -0.55\,\text{e}$.
 Assigning the same charge to all atoms of the same type is common with many
-force fields, including the force fields used in the previous tutorials. This
+force fields, including the force fields used in the previous tutorials.  This
 changes once ReaxFF is used: the charge of each atom will adjust to its local
 environment.
 
