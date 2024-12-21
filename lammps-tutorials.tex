@@ -4160,7 +4160,7 @@ of the system using \textit{dump image}:
 \begin{verbatim}
     dump mydmp all image 1000 dump.mix.*.ppm &
     type type shiny 0.1 box no 0.01 &
-    view 90 0 zoom 3 fsaa yes bond atom 0.5
+    view 90 0 zoom 1.5 fsaa yes bond atom 0.5
   dump_modify mydmp backcolor white &
     acolor cp gray acolor c=1 gray &
     acolor c= gray acolor c1 gray &
@@ -4215,17 +4215,6 @@ chain unwrapped from the simulation box is shown in Fig.\,\ref{fig:REACTED_VMD})
 \caption{Evolution of the reaction counts, $\text{N}_r$,
 as a function of the time, $t$, during the reaction.}
 \label{fig:evolution-reacting}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{REACTED_VMD}
-    \caption{Polymer composite model of polystyrene and a CNT created in
-    \hyperref[bond-react-label]{Tutorial 8} by in-situ polymerization of
-    styrene using REACTER. The polymer chains are shown unwrapped from
-    the simulation box and the CNT (red) is also shifted along its axis
-    for visibility. Image rendered using VMD.}
-    \label{fig:REACTED_VMD}
 \end{figure}
 
 \section*{Author Contributions}

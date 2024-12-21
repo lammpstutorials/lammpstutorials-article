@@ -1,4 +1,21 @@
 LAMMPS (29 Aug 2024 - Development - patch_29Aug2024-1065-gcf05700897)
+# polymerization of PS-CNT composite using REACTER
+
+units real
+boundary p p p
+
+atom_style full
+kspace_style pppm 1.0e-4
+pair_style lj/class2/coul/long 8.5
+angle_style class2
+bond_style class2
+dihedral_style class2
+improper_style class2
+
+special_bonds lj/coul 0 0 1
+pair_modify tail yes mix sixthpower
+
+read_data CNT-PS-mix.data    extra/bond/per/atom 5   extra/angle/per/atom 15   extra/dihedral/per/atom 15   extra/improper/per/atom 25   extra/special/per/atom 25
 Reading data file ...
   orthogonal box = (-2.3164529 -26.16 -26.16) to (13.21044 26.16 26.16)
   1 by 1 by 1 MPI processor grid
@@ -37,6 +54,8 @@ Finding 1-2 1-3 1-4 neighbors ...
     34 = max # of special neighbors
   special bonds CPU = 0.001 seconds
   read_data CPU = 0.091 seconds
+
+molecule mol1 M-M_pre.lmpmol
 Read molecule template mol1:
 2styrene_unreacted
   1 molecules
@@ -46,6 +65,7 @@ Read molecule template mol1:
   48 angles with max type 19
   64 dihedrals with max type 21
   16 impropers with max type 9
+molecule mol2 M-M_post.lmpmol
 Read molecule template mol2:
 2styrene_reacted
   1 molecules
@@ -55,6 +75,7 @@ Read molecule template mol2:
   54 angles with max type 22
   79 dihedrals with max type 19
   14 impropers with max type 8
+molecule mol3 M-P_pre.lmpmol
 Read molecule template mol3:
 chain_plus_styrene_unreacted
   1 molecules
@@ -64,6 +85,7 @@ chain_plus_styrene_unreacted
   75 angles with max type 22
   105 dihedrals with max type 21
   21 impropers with max type 9
+molecule mol4 M-P_post.lmpmol
 Read molecule template mol4:
 chain_plus_styrene_reacted
   1 molecules
@@ -73,6 +95,7 @@ chain_plus_styrene_reacted
   81 angles with max type 22
   121 dihedrals with max type 19
   19 impropers with max type 8
+molecule mol5 P-P_pre.lmpmol
 Read molecule template mol5:
 chain_chain_unreacted
   1 molecules
@@ -82,6 +105,7 @@ chain_chain_unreacted
   84 angles with max type 22
   118 dihedrals with max type 19
   20 impropers with max type 8
+molecule mol6 P-P_post.lmpmol
 Read molecule template mol6:
 chain_chain_reacted
   1 molecules
@@ -91,15 +115,69 @@ chain_chain_reacted
   90 angles with max type 22
   135 dihedrals with max type 19
   18 impropers with max type 3
+
+thermo 250
+
+fix rxn1 all bond/react stabilization yes statted_grp 0.03  react R1 all 1 0 3.0 mol1 mol2 M-M.rxnmap stabilize_steps 100  react R2 all 1 0 3.0 mol3 mol4 M-P.rxnmap stabilize_steps 100  react R3 all 1 0 5.0 mol5 mol6 P-P.rxnmap stabilize_steps 100
 dynamic group bond_react_MASTER_group defined
 dynamic group statted_grp_REACT defined
+
+fix 1 statted_grp_REACT nvt temp 530 530 100
+
+#fix 4 bond_react_MASTER_group temp/rescale 1 530 530 1 1
+
+thermo_style custom step temp press density f_rxn1[*]
+
+dump mydmp all image 1000 dump.mixing.*.ppm   type type shiny 0.1 box no 0.01   view 90 0 zoom 1.5 fsaa yes bond atom 0.5
+dump_modify mydmp backcolor white   acolor cp gray acolor c=1 gray   acolor c= gray acolor c1 gray   acolor c2 gray acolor c3 gray   adiam cp 0.3 adiam c=1 0.3   adiam c= 0.3 adiam c1 0.3   adiam c2 0.3 adiam c3 0.3   acolor hc white adiam hc 0.15
+
+run 10000
 
 CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
 
 Your simulation uses code contributions which should be cited:
+
 - Type Label Framework: https://doi.org/10.1021/acs.jpcb.3c08419
+
+@Article{Gissinger24,
+ author = {Jacob R. Gissinger, Ilia Nikiforov, Yaser Afshar, Brendon Waters, Moon-ki Choi, Daniel S. Karls, Alexander Stukowski, Wonpil Im, Hendrik Heinz, Axel Kohlmeyer, and Ellad B. Tadmor},
+ title = {Type Label Framework for Bonded Force Fields in LAMMPS},
+ journal = {J. Phys. Chem. B},
+ year =    2024,
+ volume =  128,
+ number =  13,
+ pages =   {3282--3297}
+}
+
 - fix bond/react: reacter.org doi:10.1016/j.polymer.2017.09.038, doi:10.1021/acs.macromol.0c02012, doi:10.1016/j.cpc.2024.109287
-The log file lists these citations in BibTeX format.
+
+@Article{Gissinger17,
+ author = {J. R. Gissinger and B. D. Jensen and K. E. Wise},
+ title = {Modeling Chemical Reactions in Classical Molecular Dynamics Simulations},
+ journal = {Polymer},
+ year =    2017,
+ volume =  128,
+ pages =   {211--217}
+}
+
+@Article{Gissinger20,
+ author = {J. R. Gissinger, B. D. Jensen, K. E. Wise},
+ title = {{REACTER}: A Heuristic Method for Reactive Molecular Dynamics},
+ journal = {Macromolecules},
+ year =    2020,
+ volume =  53,
+ number =  22,
+ pages =   {9953--9961}
+}
+
+@Article{Gissinger24,
+ author = {J. R. Gissinger, B. D. Jensen, K. E. Wise},
+ title = {Molecular Modeling of Reactive Systems with REACTER},
+ journal = {Computer Physics Communications},
+ year =    2024,
+ volume =  304,
+ number =  109287
+}
 
 CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
 
@@ -131,83 +209,81 @@ Neighbor list info ...
       pair build: copy
       stencil: none
       bin: none
-Setting up Verlet run ...
-  Unit style    : real
-  Current step  : 0
-  Time step     : 1
 WARNING: Inconsistent image flags (../domain.cpp:1051)
 Per MPI rank memory allocation (min/avg/max) = 35.86 | 35.86 | 35.86 Mbytes
    Step          Temp          Press         Density       f_rxn1[1]      f_rxn1[2]      f_rxn1[3]   
          0   302.27771     -9596.9435      0.90392574     0              0              0            
-       250   389.53088     -13850.265      0.90392574     3              0              0            
-       500   485.68521     -9007.2658      0.90392574     8              0              0            
-       750   542.3226      -23248.667      0.90392574     16             0              1            
-      1000   534.7719      -12762.21       0.90392574     19             1              1            
-      1250   516.99898     -11075.439      0.90392574     24             1              3            
-      1500   543.76181     -7868.2943      0.90392574     30             1              4            
-      1750   513.87518     -25520.029      0.90392574     37             1              8            
-      2000   535.3342      -12037.406      0.90392574     41             3              12           
-      2250   531.66857     -8743.6113      0.90392574     43             4              13           
-      2500   527.99965     -12390.768      0.90392574     45             4              17           
-      2750   530.87307     -62829.341      0.90392574     47             5              20           
-      3000   521.16815     -15127.611      0.90392574     50             5              22           
-      3250   523.34123     -10305.497      0.90392574     54             5              23           
-      3500   531.02862     -8035.5586      0.90392574     56             5              23           
-      3750   537.03195     -7481.4729      0.90392574     57             7              26           
-      4000   529.24999     -131818.3       0.90392574     57             7              28           
-      4250   535.47954     -15352.285      0.90392574     62             7              31           
-      4500   530.34472     -9252.827       0.90392574     63             8              32           
-      4750   534.81427     -51105.955      0.90392574     67             8              35           
-      5000   522.77673     -58794.632      0.90392574     68             8              38           
-      5250   534.0386      -11023.165      0.90392574     69             9              38           
-      5500   533.83622     -179338.2       0.90392574     70             9              41           
-      5750   533.65206     -9994.6046      0.90392574     71             9              45           
-      6000   529.82185     -8416.1706      0.90392574     72             9              46           
-      6250   531.81262     -71335.905      0.90392574     74             9              50           
-      6500   542.45727     -208291.06      0.90392574     75             9              51           
-      6750   519.63414     -8612.4281      0.90392574     75             9              51           
-      7000   530.64062     -10287.366      0.90392574     75             9              51           
-      7250   520.41821     -8764.4035      0.90392574     75             9              52           
-      7500   531.01859     -7844.5152      0.90392574     77             11             53           
-      7750   527.27692     -9686.8375      0.90392574     77             12             54           
-      8000   536.78229     -10465.507      0.90392574     78             12             54           
-      8250   517.53142     -18790.931      0.90392574     78             12             55           
-      8500   547.23107     -11464.695      0.90392574     78             12             57           
-      8750   529.14376     -9877.1628      0.90392574     78             12             57           
-      9000   526.70037     -12063.703      0.90392574     78             12             58           
-      9250   541.9196      -8608.9846      0.90392574     79             12             59           
-      9500   516.09736     -8818.5419      0.90392574     79             13             59           
-      9750   548.34487     -26718.708      0.90392574     79             13             62           
-     10000   530.89214     -11239.132      0.90392574     79             13             62           
-Loop time of 230.245 on 1 procs for 10000 steps with 3392 atoms
+       250   389.62661     -13771.24       0.90392574     3              0              0            
+       500   496.13936     -8387.4543      0.90392574     8              0              0            
+       750   563.07162     -7466.3885      0.90392574     17             0              0            
+      1000   532.39002     -237215.55      0.90392574     25             0              1            
+      1250   519.59296     -9014.2788      0.90392574     28             2              2            
+      1500   528.67689     -6693.843       0.90392574     34             2              4            
+      1750   546.01113     -7038.0434      0.90392574     36             4              8            
+      2000   526.58304     -6909.547       0.90392574     42             4              11           
+      2250   551.46275     -7135.5723      0.90392574     45             4              15           
+      2500   531.51382     -6816.0616      0.90392574     49             4              15           
+      2750   527.79367     -8993.9614      0.90392574     50             4              17           
+      3000   535.77409     -8200.5447      0.90392574     51             5              17           
+      3250   531.26987     -11768.345      0.90392574     52             6              19           
+      3500   543.42131     -8565.5964      0.90392574     52             6              22           
+      3750   538.99985     -94280.857      0.90392574     54             7              25           
+      4000   535.75775     -7002.1693      0.90392574     61             7              29           
+      4250   539.03236     -6676.7884      0.90392574     63             8              31           
+      4500   524.03635     -29603.541      0.90392574     63             8              32           
+      4750   536.66093     -219467.93      0.90392574     63             8              36           
+      5000   534.64995     -7777.0902      0.90392574     64             8              38           
+      5250   530.73662     -8320.2412      0.90392574     66             9              39           
+      5500   522.46297     -7760.4153      0.90392574     66             9              40           
+      5750   530.41956     -7919.3994      0.90392574     67             9              42           
+      6000   548.51896     -4949.9725      0.90392574     67             9              42           
+      6250   514.90331     -8398.5823      0.90392574     68             10             42           
+      6500   532.59521     -8099.478       0.90392574     70             10             43           
+      6750   528.09969     -9745.5438      0.90392574     70             11             45           
+      7000   536.15819     -16114.684      0.90392574     72             11             46           
+      7250   538.63772     -110866.47      0.90392574     73             11             48           
+      7500   540.49827     -6574.2117      0.90392574     74             11             49           
+      7750   537.27053     -10202.909      0.90392574     75             11             50           
+      8000   530.75755     -10371.958      0.90392574     75             12             51           
+      8250   528.48172     -8879.1006      0.90392574     75             12             53           
+      8500   537.78827     -7153.8509      0.90392574     75             12             54           
+      8750   533.06702     -6964.6352      0.90392574     75             12             55           
+      9000   540.99978     -6204.6325      0.90392574     75             12             55           
+      9250   537.23535     -8742.3545      0.90392574     75             13             55           
+      9500   535.42716     -10138.52       0.90392574     75             13             56           
+      9750   532.41898     -10556.994      0.90392574     75             13             56           
+     10000   527.68125     -7598.2347      0.90392574     75             14             56           
+Loop time of 228.008 on 1 procs for 10000 steps with 3392 atoms
 
-Performance: 3.753 ns/day, 6.396 hours/ns, 43.432 timesteps/s, 147.322 katom-step/s
-99.4% CPU use with 1 MPI tasks x no OpenMP threads
+Performance: 3.789 ns/day, 6.334 hours/ns, 43.858 timesteps/s, 148.767 katom-step/s
+99.7% CPU use with 1 MPI tasks x no OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 92.741     | 92.741     | 92.741     |   0.0 | 40.28
-Bond    | 51.39      | 51.39      | 51.39      |   0.0 | 22.32
-Kspace  | 11.155     | 11.155     | 11.155     |   0.0 |  4.85
-Neigh   | 19.65      | 19.65      | 19.65      |   0.0 |  8.53
-Comm    | 0.625      | 0.625      | 0.625      |   0.0 |  0.27
-Output  | 2.331      | 2.331      | 2.331      |   0.0 |  1.01
-Modify  | 52.174     | 52.174     | 52.174     |   0.0 | 22.66
-Other   |            | 0.1784     |            |       |  0.08
+Pair    | 92.944     | 92.944     | 92.944     |   0.0 | 40.76
+Bond    | 51.204     | 51.204     | 51.204     |   0.0 | 22.46
+Kspace  | 11.353     | 11.353     | 11.353     |   0.0 |  4.98
+Neigh   | 18.861     | 18.861     | 18.861     |   0.0 |  8.27
+Comm    | 0.60999    | 0.60999    | 0.60999    |   0.0 |  0.27
+Output  | 1.0048     | 1.0048     | 1.0048     |   0.0 |  0.44
+Modify  | 51.868     | 51.868     | 51.868     |   0.0 | 22.75
+Other   |            | 0.163      |            |       |  0.07
 
 Nlocal:           3392 ave        3392 max        3392 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Nghost:          12379 ave       12379 max       12379 min
+Nghost:          12415 ave       12415 max       12415 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Neighs:         654516 ave      654516 max      654516 min
+Neighs:         656042 ave      656042 max      656042 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 
-Total # of neighbors = 654516
-Ave neighs/atom = 192.95873
-Ave special neighs/atom = 10.228774
-Neighbor list builds = 822
+Total # of neighbors = 656042
+Ave neighs/atom = 193.40861
+Ave special neighs/atom = 9.9858491
+Neighbor list builds = 793
 Dangerous builds = 0
+
+write_restart restart_longrun
 System init for write_restart ...
 PPPM initialization ...
   using 12-bit tables for long-range coulomb (../kspace.cpp:342)
@@ -219,6 +295,7 @@ PPPM initialization ...
   using double precision KISS FFT
   3d grid and FFT values/proc = 4400 1350
 Generated 21 of 21 mixed pair_coeff terms from sixthpower/sixthpower mixing rule
+write_data restart_longrun.data nofix
 System init for write_data ...
 PPPM initialization ...
   using 12-bit tables for long-range coulomb (../kspace.cpp:342)
@@ -230,4 +307,4 @@ PPPM initialization ...
   using double precision KISS FFT
   3d grid and FFT values/proc = 4400 1350
 Generated 21 of 21 mixed pair_coeff terms from sixthpower/sixthpower mixing rule
-Total wall time: 0:03:50
+Total wall time: 0:03:48
