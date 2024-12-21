@@ -344,43 +344,46 @@ McDonald~\cite{hansen2013theory}.
 
 The LAMMPS release version 29Aug2024~\cite{lammps_code} and the
 matching LAMMPS--GUI software version 1.6.11 are required to follow the
-tutorials, as they use features that first appeared in these versions.
-For Linux (with x86\_64 CPU), macOS (BigSur or later), and Windows (10
+tutorials, as they include features that were first introduced in these versions.
+For Linux (x86\_64 CPU), macOS (BigSur or later), and Windows (10
 and 11) you can download a precompiled LAMMPS package from the LAMMPS
 release page on GitHub
 (\href{https://github.com/lammps/lammps/releases}{github.com/lammps/lammps/releases}).
 Select a package with `GUI' in the file name, which includes
 both LAMMPS--GUI and a LAMMPS console executable.  These
 precompiled packages are designed to be portable, and therefore omit support for
-running in parallel with MPI.  \hyperref[using-lammps-gui-label]{Appendix
-  \ref{using-lammps-gui-label}} has instructions for installing
-LAMMPS--GUI and using its most relevant features for the tutorials.
+parallel execution with MPI.  Instructions for installing LAMMPS--GUI and
+using its most relevant features for the tutorials are provided in 
+\hyperref[using-lammps-gui-label]{Appendix~\ref{using-lammps-gui-label}}.
 
-LAMMPS versions have good backward compatibility: old inputs generally work with
-newer LAMMPS versions.  However, forward compatibility is not as strong, meaning
-newer inputs are not as likely to work with older LAMMPS versions.  Thus, it is
-generally possible to follow this tutorial with more recent releases of
-LAMMPS--GUI and LAMMPS.  Older versions may need some minor adjustments.
-Nevertheless, these tutorials will be periodically revised to ensure compatibility
-and take advantage of new features in the most recent stable version of LAMMPS.
+LAMMPS versions are generally backward compatible, meaning that old
+input files typically work with newer versions of LAMMPS.  However,
+forward compatibility is not as strong, so
+newer input files may not work with older versions.  As a result, it is
+usually possible to follow this tutorial with more recent releases of
+LAMMPS--GUI and LAMMPS, though older versions may require some minor adjustments.
+These tutorials will be periodically updated to ensure compatibility
+and take advantage of new features in the latest stable version of LAMMPS.
 
-For advanced tutorials, external tools are required for plotting and
-visualization, since the corresponding functionality in LAMMPS--GUI is
+For some tutorials, external tools are required for plotting and
+visualization, as the corresponding functionality in LAMMPS--GUI is
 limited.  Suitable external tools for plotting include Python with
 Pandas/Matplotlib~\cite{van1995python,hunter2007Matplotlib}, XmGrace,
-Gnuplot, Microsoft Excel, and LibreOffice Calc.  For
-visualization, suitable external tools include VMD~\cite{vmd_home,humphrey1996vmd}
+Gnuplot, Microsoft Excel, and LibreOffice Calc.  For visualization,
+suitable external tools include VMD~\cite{vmd_home,humphrey1996vmd}
 and OVITO~\cite{ovito_home,ovito_paper}.
 
-\hyperref[command-line-label]{Appendix~\ref{command-line-label}} has instructions
-for running LAMMPS from the command line.
+% \hyperref[command-line-label]{Appendix~\ref{command-line-label}} has instructions
+% for running LAMMPS from the command line.
+% SG: I placed a reference of Appendix B before, so I dont think that sentence is
+% necessary here.
 
 \subsection{About LAMMPS--GUI}
 
 LAMMPS--GUI is a graphical text editor, enhanced for editing LAMMPS input
-files, and linked to the LAMMPS library, allowing it to run LAMMPS
-directly.  The text editor functions similarly to other graphical editors
-like Notepad or Gedit but offers the following enhancements specifically for LAMMPS:
+files and linked to the LAMMPS library, allowing it to run LAMMPS
+directly.  The text editor functions similarly to other graphical editors,
+such as Notepad or Gedit, but offers the following enhancements specifically for LAMMPS:
 \begin{itemize}
   \item Auto-completion of LAMMPS commands and options
   \item Syntax highlighting for LAMMPS input files
@@ -400,11 +403,10 @@ like Notepad or Gedit but offers the following enhancements specifically for LAM
   \item Viewing of plain text files
   \item Use of wizard dialogs to set up tutorials
 \end{itemize}
-
 \hyperref[using-lammps-gui-label]{Appendix~\ref{using-lammps-gui-label}}
 contains basic instructions for installation and using LAMMPS--GUI with
 the tutorials presented here.  A complete description of all LAMMPS--GUI
-features is in the LAMMPS manual~\cite{lammps_gui_docs}.
+features can be found in the LAMMPS manual~\cite{lammps_gui_docs}.
 
 \section{Content and links}
 
@@ -412,15 +414,15 @@ The tutorials described in this article can be accessed at
 \href{https://lammpstutorials.github.io}{lammpstutorials.github.io},
 where additional exercises with solutions are also provided.  All files
 and inputs required to follow the tutorials are available from a
-dedicated GitHub account,
+dedicated GitHub organization account,
 \href{https://github.com/lammpstutorials}{github.com/lammpstutorials}.
-Additionally, these files can be downloaded by clicking \guicmd{Start LAMMPS Tutorial X}
+These files can also be downloaded by clicking \guicmd{Start LAMMPS Tutorial X}
 (where \texttt{X} = 1...8) from the \guicmd{Tutorials} menu of LAMMPS--GUI.
 
 In the following, all LAMMPS input or console commands are formatted
 with a \lmpcmd{colored background}.  Keyboard shortcuts and 
 file names are formatted in \flecmd{monospace}, and LAMMPS--GUI options and menus
-are in \guicmd{quoted monospace}.
+are displayed in \guicmd{quoted monospace}.
 % S.G.: I removed "folder names" because all folders will eventually be removed (TO CONTROL BEFORE SUBMITTING)
 % S.G.: I removed "Section titles" as well because it seems to be using a different style
 
