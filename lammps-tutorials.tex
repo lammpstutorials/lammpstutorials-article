@@ -3977,68 +3977,57 @@ The \lmpcmd{mix sixthpower} imposes the following mixing rule for the calculatio
 of the cross coefficients: 
 \begin{eqnarray}
 \nonumber
-\sigma_{ij} & = & \left( \frac{1}{2} (\sigma^6_i+\sigma_j^6) \right)^{1/6}, ~ \text{and} \\
+\sigma_{ij} & = & 2^{-1/6} (\sigma^6_i+\sigma_j^6)^{1/6}, ~ \text{and} \\
 \nonumber
 \epsilon_{ij} & = & \dfrac{2 \sqrt{\epsilon_i \epsilon_j} \sigma^3_i \sigma^3_j}{\sigma^6_i+\sigma_j^6}.
 \end{eqnarray}
 
-Let us read a data file named \href{\filepath tutorial8/CNT.data}{\textit{CNT.data}}
-containing a periodic single-walled CNT.  Add the following lines to \textit{mixing.lmp}:
-{\normalsize
-\begin{verbatim}
-read_data CNT.data &
-  extra/special/per/atom 20
-\end{verbatim}
-}
-The CNT is about 1.1 nm in diameter and 1.6 nm long.
-The box is 5.2 nm in the other dimensions, so filling the box with
-styrene monomers will be easy.
-% S.G.: @jrgissing, here we could describe the content of nylon.data.
-% How was it created, what is the specifity of the molecules involved, etc...
-
-To add 200 styrene molecules to the simulation box, add the following commands
-to \textit{mixing.lmp}:
-{\normalsize
-\begin{verbatim}
+Let us read the \href{\filepath tutorial8/CNT.data}{\dwlcmd{CNT.data}} file, which
+contains a periodic single-walled CNT.  Add the following line to \flecmd{mixing.lmp}:
+\begin{lstlisting}
+read_data CNT.data extra/special/per/atom 20
+\end{lstlisting}
+The CNT is approximately $1.1~\text{nm}$ in diameter and $1.6\,\text{nm}$ in length, oriented
+along the $x$-axis. The simulation box is as large as 5.2~nm in the two other dimensions,
+making it straightforward to fill the box with styrene.
+To add 200 styrene molecules to the simulation box, include the following commands
+to \flecmd{mixing.lmp}:
+\begin{lstlisting}
 molecule styrene styrene.lmpmol
-create_atoms 0 random 200 8305 NULL &
-overlap 2.75 maxtry 500 mol styrene 7687
-\end{verbatim}
-}
-Let us use the \textit{minimize} command to reduce the energy of the system:
-{\normalsize
-\begin{verbatim}
+create_atoms 0 random 200 8305 NULL overlap 2.75 &
+    maxtry 500 mol styrene 7687
+\end{lstlisting}
+Finally, let us use the \lmpcmd{minimize} command to reduce the potential energy of the system:
+\begin{lstlisting}
 minimize 1.0e-4 1.0e-6 100 1000
 reset_timestep 0
-\end{verbatim}
-}
-Then, let us densify the system to a target value of 0.9 g/cm$^3$
-by manually shrinking the simulation box at a constant rate.  The dimension parallel
-to the CNT axis will remain fixed, since the CNT is periodic in that direction.
-The \textit{fix halt} feature is used to stop the box shrinkage once the target density is
-reached.
-{\normalsize
-\begin{verbatim}
-velocity all create 300.0 9845 dist gaussian &
-  rot yes loop local
-fix 1 all nvt temp 300 300 100
+\end{lstlisting}
 
-fix 2 all deform 1 y erate -0.0001 &
-  z erate -0.0001
+Then, let us densify the system to a target value of $0.9~\text{g/cm}^3$
+by manually shrinking the simulation box at a constant rate.  The dimension parallel
+to the CNT axis is maintained fixed because the CNT is periodic in that direction.
+Add the following commands to \flecmd{mixing.lmp}:
+% SG: I remove the loop local, unless its important? But if it is, we have to 
+% explain what it does and why it was chosen here.
+\begin{lstlisting}
+velocity all create 300.0 9845 dist gaussian rot yes
+fix mynvt all nvt temp 300 300 100
+
+fix mydef all deform 1 y erate -0.0001 z erate -0.0001
 variable rho equal density
-fix 3 all halt 10 v_rho > 0.9 error continue
+fix myhal all halt 10 v_rho > 0.9 error continue
 
 thermo 500
-thermo_style custom step temp pe etotal press &
-density
+thermo_style custom step temp pe etotal press density
 
 run 9000
-\end{verbatim}
-}
-For the next stage of the simulation, we will use \textit{dump image} to
+\end{lstlisting}
+The \lmpcmd{fix halt} command is used to stop the box shrinkage once the
+target density is reached. 
+
+For the next stage of the simulation, we will use \lmpcmd{dump image} to
 output images every 1000 steps:
-{\normalsize
-\begin{verbatim}
+\begin{lstlisting}
 dump mydmp all image 1000 dump.mix.*.ppm &
   type type shiny 0.1 box no 0.01 &
   view 90 0 zoom 3 fsaa yes bond atom 0.5
@@ -4050,30 +4039,25 @@ dump_modify mydmp backcolor white &
   adiam c= 0.3 adiam c1 0.3 &
   adiam c2 0.3 adiam c3 0.3 &
   acolor hc white adiam hc 0.15
-\end{verbatim}
-}
-For the following 10\,ps, let us equilibrate the densified system
+\end{lstlisting}
+For the following $10~\text{ps}$, let us equilibrate the densified system
 in the constant-volume ensemble, and write the final state of the
-system in a file named \textit{CNT-PS-mix.data}:
-{\normalsize
-\begin{verbatim}
+system in a file named \flecmd{CNT-PS-mix.data}:
+\begin{lstlisting}
 unfix 2
 unfix 3
 reset_timestep 0
 
 run 9999
-\end{verbatim}
-}
-For visualization purposes, let us move the CNT to the center of the simulation box.
-{\normalsize
-\begin{verbatim}
-fix centralize CNT recenter 0 0 0 units box &
-  shift all
+\end{lstlisting}
+For visualization purposes, let us move the CNT to the center of the box
+for the last step of the simulation using \lmpcmd{fix centralize}:
+\begin{lstlisting}
+fix centralize CNT recenter 0 0 0 units box shift all
 run 1
 
 write_data CNT-PS-mix.data
-\end{verbatim}
-}
+\end{lstlisting}
 As the time progresses, [maybe plot total energy instead of density
 to demonstrate equilbrated box]
 %the density $\rho$ of the system progressively
