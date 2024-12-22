@@ -210,10 +210,10 @@ performing random changes to the system configuration that are either
 accepted or rejected based on energy criteria
 \cite{frenkel2023understanding, allen2017computer}.  MS allows for
 measuring a broad variety of properties, including structural properties
-(e.g.~bond length distribution, coordination numbers, radial
-distribution functions), thermodynamic properties (e.g.~temperature,
-pressure, volume), dynamic behaviors (e.g.~diffusion coefficient,
-viscosity), and mechanical responses (e.g.~elastic constant, Poisson
+(e.g.,~bond length distribution, coordination numbers, radial
+distribution functions), thermodynamic properties (e.g.,~temperature,
+pressure, volume), dynamic behaviors (e.g.,~diffusion coefficient,
+viscosity), and mechanical responses (e.g.,~elastic constant, Poisson
 ratio).  Some of these quantities can be directly compared with
 experimental data, enabling the validation of the simulated system,
 while others, available only through simulations, are often useful for
@@ -239,7 +239,7 @@ unnecessary for common use cases, and the detailed manual can
 often feel overwhelming.  Beyond the intrinsic complexity of LAMMPS, performing accurate
 MS requires several complex, system-specific decisions regarding
 the physics to be modeled, such as selecting the thermodynamic
-ensemble (e.g.~micro-canonical, grand-canonical), determining the
+ensemble (e.g.,~micro-canonical, grand-canonical), determining the
 simulation duration, and choosing the sets of parameters describing the
 interactions between atoms (the so-called force field)
 \cite{wong2016good, van2018validation, prasad2018best}.  While these choices are independent of the
@@ -422,7 +422,7 @@ These files can also be downloaded by clicking \guicmd{Start LAMMPS Tutorial X}
 (where \texttt{X} = 1...8) from the \guicmd{Tutorials} menu of LAMMPS--GUI.
 
 In the following, all LAMMPS input or console commands are formatted
-with a \lmpcmd{colored background}.  Keyboard shortcuts and 
+with a \lmpcmd{colored background}.  Keyboard shortcuts and
 file names are formatted in \flecmd{monospace}, and LAMMPS--GUI options and menus
 are displayed in \guicmd{quoted monospace}.
 % S.G.: I removed "folder names" because all folders will eventually be removed (TO CONTROL BEFORE SUBMITTING)
@@ -434,10 +434,18 @@ are displayed in \guicmd{quoted monospace}.
 The objective of this tutorial is to perform a simple MD simulation
 using LAMMPS.  The system consists of a Lennard-Jones fluid composed of neutral
 particles with two different effective diameters, contained within a
-cubic box with periodic boundary conditions (Fig.\,\ref{fig:LJ}).  In
+cubic box with periodic boundary conditions (Fig.~\ref{fig:LJ-avarar}).  In
 this tutorial, the temperature of the system is maintained using a
 Langevin thermostat~\cite{schneider1978molecular}, and basic quantities,
 including potential and kinetic energies, are calculated from the simulation.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{LJ-avatar}
+\caption{The binary mixture simulated in \hyperref[lennard-jones-label]{Tutorial 1},
+with the small atoms of type 1 in green and large atoms of type 2 in blue.}
+\label{fig:LJ-avatar}
+\end{figure}
 
 \subsubsection{My first input}
 
@@ -475,7 +483,7 @@ order of commands in the input script is important.
 
 In the first section of the script, called \lmpcmd{Initialization},
 global parameters for the simulation are defined, such as units, boundary conditions
-(e.g., periodic or non-periodic), and atom types (e.g., uncharged point particles
+(e.g.,~periodic or non-periodic), and atom types (e.g.,~uncharged point particles
 or extended spheres with a radius and angular velocities).  These commands must be
 executed \emph{before} creating the simulation box or they will cause
 an error.  Similarly, many LAMMPS commands may only be
@@ -493,8 +501,7 @@ The first line, \lmpcmd{units lj}, specifies the use of
 \emph{reduced} units, where all quantities are dimensionless.  This unit system is
 a popular choice for simulations that explore general statistical mechanical
 principles, as it emphasizes relative differences between parameters rather than
-representing any specific material.
-The second line, \lmpcmd{dimension 3}, specifies that the simulation is conducted
+representing any specific material.  The second line, \lmpcmd{dimension 3}, specifies that the simulation is conducted
 in 3D space, as opposed to 2D, where atoms are confined to move only in the 
 xy-plane.  The third line, \lmpcmd{atom\_style atomic}, designates
 the atomic style for representing simple, individual particles.
@@ -530,10 +537,10 @@ to avoid confusion when sharing input files with other LAMMPS users.
 Each LAMMPS command is accompanied by extensive online documentation
 that details the different options for that command.  From the LAMMPS--GUI
 editor buffer, you can access the documentation by
-right-clicking on a line containing a command (e.g., \lmpcmd{units lj}) and
+right-clicking on a line containing a command (e.g.,~\lmpcmd{units lj}) and
 selecting \guicmd{View documentation for (\dots)}\,.  This action will
 prompt your web browser to open the corresponding URL for the online manual.
-A screenshot of this context menu is shown in figure~\ref{fig:GUI-1}.
+A screenshot of this context menu is shown in Fig.~\ref{fig:GUI-1}.
 
 \paragraph{System definition}
 
@@ -547,7 +554,7 @@ create_atoms 1 random 1500 34134 simbox overlap 0.3
 create_atoms 2 random 100 12756 simbox overlap 0.3
 \end{lstlisting}
 The first line, \lmpcmd{region simbox (...)}, defines a region
-named \lmpcmd{simbox} that is a block (i.e., a rectangular
+named \lmpcmd{simbox} that is a block (i.e.,~a rectangular
 cuboid) extending from -20 to 20 units along all three spatial dimensions.
 The second line, \lmpcmd{create\_box 2 simbox}, initializes a simulation box
 based on the region \lmpcmd{simbox} and reserves space for two types of atoms.
@@ -617,8 +624,9 @@ $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{LJ}
-\caption{The binary mixture simulated during \hyperref[lennard-jones-label]{Tutorial 1}.
-  The atoms of type 1 are represented as small red spheres, the atoms of type 2 as large
+\caption{The binary mixture simulated in \hyperref[lennard-jones-label]{Tutorial 1}.
+  This image was generated directly from the LAMMPS--GUI.  Atoms of
+  type 1 are represented as small red spheres, atoms of type 2 as large
   green spheres, and the edges of the simulation box are represented as blue sticks.}
 \label{fig:LJ}
 \end{figure}
@@ -659,7 +667,7 @@ The image viewer works by instructing LAMMPS to render an image of the current s
 its internal rendering library via the \lmpcmd{dump image} command.  The
 resulting image is then displayed, with various buttons available to adjust
 the view and rendering style.  The image shown in
-figure~\ref{fig:LJ} was created this way.  This will always capture the current
+Fig.~\ref{fig:LJ} was created this way.  This will always capture the current
 state of the system.  Save the image for future comparisons.
 
 \paragraph{Energy minimization}
@@ -683,7 +691,7 @@ Note that, except for trivial systems, minimization algorithms will find a
 local minimum rather than the global minimum.
 
 Run the minimization and observe that LAMMPS--GUI captures the output
-and update the chart in real time (see Figure~\ref{fig:chart-log}).  This run executes quickly (depending
+and update the chart in real time (see Fig.~\ref{fig:chart-log}).  This run executes quickly (depending
 on your computer's capabilities), but LAMMPS--GUI may fail to capture some
 of the thermodynamic data.  In that
 case, use the \guicmd{Preferences} dialog to reduce the data update
@@ -702,12 +710,12 @@ fresh, resetting the system and re-executing the script from the beginning.
 \end{figure}
 
 The potential energy decreases from a positive value to a
-negative value (Figures~\ref{fig:chart-log} and \ref{fig:evolution-energy}\,a).
+negative value (Figs.~\ref{fig:chart-log} and \ref{fig:evolution-energy}\,a).
 The initially positive potential energy is
 expected, as the atoms are created at random positions within
 the simulation box, with some in very close proximity to each other.
 This proximity results in a large initial potential energy due to the repulsive branch of the
-Lennard-Jones potential [i.e., the term in $1/r^{12}$ in Eq.\,\eqref{eq:LJ}].
+Lennard-Jones potential [i.e.,~the term in $1/r^{12}$ in Eq.~\eqref{eq:LJ}].
 As the energy minimization progresses, the
 energy decreases -- first rapidly -- then more gradually,
 before plateauing at a negative value.  This indicates that the atoms
@@ -727,12 +735,11 @@ drop-down menu of the \guicmd{Charts} window.
 
 \paragraph{Molecular dynamics}
 
-After the energy minimization, any overlapping atoms have been
-displaced, and the system is now ready to perform a molecular dynamics
-simulation using the minimized geometry.  Since we want to start from
-the result of the energy minimization step, we can append commands for
-the MD simulation to the same input script, \flecmd{initial.lmp}.  After
-the \lmpcmd{minimize} command, add the following lines:
+After energy minimization, any overlapping atoms are displaced, and
+the system is ready for a molecular dynamics simulation.  To continue
+from the result of the minimization step, append the MD simulation
+commands to the same input script, \flecmd{initial.lmp}.  Add the
+following lines immediately after the \lmpcmd{minimize} command:
 \begin{lstlisting}
 # PART B - MOLECULAR DYNAMICS
 # 4) Visualization
@@ -740,56 +747,61 @@ thermo 50
 thermo_style custom step temp etotal pe ke press
 \end{lstlisting}
 
-Since LAMMPS reads the input from top to bottom and acts on each line
-immediately, these lines will be executed \emph{after} the energy
-minimization.  There is no need to re-initialize or re-define the
-system.  The \lmpcmd{thermo} command is called a second time to change
-the previous value of 10 to a value of 50 as soon as \textit{PART B} of
+Since LAMMPS reads inputs from top to bottom, these lines will
+be executed \emph{after} the energy minimization.  Therefore,
+there is no need to re-initialize or re-define the
+system.  The \lmpcmd{thermo} command is called a second time to
+update the output frequency from 10 to 50 as soon as \lmpcmd{PART B} of
 the simulation starts.  In addition, a new \lmpcmd{thermo\_style}
-command changes which thermodynamic information is to be printed by LAMMPS
-during \textit{PART B}.  This is done because during molecular
-dynamics, the system will have a non-zero temperature (\textit{temp})
-and kinetic energy (\textit{ke}) and it is useful to monitor those.
-Here, \textit{pe} is the potential energy of the system, such that
-\textit{pe + ke = etotal}.
+command is introduced to specify the thermodynamic information LAMMPS should
+print during during \lmpcmd{PART B}.  This adjustment is done because during molecular
+dynamics, the system exhibits non-zero temperature (\lmpcmd{temp})
+and kinetic energy (\lmpcmd{ke}), which are useful to monitor.
+The \lmpcmd{pe} keyword represents the potential energy of the system, such that
+\lmpcmd{pe} + \lmpcmd{ke} = \lmpcmd{etotal}.
 
-Then, let us add a second \lmpcmd{Run} category by adding the following
-lines to \emph{PART B} of \flecmd{initial.lmp}:
+Then, add a second \lmpcmd{Run} category by including the following
+lines in \lmpcmd{PART B} of \flecmd{initial.lmp}:
 \begin{lstlisting}
 # 5) Run
 fix mynve all nve
 timestep 0.005
-run 10000
+run 50000
 \end{lstlisting}
-The \lmpcmd{fix nve} command is used to update the positions and
+The \lmpcmd{fix nve} command updates the positions and
 velocities of the atoms in the group \lmpcmd{all} at every step.  The
 group \lmpcmd{all} is a default group that contains every atom.  The
-last two lines set the value of the \lmpcmd{timestep} and the number of
+last two lines specify the value of the \lmpcmd{timestep} and the number of
 steps for the \lmpcmd{run}, respectively, corresponding to a total
-duration of 50 time units.
+duration of 250 time units.
 
-Since there are no other fix commands that change forces or velocities,
-and since we have periodic boundary conditions in all directions, the MD
-simulation will be performed in the microcanonical or NVE ensemble.
-This means the system has no exchange of energy outside the simulation
-box and the number of particles and the box volume are constant.  We can
-see that there is no equilibrium between potential and kinetic energy
-yet, as the former is falling while the latter is rising.  If you extend
-the run for more steps (say 100,000), the values for both kinetic and
-potential energy will plateau (indicating equilibrium), and the total
-energy should fluctuate around some constant value.
+\begin{note}
+Since no other fix commands alter forces or velocities,
+and periodic boundary conditions are applied in all directions, the MD
+simulation will be performed in the microcanonical (NVE) ensemble,
+which maintains a constant number of particles and a fixed box volume.
+In this ensemble, the system does not exchange energy outside
+the simulation box.
+\end{note}
 
-Now we change the \lmpcmd{Run} section to:
+Run the simulation using LAMMPS.  Initially, there is no equilibrium
+between potential and kinetic energy, as the potential energy
+decreases while the kinetic energy increases.  After approximately
+40\,000 steps, the values for both kinetic and potential energy
+plateau, indicating that the system has reached equilibrium, with
+the total energy fluctuating around a certain constant value.
+
+Now, we change the \lmpcmd{Run} section to (note the shorter run time):
 \begin{lstlisting}
 # 5) Run
 fix mynve all nve
 fix mylgv all langevin 1.0 1.0 0.1 1530917
 timestep 0.005
-run 10000
+run 15000
 \end{lstlisting}
 The new command adds a Langevin thermostat to the atoms in the group
 \lmpcmd{all}, with a desired target temperature of 1.0 temperature units
-throughout the run (the two numbers stand for the target at the beginning
+throughout the run (the two numbers represent the target temperature at the beginning
 and at the end of the run, which allows for a temperature ramp if
 they differ)~\cite{schneider1978molecular}.  A \lmpcmd{damping}
 parameter of 0.1 is used.  The \lmpcmd{damping} parameter determines how
@@ -804,17 +816,17 @@ seed used to initialize the random number generator used inside of
 independent simulations.  In the presence of a thermostat, the MD simulation
 will be performed in the canonical or NVT ensemble.
 
-Run the simulation again using LAMMPS. From the information
+Run the simulation again using LAMMPS.  From the information
 printed in the \guicmd{Output} window, one can see that the temperature
 starts from 0 but rapidly reaches the requested value and
-stabilizes itself near $T=1$ temperature units.  One can also see that
+stabilizes itself near $T=1$ temperature units.  One can also observe that
 the potential energy, $p_\text{e}$, rapidly decreases during energy
-minimization (see also figure~\ref{fig:evolution-energy}\,a).  After
+minimization (see also Fig.~\ref{fig:evolution-energy}\,a).  After
 the molecular dynamics simulation starts, $p_\text{e}$ increases until
 it reaches a plateau value of about -0.25.  The kinetic energy,
 $k_\text{e}$, is equal to zero during energy minimization and then
-increases during molecular dynamics until it reaches a plateau value of
-about 1.5 (Figure~\ref{fig:evolution-energy}\,b).
+increases rapibly during molecular dynamics until it reaches
+a plateau value of about 1.5 (Fig.~\ref{fig:evolution-energy}\,b).
 
 \begin{figure}
 \centering
@@ -840,7 +852,6 @@ by either using the \guicmd{Ctrl-D} keyboard shortcut or selecting
 \guicmd{Copy dump image command} from the \guicmd{File} menu.  This text
 can be pasted into the into the \lmpcmd{Visualization} section of
 \lmpcmd{PART B} of the \flecmd{initial.lmp} file.  This may look like the following:
-
 \begin{lstlisting}
 dump viz all image 100 myimage-*.ppm type type &
     size 800 800 zoom 1.452 shiny 0.7 fsaa yes &
@@ -854,14 +865,14 @@ steps.  The two \lmpcmd{type} keywords are for \lmpcmd{color} and
 \lmpcmd{diameter}, respectively.  Run the \flecmd{initial.lmp} using
 LAMMPS again, and a new window named \guicmd{Slide Show} will pop up.
 It will show each image created by the \lmpcmd{dump image} as it is
-created and after the simulation is finished (or stopped), the slide
-show viewer allows you to animate the trajectory by cycling through the
+created. After the simulation is finished (or stopped), the slideshow
+viewer allows you to animate the trajectory by cycling through the
 images.  The window also allows you to export the animation to a movie
 (provided the FFMpeg program is installed) and to bulk delete those
 image files.
 
 The rendering of the system can be further adjusted using the many
-options of the \lmpcmd{dump image} command.  The value for the
+options of the \lmpcmd{dump image} command.  Fir instance, the value for the
 \lmpcmd{shiny} keyword is used to adjust the shininess of the atoms, the
 \lmpcmd{box} keyword adds or removes a representation of the box, and
 the \lmpcmd{view} and \lmpcmd{zoom} keywords adjust the camera (and so
@@ -877,8 +888,27 @@ simulation from a previously saved configuration.
 
 Open the \flecmd{improved.min.lmp}, which was downloaded during the
 tutorial setup.  This file contains the \lmpcmd{Part A} of the
-\flecmd{initial.lmp} file, but \emph{without} the \lmpcmd{create\_atoms}
-commands in the \lmpcmd{System definition} section.
+\flecmd{initial.lmp} file, but \emph{without} any
+commands in the \lmpcmd{System definition} section:
+\begin{lstlisting}
+# 1) Initialization
+units lj
+dimension 3
+atom_style atomic
+boundary p p p
+# 2) System definition
+# 3) Settings
+mass 1 1.0
+mass 2 10.0
+pair_style lj/cut 4.0
+pair_coeff 1 1 1.0 1.0
+pair_coeff 2 2 0.5 3.0
+# 4) Visualization
+thermo 10
+thermo_style custom step etotal press
+# 5) Run
+minimize 1.0e-6 1.0e-6 1000 10000
+\end{lstlisting}
 
 We want to create the atoms of types 1 and 2 in two separate
 regions.  To achieve this, we need to add two \lmpcmd{region} commands and then
@@ -897,31 +927,30 @@ create_atoms 2 random 150 12756 cyl_in
 The \lmpcmd{side in} and \lmpcmd{side out} keywords are used to define
 regions representing the inside and outside of the cylinder of radius
 10 length units.  Then, append a sixth section titled \lmpcmd{Save system} at the end
-of the file with the following content (make sure the \lmpcmd{write\_data} command
-is placed \emph{after} the \lmpcmd{minimize} command):
+of the file, ensuring that the \lmpcmd{write\_data} command is placed \emph{after}
+the \lmpcmd{minimize} command:
 \begin{lstlisting}
 # 6) Save system
-write_data min_coords.data
+write_data improved.min.data
 \end{lstlisting}
 
+\begin{note}
 A key improvement to the input is the addition of the
 \lmpcmd{write\_data} command.  This command writes the state
-of the system to a text file called \flecmd{min\_coords.data}.
+of the system to a text file called \flecmd{improved.min.data}.
 This \flecmd{.data} file will be used later
 to restart the simulation from the final state of the energy
-minimization step without having to repeat the system creation and
-minimization.
+minimization step, eliminating the need to repeat the system creation and minimization.
+\end{note}
 
-Run the \flecmd{improved.min.lmp} file using LAMMPS.  At the end of the simulation, a file
-called \flecmd{min\_coords.data} is created.  You can view the contents
-of the file with the file view feature of LAMMPS--GUI, e.g.~from the
-\guicmd{File} menu or by right-clicking on the file name in the editor
-and selecting the entry \guicmd{View file `min\_coords.data'}.
+Run the \flecmd{improved.min.lmp} file using LAMMPS.  At the end of the simulation,
+a file called \flecmd{improved.min.data} is created.  You can view the contents
+of this file from the LAMMPS--GUI, by right-clicking on the file name in
+the editor and selecting the entry \guicmd{View file `improved.min.data'}.
 
 The created \flecmd{.data} file contains all the information necessary to
 restart the simulation, such as the number of atoms, the box size, the
-masses, and the pair coefficients.  The
-\flecmd{.data} file also contains the final
+masses, and the pair coefficients.  This \flecmd{.data} file also contains the final
 positions of the atoms within the \lmpcmd{Atoms} section.  The first five
 columns of the \lmpcmd{Atoms} section correspond (from left to right) to
 the atom indexes (from 1 to the total number of atoms, 1150), the atom
@@ -959,21 +988,32 @@ and the edges of the simulation box are represented as blue sticks.}
 To continue a simulation from the saved configuration, open the
 \flecmd{improved.md.lmp} file, which was downloaded during the tutorial setup.
 This file contains the \textit{Initialization} part from \flecmd{initial.lmp}
-and \flecmd{improved.min.lmp}.
+and \flecmd{improved.min.lmp}:
+\begin{lstlisting}
+# 1) Initialization
+units lj
+dimension 3
+atom_style atomic
+boundary p p p
+# 2) System definition
+# 3) Settings
+# 4) Visualization
+# 5) Run
+\end{lstlisting}
 
 Since we want to read the system from the data file, we do not need
 to repeat most of the commands from the \lmpcmd{System definition}
-and \lmpcmd{Settings} categories.  The exception is the \textit{pair\_style}
+and \lmpcmd{Settings} categories.  The exception is the \lmpcmd{pair\_style}
 command, which now must come \emph{before} the simulation box is defined,
 meaning before the \lmpcmd{read\_data} command.  Add the following
 lines to \flecmd{improved.md.lmp}:
 \begin{lstlisting}
 # 2) System definition
 pair_style lj/cut 4.0
-read_data min_coords.data
+read_data improved.min.data
 \end{lstlisting}
 
-By visualizing the system (see figure \ref{fig:improved-min}), you may
+By visualizing the system (see Fig.~\ref{fig:improved-min}), you may
 have noticed that some atoms left their original region during
 minimization.  To start the simulation from a clean slate, with only
 atoms of type 2 inside the cylinder and atoms of type 1 outside the
@@ -997,7 +1037,7 @@ regions, which is necessary since regions are not saved by the
 create groups containing all the atoms of type 1 and all the
 atoms of type 2, respectively.  The next two \lmpcmd{group} commands
 create atom groups based on their positions at the beginning of the
-simulation, i.e.~when the commands are being read by LAMMPS.  The last
+simulation, i.e.,~when the commands are being read by LAMMPS.  The last
 two \lmpcmd{group} commands create atom groups based on the intersection
 between the previously defined groups.  Finally, the two
 \lmpcmd{delete\_atoms} commands delete the atoms of type 1
@@ -1117,16 +1157,16 @@ sometimes referred to as the ``flying ice cube syndrome''~\cite{wong2016good}.
 \end{note}
 
 Run \flecmd{improved.md.lmp} and observe the mixing of the two populations
-over time (see also Fig.\,\ref{fig:evolution-population}).  From the
+over time (see also Fig.~\ref{fig:evolution-population}).  From the
 variables \lmpcmd{n1\_in} and \lmpcmd{n2\_in}, you can track the number
 of atoms in each region as a function of time
-(Fig.\,\ref{fig:mixing}\,a).  To view their evolution, select the entries
+(Fig.~\ref{fig:mixing}\,a).  To view their evolution, select the entries
 \guicmd{v\_n1\_in} or \guicmd{v\_n2\_in} in the \guicmd{Select data} drop-down
 menu in the \guicmd{Charts} window of LAMMPS--GUI.
 
 In addition, as the mixing progresses, the average coordination number
 between atoms of types 1 and 2 increases from about $0.01$ to $0.04$
-(Fig.\,\ref{fig:mixing}\,b).  This indicates that, over time, more and
+(Fig.~\ref{fig:mixing}\,b).  This indicates that, over time, more and
 more particles of type 1 come into contact with particles of type 2, as
 expected during mixing.  This can be observed using the entry
 \guicmd{c\_sumcoor12} in the \guicmd{Charts} drop-down menu.
@@ -1169,20 +1209,18 @@ dump_modify viz adiam 1 1 adiam 2 3 backcolor white &
 \end{lstlisting}
 Run LAMMPS again.  Now, the atoms of type 1 are colored based on the value
 of \lmpcmd{c\_coor12}, which is mapped continuously from turquoise to yellow
-and red for atoms with the highest coordination (Figure~\ref{fig:coords-viz}).
+and red for atoms with the highest coordination (Fig.~\ref{fig:coords-viz}).
 In the definition of the variable \lmpcmd{v\_coor12}, atoms of type 2 are
 all assigned a value of -1, and will therefore always be colored their default blue.
 
 \subsection{Tutorial 2: Pulling on a carbon nanotube}
 \label{carbon-nanotube-label}
 
-% "classical" or rather "conventional molecular"?
-% SG: "conventional" is indeed better
 In this tutorial, the system of interest is a small, single-walled
-carbon nanotube (CNT) in an empty box (Fig.\,\ref{fig:CNT}).  The CNT is
+carbon nanotube (CNT) in an empty box (Fig.~\ref{fig:CNT}).  The CNT is
 strained by fixing atoms at one end and moving atoms at the
 other end with constant velocity.  To illustrate the difference between
-conventional~\cite{typelabel_paper} and reactive force fields, this
+conventional and reactive force fields, this % SG: I am not sure why typelabel_paper was cited here. Am I wrong to remove it?
 tutorial is divided into two parts: in the first part, a conventional molecular force
 field (called OPLS-AA~\cite{jorgensenDevelopmentTestingOPLS1996}) is
 used and the bonds between the atoms of the CNT are unbreakable.  In the
@@ -1380,7 +1418,7 @@ delete_atoms random fraction 0.02 no rdel NULL 2793 bond yes
 \end{lstlisting}
 The \lmpcmd{delete\_atoms} command randomly deletes $2\,\%$ of the atoms from
 the \lmpcmd{rdel} group, here about 10 atoms (compare the top
-and the middle panels in Fig.\,\ref{fig:CNT-unbreakable}).
+and the middle panels in Fig.~\ref{fig:CNT-unbreakable}).
 
 \paragraph{The molecular dynamics}
 
@@ -1499,12 +1537,12 @@ with time $t$.  Here, the potential is OPLS-AA, and the CNT is unbreakable.}
 \end{figure}
 
 Run the simulation using LAMMPS.  As can be seen from the variable $L_\text{cnt}$, the length
-of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.\,\ref{fig:CNT-unbreakable-LE}\,a),
+of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.~\ref{fig:CNT-unbreakable-LE}\,a),
 as expected from the imposed constant velocity.  What you observe in the \guicmd{Slide Show}
-windows should resembles Fig.\,\ref{fig:CNT-unbreakable}.  The total energy of the system
+windows should resembles Fig.~\ref{fig:CNT-unbreakable}.  The total energy of the system
 shows a non-linear increase with $t$ once the deformation starts, which is expected
 from the typical dependency of bond energy with bond distance,
-$U_\text{b} = k_\text{b} \left( r - r_0 \right)^2$ (Fig.\,\ref{fig:CNT-unbreakable-LE}\,b).
+$U_\text{b} = k_\text{b} \left( r - r_0 \right)^2$ (Fig.~\ref{fig:CNT-unbreakable-LE}\,b).
 
 \paragraph{Importing YAML log file into Python}
 
@@ -1528,7 +1566,7 @@ NumPy `savetxt' function.  `thermo[0]' can be used to access the
 information from the first minimization run, and `thermo[1]' to access the
 information from the second MD run.  The data extracted from
 the \flecmd{unbreakable.yaml} file can then be used to plot the stress-strain
-curve, see Fig.\,\ref{fig:CNT-stress-strain-unbreakable}.
+curve, see Fig.~\ref{fig:CNT-stress-strain-unbreakable}.
 
 \begin{figure}
 \centering
@@ -1551,7 +1589,7 @@ to break if the applied deformation is large enough.
 
 \paragraph{Input file initialization}
 
-Open the input named 
+Open the input named
 \href{\filepath tutorial2/breakable.lmp}{\dwlcmd{breakable.lmp}} that should have
 been downloaded next to \lmpcmd{unbreakable.lmp} during the tutorial setup.
 There are only a few differences with the previous input.  First, the \lmpcmd{metal}
@@ -1639,7 +1677,7 @@ velocity cnt_bot set -0.75 0 0
 run 30000
 \end{lstlisting}
 Run the simulation.  Some bonds are expected to break before the end of the
-simulation (Fig.\,\ref{fig:CNT-deformed-breakable}).
+simulation (Fig.~\ref{fig:CNT-deformed-breakable}).
 
 \begin{figure}
 \centering
@@ -1653,9 +1691,9 @@ Looking at the evolution of the energy, one can see that the total
 energy $E_\text{tot}$ is initially increasing with the deformation.  When
 bonds break, the energy relaxes abruptly,
 as can be seen near $t=110~\text{ps}$ and again near $t=130~\text{ps}$ in
-Fig.\,\ref{fig:CNT-deformed-breakable}\,a.  Using the same script as previously to
+Fig.~\ref{fig:CNT-deformed-breakable}\,a.  Using the same script as previously to
 import the data into Python, the stress-strain
-curve can be generated, see Fig.\,\ref{fig:CNT-deformed-breakable}\,b.
+curve can be generated, see Fig.~\ref{fig:CNT-deformed-breakable}\,b.
 
 \begin{figure}
 \centering
@@ -1697,7 +1735,7 @@ represented as a transparent continuum field for clarity.}
 \end{figure}
 
 \noindent The goal of this tutorial is to use LAMMPS to solvate a small hydrophilic
-polymer (PEG - PolyEthylene Glycol) in a reservoir of water (Fig.\,\ref{fig:PEG}).
+polymer (PEG - PolyEthylene Glycol) in a reservoir of water (Fig.~\ref{fig:PEG}).
 Once the water reservoir is properly equilibrated at the desired temperature and
 pressure, the polymer molecule is added and a constant stretching force is applied
 to both ends of the polymer.  The evolution of the polymer length is measured as
@@ -1768,7 +1806,7 @@ This tutorial uses type labels~\cite{typelabel_paper} to map each of the
 numeric atom types with a string (see the \flecmd{parameters.inc} file):
 \lmpcmdnote{labelmap atom 1 OE 2 C 3 HC 4 H 5 CPos 6 OAlc 7 OW 8 HW}
 Therefore, the oxygen and hydrogen atoms of water (respectively types 7 and 8)
-can be referred to as `OW' and `HW', respectively.  Similar maps are used for 
+can be referred to as `OW' and `HW', respectively.  Similar maps are used for
 the bond types, angle types, and dihedral types.
 \end{note}
 
@@ -1861,8 +1899,8 @@ write_restart water.restart
 The final state is saved in a binary file named \flecmd{water.restart}.
 Run the input using LAMMPS.  The system reaches its equilibrium temperature
 after just a few picoseconds, and its equilibrium density after approximately
-10~picoseconds (Fig.\,\ref{fig:PEG-density}).  A snapshot of the equilibrated
-system can also be seen in Fig.\,\ref{fig:PEG-water}.
+10~picoseconds (Fig.~\ref{fig:PEG-density}).  A snapshot of the equilibrated
+system can also be seen in Fig.~\ref{fig:PEG-water}.
 
 \begin{figure}
 \centering
@@ -1988,7 +2026,7 @@ sure that the temperature remains close to the
 target value of $300~\text{K}$ throughout the entire simulation, and that
 the volume and total energy are almost constant, indicating
 that the system was in a reasonable configuration from the start.
-See a snapshot of the system in Fig.\,\ref{fig:PEG-solvated}.
+See a snapshot of the system in Fig.~\ref{fig:PEG-solvated}.
 
 \begin{figure}
 \centering
@@ -2001,7 +2039,7 @@ See a snapshot of the system in Fig.\,\ref{fig:PEG-solvated}.
 \subsubsection{Stretching the PEG molecule}
 
 Here, a constant force is applied to both ends of the PEG molecule until it
-stretches.  Open the file named \flecmd{pull.lmp}, which 
+stretches.  Open the file named \flecmd{pull.lmp}, which
 only contains two lines:
 \begin{lstlisting}
 kspace_style pppm 1e-5
@@ -2023,15 +2061,15 @@ group topull2 variable end2
 \end{lstlisting}
 These lines identify the oxygen atoms (\lmpcmd{OAlc}) at the ends of the PEG
 molecule and calculates their center of mass along the $x$ axis.  It then
-divides these atoms into two groups, \lmpcmd{OAlc} (i.e., the OAlc atom to
-the right of the center) and \lmpcmd{OAlc} (i.e., the OAlc atom to the right
+divides these atoms into two groups, \lmpcmd{OAlc} (i.e.,~the OAlc atom to
+the right of the center) and \lmpcmd{OAlc} (i.e.,~the OAlc atom to the right
 of the center), for applying force during the stretching process.
 
 Add the following \lmpcmd{dump} command to create images of the system:
 \begin{lstlisting}
 dump viz all image 250 myimage-*.ppm type &
   type shiny 0.1 box no 0.01 &
-  view 0 90 zoom 3 fsaa yes bond atom 0.8 size 1000 500 
+  view 0 90 zoom 3 fsaa yes bond atom 0.8 size 1000 500
 dump_modify viz backcolor white &
   acolor OW red acolor HW white &
   acolor OE darkred acolor OAlc darkred &
@@ -2087,13 +2125,13 @@ the entropic contributions from both the water and PEG molecules.
 
 Run the \flecmd{pull.lmp} file using LAMMPS.  From the generated images of the system,
 you should observe that the PEG molecule eventually aligns
-in the direction of the applied force (as seen in Fig.\,\ref{fig:PEG-in-water}).
+in the direction of the applied force (as seen in Fig.~\ref{fig:PEG-in-water}).
 The evolutions of the radius of gyration over
 time indicates that the PEG quickly adjusts to the external force
-(Fig.\,\ref{fig:PEG-distance}\,a).  Additionally, from the values of the dihedral angles
+(Fig.~\ref{fig:PEG-distance}\,a).  Additionally, from the values of the dihedral angles
 printed in the \flecmd{pull.dat} file, you can create a histogram
 of dihedral angles for a specific type.  For example, the angle $\phi$ for dihedrals
-of type 1 (C-C-OE-C) is shown in Fig.\,\ref{fig:PEG-distance}\,b.
+of type 1 (C-C-OE-C) is shown in Fig.~\ref{fig:PEG-distance}\,b.
 
 \begin{figure}
 \centering
@@ -2129,7 +2167,7 @@ imposed lateral motion of the walls.}
 \end{figure}
 
 \noindent The objective of this tutorial is to simulate an electrolyte
-nanoconfined and sheared between two walls (Fig.\,\ref{fig:NANOSHEAR}).  The density
+nanoconfined and sheared between two walls (Fig.~\ref{fig:NANOSHEAR}).  The density
 and velocity profiles of the fluid in the direction normal to the walls are
 extracted to highlight the effect of confining a fluid on its local properties.
 This tutorial demonstrates key concepts of combining a fluid and a solid in
@@ -2345,7 +2383,7 @@ delete_atoms random fraction 0.15 yes H2O NULL 482793 mol yes
 \end{lstlisting}
 
 To create an image of the system, add the following \lmpcmd{dump} image
-into \flecmd{create.lmp} (see also Fig.\,\ref{fig:NANOSHEAR-system}):
+into \flecmd{create.lmp} (see also Fig.~\ref{fig:NANOSHEAR-system}):
 \begin{lstlisting}
 dump mydmp all image 200 myimage-*.ppm type type &
   shiny 0.1 box no 0.01 view 90 0 zoom 1.8
@@ -2401,7 +2439,7 @@ angle_style harmonic
 pair_style lj/cut/tip4p/long O H O-H H-O-H 0.1546 12.0
 kspace_style pppm/tip4p 1.0e-5
 kspace_modify slab 3.0
-    
+
 read_data create.data
 
 include parameters.inc
@@ -2456,7 +2494,7 @@ run 4000
 \end{lstlisting}
 When running the \flecmd{minimize.lmp} file with LAMMPS, you should observe that the
 total energy of the system is initially very high but rapidly decreases,
-eventually reaching a plateau (Fig.\,\ref{fig:NANOSHEAR-minimization}).  From the generated
+eventually reaching a plateau (Fig.~\ref{fig:NANOSHEAR-minimization}).  From the generated
 images of the system, you will notice that some of the atoms are moving, particularly
 those that were initially in problematic positions.
 
@@ -2482,7 +2520,7 @@ Instead, we use the classic \lmpcmd{fix nve} command.
 
 When running the \flecmd{minimize.lmp} file with LAMMPS, you should observe that the
 the temperature reaches the desired value of $300\,\text{K}$, and that the total
-energy reaches a plateau (Fig.\,\ref{fig:NANOSHEAR-minimization}).  The generated file
+energy reaches a plateau (Fig.~\ref{fig:NANOSHEAR-minimization}).  The generated file
 \flecmd{minimize.data} contains the final state of the system.
 
 \begin{figure}
@@ -2565,7 +2603,7 @@ write_data equilibrate.data nocoeff
 \end{lstlisting}
 Run the \flecmd{input.lmp} file using LAMMPS.  As seen from the values of
 \lmpcmd{deltaz}, the distance between the two walls reaches
-an equilibrium value (Fig.\,\ref{fig:NANOSHEAR-equilibration}).
+an equilibrium value (Fig.~\ref{fig:NANOSHEAR-equilibration}).
 
 \begin{note}
 Note that it is generally recommended to run a longer equilibration.  In this case,
@@ -2661,7 +2699,7 @@ dump_modify mydmp backcolor white &
 
 thermo 250
 thermo_modify temp Tfluid
-thermo_style custom step temp etotal f_mysf1[1] f_mysf2[1] 
+thermo_style custom step temp etotal f_mysf1[1] f_mysf2[1]
 \end{lstlisting}
 Let us also extract the density and velocity profiles using
 the \lmpcmd{chunk/atom} and \lmpcmd{ave/chunk} commands.  These commands are
@@ -2733,7 +2771,7 @@ higher than what would be measured in the absence of walls.
 The objective of this tutorial is to demonstrate how the reactive force field ReaxFF
 can be used to calculate the partial charges of a system undergoing deformation, as well as
 the formation and breaking of chemical bonds~\cite{van2001reaxff, zou2012investigation}.
-The system simulated in this tutorial is a block of silicon dioxide $\text{SiO}_2$ (Fig.\,\ref{fig:SIO})
+The system simulated in this tutorial is a block of silicon dioxide $\text{SiO}_2$ (Fig.~\ref{fig:SIO})
 which is deformed until it ruptures.  Particular attention is paid to the evolution
 of atomic charges during the deformation of the structure, with chemical reactions
 resulting from the deformation being tracked over time.
@@ -2814,7 +2852,7 @@ You can generate histograms of the charges for each atom type using
 fix myhis1 grpSi ave/histo 10 500 5000 -1.5 2.5 1000 v_vq &
   file relax-Si.histo mode vector
 fix myhis2 grpO ave/histo 10 500 5000 -1.5 2.5 1000 v_vq &
-  file relax-O.histo mode vector    
+  file relax-O.histo mode vector
 \end{lstlisting}
 We can also use the \lmpcmd{fix reaxff/species} to evaluate what species are
 present within the simulation.  It will be useful later when the system is deformed,
@@ -2838,15 +2876,15 @@ Run the \flecmd{relax.lmp} file using LAMMPS.  As seen from \flecmd{relax.specie
 only one species is detected, called \lmpcmd{O384Si192}, representing the entire system.
 
 As the simulation progresses, the charge of every atom fluctuates
-because it is adjusting to the local environment of the atom (Fig.\,\ref{fig:SIO-charge}\,a).
+because it is adjusting to the local environment of the atom (Fig.~\ref{fig:SIO-charge}\,a).
 It is also observed that the averaged charges for silicon and oxygen
 atoms fluctuate significantly at the beginning of the simulation, corresponding
 to a rapid change in the system volume, which causes interatomic distances to
-shift quickly (Fig.\,\ref{fig:SIO-charge}\,b).  The atoms with the
+shift quickly (Fig.~\ref{fig:SIO-charge}\,b).  The atoms with the
 most extreme charges are located at structural defects,
-such as dangling oxygen groups (Fig.\,\ref{fig:SIO-slice}).
+such as dangling oxygen groups (Fig.~\ref{fig:SIO-slice}).
 Finally, the charge distribution $P(q)$ can be plotted using the charge values
-from the \flecmd{.histo} files (Fig.\,\ref{fig:SIO-distribution}\,a).
+from the \flecmd{.histo} files (Fig.~\ref{fig:SIO-distribution}\,a).
 
 \begin{figure}
 \centering
@@ -2947,12 +2985,12 @@ write_data deform.data
 Run the \lmpcmd{deform.lmp} file using LAMMPS.  During the deformation, the charge
 values progressively evolve until the structure eventually breaks down.  After the
 structure breaks down, the charges equilibrate near new average values that differ
-from the initial averages (Fig.\,\ref{fig:SIO-deformed-charge}\,a).  The difference
+from the initial averages (Fig.~\ref{fig:SIO-deformed-charge}\,a).  The difference
 between the initial and the final charges can be explained by the presence of
 defects, as well as new solid/vacuum interfaces, and the fact that surface atoms
-typically have different charges compared to bulk atoms (Fig.\,\ref{fig:SIO-deformed}).
+typically have different charges compared to bulk atoms (Fig.~\ref{fig:SIO-deformed}).
 You can also see a sharp increase in temperature during the rupture of
-the material (Fig.\,\ref{fig:SIO-deformed-charge}\,b).
+the material (Fig.~\ref{fig:SIO-deformed-charge}\,b).
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-deformed}
@@ -2965,7 +3003,7 @@ about $-0.9 ~ \text{e}$ appear in blue.}
 \end{figure}
 
 You can examine the charge distribution after deformation, as well as during
-deformation (Fig.\,\ref{fig:SIO-distribution}\,b).  As expected, the final
+deformation (Fig.~\ref{fig:SIO-distribution}\,b).  As expected, the final
 charge distribution slightly differs from the previously calculated one.  If
 no new species were formed during the simulation, the \flecmd{deform.species} file
 should look like this:
@@ -3078,7 +3116,7 @@ form surface groups (such as hydroxyl (-OH) groups).
   20000      1        1        1
 \end{lstlisting}
 At the end of the simulation, hydroxyl (-OH) groups can be seen at the interfaces
-(Fig.\,\ref{fig:SIO-decorated}).
+(Fig.~\ref{fig:SIO-decorated}).
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-decorated}
@@ -3104,7 +3142,7 @@ cyan and white, oxygen (O) atoms from SiO$_2$ in red, and silicon (Si) atoms in 
 
 \noindent The objective of this tutorial is to combine molecular dynamics and
 grand canonical Monte Carlo simulations to compute the adsorption of water
-molecules in cracked silica material (Fig.\,\ref{fig:GCMC}).  This tutorial
+molecules in cracked silica material (Fig.~\ref{fig:GCMC}).  This tutorial
 illustrates the use of the grand canonical ensemble in molecular simulation, an
 open ensemble where the number of atoms or molecules in the simulation box can vary.
 By employing the grand canonical ensemble, we will set the chemical
@@ -3165,7 +3203,7 @@ Let us also print the box volume and system density, alongside the
 temperature and total energy:
 \begin{lstlisting}
 thermo 250
-thermo_style custom step temp etotal vol density 
+thermo_style custom step temp etotal vol density
 \end{lstlisting}
 
 % SG
@@ -3190,7 +3228,7 @@ fix mynvt all nvt temp 6000 300 0.1
 run 30000
 \end{lstlisting}
 In the third step, the system is equilibrated at the final desired
-conditions, $T = 300\,\text{K}$ and $p = 1\,\text{atm}$, 
+conditions, $T = 300\,\text{K}$ and $p = 1\,\text{atm}$,
 using an anisotropic pressure coupling:
 \begin{lstlisting}
 unfix mynvt
@@ -3205,12 +3243,12 @@ Anisotropic barostats adjust the dimensions independently, which is
 generally suitable for a solid phase.
 
 Run the simulation using LAMMPS.  From the \guicmd{Charts} window, the temperature
-evolution can be observed, showing that it closely follows the desired annealing procedure (Fig.\,\ref{fig:GCMC-dimension}\,a).
+evolution can be observed, showing that it closely follows the desired annealing procedure (Fig.~\ref{fig:GCMC-dimension}\,a).
 The evolution of the box dimensions over time confirms that the box
 deformed during the last stage of the simulation
-(Fig.\,\ref{fig:GCMC-dimension}\,b).  After the simulation completes, the final
+(Fig.~\ref{fig:GCMC-dimension}\,b).  After the simulation completes, the final
 LAMMPS topology file called \flecmd{generate.data}
-will be located next to \flecmd{generate.lmp} (Fig.\,\ref{fig:GCMC-snapshot}).
+will be located next to \flecmd{generate.lmp} (Fig.~\ref{fig:GCMC-snapshot}).
 
 \begin{figure}
 \centering
@@ -3274,7 +3312,7 @@ write_data cracking.data
 The \lmpcmd{fix nvt} command is employed to control the temperature of the system.
 As observed from the generated images, the atoms
 progressively adjust to the changing box dimensions. At some point, bonds begin to break,
-leading to the appearance of dislocations (Fig.\,\ref{fig:GCMC-cracked}).
+leading to the appearance of dislocations (Fig.~\ref{fig:GCMC-cracked}).
 
 \begin{figure}
 \centering
@@ -3463,7 +3501,7 @@ option for water is used to specify that the number of molecules will not be con
 Finally, let us use the \textit{fix gcmc} and perform the grand canonical Monte
 Carlo steps.  Add the following lines into \flecmd{gcmc.lmp}:
 \begin{lstlisting}
-variable tfac equal 5.0/3.0 
+variable tfac equal 5.0/3.0
 fix fgcmc H2O gcmc 100 100 0 0 65899 300 -0.5 0.1 &
   mol h2omol tfac_insert ${tfac} shake shak &
   full_energy pressure 100
@@ -3537,7 +3575,7 @@ sampling method.}
 
 \noindent The objective of this tutorial is to measure the free energy profile
 of particles through a barrier potential using two methods: free sampling and
-umbrella sampling~\cite{kastner2011umbrella, allen2017computer, frenkel2023understanding} (Fig.\,\ref{fig:US}).
+umbrella sampling~\cite{kastner2011umbrella, allen2017computer, frenkel2023understanding} (Fig.~\ref{fig:US}).
 To simplify the process and minimize computation time, the barrier potential will be
 imposed on the atoms using an additional force, mimicking the presence of a repulsive
 area in the middle of the simulation box without needing to simulate additional atoms.
@@ -3618,7 +3656,7 @@ F = \dfrac{U_0}{\delta} \left[ \dfrac{1}{(x-x_0)^2/\delta^2+1}
 - \dfrac{1}{(x+x_0)^2/\delta^2+1} \right].
 \label{eq:F}
 \end{equation}
-Fig.\,\ref{fig:potential} shows the potential $U$ and force $F$ along the $x$-axis.
+Fig.~\ref{fig:potential} shows the potential $U$ and force $F$ along the $x$-axis.
 With $U_0 = 1.5 \epsilon = 0.36\,\text{kcal/mol}$, $U_0$ is of the same order of magnitude as the
 thermal energy $k_\text{B} T = 0.24\,\text{kcal/mol}$, where $k_\text{B} = 0.002\,\text{kcal/mol/K}$
 is the Boltzmann constant and $T = 119.8\,\text{K}$ is the temperature
@@ -3628,8 +3666,8 @@ frequently overcome the energy barrier due to thermal agitation.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-potential}
-\caption{Potential $U$ given in Eq.\,\eqref{eq:U} (a) and force $F$ given in
-Eq.\,\eqref{eq:F} (b) as functions of the coordinate $x$. Here,
+\caption{Potential $U$ given in Eq.~\eqref{eq:U} (a) and force $F$ given in
+Eq.~\eqref{eq:F} (b) as functions of the coordinate $x$. Here,
 $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\AA{}}$.}
 \label{fig:potential}
 \end{figure}
@@ -3681,8 +3719,8 @@ run 50000
 Run the simulation with LAMMPS.  The number of atoms in the
 central region, $n_\mathrm{center}$, reaches
 its equilibrium value after approximately $40\,\text{ps}$
-(Fig.\,\ref{fig:US-density-evolution}).  A snapshot of the
-equilibrated system is shown in Fig.\,\ref{fig:US-system-unbiased}.
+(Fig.~\ref{fig:US-density-evolution}).  A snapshot of the
+equilibrated system is shown in Fig.~\ref{fig:US-system-unbiased}.
 
 \paragraph{Run and data acquisition}
 
@@ -3717,11 +3755,11 @@ $\delta = 0.5~\text{\AA{}}$, and $x_0 = 5~\text{\AA{}}$.}
 \paragraph{Data analysis}
 
 Once the simulation is complete, the density profile shows that the density in the center of the box is
-about two orders of magnitude lower than inside the reservoir (Fig.\,\ref{fig:US-density}\,a).
-Next, we plot $-R T \ln(\rho/\rho_\mathrm{bulk})$ (i.e.~Eq.\,\eqref{eq:G} where
+about two orders of magnitude lower than inside the reservoir (Fig.~\ref{fig:US-density}\,a).
+Next, we plot $-R T \ln(\rho/\rho_\mathrm{bulk})$ (i.e.~Eq.~\eqref{eq:G} where
 the pressure ratio $p/p_\mathrm{bulk}$ is replaced by the density ratio
 $\rho/\rho_\mathrm{bulk}$, assuming the system behaves as an ideal gas) and compare it
-with the imposed potential $U$ from Eq.\,\eqref{eq:U} (Fig.\,\ref{fig:US-density}\,b).
+with the imposed potential $U$ from Eq.~\eqref{eq:U} (Fig.~\ref{fig:US-density}\,b).
 The reference density, $\rho_\text{bulk} = 0.0009~\text{\AA{}}^{-3}$,
 was estimated by measuring the density of the reservoir from the raw density
 profiles.  The agreement between the MD results and the imposed energy profile
@@ -3744,7 +3782,7 @@ $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\
 \includegraphics[width=\linewidth]{US-density}
 \caption{a) Fluid density $\rho$ along the $x$ direction.
 b) Potential $U$ as a function of $x$ measured using free sampling (blue disks)
-compared to the imposed potential given in Eq.\,\eqref{eq:U} (dark line).
+compared to the imposed potential given in Eq.~\eqref{eq:U} (dark line).
 Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, $x_0 = 10~\text{\AA{}}$,
 and the measured reference density in the reservoir is $\rho_\text{bulk} = 0.0009~\text{\AA{}}^{-3}$.} % SG: check units of rho bulk
 \label{fig:US-density}
@@ -3804,7 +3842,7 @@ create_box 2 myreg
 create_atoms 2 single 0 0 0
 create_atoms 1 random 199 34134 myreg overlap 3 maxtry 50
 \end{lstlisting}
-Next, we assign the same mass and LJ parameters to both atom types 
+Next, we assign the same mass and LJ parameters to both atom types
 1 and 2, and place the atoms of type 2 into a group named \lmpcmd{topull}:
 \begin{lstlisting}
 mass * 39.948
@@ -3842,7 +3880,7 @@ So far, our code resembles that of Method 1, except for the additional particle
 of type 2.  Particles of types 1 and 2 are identical, with the same mass
 and LJ parameters.  However, the particle of type 2 will also
 be exposed to the biasing potential $V$, which forces it to explore the
-central part of the box (Fig.\,\ref{fig:US-system-biased}).
+central part of the box (Fig.~\ref{fig:US-system-biased}).
 
 \begin{figure}
 \centering
@@ -3916,7 +3954,7 @@ where -30 and 30 are the boundaries, 50 is the number of bins, 1e-8 is the toler
 and 119.8 is the temperature in Kelvin.  A file called \flecmd{umbrella-sampling.dat} is created,
 containing the free energy profile in kcal/mol.  The resulting PMF can be compared
 with the imposed potential $U$, showing excellent agreement
-(Fig.\,\ref{fig:US-freenergy}).  Remarkably, this excellent agreement is achieved despite
+(Fig.~\ref{fig:US-freenergy}).  Remarkably, this excellent agreement is achieved despite
 the very short calculation time and the high value for the energy barrier.
 Achieving similar results through free sampling would require performing extremely
 long and computationally expensive simulations.
@@ -3925,7 +3963,7 @@ long and computationally expensive simulations.
 \centering
 \includegraphics[width=\linewidth]{US-free-energy}
 \caption{The potential $U$ as a function of $x$, measured using umbrella sampling
-(blue disks), is compared to the imposed potential given in Eq.\,\eqref{eq:U}
+(blue disks), is compared to the imposed potential given in Eq.~\eqref{eq:U}
 (dark line). Parameters are $U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$,
 and $x_0 = 10~\text{\AA{}}$.}
 \label{fig:US-freenergy}
@@ -3936,29 +3974,27 @@ and $x_0 = 10~\text{\AA{}}$.}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.55\linewidth]{REACT}
-\caption{Polymer melt made in nylon and carbon nanotubes (CNTs) simulated during
-\hyperref[bond-react-label]{Tutorial 8}. The water molecules (in red and white)
-are created by the polymerization of nylon simulation using REACTER.}
+\includegraphics[width=0.7\linewidth]{REACT.png}
+\caption{Initial configuration for \hyperref[bond-react-label]{Tutorial 8}.
+The system consists of 200 styrene molecules packed around a single-walled
+CNT, with a mass density for the whole system of $0.9~\text{g/cm}^3$.}
 \label{fig:REACT}
 \end{figure}
 
-The goal of this tutorial is to create a system made of 
-carbon nanotubes (CNTs) embedded in a polymer melt made in nylon-6,6 (Fig.\,\ref{fig:REACT}). The
-REACTER protocol is used to simulate the polymerization of nylon, and the formation
-of water molecules is followed in time~\cite{gissinger2020reacter, gissinger2024molecular}.
-In contrast with Airebo (\hyperref[carbon-nanotube-label]{Tutorial 2})
+The goal of this tutorial is to create a model of a carbon nanotube (CNT) embedded
+in a polymer melt made of polystyrene (PS) (Fig.~\ref{fig:REACT}).  The
+REACTER protocol is used to simulate the polymerization of styrene monomers, and the
+polymerization reaction is followed in time \cite{gissinger2017polymer, gissinger2020reacter, gissinger2024molecular}.
+In contrast with AIREBO (\hyperref[carbon-nanotube-label]{Tutorial 2})
 and ReaxFF (\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}), the REACTER
 protocol relies on the use of a \textit{classical} force field.
 
 \subsubsection{Creating the system}
 
-The first step of the tutorial is to mix small carbon nanotubes
-with the initial, unreacted, molecules. The molecules are hexamethylenediamine
-(C$_6$H$_{16}$N$_2$) and adipic acid (C$_6$H$_{10}$O$_4$). Create a new input
-file, call it \textit{mixing.lmp}, and copy the following lines into it:
-{\normalsize
-\begin{verbatim}
+To begin this tutorial, select \guicmd{Start Tutorial 8} from the
+\guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.
+The editor should display the following content corresponding to \flecmd{mixing.lmp}:
+\begin{lstlisting}
 units real
 boundary p p p
 atom_style full
@@ -3969,147 +4005,155 @@ angle_style class2
 bond_style class2
 dihedral_style class2
 improper_style class2
+
 pair_modify tail yes mix sixthpower
 special_bonds lj/coul 0 0 1
-\end{verbatim}
-}
-The \textit{class2} styles compute a 6/9 Lennard-Jones~\cite{sun1998compass}.
-The \textit{class2} bonds, angles, dihedrals, and impropers are used as
-well, see the documention for a description of their respective potentials.
-The \textit{mix sixthpower} imposes the following mixing rule for the calculation
-of the cross coefficients: $\sigma_{ij} = ( 0.5 (\sigma^6_i+\sigma_j^6))^{1/6}$,
-and $\epsilon_{ij} = (2 \sqrt{\epsilon_i \epsilon_j} \sigma^3_i \sigma^3_j)
-/ (\sigma^6_i+\sigma_j^6)$.
+\end{lstlisting}
+The \lmpcmd{class2} styles compute a 6/9 Lennard-Jones potential~\cite{sun1998compass}.
+The \textit{class2} bond, angle, dihedral, and improper styles are used as
+well, see the documentation for a description of their respective potentials.
+The \lmpcmd{mix sixthpower} imposes the following mixing rule for the calculation
+of the cross coefficients: 
+\begin{eqnarray}
+\nonumber
+\sigma_{ij} & = & 2^{-1/6} (\sigma^6_i+\sigma_j^6)^{1/6}, ~ \text{and} \\
+\nonumber
+\epsilon_{ij} & = & \dfrac{2 \sqrt{\epsilon_i \epsilon_j} \sigma^3_i \sigma^3_j}{\sigma^6_i+\sigma_j^6}.
+\end{eqnarray}
 
-Let us read a data file named \href{\filepath tutorial8/nylon.data}{\textit{nylon.data}}
-containing the unreacted molecule template, and let us replicate it. Add the
-folloxing lines to \textit{mixing.lmp}:
-{\normalsize
-\begin{verbatim}
-read_data nylon.data &
-  extra/bond/per/atom 5  &
-  extra/angle/per/atom 15 &
-  extra/dihedral/per/atom 15 &
-  extra/improper/per/atom 25 &
-  extra/special/per/atom 25
-replicate 3 4 4
-\end{verbatim}
-}
-The resulting box is $(7.2\,\text{nm})^3$ in size, and its density is low
-enough that inserting CNTs will be easy.
-% S.G.: @jrgissing, here we could describe the content of nylon.data.
-% How was it created, what is the specifity of the molecules involved, etc...
-
-To add 5 CNTs to the simulation box, add the following commands
-to \textit{mixing.lmp}:
-{\normalsize
-\begin{verbatim}
-molecule CNT cnt.molecule
-create_atoms 0 random 5 8305 NULL overlap 3 &
-  maxtry 500 mol CNT 7687
-\end{verbatim}
-}
-Let us use the \textit{minimize} command to reduce the energy of the system:
-{\normalsize
-\begin{verbatim}
+Let us read the \href{\filepath tutorial8/CNT.data}{\dwlcmd{CNT.data}} file, which
+contains a periodic single-walled CNT.  Add the following line to \flecmd{mixing.lmp}:
+\begin{lstlisting}
+read_data CNT.data extra/special/per/atom 20
+\end{lstlisting}
+The CNT is approximately $1.1~\text{nm}$ in diameter and $1.6\,\text{nm}$ in length, oriented
+along the $x$-axis. The simulation box is as large as 5.2~nm in the two other dimensions,
+making it straightforward to fill the box with styrene.
+To add 200 styrene molecules to the simulation box, using the
+\href{\filepath tutorial8/styrene.mol}{\dwlcmd{styrene.mol}} file.
+Include the following commands to \flecmd{mixing.lmp}:
+\begin{lstlisting}
+molecule styrene styrene.mol
+create_atoms 0 random 200 8305 NULL overlap 2.75 &
+    maxtry 500 mol styrene 7687
+\end{lstlisting}
+Finally, let us use the \lmpcmd{minimize} command to reduce the potential energy of the system:
+\begin{lstlisting}
 minimize 1.0e-4 1.0e-6 100 1000
 reset_timestep 0
-\end{verbatim}
-}
-Then, let us use \textit{dump image} to output images every 1000 steps:
-{\normalsize
-\begin{verbatim}
-dump mydmp all image 1000 dump.mixing.*.ppm &
-  type type shiny 0.1 box no 0.01 &
-  view 0 0 zoom 1.8 fsaa yes bond atom 0.5
-dump_modify mydmp backcolor white &
-  acolor c2 gray acolor c_1 lightslategray &
-  acolor o dimgray acolor o_1 dimgray &
-  acolor hc lightslategray &
-  acolor ho lightslategray &
-  acolor hn lightslategray acolor hw white &
-  acolor o* red acolor n darkslategray &
-  acolor na darkslategray &
-  acolor cp lightpink &
-  adiam c2 0.3 adiam c_1 0.3 &
-  adiam cp 0.3 adiam o 0.28 &
-  adiam o_1 0.28 adiam o* 2.8 &
-  adiam hc 0.15 adiam ho 0.15 &
-  adiam hn 0.15 adiam hw 1.5 &
-  adiam n 0.3 adiam na 0.3 
-\end{verbatim}
-}
-Then, let us perform a short equilibration of system using \textit{fix npt}
-with a isotropic couplage. To speed up the equilibration of the system, let us 
-impose a relatively large pressure of 1000\,atm for the first 10\,ps:
-{\normalsize
-\begin{verbatim}
-velocity all create 300 1829 dist gaussian &
-  mom yes rot yes
-fix mynpt all npt temp 300 300 100 &
-  iso 1000 1000 1000
+\end{lstlisting}
 
-thermo 1000
-thermo_style custom step temp pe etotal press &
-  density vol
+Then, let us densify the system to a target value of $0.9~\text{g/cm}^3$
+by manually shrinking the simulation box at a constant rate.  The dimension parallel
+to the CNT axis is maintained fixed because the CNT is periodic in that direction.
+Add the following commands to \flecmd{mixing.lmp}:
+% SG: I removed the loop local, unless its important? But if it is, we have to 
+% explain what it does and why it was chosen here.
+\begin{lstlisting}
+velocity all create 530 9845 dist gaussian rot yes
+fix mynvt all nvt temp 530 530 100
+
+fix mydef all deform 1 y erate -0.0001 z erate -0.0001
+variable rho equal density
+fix myhal all halt 10 v_rho > 0.9 error continue
+
+thermo 200
+thermo_style custom step temp pe etotal press density
+
+run 9000
+\end{lstlisting}
+The \lmpcmd{fix halt} command is used to stop the box shrinkage once the
+target density is reached. 
+
+For the next stage of the simulation, we will use \lmpcmd{dump image} to
+output images every 200 steps:
+\begin{lstlisting}
+dump viz all image 200 myimage-*.ppm &
+  type type shiny 0.1 box no 0.01 size 1000 1000 &
+  view 90 0 zoom 1.8 fsaa yes bond atom 0.5
+dump_modify viz backcolor white &
+  acolor cp gray acolor c=1 gray &
+  acolor c= gray acolor c1 deeppink &
+  acolor c2 deeppink acolor c3 deeppink &
+  adiam cp 0.3 adiam c=1 0.3 &
+  adiam c= 0.3 adiam c1 0.3 &
+  adiam c2 0.3 adiam c3 0.3 &
+  acolor hc white adiam hc 0.15
+\end{lstlisting}
+For the following $10~\text{ps}$, let us equilibrate the densified system
+in the constant-volume ensemble, and write the final state of the
+system in a file named \flecmd{mixing.data}:
+\begin{lstlisting}
+unfix mydef
+unfix myhal
+reset_timestep 0
+
+group CNT molecule 1 2 3
+fix myrec CNT recenter NULL 0 0 units box shift all
 
 run 10000
-\end{verbatim}
-}
-Then, for the following 20\,ps, let us continue the equilibration
-with an imposed pressure of 1\,atm, and write the final state of the
-system in a file named \textit{cnt-nylon-mix.data}:
-{\normalsize
-\begin{verbatim}
-fix mynpt all npt temp 300 300 100 iso 1 1 1000
 
-run 20000
-write_data cnt-nylon-mix.data
-\end{verbatim}
-}
-As the time progresses, the density $\rho$ of the system progressively
-converges toward an equilibrium value $\rho \approx 1.3$\,g/cm$^3$
-(Fig.\,\ref{fig:evolution-density}).
+write_data mixing.data
+\end{lstlisting}
+For visualization purposes, the atoms from the CNT \lmpcmd{group} is moved
+to the center of the box using \lmpcmd{fix recenter}.
+As the time progresses, the system density,
+$\rho$, gradually converges toward the target value of $0.8$\,g/cm$^3$ (Fig.~\ref{fig:evolution-density}\,a).
+Meanwhile, the total energy of the system initially evolves rapidly, reflecting the
+densification process, and then eventually stabilizes (Fig.~\ref{fig:evolution-density}\,b).
+The final state is shown in Fig.~\ref{fig:REACT}.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{REACT-mixing}
-\caption{Evolution of the system density, $\rho$, as a function of the
-time, $t$, during equilibration.}
+\caption{a) Evolution of the density, $\rho$, as a function of the
+time, $t$, during equilibration of the system from \hyperref[bond-react-label]{Tutorial 8}.
+b) Evolution of the total energy, $E_\text{tot}$, of the system.
+The vertical dashed lines mark the transition between the different
+phases of the simulation.}
 \label{fig:evolution-density}
 \end{figure}
 
-\subsubsection{Atom maps and molecule templates}
+\subsubsection{Reaction templates}
 
-The REACTER protocol relies on classical force fields. For the reaction to
-occur, an \textit{atom map} containing information about the reaction mechanism
-must be provided by the user. The atom map specifies which atoms are
-the initiators to the reaction and what are the distance cutoffs. In addition,
-pre-reaction and post-reaction molecule templates must be provided.
+The REACTER protocol enables the modeling of chemical reactions using
+classical force fields.  The user must provide a molecule template for the reactants,
+a molecule template for the products, and a \flecmd{reaction map} file that
+provides an atom mapping between the two templates.  The reaction map file also includes
+additional information, such as which atoms act as initiators for the reaction and which
+serve as edge atoms to connect the rest of a long polymer chain in the simulation.
 
-Download the two atoms maps, \href{\filepath tutorial8/rxn1_stp1_map}{\textit{rxn1$\_$stp1$\_$map}}
-and \href{\filepath tutorial8/rxn1_stp1_map}{\textit{rxn1$\_$stp1$\_$map}},
-the two templates for the unreacted molecules,
-\href{\filepath tutorial8/rxn1_stp1_unreacted.molecule_template}{\textit{rxn1$\_$stp1$\_$unreacted.molecule$\_$template}}
-and 
-\href{\filepath tutorial8/rxn1_stp2_unreacted.molecule_template}{\textit{rxn1$\_$stp2$\_$unreacted.molecule$\_$template}},
-as well as the two templates for the reacted molecules,
-\href{\filepath tutorial8/rxn1_stp1_reacted.molecule_template}{\textit{rxn1$\_$stp1$\_$reacted.molecule$\_$template}}
-and 
-\href{\filepath tutorial8/rxn1_stp2_reacted.molecule_template}{\textit{rxn1$\_$stp2$\_$reacted.molecule$\_$template}}.
-
-% S.G.: @jrgissing, here we could describe the specifity, or at least the most important
-% details of the atom maps.
-% S.G.: the name of the molecule templates are too long. Would it be possible to shorten them
-% for the sake of the tutorial? like "reacted-1.mol" instead of rxn1_stp1_reacted.molecule_template.
+There are three reactions to define: (1) the polymerization of two styrene monomers,
+(2) the addition of a styrene monomer to the end of a growing polymer chain, and (3) the
+linking of two polymer chains.  Download the three files associated with each reaction.
+The first reaction uses the prefix `M-M' for the pre-reaction template,
+post-reaction template, and reaction map file:
+\begin{itemize}
+\item \href{\filepath tutorial8/M-M_pre.mol}{\textit{M-M$\_$pre.mol}},
+\item \href{\filepath tutorial8/M-M_post.mol}{\textit{M-M$\_$post.mol}},
+\item \href{\filepath tutorial8/M-M.rxnmap}{\textit{M-M.rxnmap}}.
+\end{itemize}
+The second reaction uses the prefix `M-P',
+\begin{itemize}
+\item \href{\filepath tutorial8/M-P_pre.lmpmol}{\textit{M-P$\_$pre.mol}},
+\item \href{\filepath tutorial8/M-P_post.lmpmol}{\textit{M-P$\_$post.mol}},
+\item \href{\filepath tutorial8/M-P.rxnmap}{\textit{M-P.rxnmap}}.
+\end{itemize}
+The third reaction uses the prefix `P-P',
+\begin{itemize}
+\item \href{\filepath tutorial8/P-P_pre.lmpmol}{\textit{P-P$\_$pre.mol}},
+\item \href{\filepath tutorial8/P-P_post.lmpmol}{\textit{P-P$\_$post.mol}},
+\item \href{\filepath tutorial8/P-P.rxnmap}{\textit{P-P.rxnmap}}.
+\end{itemize}
+Here, the file names for each reaction use the abbreviation `M' for monomer and `P'
+for polymer.
 
 \subsubsection{Simulating the reaction}
 
 The first step, before simulating the reaction, is to import the previously
-generated configuration. Create a new input file named \textit{reacting.lmp},
-and copy the following lines into it:
-{\normalsize
-\begin{verbatim}
+generated configuration.  Open the file named \flecmd{polymerize.lmp},
+which should contain the following lines:
+\begin{lstlisting}
 units real
 boundary p p p
 atom_style full
@@ -4120,108 +4164,124 @@ angle_style class2
 bond_style class2
 dihedral_style class2
 improper_style class2
-pair_modify tail yes mix sixthpower
 
+pair_modify tail yes mix sixthpower
 special_bonds lj/coul 0 0 1
 
-read_data cnt-nylon-mix.data &
+read_data mixing.data &
   extra/bond/per/atom 5  &
   extra/angle/per/atom 15 &
   extra/dihedral/per/atom 15 &
   extra/improper/per/atom 25 &
   extra/special/per/atom 25
-\end{verbatim}
-}
-Here, the \textit{read$\_$data} command is used to import \textit{cnt-nylon-mix.data}.
-Then, let us import all four molecules template using the \textit{molecule} command:
-{\normalsize
-\begin{verbatim}
-molecule mol1 rxn1_stp1_unreacted.molecule_template
-molecule mol2 rxn1_stp1_reacted.molecule_template
-molecule mol3 rxn1_stp2_unreacted.molecule_template
-molecule mol4 rxn1_stp2_reacted.molecule_template 
-\end{verbatim}
-}
-In order to follow the evolution of the reaction with time, let us generate images
-of the system using \textit{dump image}:
-{\normalsize
-\begin{verbatim}
-dump mydmp all image 1000 dump.mixing.*.ppm &
-  type type shiny 0.1 box no 0.01 &
-  view 0 0 zoom 1.8 fsaa yes bond atom 0.5
-dump_modify mydmp backcolor white &
-  acolor c2 gray acolor c_1 lightslategray &
-  acolor o dimgray acolor o_1 dimgray &
-  acolor hc lightslategray &
-  acolor ho lightslategray &
-  acolor hn lightslategray acolor hw white &
-  acolor o* red acolor n darkslategray &
-  acolor na darkslategray &
-  acolor cp lightpink &
-  adiam c2 0.3 adiam c_1 0.3 &
-  adiam cp 0.3 adiam o 0.28 &
-  adiam o_1 0.28 adiam o* 2.8 &
-  adiam hc 0.15 adiam ho 0.15 &
-  adiam hn 0.15 adiam hw 1.5 &
-  adiam n 0.3 adiam na 0.3
-\end{verbatim}
-}
-Then, using the \textit{fix bond/react}, 
-{\normalsize
-\begin{verbatim}
-fix myrxns all bond/react &
-  stabilization yes statted_grp 0.03 &
-  react rxn1 all 1 0.0 2.9 mol1 mol2 rxn1_stp1_map 
-  react rxn2 all 1 0.0 5.0 mol3 mol4 rxn1_stp2_map
-\end{verbatim}
-}
-With the \textit{stabilization} keyword, the \textit{bond/react} command will
-try to stabilize the atoms involved in the reaction using the nve/limit
-command with a maximum displacement of $0.03\,\text{\AA{}}$ (a command that was
-used, for instance, in \hyperref[sheared-confined-label]{Tutorial 4}). The two
-\textit{react} keywords contain specific details about the two reactions
-involved here, i.e. a transformation of \textit{mol1} into \textit{mol2} based
-on the atom map \textit{rxn1$\_$stp1$\_$map}, and a transformation of 
-\textit{mol3} into \textit{mol4} based on the atom map \textit{rxn1$\_$stp2$\_$map}.
+\end{lstlisting}
+Here, the \lmpcmd{read$\_$data} command is used to import the
+previously generated \flecmd{mixing.data} file.  All other commands
+have been introduced in earlier parts of the tutorial.
 
-Finally, let us use the \textit{fix nvt} to perform the integration of the 
-equation of motion and control the temperature of the system:
-{\normalsize
-\begin{verbatim}
-fix mynvt statted_grp_REACT nvt $
-  temp 300 300 100
+Then, let us import all six molecules templates using the \lmpcmd{molecule} command:
+\begin{lstlisting}
+molecule mol1 M-M_pre.mol
+molecule mol2 M-M_post.mol
+molecule mol3 M-P_pre.mol
+molecule mol4 M-P_post.mol
+molecule mol5 P-P_pre.mol
+molecule mol6 P-P_post.mol
+\end{lstlisting}
+In order to follow the evolution of the reaction with time, let us generate images
+of the system using \lmpcmd{dump image}:
+\begin{lstlisting}
+dump viz all image 200 myimage-*.ppm &
+  type type shiny 0.1 box no 0.01 size 1000 1000 &
+  view 90 0 zoom 1.8 fsaa yes bond atom 0.5
+dump_modify viz backcolor white &
+  acolor cp gray acolor c=1 gray &
+  acolor c= gray acolor c1 deeppink &
+  acolor c2 gray deeppink c3 deeppink &
+  adiam cp 0.3 adiam c=1 0.3 &
+  adiam c= 0.3 adiam c1 0.3 &
+  adiam c2 0.3 adiam c3 0.3 &
+  acolor hc white adiam hc 0.15
+\end{lstlisting}
+
+Let us use \lmpcmd{fix bond/react} by adding the following
+line to \flecmd{polymerize.lmp}:
+\begin{lstlisting}
+fix rxn all bond/react &
+  stabilization yes statted_grp 0.03 &
+  react R1 all 1 0 3.0 mol1 mol2 M-M.rxnmap &
+  react R2 all 1 0 3.0 mol3 mol4 M-P.rxnmap &
+  react R3 all 1 0 5.0 mol5 mol6 P-P.rxnmap
+\end{lstlisting}
+With the \lmpcmd{stabilization} keyword, the \lmpcmd{bond/react} command will
+stabilize the atoms involved in the reaction using the \lmpcmd{nve/limit}
+command with a maximum displacement of $0.03\,\mathrm{\AA{}}$ (a command that was
+used, for instance, in \hyperref[sheared-confined-label]{Tutorial 4}).  By default,
+each reaction is stabilized for 60 time steps.  Each \lmpcmd{react} keyword
+corresponds to a reaction, e.g.,~a transformation of \lmpcmd{mol1} into \lmpcmd{mol2}
+based on the atom map \lmpcmd{M-M.rxnmap}.  Implementation details about each reaction,
+such as the reaction distance cutoffs and the frequency with which to search for
+reaction sties, are also specified in this command.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{REACT-final.png}
+\caption{Final configuration for \hyperref[bond-react-label]{Tutorial 8}.
+The atoms from the formed polymer named \lmpcmd{c1}, \lmpcmd{c2}, and 
+\lmpcmd{c3} are colored in pink.}
+\label{fig:REACT-final}
+\end{figure}
+
+\begin{note}
+The command \lmpcmd{fix bond/react} creates several groups of atoms that are dynamically updated
+to track which atoms are being stabilized and which atoms are undergoing
+dynamics with the system-wide time integrator (here, \lmpcmd{fix nvt}).
+When reaction stabilization is employed, there should not be a time integrator acting on
+the group \lmpcmd{all}.  Instead, the group of atoms not currently
+undergoing stabilization is named by appending `\_REACT' to the user-provided prefix.
+\end{note}
+
+Add the following commands to \flecmd{polymerize.lmp} to operate in the NVT ensemble
+while ensuring that the CNT remains centered in the simulation box:
+\begin{lstlisting}
+fix mynvt statted_grp_REACT nvt temp 530 530 100
+group CNT molecule 1 2 3
+fix myrec CNT recenter NULL 0 0 shift all
 
 thermo 1000
-thermo_style custom step temp pe $
-  etotal press f_myrxns[1] f_myrxns[2]
+thermo_style custom step temp press density f_rxn[*]
 
-run 50000
-\end{verbatim}
-}
-Here, in addition, the \textit{thermo custom} command was called and was
-asked to print the cumulative reaction counts from \textit{fix myrxns}.
-The number of reaction, $N_r$, can be seen to increase with time
-(Fig.\,\ref{fig:evolution-reacting})
+run 25000
+\end{lstlisting}
+Here, the \lmpcmd{thermo custom} command is used
+to print the cumulative reaction counts from \lmpcmd{fix rxn}.
+Run the simulation using LAMMPS.  As the simulation progresses, polymer chains are
+observed forming (Fig.~\ref{fig:REACT-final}).  During this reaction process, the
+temperature of the system remains well-controlled (Fig.~\ref{fig:evolution-reacting}\,a),
+while the number of reactions, $N_r$, increases with time (Fig.~\ref{fig:evolution-reacting}\,b).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{REACT-reacting}
-\caption{Evolution of the reaction counts, $\text{N}_r$,
-as a function of the time, $t$, during the reaction.}
+\caption{a) Evolution of the system temperature, $T$,
+as a function of the time, $t$, during the polymerization step of
+\hyperref[bond-react-label]{Tutorial 8}.
+b) Evolution of the three reaction counts, corresponding respecively to
+the polymerization of two styrene monomers (Rnx~1), the  addition of a styrene
+monomer to the end of a growing polymer chain (Rnx~2), and to the linking
+of two polymer chains (Rnx~3).}
 \label{fig:evolution-reacting}
 \end{figure}
 
 \section*{Author Contributions}
-% S.G. to update
-S.G. conceived and wrote all the online tutorials and underlying Sphinx documentation
+
+S.G. conceived and wrote the original online tutorials and underlying Sphinx documentation
 for \href{https://lammpstutorials.github.io}{lammpstutorials.github.io}.
-
-\noindent A.K. wrote the LAMMPS GUI software and helped revise the
-tutorials for use with it.
-
-\noindent J.G. is the principal author of fix bond/react and type label
-support in LAMMPS.  He revised tutorials to use type labels.
-% and contributed the eighth tutorial using fix bond/react (?).
+J.G. is the principal author of \lmpcmd{fix bond/react} and \lmpcmd{type labels}
+support in LAMMPS.  He revised the tutorials to incorporate type labels and wrote Tutorial 8.
+A.K. developed the LAMMPS--GUI software and assisted in revising the
+tutorials for use with it.  All authors participated in the revision and finalization
+of the manuscript.
 
 \section*{Potentially Conflicting Interests}
 
@@ -4230,10 +4290,9 @@ There are no conflicting interests to declare.
 \section*{Funding Information}
 
 S.G. acknowledges funding from the European Union's Horizon 2020 research and
-innovation programme under the Marie Skłodowska-Curie grant agreement N$^\circ\;101065060$.
-
-\noindent A.K. acknowledges financial support by Sandia National Laboratories under
-POs 2149742 and 2407526.
+innovation programme under the Marie Skłodowska-Curie grant agreement $\text{N}^\circ\;101065060$.
+A.K. acknowledges financial support by Sandia National Laboratories under
+POs~2149742 and 2407526.
 
 \section*{Author Information}
 \makeorcid
@@ -4250,7 +4309,7 @@ POs 2149742 and 2407526.
 
 \begin{note}
 For simplicity, these tutorials reference keyboard shortcuts
-based on the assignments for Linux and Windows. {macOS} users should
+based on the assignments for Linux and Windows.  {macOS} users should
 use the ``Command'' key (\cmd) in place of the
 ``Ctrl'' key when using keyboard shortcuts.
 \end{note}
@@ -4283,7 +4342,7 @@ This will integrate LAMMPS--GUI into your desktop environment
 (e.g.,~GNOME, KDE, XFCE) where it should appear in the ``Applications''
 menu under ``Science''.  Additionally, the ``.lmp'' file extension will be
 registered to launch LAMMPS--GUI when opening a file with this
-extension in the desktop's file manager. You can then
+extension in the desktop's file manager.  You can then
 launch LAMMPS--GUI from the command line using the following command:
 \begin{lstlisting}
 flatpak run org.lammps.lammps-gui
@@ -4302,7 +4361,7 @@ enable command-line access, follow the instructions in the README.txt
 file.
 
 After installation, you can launch LAMMPS\_GUI from the Applications
-folder. Additionally, you can drag an input file onto the app or open files with the
+folder.  Additionally, you can drag an input file onto the app or open files with the
 ``.lmp'' extension.  Note that the LAMMPS--GUI bundle is currently not
 cryptographically signed, so macOS may initially prevent it from launching.
 If this happens, you can adjust the settings in the ``Security \& Privacy" system
@@ -4317,7 +4376,7 @@ installer nor the LAMMPS--GUI application (or any other applications inside)
 have been cryptographically signed.  You will need to choose to keep the file,
 and when launching the installer again, confirm that you want to run it despite the warning.
 
-After installation, a new entry should appear in the Start menu. Additionally,
+After installation, a new entry should appear in the Start menu.  Additionally,
 the ``.lmp'' file extension should be registered with  Windows File
 Explorer to open LAMMPS--GUI when opening a file with that
 extension.  The ``lammps-gui'' and ``lmp'' commands should also be available
@@ -4327,7 +4386,7 @@ in the command line, either in a Command Prompt or Terminal window.
 
 LAMMPS--GUI can be launched from the command line, as explained above, where you
 can either launch it without arguments or provide one file name as an argument.  All
-other arguments will be ignored. For example:
+other arguments will be ignored.  For example:
 \begin{lstlisting}
 lammps-gui input.lmp
 \end{lstlisting}
@@ -4358,7 +4417,7 @@ the syntax highlighting.  When you press the \texttt{Tab} key, the line will be
 reformatted.  Consistent formatting can improve the readability of
 input files, especially long and complex ones.
 
-If the file in the editor has unsaved changes, the word 
+If the file in the editor has unsaved changes, the word
 ``\*modified\*'' will appear in the window title.  The current input
 buffer can be saved by selecting ``Save'' or ``Save As...'' from the
 ``File'' menu.  You can also click the ``Save'' icon on the left side
@@ -4401,17 +4460,17 @@ of the current \lmpcmd{run} or \lmpcmd{minimize} command.
 
 Open the \guicmd{Image Viewer} using either the \guicmd{Create Image} option
 from the \guicmd{Run} menu, the \guicmd{Ctrl-I} keyboard shortcut,
-or click on the (right) palette button in the status bar. The image
+or click on the (right) palette button in the status bar.  The image
 can be saved using the \guicmd{Save As...} option from the \guicmd{File} menu.
 
 \subsection{The Output Window}
 
 By default, when starting a run, the \guicmd{Output} window opens to display the screen
-output of the running LAMMPS calculation. The text in the Output window is
+output of the running LAMMPS calculation.  The text in the Output window is
 read-only and cannot be modified, but keyboard shortcuts for selecting and
 copying all or part of the text can be used to transfer it to another program:
 The keyboard shortcut \guicmd{Ctrl-S} (or \guicmd{Command-S} on {macOS}) can
-be used to save the Output buffer to a file. Additionally, the \guicmd{Select All}
+be used to save the Output buffer to a file.  Additionally, the \guicmd{Select All}
 and \guicmd{Copy} functions, along with a \guicmd{Save Log to File} option, are available
 through the context menu, which can be accessed by right-clicking within the text area of the
 \guicmd{Output} window.
@@ -4432,7 +4491,7 @@ by clicking the \guicmd{lens} button located next to the data drop-down menu.
 \subsection{Preferences}
 
 The Preferences dialog allows customization of the behavior and appearance of
-LAMMPS--GUI. Among other options:
+LAMMPS--GUI.  Among other options:
 \begin{itemize}
 \item In the \guicmd{General Settings} tab, the \guicmd{Data update interval} setting
 allows you to define the time interval, in milliseconds, between data updates during
@@ -4454,7 +4513,7 @@ See Ref.\,\citenum{lammps_gui_docs} for a full list of options.
 \label{command-line-label}
 
 LAMMPS can be executed from the command line on Linux, macOS,
-as well as Windows. On Linux/macOS, first navigate to the directory containing
+as well as Windows.  On Linux/macOS, first navigate to the directory containing
 the \flecmd{input.lmp} file and execute:
 \begin{lstlisting}
 lmp -in input.lmp

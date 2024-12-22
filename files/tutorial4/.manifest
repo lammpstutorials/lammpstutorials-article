@@ -20,15 +20,12 @@ solution/create.data
 solution/create.lmp
 solution/create.log
 solution/minimize.data
-solution/minimize.ipynb
 solution/minimize.lmp
 solution/minimize.log
 solution/equilibrate.data
-solution/equilibrate.ipynb
 solution/equilibrate.lmp
 solution/equilibrate.log
 solution/shearing-ions.dat
-solution/shearing.ipynb
 solution/shearing.lmp
 solution/shearing.log
 solution/shearing.png

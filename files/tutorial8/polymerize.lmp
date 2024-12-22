@@ -1,4 +1,3 @@
-# inserting styrene molecules around a periodic CNT
 
 units real
 boundary p p p
@@ -14,3 +13,9 @@ improper_style class2
 pair_modify tail yes mix sixthpower
 special_bonds lj/coul 0 0 1
 
+read_data mixing.data &
+  extra/bond/per/atom 5  &
+  extra/angle/per/atom 15 &
+  extra/dihedral/per/atom 15 &
+  extra/improper/per/atom 25 &
+  extra/special/per/atom 25

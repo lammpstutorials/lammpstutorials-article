@@ -20,7 +20,6 @@ decorate.png
 decorate-Si.histo
 decorate.species
 deform.data
-deform.ipynb
 deform.lmp
 deform.log
 deform-mod.data
@@ -30,7 +29,6 @@ deform-Si.histo
 deform.species
 reaxCHOFe.inc
 relax.data
-relax.ipynb
 relax.lmp
 relax.log
 relax-O.histo
