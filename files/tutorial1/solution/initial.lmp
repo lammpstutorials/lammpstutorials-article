@@ -32,4 +32,4 @@ dump_modify viz pad 9 boxcolor darkblue backcolor white adiam 1 1.6 adiam 2 4.8
 fix mynve all nve
 fix mylgv all langevin 1.0 1.0 0.1 1530917
 timestep 0.005
-run 10000
+run 15000

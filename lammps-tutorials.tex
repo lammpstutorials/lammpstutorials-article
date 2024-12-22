@@ -434,10 +434,18 @@ are displayed in \guicmd{quoted monospace}.
 The objective of this tutorial is to perform a simple MD simulation
 using LAMMPS.  The system consists of a Lennard-Jones fluid composed of neutral
 particles with two different effective diameters, contained within a
-cubic box with periodic boundary conditions (Fig.~\ref{fig:LJ}).  In
+cubic box with periodic boundary conditions (Fig.~\ref{fig:LJ-avarar}).  In
 this tutorial, the temperature of the system is maintained using a
 Langevin thermostat~\cite{schneider1978molecular}, and basic quantities,
 including potential and kinetic energies, are calculated from the simulation.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{LJ-avatar}
+\caption{The binary mixture simulated in \hyperref[lennard-jones-label]{Tutorial 1},
+with the small atoms of type 1 in green and large atoms of type 2 in blue.}
+\label{fig:LJ-avatar}
+\end{figure}
 
 \subsubsection{My first input}
 
@@ -616,8 +624,9 @@ $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{LJ}
-\caption{The binary mixture simulated during \hyperref[lennard-jones-label]{Tutorial 1}.
-  The atoms of type 1 are represented as small red spheres, the atoms of type 2 as large
+\caption{The binary mixture simulated in \hyperref[lennard-jones-label]{Tutorial 1}.
+  This image was generated directly from the LAMMPS--GUI.  Atoms of
+  type 1 are represented as small red spheres, atoms of type 2 as large
   green spheres, and the edges of the simulation box are represented as blue sticks.}
 \label{fig:LJ}
 \end{figure}
@@ -726,12 +735,11 @@ drop-down menu of the \guicmd{Charts} window.
 
 \paragraph{Molecular dynamics}
 
-After the energy minimization, any overlapping atoms have been
-displaced, and the system is now ready to perform a molecular dynamics
-simulation using the minimized geometry.  Since we want to start from
-the result of the energy minimization step, we can append commands for
-the MD simulation to the same input script, \flecmd{initial.lmp}.  After
-the \lmpcmd{minimize} command, add the following lines:
+After energy minimization, any overlapping atoms are displaced, and
+the system is ready for a molecular dynamics simulation.  To continue
+from the result of the minimization step, append the MD simulation
+commands to the same input script, \flecmd{initial.lmp}.  Add the
+following lines immediately after the \lmpcmd{minimize} command:
 \begin{lstlisting}
 # PART B - MOLECULAR DYNAMICS
 # 4) Visualization
@@ -739,56 +747,61 @@ thermo 50
 thermo_style custom step temp etotal pe ke press
 \end{lstlisting}
 
-Since LAMMPS reads the input from top to bottom and acts on each line
-immediately, these lines will be executed \emph{after} the energy
-minimization.  There is no need to re-initialize or re-define the
-system.  The \lmpcmd{thermo} command is called a second time to change
-the previous value of 10 to a value of 50 as soon as \textit{PART B} of
+Since LAMMPS reads inputs from top to bottom, these lines will
+be executed \emph{after} the energy minimization.  Therefore,
+there is no need to re-initialize or re-define the
+system.  The \lmpcmd{thermo} command is called a second time to
+update the output frequency from 10 to 50 as soon as \lmpcmd{PART B} of
 the simulation starts.  In addition, a new \lmpcmd{thermo\_style}
-command changes which thermodynamic information is to be printed by LAMMPS
-during \textit{PART B}.  This is done because during molecular
-dynamics, the system will have a non-zero temperature (\textit{temp})
-and kinetic energy (\textit{ke}) and it is useful to monitor those.
-Here, \textit{pe} is the potential energy of the system, such that
-\textit{pe + ke = etotal}.
+command is introduced to specify the thermodynamic information LAMMPS should
+print during during \lmpcmd{PART B}.  This adjustment is done because during molecular
+dynamics, the system exhibits non-zero temperature (\lmpcmd{temp})
+and kinetic energy (\lmpcmd{ke}), which are useful to monitor.
+The \lmpcmd{pe} keyword represents the potential energy of the system, such that
+\lmpcmd{pe} + \lmpcmd{ke} = \lmpcmd{etotal}.
 
-Then, let us add a second \lmpcmd{Run} category by adding the following
-lines to \emph{PART B} of \flecmd{initial.lmp}:
+Then, add a second \lmpcmd{Run} category by including the following
+lines in \lmpcmd{PART B} of \flecmd{initial.lmp}:
 \begin{lstlisting}
 # 5) Run
 fix mynve all nve
 timestep 0.005
-run 10000
+run 50000
 \end{lstlisting}
-The \lmpcmd{fix nve} command is used to update the positions and
+The \lmpcmd{fix nve} command updates the positions and
 velocities of the atoms in the group \lmpcmd{all} at every step.  The
 group \lmpcmd{all} is a default group that contains every atom.  The
-last two lines set the value of the \lmpcmd{timestep} and the number of
+last two lines specify the value of the \lmpcmd{timestep} and the number of
 steps for the \lmpcmd{run}, respectively, corresponding to a total
-duration of 50 time units.
+duration of 250 time units.
 
-Since there are no other fix commands that change forces or velocities,
-and since we have periodic boundary conditions in all directions, the MD
-simulation will be performed in the microcanonical or NVE ensemble.
-This means the system has no exchange of energy outside the simulation
-box and the number of particles and the box volume are constant.  We can
-see that there is no equilibrium between potential and kinetic energy
-yet, as the former is falling while the latter is rising.  If you extend
-the run for more steps (say 100,000), the values for both kinetic and
-potential energy will plateau (indicating equilibrium), and the total
-energy should fluctuate around some constant value.
+\begin{note}
+Since no other fix commands alter forces or velocities,
+and periodic boundary conditions are applied in all directions, the MD
+simulation will be performed in the microcanonical (NVE) ensemble,
+which maintains a constant number of particles and a fixed box volume.
+In this ensemble, the system does not exchange energy outside
+the simulation box.
+\end{note}
 
-Now we change the \lmpcmd{Run} section to:
+Run the simulation using LAMMPS.  Initially, there is no equilibrium
+between potential and kinetic energy, as the potential energy
+decreases while the kinetic energy increases.  After approximately
+40\,000 steps, the values for both kinetic and potential energy
+plateau, indicating that the system has reached equilibrium, with
+the total energy fluctuating around a certain constant value.
+
+Now, we change the \lmpcmd{Run} section to (note the shorter run time):
 \begin{lstlisting}
 # 5) Run
 fix mynve all nve
 fix mylgv all langevin 1.0 1.0 0.1 1530917
 timestep 0.005
-run 10000
+run 15000
 \end{lstlisting}
 The new command adds a Langevin thermostat to the atoms in the group
 \lmpcmd{all}, with a desired target temperature of 1.0 temperature units
-throughout the run (the two numbers stand for the target at the beginning
+throughout the run (the two numbers represent the target temperature at the beginning
 and at the end of the run, which allows for a temperature ramp if
 they differ)~\cite{schneider1978molecular}.  A \lmpcmd{damping}
 parameter of 0.1 is used.  The \lmpcmd{damping} parameter determines how
@@ -803,17 +816,17 @@ seed used to initialize the random number generator used inside of
 independent simulations.  In the presence of a thermostat, the MD simulation
 will be performed in the canonical or NVT ensemble.
 
-Run the simulation again using LAMMPS. From the information
+Run the simulation again using LAMMPS.  From the information
 printed in the \guicmd{Output} window, one can see that the temperature
 starts from 0 but rapidly reaches the requested value and
-stabilizes itself near $T=1$ temperature units.  One can also see that
+stabilizes itself near $T=1$ temperature units.  One can also observe that
 the potential energy, $p_\text{e}$, rapidly decreases during energy
 minimization (see also Fig.~\ref{fig:evolution-energy}\,a).  After
 the molecular dynamics simulation starts, $p_\text{e}$ increases until
 it reaches a plateau value of about -0.25.  The kinetic energy,
 $k_\text{e}$, is equal to zero during energy minimization and then
-increases during molecular dynamics until it reaches a plateau value of
-about 1.5 (Fig.~\ref{fig:evolution-energy}\,b).
+increases rapibly during molecular dynamics until it reaches
+a plateau value of about 1.5 (Fig.~\ref{fig:evolution-energy}\,b).
 
 \begin{figure}
 \centering
@@ -839,7 +852,6 @@ by either using the \guicmd{Ctrl-D} keyboard shortcut or selecting
 \guicmd{Copy dump image command} from the \guicmd{File} menu.  This text
 can be pasted into the into the \lmpcmd{Visualization} section of
 \lmpcmd{PART B} of the \flecmd{initial.lmp} file.  This may look like the following:
-
 \begin{lstlisting}
 dump viz all image 100 myimage-*.ppm type type &
     size 800 800 zoom 1.452 shiny 0.7 fsaa yes &
@@ -853,14 +865,14 @@ steps.  The two \lmpcmd{type} keywords are for \lmpcmd{color} and
 \lmpcmd{diameter}, respectively.  Run the \flecmd{initial.lmp} using
 LAMMPS again, and a new window named \guicmd{Slide Show} will pop up.
 It will show each image created by the \lmpcmd{dump image} as it is
-created and after the simulation is finished (or stopped), the slide
-show viewer allows you to animate the trajectory by cycling through the
+created. After the simulation is finished (or stopped), the slideshow
+viewer allows you to animate the trajectory by cycling through the
 images.  The window also allows you to export the animation to a movie
 (provided the FFMpeg program is installed) and to bulk delete those
 image files.
 
 The rendering of the system can be further adjusted using the many
-options of the \lmpcmd{dump image} command.  The value for the
+options of the \lmpcmd{dump image} command.  Fir instance, the value for the
 \lmpcmd{shiny} keyword is used to adjust the shininess of the atoms, the
 \lmpcmd{box} keyword adds or removes a representation of the box, and
 the \lmpcmd{view} and \lmpcmd{zoom} keywords adjust the camera (and so
