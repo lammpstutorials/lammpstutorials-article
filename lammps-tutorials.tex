@@ -3938,7 +3938,7 @@ and $x_0 = 10~\text{\AA{}}$.}
 \includegraphics[width=\linewidth]{REACT}
 \caption{Initial configuration for \hyperref[bond-react-label]{Tutorial 8}.
 The system consists of 200 styrene molecules packed around a single-walled
-CNT with a total system density of 0.9 g/cm$^3$.}
+CNT, with a mass density for the whole system of $0.9~\text{g/cm}^3$.}
 \label{fig:REACT}
 \end{figure}
 
@@ -4225,16 +4225,14 @@ as a function of the time, $t$, during the reaction.}
 \end{figure}
 
 \section*{Author Contributions}
-% S.G. to update
-S.G. conceived and wrote all the online tutorials and underlying Sphinx documentation
+
+S.G. conceived and wrote the original online tutorials and underlying Sphinx documentation
 for \href{https://lammpstutorials.github.io}{lammpstutorials.github.io}.
-
-\noindent A.K. wrote the LAMMPS GUI software and helped revise the
-tutorials for use with it.
-
-\noindent J.G. is the principal author of fix bond/react and type label
-support in LAMMPS.  He revised tutorials to use type labels.
-% and contributed the eighth tutorial using fix bond/react (?).
+J.G. is the principal author of \lmpcmd{fix bond/react} and \lmpcmd{type labels}
+support in LAMMPS.  He revised the tutorials to incorporate type labels and wrote Tutorial 8.
+A.K. developed the LAMMPS--GUI software and assisted in revising the
+tutorials for use with it.  All authors participated in the revision and finalization
+of the manuscript.
 
 \section*{Potentially Conflicting Interests}
 
@@ -4243,10 +4241,9 @@ There are no conflicting interests to declare.
 \section*{Funding Information}
 
 S.G. acknowledges funding from the European Union's Horizon 2020 research and
-innovation programme under the Marie Skłodowska-Curie grant agreement N$^\circ\;101065060$.
-
-\noindent A.K. acknowledges financial support by Sandia National Laboratories under
-POs 2149742 and 2407526.
+innovation programme under the Marie Skłodowska-Curie grant agreement $\text{N}^\circ\;101065060$.
+A.K. acknowledges financial support by Sandia National Laboratories under
+POs~2149742 and 2407526.
 
 \section*{Author Information}
 \makeorcid
@@ -4263,7 +4260,7 @@ POs 2149742 and 2407526.
 
 \begin{note}
 For simplicity, these tutorials reference keyboard shortcuts
-based on the assignments for Linux and Windows. {macOS} users should
+based on the assignments for Linux and Windows.  {macOS} users should
 use the ``Command'' key (\cmd) in place of the
 ``Ctrl'' key when using keyboard shortcuts.
 \end{note}
@@ -4296,7 +4293,7 @@ This will integrate LAMMPS--GUI into your desktop environment
 (e.g.,~GNOME, KDE, XFCE) where it should appear in the ``Applications''
 menu under ``Science''.  Additionally, the ``.lmp'' file extension will be
 registered to launch LAMMPS--GUI when opening a file with this
-extension in the desktop's file manager. You can then
+extension in the desktop's file manager.  You can then
 launch LAMMPS--GUI from the command line using the following command:
 \begin{lstlisting}
 flatpak run org.lammps.lammps-gui
@@ -4315,7 +4312,7 @@ enable command-line access, follow the instructions in the README.txt
 file.
 
 After installation, you can launch LAMMPS\_GUI from the Applications
-folder. Additionally, you can drag an input file onto the app or open files with the
+folder.  Additionally, you can drag an input file onto the app or open files with the
 ``.lmp'' extension.  Note that the LAMMPS--GUI bundle is currently not
 cryptographically signed, so macOS may initially prevent it from launching.
 If this happens, you can adjust the settings in the ``Security \& Privacy" system
@@ -4330,7 +4327,7 @@ installer nor the LAMMPS--GUI application (or any other applications inside)
 have been cryptographically signed.  You will need to choose to keep the file,
 and when launching the installer again, confirm that you want to run it despite the warning.
 
-After installation, a new entry should appear in the Start menu. Additionally,
+After installation, a new entry should appear in the Start menu.  Additionally,
 the ``.lmp'' file extension should be registered with  Windows File
 Explorer to open LAMMPS--GUI when opening a file with that
 extension.  The ``lammps-gui'' and ``lmp'' commands should also be available
@@ -4340,7 +4337,7 @@ in the command line, either in a Command Prompt or Terminal window.
 
 LAMMPS--GUI can be launched from the command line, as explained above, where you
 can either launch it without arguments or provide one file name as an argument.  All
-other arguments will be ignored. For example:
+other arguments will be ignored.  For example:
 \begin{lstlisting}
 lammps-gui input.lmp
 \end{lstlisting}
@@ -4414,17 +4411,17 @@ of the current \lmpcmd{run} or \lmpcmd{minimize} command.
 
 Open the \guicmd{Image Viewer} using either the \guicmd{Create Image} option
 from the \guicmd{Run} menu, the \guicmd{Ctrl-I} keyboard shortcut,
-or click on the (right) palette button in the status bar. The image
+or click on the (right) palette button in the status bar.  The image
 can be saved using the \guicmd{Save As...} option from the \guicmd{File} menu.
 
 \subsection{The Output Window}
 
 By default, when starting a run, the \guicmd{Output} window opens to display the screen
-output of the running LAMMPS calculation. The text in the Output window is
+output of the running LAMMPS calculation.  The text in the Output window is
 read-only and cannot be modified, but keyboard shortcuts for selecting and
 copying all or part of the text can be used to transfer it to another program:
 The keyboard shortcut \guicmd{Ctrl-S} (or \guicmd{Command-S} on {macOS}) can
-be used to save the Output buffer to a file. Additionally, the \guicmd{Select All}
+be used to save the Output buffer to a file.  Additionally, the \guicmd{Select All}
 and \guicmd{Copy} functions, along with a \guicmd{Save Log to File} option, are available
 through the context menu, which can be accessed by right-clicking within the text area of the
 \guicmd{Output} window.
@@ -4445,7 +4442,7 @@ by clicking the \guicmd{lens} button located next to the data drop-down menu.
 \subsection{Preferences}
 
 The Preferences dialog allows customization of the behavior and appearance of
-LAMMPS--GUI. Among other options:
+LAMMPS--GUI.  Among other options:
 \begin{itemize}
 \item In the \guicmd{General Settings} tab, the \guicmd{Data update interval} setting
 allows you to define the time interval, in milliseconds, between data updates during
@@ -4467,7 +4464,7 @@ See Ref.\,\citenum{lammps_gui_docs} for a full list of options.
 \label{command-line-label}
 
 LAMMPS can be executed from the command line on Linux, macOS,
-as well as Windows. On Linux/macOS, first navigate to the directory containing
+as well as Windows.  On Linux/macOS, first navigate to the directory containing
 the \flecmd{input.lmp} file and execute:
 \begin{lstlisting}
 lmp -in input.lmp
