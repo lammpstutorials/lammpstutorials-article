@@ -15,13 +15,13 @@ jobs:
     steps:
       # Step 1: Checkout the repository
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # Step 2: Set up TeX Live (LaTeX environment)
       - name: Set up TeX Live
-        uses: dante-ev/action-texlive@v1
-        with:
-          texlive_version: '2020'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive texlive-latex-extra texlive-fonts-recommended texlive-xetex
 
       # Step 3: Install make (required to run your Makefile)
       - name: Install make
@@ -33,7 +33,7 @@ jobs:
 
       # Step 5: Upload the generated PDF as an artifact
       - name: Upload PDF artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: lammps-tutorials-pdf
           path: lammps-tutorials.pdf
