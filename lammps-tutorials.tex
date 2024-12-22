@@ -245,7 +245,7 @@ interactions between atoms (the so-called force field)
 \cite{wong2016good, van2018validation, prasad2018best}.  While these choices are independent of the
 simulation software, they may occasionally be constrained by the
 features available in a given package.  The tutorials in this
-article aim to ease the learning curve and guide users in
+article aim to flatten the learning curve and guide users in
 performing accurate, reliable MS with LAMMPS.
 
 \subsection{Scope}
@@ -338,7 +338,9 @@ tutorials, users can also refer to \textit{Basic Concepts for Simple and
   Complex Liquids} by Jean-Louis Barrat and Jean-Pierre Hansen
 \cite{barrat2003basic}, as well as \textit{Theory of Simple Liquids:
   with Applications to Soft Matter} by Jean-Pierre Hansen and Ian Ranald
-McDonald~\cite{hansen2013theory}.
+McDonald~\cite{hansen2013theory}.  For more resources, the SklogWiki
+platform provies a wide range of information information on statistical mechanics
+and molecular simulations~\cite{sklogwiki_main_page}. 
 
 \subsection{Software/system requirements}
 
@@ -442,7 +444,7 @@ including potential and kinetic energies, are calculated from the simulation.
 To run a simulation using LAMMPS, you need to write an input script containing
 a series of commands for LAMMPS to execute.  For clarity, the
 input scripts for this tutorial will be divided into five categories,
-Which will be filled out step by step.  To set up this tutorial, select
+which will be filled out step by step.  To set up this tutorial, select
 \guicmd{Start LAMMPS Tutorial 1} from the \guicmd{Tutorials} menu of LAMMPS--GUI, and
 follow the instructions.  This will select (or create, if needed) a folder,
 place the initial input file \flecmd{initial.lmp} in it, and
@@ -456,7 +458,6 @@ following content:
 # 4) Visualization
 # 5) Run
 \end{lstlisting}
-
 Everything that appears after a hash symbol ($\#$) is a comment
 and ignored by LAMMPS.  LAMMPS--GUI will color such comments in red.
 These five categories are not required in every input script and do not
@@ -472,16 +473,15 @@ order of commands in the input script is important.
 
 \paragraph{Initialization}
 
-In the first section of the script, called \lmpcmd{Initialization}, we
-set global parameters for the simulation, such as units, boundary conditions
+In the first section of the script, called \lmpcmd{Initialization},
+global parameters for the simulation are defined, such as units, boundary conditions
 (e.g., periodic or non-periodic), and atom types (e.g., uncharged point particles
 or extended spheres with a radius and angular velocities).  These commands must be
-executed \emph{before} creating the simulation box, or they will cause
+executed \emph{before} creating the simulation box or they will cause
 an error.  Similarly, many LAMMPS commands may only be
-entered \emph{after} the simulation box is defined.  Only a very small
-number of commands may be used in both cases.  Edit \flecmd{initial.lmp}
-so that the \lmpcmd{Initialization} section looks like this:
-
+entered \emph{after} the simulation box is defined.  Only a limited
+number of commands may be used in both cases.  Update the \flecmd{initial.lmp} file
+so that the \lmpcmd{Initialization} section appears as follows:
 \begin{lstlisting}
 # 1) Initialization
 units lj
@@ -489,35 +489,33 @@ dimension 3
 atom_style atomic
 boundary p p p
 \end{lstlisting}
-
-The first line, \lmpcmd{units lj}, indicates that we are using
-so-called \emph{reduced} units in which all quantities are unitless.  This is
-a popular choice for simulations investigating general statistical mechanical
-principles, focusing on relative differences between parameters rather than
+The first line, \lmpcmd{units lj}, specifies the use of
+\emph{reduced} units, where all quantities are dimensionless.  This unit system is
+a popular choice for simulations that explore general statistical mechanical
+principles, as it emphasizes relative differences between parameters rather than
 representing any specific material.
-
-The second line, \lmpcmd{dimension 3}, indicates that the simulation is
-in 3D, as opposed to 2D, where atoms are restricted to move only in the 
-xy-plane.  The third line, \lmpcmd{atom\_style atomic}, indicates that
-the \lmpcmd{atomic} style will be used for simple individual particles,
-meaning each particle is represented as a point with a mass.  This is the
-minimal atom style; other atom styles allow for associating additional properties
-with atoms, such as charges, bonds, molecule IDs, and more.  The choice
-of atom style is determined by the model being simulated.
-
+The second line, \lmpcmd{dimension 3}, specifies that the simulation is conducted
+in 3D space, as opposed to 2D, where atoms are confined to move only in the 
+xy-plane.  The third line, \lmpcmd{atom\_style atomic}, designates
+the atomic style for representing simple, individual particles.
+In this style, each particle is treated as a point with a mass, making it the
+most basic atom style.  Other atom styles can incorporate additional attributes for atoms,
+such as charges, bonds, or molecule IDs, depending on the requirements of the simulated model.
 The last line, \lmpcmd{boundary p p p}, indicates that periodic boundary
-conditions will be used along all three directions of space (the 3
-\lmpcmd{p} stand for \lmpcmd{x}, \lmpcmd{y}, and \lmpcmd{z},
-respectively).  Alternatives are fixed non-periodic, \lmpcmd{f},
-shrink-wrapped non-periodic \lmpcmd{s}, and shrink-wrapped non-periodic
-with minimum, \lmpcmd{m}.  For non-periodic boundaries, there can be a
-different choice for each side, so something like \lmpcmd{boundary p p
-  fm} is valid input and suitable for slab geometry systems.
+conditions are applied along all three directions of space, where the three
+p stand for $x$, $y$, and $z$, respectively.  Alternatives are fixed non-periodic
+(f), shrink-wrapped non-periodic (s), and shrink-wrapped non-periodic
+with minimum (m).  For non-periodic boundaries, different options
+can be assigned to each dimension, making configurations like \lmpcmd{boundary p p fm}
+valid for systems such as slab geometries.
 
-Strictly speaking, none of these four commands are required because
-they represent the default settings for the respective global properties.
-However, it is good practice to make such defaults explicit to avoid
-confusion when sharing inputs with other LAMMPS users.
+\begin{note}
+Strictly speaking, none of the four commands specified in the
+Initialization section are mandatory, as
+they correspond to the default settings for their respective global properties.
+However, explicitly specifying these defaults is considered good practice
+to avoid confusion when sharing input files with other LAMMPS users.
+\end{note}
 
 \begin{figure}
 \centering
@@ -529,18 +527,18 @@ confusion when sharing inputs with other LAMMPS users.
 \label{fig:GUI-1}
 \end{figure}
 
-Each LAMMPS command is associated with extensive online documentation
-detailing the different options for that command.  From the LAMMPS--GUI
-editor buffer, the documentation can be accessed by
-right-clicking the line with a command, such as \lmpcmd{units lj}, and
-selecting \guicmd{View documentation for (\dots)}\,.  LAMMPS--GUI will
-prompt your web browser to open the corresponding URL of the online manual.  See
-figure~\ref{fig:GUI-1} for a screenshot of this context menu.
+Each LAMMPS command is accompanied by extensive online documentation
+that details the different options for that command.  From the LAMMPS--GUI
+editor buffer, you can access the documentation by
+right-clicking on a line containing a command (e.g., \lmpcmd{units lj}) and
+selecting \guicmd{View documentation for (\dots)}\,.  This action will
+prompt your web browser to open the corresponding URL for the online manual.
+A screenshot of this context menu is shown in figure~\ref{fig:GUI-1}.
 
 \paragraph{System definition}
 
-The next step is to create the simulation box and put some atoms into it.
-Modify the \textit{System definition} category of \flecmd{initial.lmp} as follows:
+The next step is to create the simulation box and populate it with atoms.
+Modify the \lmpcmd{System definition} category of \flecmd{initial.lmp} as shown below:
 \begin{lstlisting}
 # 2) System definition
 region simbox block -20 20 -20 20 -20 20
@@ -548,37 +546,30 @@ create_box 2 simbox
 create_atoms 1 random 1500 34134 simbox overlap 0.3
 create_atoms 2 random 100 12756 simbox overlap 0.3
 \end{lstlisting}
+The first line, \lmpcmd{region simbox (...)}, defines a region
+named \lmpcmd{simbox} that is a block (i.e., a rectangular
+cuboid) extending from -20 to 20 units along all three spatial dimensions.
+The second line, \lmpcmd{create\_box 2 simbox}, initializes a simulation box
+based on the region \lmpcmd{simbox} and reserves space for two types of atoms.
 
-The first line, \lmpcmd{region simbox (...)}, creates a region
-named \lmpcmd{simbox} that is a block (i.e.,~a rectangular
-cuboid) extending from -20 to 20 length units along all 3 directions
-of space.  % The \lmpcmd{units box} option requests that the region
-%dimensions are computed as multiples of the length unit and not as
-%multiples of the lattice spacing (\lmpcmd{units lattice}), which is the
-%default.  In this specific case there is no difference, since we did not
-%use the \lmpcmd{lattice} command and the default lattice spacing is 1.0
-%in x-, y-, or z-direction.
-% S.G.: I removed "units box", I think it just bring confusion.
+\begin{note}
+From this point on, any command referencing an atom type larger than 2
+will trigger an error.  While it is possible to allocate more atom types
+than needed, you must assign a mass and provide force field parameters for
+each type.  Failing to do so will cause LAMMPS to terminate with an error.
+\end{note}
 
-The second line, \lmpcmd{create\_box 2 simbox}, creates a simulation box
-based on the region \lmpcmd{simbox} with two types of atoms.  From this
-point on, any command referencing an atom type larger than \textit{2}
-will trigger an error.  You may specify more atom types than
-necessary, but for each type you must set the mass and provide
-force field parameters.  Failing to do so will cause LAMMPS to abort with an
-error at the beginning of a minimization or MD run.
-
-The third line, \lmpcmd{create\_atoms (\dots)}, creates 1500 atoms of type
-1 at random positions within the region
-\lmpcmd{simbox}.  The integer 34134 is a seed for the
-internal random number generator that can be changed to create different
-sequences of random numbers and thus different initial geometries for
-the simulation.  The fourth line creates 100 atoms of type 2.
+The third line, \lmpcmd{create\_atoms (\dots)}, generates 1500 atoms of type
+1 at random positions within the
+\lmpcmd{simbox} region.  The integer 34134 is a seed for the
+internal random number generator, which can be changed to produce different
+sequences of random numbers and, consequently, different initial atom positions.
+The fourth line adds 100 atoms of type 2.
 Both \lmpcmd{create\_atoms} commands use the optional argument
-\lmpcmd{overlap 0.3} to impose a constraint on the randomly placed atoms
-so that they must be at least 0.3 length units apart.  This step helps avoid
-so-called ``close contacts'' between atoms which can cause
-problems due to generating large forces.
+\lmpcmd{overlap 0.3}, which enforces a minimum distance of 0.3
+units between the randomly placed atoms.  This constraint helps avoid
+``close contacts'' between atoms, which can lead to excessively
+large forces and simulation instability.
 
 \paragraph{Settings}
 
@@ -592,32 +583,34 @@ pair_style lj/cut 4.0
 pair_coeff 1 1 1.0 1.0
 pair_coeff 2 2 0.5 3.0
 \end{lstlisting}
-
 The two \lmpcmd{mass} commands assign a mass of 1.0 and 5.0 units
 to the atoms of type 1 and 2, respectively.  The third line,
 \lmpcmd{pair\_style lj/cut 4.0}, specifies that the atoms
 will be interacting through a Lennard-Jones (LJ) potential with a
-cut-off equal to $r_c = 4.0$ length units
-\cite{wang2020lennard,fischer2023history}:
-$$E_{ij} (r) = 4 \epsilon_{ij} \left[ \left( \dfrac{\sigma_{ij}}{r} \right)^{12}
-  - \left( \dfrac{\sigma_{ij}}{r} \right)^{6} \right], ~ \text{for} ~ r
-< r_c,$$ where $r$ is the inter-particle distance, $\epsilon_{ij}$ is
-the depth of the potential well, determining the interaction strength, and
-$\sigma_{ij}$ is the distance at which the potential energy is zero.
-Here, the indexes $ij$ refer to pairs of particle types $i$ and $j$.
-
-The fourth line, \lmpcmd{pair\_coeff 1 1 1.0 1.0}, sets the
-Lennard-Jones coefficients for the interactions between pairs of atoms
-of type 1, respectively the energy parameter $\epsilon_{11} = 1.0$ and
+cut-off equal to $r_c = 4.0$ length units \cite{wang2020lennard,fischer2023history}:
+\begin{equation}
+E_{ij} (r) = 4 \epsilon_{ij} \left[ \left( \dfrac{\sigma_{ij}}{r} \right)^{12}
+  - \left( \dfrac{\sigma_{ij}}{r} \right)^{6} \right], ~ \text{for} ~ r < r_c,
+\label{eq:LJ}
+\end{equation}
+where $r$ is the inter-particle distance, $\epsilon_{ij}$ is
+the depth of the potential well that determines the interaction strength, and
+$\sigma_{ij}$ is the distance at which the potential energy equals zero.
+The indexes $i$ and $j$ refer to pairs of particle types.
+The fourth line, \lmpcmd{pair\_coeff 1 1 1.0 1.0}, specifies the
+Lennard-Jones coefficients for interactions between pairs of atoms
+of type 1: the energy parameter $\epsilon_{11} = 1.0$ and
 the distance parameter $\sigma_{11} = 1.0$.  Similarly, the last line
-sets the Lennard-Jones coefficients for the interactions between atoms
-of type 2, $\epsilon_{22} = 0.5$, and $\sigma_{22} = 3.0$.  By default,
-LAMMPS calculates the cross coefficients between the different atom
-types using geometric average:
-$\epsilon_{ij} = \sqrt{\epsilon_{ii} \epsilon_{jj}}$,
-$\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$.  In the present case, we
-thus have: $\epsilon_{12} = \sqrt{1.0 \times 0.5} = 0.707$, and
+sets the Lennard-Jones coefficients for interactions between atoms
+of type 2, $\epsilon_{22} = 0.5$, and $\sigma_{22} = 3.0$.
+
+\begin{note}
+By default, LAMMPS calculates the cross coefficients for different atom
+types using geometric average: $\epsilon_{ij} = \sqrt{\epsilon_{ii} \epsilon_{jj}}$,
+$\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$.  In the present case,
+$\epsilon_{12} = \sqrt{1.0 \times 0.5} = 0.707$, and
 $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
+\end{note}
 
 \paragraph{Single-point energy}
 
@@ -630,10 +623,10 @@ $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
 \label{fig:LJ}
 \end{figure}
 
-The system is now fully parameterized, and the input ready to compute
+The system is now fully parameterized, and the input is ready to compute
 forces.  Let us complete the two remaining categories,
-\lmpcmd{Visualization}, and \lmpcmd{Run}, by adding the following lines
-into \flecmd{initial.lmp}:
+\lmpcmd{Visualization} and \lmpcmd{Run}, by adding the following lines
+to \flecmd{initial.lmp}:
 \begin{lstlisting}
 # 4) Visualization
 thermo 10
@@ -641,22 +634,21 @@ thermo_style custom step etotal press
 # 5) Run
 run 0 post no
 \end{lstlisting}
-
-The \lmpcmd{thermo 10} command asks LAMMPS to print thermodynamic
-information to the console every given number of steps, in this case,
+The \lmpcmd{thermo 10} command instructs LAMMPS to print thermodynamic
+information to the console every specified number of steps, in this case,
 every 10 simulation steps.  The \lmpcmd{thermo\_style custom} command
-specifies what LAMMPS should output -- in this case, the step number
-(\textit{step}), total energy (\textit{etotal}), and pressure (\textit{press}).
+defines the specific outputs, which in this case are the step number
+(\lmpcmd{step}), total energy (\lmpcmd{etotal}), and pressure (\lmpcmd{press}).
 The \lmpcmd{run 0 post no} command instructs LAMMPS to initialize forces and energy
-without actually running the simulation, and the \lmpcmd{post no} option disables
+without actually running the simulation.  The \lmpcmd{post no} option disables
 the post-run summary and statistics output.
 
-You can now run LAMMPS.  It should finish quickly, and with the default
+You can now run LAMMPS.  The simulation should finish quickly, and with the default
 settings, LAMMPS--GUI will open two windows: one displaying the console
-output and another with a chart.  The \guicmd{Output} window shows information from
-the executed commands, along with the total energy and pressure at step 0,
+output and another with a chart.  The \guicmd{Output} window will display information from
+the executed commands, including the total energy and pressure at step 0,
 as specified by the thermodynamic data request.  Since no actual simulation
-steps were performed, the charts will be empty.
+steps were performed, the \guicmd{Charts} window will be empty.
 
 \paragraph{Snapshot Image}
 
@@ -665,37 +657,39 @@ current system using the \guicmd{Image Viewer} window, which can be
 accessed by clicking the \guicmd{Create Image} button in the \guicmd{Run} menu.
 The image viewer works by instructing LAMMPS to render an image of the current system using
 its internal rendering library via the \lmpcmd{dump image} command.  The
-resulting image is then displayed, and various buttons allow you to adjust
-the view and rendering style.  The image of
+resulting image is then displayed, with various buttons available to adjust
+the view and rendering style.  The image shown in
 figure~\ref{fig:LJ} was created this way.  This will always capture the current
 state of the system.  Save the image for future comparisons.
 
 \paragraph{Energy minimization}
 
-Now, replace the \lmpcmd{run 0 post no} command line with a \lmpcmd{minimize}
-command as follows:
+Now, replace the \lmpcmd{run 0 post no} command line with the
+following \lmpcmd{minimize} command:
 \begin{lstlisting}
 # 5) Run
 minimize 1.0e-6 1.0e-6 1000 10000
 \end{lstlisting}
-
-This tells LAMMPS to perform an energy minimization of the system.  That
-is, LAMMPS will compute the forces on all atoms and then update the
-positions according to a selected algorithm so that the potential energy
-decreases.  By default, LAMMPS uses the conjugate gradient (CG)
+This tells LAMMPS to perform an energy minimization of the system.
+Specifically, LAMMPS will compute the forces on all atoms and then update their
+positions according to a selected algorithm, aiming to reduce
+the potential energy.  By default, LAMMPS uses the conjugate gradient (CG)
 algorithm~\cite{hestenes1952methods}.  The simulation will stop as soon
 as the minimizer algorithm cannot find a way to lower the potential
-energy.  Except for trivial systems, minimization algorithms will find a
+energy. % SG: I don't think that its true, its rather the algorithm
+% will stop when one of the four criteria is met. Axel, what do you think? 
+% I propose to replace by "when specific convergence criteria are met"
+Note that, except for trivial systems, minimization algorithms will find a
 local minimum rather than the global minimum.
 
-Run the minimization and observe that LAMMPS--GUI will capture the output
-and update the chart in real time.  This run executes quickly (depending
-on your computer's capabilities) and LAMMPS--GUI may fail to capture some
-of the thermodynamic data (see figure \ref{fig:chart-log}).  In that
+Run the minimization and observe that LAMMPS--GUI captures the output
+and update the chart in real time (see Figure~\ref{fig:chart-log}).  This run executes quickly (depending
+on your computer's capabilities), but LAMMPS--GUI may fail to capture some
+of the thermodynamic data.  In that
 case, use the \guicmd{Preferences} dialog to reduce the data update
 interval and switch to single-threaded, unaccelerated execution in the
-\guicmd{Accelerators} tab.  You can repeat the run.  Each new run will start
-fresh, forgetting the current system and starting over from the top.
+\guicmd{Accelerators} tab.  You can repeat the run; each new attempt will start
+fresh, resetting the system and re-executing the script from the beginning.
 
 \begin{figure}
 \centering
@@ -703,27 +697,33 @@ fresh, forgetting the current system and starting over from the top.
 \includegraphics[width=0.497\linewidth]{output-1}
 \caption{\guicmd{Charts} (left) and \guicmd{Output} (right) windows of LAMMPS--GUI
   after performing the minimization simulation of \hyperref[lennard-jones-label]{Tutorial 1}.}
+  % SG: TODO - retake the snapshot with the same data as the next figure
 \label{fig:chart-log}
 \end{figure}
 
 The potential energy decreases from a positive value to a
-negative value.  The initially positive value of the potential energy is
-expected because the atoms are created at random positions within
-the simulation box, with some of them being very close to each other,
-resulting in a large initial potential energy due to the repulsive branch of the
-Lennard-Jones potential.  As the energy minimization progresses, the
-energy decreases -- first rapidly -- then more slowly, and it plateaus at
-a negative value, indicating that the atoms are displaced to
-reasonable distances from each other.
+negative value (Figures~\ref{fig:chart-log} and \ref{fig:evolution-energy}\,a).
+The initially positive potential energy is
+expected, as the atoms are created at random positions within
+the simulation box, with some in very close proximity to each other.
+This proximity results in a large initial potential energy due to the repulsive branch of the
+Lennard-Jones potential [i.e., the term in $1/r^{12}$ in Eq.\,\eqref{eq:LJ}].
+As the energy minimization progresses, the
+energy decreases -- first rapidly -- then more gradually,
+before plateauing at a negative value.  This indicates that the atoms
+have moved to reasonable distances from one another.
 
 Create and save a snapshot image of the simulation state after the
-minimization and compare the two images.  You should see that the atoms
-are ``clumping together''.
+minimization, and compare it to the initial image.  You should observe
+that the atoms are ``clumping together'' as they move toward positions
+of lower potential energy.
 
-Since the \lmpcmd{thermo\_style} command also includes the \textit{press}
-keyword, it is possible to switch from plotting the total energy to
-displaying the pressure by choosing \guicmd{Press} in the \guicmd{Select data}
+\begin{note}
+Since the \lmpcmd{thermo\_style} command also includes the \lmpcmd{press}
+keyword, you can switch from plotting the total energy to
+displaying the pressure by selecting \guicmd{Press} in the \guicmd{Select data}
 drop-down menu of the \guicmd{Charts} window.
+\end{note}
 
 \paragraph{Molecular dynamics}
 
