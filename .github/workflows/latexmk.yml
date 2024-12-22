@@ -23,7 +23,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y texlive texlive-latex-extra texlive-fonts-recommended texlive-xetex latexmk
           sudo apt-get install -y texlive-fonts-extra texlive-science texlive-pstricks
-          sudo apt-get install -y texlive-latex3
 
       # Step 3: Install make (required to run your Makefile)
       - name: Install make

@@ -52,18 +52,18 @@ more useful for everyone.
 
 ## License
 
-This project is licensed under the [Creative Commons BY 4.0](https://creativecommons.org/licenses/by/4.0/) License.
-For more details, see the [LICENSE](LICENSE) file.
+This project is licensed under the XXX License - see the 
+[LICENSE](LICENSE) file for details.
 
 ## Authors
 
-- [Simon Gravelle](https://github.com/simongravelle) (corresponding author),
-  Univ. Grenoble Alpes, CNRS, LIPhy, 38000 Grenoble, France
+- [Simon Gravelle](https://github.com/simongravelle) (corr. author),
+  Université Grenoble Alpes, CNRS, LIPhy, 38000 Grenoble, France.
 - [Jacob R. Gissinger](https://www.stevens.edu/profile/jgissing),
-  Stevens Institute of Technology, Hoboken, NJ 07030, USA
+  Stevens Institute of Technology, Hoboken, NJ 07030, USA.
 - [Axel Kohlmeyer](https://sites.google.com/site/akohlmey),
   Institute for Computational Molecular Science, Temple University, Philadelphia,
-  PA 19122, USA
+  PA 19122, USA.
 
 
 
@@ -71,8 +71,8 @@ For more details, see the [LICENSE](LICENSE) file.
 
 - Simon Gravelle acknowledges funding from the European Union's Horizon 2020
   research and innovation programme under the Marie Skłodowska-Curie grant
-  agreement No 101065060.
-- Axel Kohlmeyer acknowledges financial support by Sandia National Laboratories
+  agreement N°101065060.
+- Axel Kohlmeyer acknowledges financial support from Sandia National Laboratories
   under POs 2149742 and 2407526.
 
 
