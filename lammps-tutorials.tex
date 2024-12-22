@@ -888,8 +888,27 @@ simulation from a previously saved configuration.
 
 Open the \flecmd{improved.min.lmp}, which was downloaded during the
 tutorial setup.  This file contains the \lmpcmd{Part A} of the
-\flecmd{initial.lmp} file, but \emph{without} the \lmpcmd{create\_atoms}
-commands in the \lmpcmd{System definition} section.
+\flecmd{initial.lmp} file, but \emph{without} any
+commands in the \lmpcmd{System definition} section:
+\begin{lstlisting}
+# 1) Initialization
+units lj
+dimension 3
+atom_style atomic
+boundary p p p
+# 2) System definition
+# 3) Settings
+mass 1 1.0
+mass 2 10.0
+pair_style lj/cut 4.0
+pair_coeff 1 1 1.0 1.0
+pair_coeff 2 2 0.5 3.0
+# 4) Visualization
+thermo 10
+thermo_style custom step etotal press
+# 5) Run
+minimize 1.0e-6 1.0e-6 1000 10000
+\end{lstlisting}
 
 We want to create the atoms of types 1 and 2 in two separate
 regions.  To achieve this, we need to add two \lmpcmd{region} commands and then
@@ -908,31 +927,30 @@ create_atoms 2 random 150 12756 cyl_in
 The \lmpcmd{side in} and \lmpcmd{side out} keywords are used to define
 regions representing the inside and outside of the cylinder of radius
 10 length units.  Then, append a sixth section titled \lmpcmd{Save system} at the end
-of the file with the following content (make sure the \lmpcmd{write\_data} command
-is placed \emph{after} the \lmpcmd{minimize} command):
+of the file, ensuring that the \lmpcmd{write\_data} command is placed \emph{after}
+the \lmpcmd{minimize} command:
 \begin{lstlisting}
 # 6) Save system
-write_data min_coords.data
+write_data improved.min.data
 \end{lstlisting}
 
+\begin{note}
 A key improvement to the input is the addition of the
 \lmpcmd{write\_data} command.  This command writes the state
-of the system to a text file called \flecmd{min\_coords.data}.
+of the system to a text file called \flecmd{improved.min.data}.
 This \flecmd{.data} file will be used later
 to restart the simulation from the final state of the energy
-minimization step without having to repeat the system creation and
-minimization.
+minimization step, eliminating the need to repeat the system creation and minimization.
+\end{note}
 
-Run the \flecmd{improved.min.lmp} file using LAMMPS.  At the end of the simulation, a file
-called \flecmd{min\_coords.data} is created.  You can view the contents
-of the file with the file view feature of LAMMPS--GUI, e.g.,~from the
-\guicmd{File} menu or by right-clicking on the file name in the editor
-and selecting the entry \guicmd{View file `min\_coords.data'}.
+Run the \flecmd{improved.min.lmp} file using LAMMPS.  At the end of the simulation,
+a file called \flecmd{improved.min.data} is created.  You can view the contents
+of this file from the LAMMPS--GUI, by right-clicking on the file name in
+the editor and selecting the entry \guicmd{View file `improved.min.data'}.
 
 The created \flecmd{.data} file contains all the information necessary to
 restart the simulation, such as the number of atoms, the box size, the
-masses, and the pair coefficients.  The
-\flecmd{.data} file also contains the final
+masses, and the pair coefficients.  This \flecmd{.data} file also contains the final
 positions of the atoms within the \lmpcmd{Atoms} section.  The first five
 columns of the \lmpcmd{Atoms} section correspond (from left to right) to
 the atom indexes (from 1 to the total number of atoms, 1150), the atom
@@ -970,18 +988,29 @@ and the edges of the simulation box are represented as blue sticks.}
 To continue a simulation from the saved configuration, open the
 \flecmd{improved.md.lmp} file, which was downloaded during the tutorial setup.
 This file contains the \textit{Initialization} part from \flecmd{initial.lmp}
-and \flecmd{improved.min.lmp}.
+and \flecmd{improved.min.lmp}:
+\begin{lstlisting}
+# 1) Initialization
+units lj
+dimension 3
+atom_style atomic
+boundary p p p
+# 2) System definition
+# 3) Settings
+# 4) Visualization
+# 5) Run
+\end{lstlisting}
 
 Since we want to read the system from the data file, we do not need
 to repeat most of the commands from the \lmpcmd{System definition}
-and \lmpcmd{Settings} categories.  The exception is the \textit{pair\_style}
+and \lmpcmd{Settings} categories.  The exception is the \lmpcmd{pair\_style}
 command, which now must come \emph{before} the simulation box is defined,
 meaning before the \lmpcmd{read\_data} command.  Add the following
 lines to \flecmd{improved.md.lmp}:
 \begin{lstlisting}
 # 2) System definition
 pair_style lj/cut 4.0
-read_data min_coords.data
+read_data improved.min.data
 \end{lstlisting}
 
 By visualizing the system (see Fig.~\ref{fig:improved-min}), you may
