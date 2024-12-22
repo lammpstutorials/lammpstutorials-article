@@ -1,0 +1,45 @@
+# LAMMPS Tutorial manifest file. This file determines what is downloaded when.
+# comments start with a # as the first character.
+# comments and empty lines are ignored
+##############################################################################
+# 1) input file templates
+# the first file will be automatically loaded
+CNT.data
+mixing.lmp
+M-M_post.mol
+M-M_pre.mol
+M-M.rxnmap
+M-P_post.mol
+M-P_pre.mol
+M-P.rxnmap
+polymerize.lmp
+P-P_post.mol
+P-P_pre.mol
+P-P.rxnmap
+solution
+styrene.mol
+
+# 2) solution files
+# only downloaded on request
+CNT.data
+mixing.log
+mixing.restart
+M-M_pre.mol
+M-P_post.mol
+M-P.rxnmap
+polymerize.log
+P-P_post.mol
+P-P.rxnmap
+mixing.data
+mixing.lmp
+mixing.png
+M-M_post.mol
+M-M.rxnmap
+M-P_pre.mol
+polymerize.data
+polymerize.lmp
+polymerize.png
+P-P_pre.mol
+styrene.mol
+
+# 3) folders not known to LAMMPS GUI will be skipped
