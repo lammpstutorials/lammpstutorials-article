@@ -1,0 +1,40 @@
+name: LaTeX PDF Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Install LaTeX tools and missing packages
+      - name: Install LaTeX and required packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive texlive-latex-extra texlive-fonts-recommended texlive-xetex latexmk
+          sudo apt-get install -y texlive-fonts-extra texlive-science texlive-pstricks
+
+      # Step 3: Install make (required to run your Makefile)
+      - name: Install make
+        run: sudo apt-get install make
+
+      # Step 4: Build the PDF using the Makefile
+      - name: Build PDF using Makefile
+        run: make
+
+      # Step 5: Upload the generated PDF as an artifact
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: lammps-tutorials-pdf
+          path: lammps-tutorials.pdf
