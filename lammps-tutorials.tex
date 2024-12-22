@@ -3943,7 +3943,7 @@ CNT, with a mass density for the whole system of $0.9~\text{g/cm}^3$.}
 \end{figure}
 
 The goal of this tutorial is to create a model of a carbon nanotube (CNT) embedded
-in a polymer melt made of polystyrene (PS) (Fig.~\ref{fig:REACT}). The
+in a polymer melt made of polystyrene (PS) (Fig.~\ref{fig:REACT}).  The
 REACTER protocol is used to simulate the polymerization of styrene monomers, and the
 polymerization reaction is followed in time \cite{gissinger2017polymer, gissinger2020reacter, gissinger2024molecular}.
 In contrast with AIREBO (\hyperref[carbon-nanotube-label]{Tutorial 2})
@@ -3952,11 +3952,10 @@ protocol relies on the use of a \textit{classical} force field.
 
 \subsubsection{Creating the system}
 
-The first step of the tutorial is to solvate the carbon nanotube
-with the styrene molecules. Create a new input file, call it \textit{mixing.lmp},
-and copy the following lines into it:
-{\normalsize
-\begin{verbatim}
+To begin this tutorial, select \guicmd{Start Tutorial 8} from the
+\guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.
+The editor should display the following content corresponding to \flecmd{mixing.lmp}:
+\begin{lstlisting}
 units real
 boundary p p p
 atom_style full
@@ -3967,20 +3966,24 @@ angle_style class2
 bond_style class2
 dihedral_style class2
 improper_style class2
+
 pair_modify tail yes mix sixthpower
 special_bonds lj/coul 0 0 1
-\end{verbatim}
-}
-The \textit{class2} styles compute a 6/9 Lennard-Jones~\cite{sun1998compass}.
-The \textit{class2} bonds, angles, dihedrals, and impropers are used as
-well, see the documention for a description of their respective potentials.
-The \textit{mix sixthpower} imposes the following mixing rule for the calculation
-of the cross coefficients: $\sigma_{ij} = ( 0.5 (\sigma^6_i+\sigma_j^6))^{1/6}$,
-and $\epsilon_{ij} = (2 \sqrt{\epsilon_i \epsilon_j} \sigma^3_i \sigma^3_j)
-/ (\sigma^6_i+\sigma_j^6)$.
+\end{lstlisting}
+The \lmpcmd{class2} styles compute a 6/9 Lennard-Jones potential~\cite{sun1998compass}.
+The \textit{class2} bond, angle, dihedral, and improper styles are used as
+well, see the documentation for a description of their respective potentials.
+The \lmpcmd{mix sixthpower} imposes the following mixing rule for the calculation
+of the cross coefficients: 
+\begin{eqnarray}
+\nonumber
+\sigma_{ij} & = & \left( \frac{1}{2} (\sigma^6_i+\sigma_j^6) \right)^{1/6}, ~ \text{and} \\
+\nonumber
+\epsilon_{ij} & = & \dfrac{2 \sqrt{\epsilon_i \epsilon_j} \sigma^3_i \sigma^3_j}{\sigma^6_i+\sigma_j^6}.
+\end{eqnarray}
 
 Let us read a data file named \href{\filepath tutorial8/CNT.data}{\textit{CNT.data}}
-containing a periodic single-walled CNT. Add the following lines to \textit{mixing.lmp}:
+containing a periodic single-walled CNT.  Add the following lines to \textit{mixing.lmp}:
 {\normalsize
 \begin{verbatim}
 read_data CNT.data &
@@ -4010,7 +4013,7 @@ reset_timestep 0
 \end{verbatim}
 }
 Then, let us densify the system to a target value of 0.9 g/cm$^3$
-by manually shrinking the simulation box at a constant rate. The dimension parallel
+by manually shrinking the simulation box at a constant rate.  The dimension parallel
 to the CNT axis will remain fixed, since the CNT is periodic in that direction.
 The \textit{fix halt} feature is used to stop the box shrinkage once the target density is
 reached.
@@ -4088,17 +4091,17 @@ time, $t$, during equilibration.}
 \subsubsection{Reaction templates}
 
 The REACTER protocol enables the modeling of chemical reactions when using
-classical force fields. The user must provide a molecule template for the reactants,
+classical force fields.  The user must provide a molecule template for the reactants,
 a molecule template for the products, and an \textit{reaction map} file that
-provides an atom mapping between the two templates. The reaction map file contains
+provides an atom mapping between the two templates.  The reaction map file contains
 other information, such as which atoms are the initiators for the reaction, and which
 are edge atoms that would connect the rest of a long polymer chain in the simulation.
 
 There are three reactions to be defined: the polymerization of two styrene monomers,
 the addition of a strene monomer onto the end of a growing polymer chain, and the
-linking of two polymer chains. Download the three files associated with each reaction.
+linking of two polymer chains.  Download the three files associated with each reaction.
 The file names associated with each reaction use the abbreviation `M' for monomer and `P'
-for polymer. The first reaction uses the prefix `M-M' for the pre-reaction template, post-reaction
+for polymer.  The first reaction uses the prefix `M-M' for the pre-reaction template, post-reaction
 template, and reaction map file (\href{\filepath tutorial8/M-M.rxnmap}{\textit{M-M.rxnmap}},
 \href{\filepath tutorial8/M-M_pre.lmpmol}{\textit{M-M$\_$pre.lmpmol}},
 \href{\filepath tutorial8/M-M_post.lmpmol}{\textit{M-M$\_$post.lmpmol}}).
@@ -4117,7 +4120,7 @@ The third reaction uses the prefix `P-P', (\href{\filepath tutorial8/P-P.rxnmap}
 \subsubsection{Simulating the reaction}
 
 The first step, before simulating the reaction, is to import the previously
-generated configuration. Create a new input file named \textit{polymerize.lmp},
+generated configuration.  Create a new input file named \textit{polymerize.lmp},
 and copy the following lines into it:
 {\normalsize
 \begin{verbatim}
@@ -4185,10 +4188,10 @@ fix rxn all bond/react &
 With the \textit{stabilization} keyword, the \textit{bond/react} command will
 stabilize the atoms involved in the reaction using the \textit{nve/limit}
 command with a maximum displacement of $0.03\,\mathrm{\AA{}}$ (a command that was
-used, for instance, in \hyperref[sheared-confined-label]{Tutorial 4}). By default,
-each reaction is stabilized for 60 time steps. Each \textit{react} keyword
+used, for instance, in \hyperref[sheared-confined-label]{Tutorial 4}).  By default,
+each reaction is stabilized for 60 time steps.  Each \textit{react} keyword
 corresponds to a reaction, e.g.,~a transformation of \textit{mol1} into \textit{mol2}
-based on the atom map \textit{M-M.rxnmap}. Implementation details about each reaction,
+based on the atom map \textit{M-M.rxnmap}.  Implementation details about each reaction,
 such as the reaction distance cutoffs and the frequency with which to search for
 reaction sties, are also specified in this command.
 
@@ -4196,8 +4199,8 @@ reaction sties, are also specified in this command.
 to keep track of which atoms are being stabilized, and which atoms are undergoing
 dynamics using the system-wide time integrator (\textit{fix nvt}, \textit{fix npt}, etc.).
 When using reaction stabilization, there should not be a time integrator that acts on
-the ``all'' group. The name of the group of atoms that are not currently undergoing
-stabilization is derived by appending `\_REACT' to the user-provided prefix. The
+the ``all'' group.  The name of the group of atoms that are not currently undergoing
+stabilization is derived by appending `\_REACT' to the user-provided prefix.  The
 following commands use the NVT ensemble to perform time integration:
 {\normalsize
 \begin{verbatim}
