@@ -4010,7 +4010,7 @@ Then, let us densify the system to a target value of $0.9~\text{g/cm}^3$
 by manually shrinking the simulation box at a constant rate.  The dimension parallel
 to the CNT axis is maintained fixed because the CNT is periodic in that direction.
 Add the following commands to \flecmd{mixing.lmp}:
-% SG: I remove the loop local, unless its important? But if it is, we have to 
+% SG: I removed the loop local, unless its important? But if it is, we have to 
 % explain what it does and why it was chosen here.
 \begin{lstlisting}
 velocity all create 300.0 9845 dist gaussian rot yes
@@ -4020,7 +4020,7 @@ fix mydef all deform 1 y erate -0.0001 z erate -0.0001
 variable rho equal density
 fix myhal all halt 10 v_rho > 0.9 error continue
 
-thermo 500
+thermo 200
 thermo_style custom step temp pe etotal press density
 
 run 9000
@@ -4058,50 +4058,55 @@ run 10000
 write_data mixing.data
 \end{lstlisting}
 For visualization purposes, the CNT is moved to the center of the box
-for the last steps of the simulation using \lmpcmd{fix recenter}.
-As the time progresses, [maybe plot total energy instead of density
-to demonstrate equilbrated box]
+using \lmpcmd{fix recenter}.  As the time progresses, the system density,
+$\rho$, gradually converges toward the target value of $0.8$\,g/cm$^3$ (Fig.~\ref{fig:evolution-density}\,a).
+Meanwhile, the total energy of the system initially evolves rapidly, reflecting the
+densification process, and then eventually stabilizes (Fig.~\ref{fig:evolution-density}\,b).
 The final state is shown in Fig.~\ref{fig:REACT}.
-%the density $\rho$ of the system progressively
-%converges toward an equilibrium value $\rho \approx 1.3$\,g/cm$^3$
-%(Fig.~\ref{fig:evolution-density}).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{REACT-mixing}
-\caption{Evolution of the system density, $\rho$, as a function of the
-time, $t$, during equilibration.}
+\caption{a) Evolution of the density, $\rho$, as a function of the
+time, $t$, during equilibration of the system from \hyperref[bond-react-label]{Tutorial 8}.
+b) Evolution of the total energy, $E_\text{tot}$, of the system.
+The vertical dashed lines mark the transition between the different
+phases of the simulation.}
 \label{fig:evolution-density}
 \end{figure}
 
 \subsubsection{Reaction templates}
 
-The REACTER protocol enables the modeling of chemical reactions when using
+The REACTER protocol enables the modeling of chemical reactions using
 classical force fields.  The user must provide a molecule template for the reactants,
-a molecule template for the products, and an \textit{reaction map} file that
-provides an atom mapping between the two templates.  The reaction map file contains
-other information, such as which atoms are the initiators for the reaction, and which
-are edge atoms that would connect the rest of a long polymer chain in the simulation.
+a molecule template for the products, and a \flecmd{reaction map} file that
+provides an atom mapping between the two templates.  The reaction map file also includes
+additional information, such as which atoms act as initiators for the reaction and which
+serve as edge atoms to connect the rest of a long polymer chain in the simulation.
 
-There are three reactions to be defined: the polymerization of two styrene monomers,
-the addition of a strene monomer onto the end of a growing polymer chain, and the
+There are three reactions to define: (1) the polymerization of two styrene monomers,
+(2) the addition of a styrene monomer to the end of a growing polymer chain, and (3) the
 linking of two polymer chains.  Download the three files associated with each reaction.
-The file names associated with each reaction use the abbreviation `M' for monomer and `P'
-for polymer.  The first reaction uses the prefix `M-M' for the pre-reaction template, post-reaction
-template, and reaction map file (\href{\filepath tutorial8/M-M.rxnmap}{\textit{M-M.rxnmap}},
-\href{\filepath tutorial8/M-M_pre.lmpmol}{\textit{M-M$\_$pre.lmpmol}},
-\href{\filepath tutorial8/M-M_post.lmpmol}{\textit{M-M$\_$post.lmpmol}}).
-The second reaction uses the prefix `M-P', (\href{\filepath tutorial8/M-P.rxnmap}{\textit{M-P.rxnmap}},
-\href{\filepath tutorial8/M-P_pre.lmpmol}{\textit{M-P$\_$pre.lmpmol}},
-\href{\filepath tutorial8/M-P_post.lmpmol}{\textit{M-P$\_$post.lmpmol}}).
-The third reaction uses the prefix `P-P', (\href{\filepath tutorial8/P-P.rxnmap}{\textit{P-P.rxnmap}},
-\href{\filepath tutorial8/P-P_pre.lmpmol}{\textit{P-P$\_$pre.lmpmol}},
-\href{\filepath tutorial8/P-P_post.lmpmol}{\textit{P-P$\_$post.lmpmol}}).
-
-% S.G.: @jrgissing, here we could describe the specifity, or at least the most important
-% details of the atom maps.
-% S.G.: the name of the molecule templates are too long. Would it be possible to shorten them
-% for the sake of the tutorial? like "reacted-1.mol" instead of rxn1_stp1_reacted.molecule_template.
+The file names for each reaction use the abbreviation `M' for monomer and `P'
+for polymer.  The first reaction uses the prefix `M-M' for the pre-reaction template,
+post-reaction template, and reaction map file:
+\begin{itemize}
+\item \href{\filepath tutorial8/M-M_pre.mol}{\textit{M-M$\_$pre.mol}},
+\item \href{\filepath tutorial8/M-M_post.mol}{\textit{M-M$\_$post.mol}}.
+\item \href{\filepath tutorial8/M-M.rxnmap}{\textit{M-M.rxnmap}},
+\end{itemize}
+The second reaction uses the prefix `M-P',
+\begin{itemize}
+\item \href{\filepath tutorial8/M-P.rxnmap}{\textit{M-P.rxnmap}},
+\item \href{\filepath tutorial8/M-P_pre.lmpmol}{\textit{M-P$\_$pre.mol}},
+\item \href{\filepath tutorial8/M-P_post.lmpmol}{\textit{M-P$\_$post.mol}}.
+\end{itemize}
+The third reaction uses the prefix `P-P',
+\begin{itemize}
+\item \href{\filepath tutorial8/P-P.rxnmap}{\textit{P-P.rxnmap}},
+\item \href{\filepath tutorial8/P-P_pre.lmpmol}{\textit{P-P$\_$pre.mol}},
+\item \href{\filepath tutorial8/P-P_post.lmpmol}{\textit{P-P$\_$post.mol}}.
+\end{itemize}
 
 \subsubsection{Simulating the reaction}
 
