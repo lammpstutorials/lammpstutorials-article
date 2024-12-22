@@ -36,8 +36,11 @@ within the solution repository located in each tutorial folder.
 
 ## Link
 
-Access the `.pdf` from [this link](lammps-tutorials.pdf), or clone this repository
-and compile the `.tex` file yourself by typing in a terminal:
+https://github.com/lammpstutorials/lammpstutorials-article/actions/runs/12458522247/artifacts/2354075042
+
+Access the last version of the `.pdf` from
+[the Actions tab](https://github.com/lammpstutorials/lammpstutorials-article/actions/runs/12458522247/artifacts/2354075042),
+or clone this repository and compile the `.tex` file yourself by typing in a terminal:
 
 ```
 make
