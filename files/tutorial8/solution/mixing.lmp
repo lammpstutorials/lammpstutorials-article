@@ -11,42 +11,41 @@ bond_style class2
 dihedral_style class2
 improper_style class2
 
-special_bonds lj/coul 0 0 1
 pair_modify tail yes mix sixthpower
+special_bonds lj/coul 0 0 1
 
-read_data CNT.data group CNT &
-  extra/special/per/atom 20
+read_data CNT.data extra/special/per/atom 20
+group CNT type cp
 
-molecule styrene styrene.lmpmol
-
+molecule styrene styrene.mol
 create_atoms 0 random 200 8305 NULL overlap 2.75 &
   maxtry 500 mol styrene 7687
 
 minimize 1.0e-4 1.0e-6 100 1000
+reset_timestep 0
 
-velocity all create 300.0 4928459 dist gaussian &
-  rot yes loop local
-fix 1 all nvt temp 300 300 100
+velocity all create 300.0 9845 dist gaussian rot yes
+fix mynvt all nvt temp 300 300 100
 
-fix 2 all deform 1 y erate -0.0001 &
-  z erate -0.0001
+fix mydef all deform 1 y erate -0.0001 z erate -0.0001
 variable rho equal density
-fix 3 all halt 10 v_rho > 0.9 error continue
+fix myhal all halt 10 v_rho > 0.9 error continue
 
 thermo 500
-thermo_style custom step temp pe etotal press &
-  density
+thermo_style custom step temp pe etotal press density
 
 run 9000
 
-unfix 2
-unfix 3
+unfix mydef
+unfix myhal
 reset_timestep 0
 
-dump mydmp all image 1000 dump.mixing.*.ppm &
-  type type shiny 0.1 box no 0.01 &
-  view 90 0 zoom 1.5 fsaa yes bond atom 0.5
-dump_modify mydmp backcolor white &
+fix myrec CNT recenter NULL 0 0 units box shift all
+
+dump viz all image 1000 myimage-*.ppm &
+  type type shiny 0.1 box no 0.01 size 1000 1000 &
+  view 90 0 zoom 1.8 fsaa yes bond atom 0.5
+dump_modify viz backcolor white &
   acolor cp gray acolor c=1 gray &
   acolor c= gray acolor c1 gray &
   acolor c2 gray acolor c3 gray &
@@ -55,9 +54,6 @@ dump_modify mydmp backcolor white &
   adiam c2 0.3 adiam c3 0.3 &
   acolor hc white adiam hc 0.15
 
-run 9999
+run 10000
 
-fix centralize CNT recenter 0 0 0 units box shift all
-run 1
-
-write_data CNT-PS-mix.data
+write_data mixing.data
