@@ -24,8 +24,8 @@ create_atoms 0 random 200 8305 NULL overlap 2.75 &
 minimize 1.0e-4 1.0e-6 100 1000
 reset_timestep 0
 
-velocity all create 300.0 9845 dist gaussian rot yes
-fix mynvt all nvt temp 300 300 100
+velocity all create 530 9845 dist gaussian rot yes
+fix mynvt all nvt temp 530 530 100
 
 fix mydef all deform 1 y erate -0.0001 z erate -0.0001
 variable rho equal density
@@ -47,8 +47,8 @@ dump viz all image 1000 myimage-*.ppm &
   view 90 0 zoom 1.8 fsaa yes bond atom 0.5
 dump_modify viz backcolor white &
   acolor cp gray acolor c=1 gray &
-  acolor c= gray acolor c1 gray &
-  acolor c2 gray acolor c3 gray &
+  acolor c= gray acolor c1 deeppink &
+  acolor c2 deeppink acolor c3 deeppink &
   adiam cp 0.3 adiam c=1 0.3 &
   adiam c= 0.3 adiam c1 0.3 &
   adiam c2 0.3 adiam c3 0.3 &

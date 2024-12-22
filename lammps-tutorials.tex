@@ -3935,7 +3935,7 @@ and $x_0 = 10~\text{\AA{}}$.}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.55\linewidth]{REACT.png}
+\includegraphics[width=0.7\linewidth]{REACT.png}
 \caption{Initial configuration for \hyperref[bond-react-label]{Tutorial 8}.
 The system consists of 200 styrene molecules packed around a single-walled
 CNT, with a mass density for the whole system of $0.9~\text{g/cm}^3$.}
@@ -3983,11 +3983,9 @@ of the cross coefficients:
 \end{eqnarray}
 
 Let us read the \href{\filepath tutorial8/CNT.data}{\dwlcmd{CNT.data}} file, which
-contains a periodic single-walled CNT, and place the atoms into a group called \lmpcmd{CNT}.
-Add the following line to \flecmd{mixing.lmp}:
+contains a periodic single-walled CNT.  Add the following line to \flecmd{mixing.lmp}:
 \begin{lstlisting}
 read_data CNT.data extra/special/per/atom 20
-group CNT type cp
 \end{lstlisting}
 The CNT is approximately $1.1~\text{nm}$ in diameter and $1.6\,\text{nm}$ in length, oriented
 along the $x$-axis. The simulation box is as large as 5.2~nm in the two other dimensions,
@@ -4013,8 +4011,8 @@ Add the following commands to \flecmd{mixing.lmp}:
 % SG: I removed the loop local, unless its important? But if it is, we have to 
 % explain what it does and why it was chosen here.
 \begin{lstlisting}
-velocity all create 300.0 9845 dist gaussian rot yes
-fix mynvt all nvt temp 300 300 100
+velocity all create 530 9845 dist gaussian rot yes
+fix mynvt all nvt temp 530 530 100
 
 fix mydef all deform 1 y erate -0.0001 z erate -0.0001
 variable rho equal density
@@ -4029,15 +4027,15 @@ The \lmpcmd{fix halt} command is used to stop the box shrinkage once the
 target density is reached. 
 
 For the next stage of the simulation, we will use \lmpcmd{dump image} to
-output images every 1000 steps:
+output images every 200 steps:
 \begin{lstlisting}
-dump viz all image 1000 myimage-*.ppm &
+dump viz all image 200 myimage-*.ppm &
   type type shiny 0.1 box no 0.01 size 1000 1000 &
   view 90 0 zoom 1.8 fsaa yes bond atom 0.5
 dump_modify viz backcolor white &
   acolor cp gray acolor c=1 gray &
-  acolor c= gray acolor c1 gray &
-  acolor c2 gray acolor c3 gray &
+  acolor c= gray acolor c1 deeppink &
+  acolor c2 deeppink acolor c3 deeppink &
   adiam cp 0.3 adiam c=1 0.3 &
   adiam c= 0.3 adiam c1 0.3 &
   adiam c2 0.3 adiam c3 0.3 &
@@ -4051,14 +4049,16 @@ unfix mydef
 unfix myhal
 reset_timestep 0
 
+group CNT molecule 1 2 3
 fix myrec CNT recenter NULL 0 0 units box shift all
 
 run 10000
 
 write_data mixing.data
 \end{lstlisting}
-For visualization purposes, the CNT is moved to the center of the box
-using \lmpcmd{fix recenter}.  As the time progresses, the system density,
+For visualization purposes, the atoms from the CNT \lmpcmd{group} is moved
+to the center of the box using \lmpcmd{fix recenter}.
+As the time progresses, the system density,
 $\rho$, gradually converges toward the target value of $0.8$\,g/cm$^3$ (Fig.~\ref{fig:evolution-density}\,a).
 Meanwhile, the total energy of the system initially evolves rapidly, reflecting the
 densification process, and then eventually stabilizes (Fig.~\ref{fig:evolution-density}\,b).
@@ -4087,34 +4087,34 @@ serve as edge atoms to connect the rest of a long polymer chain in the simulatio
 There are three reactions to define: (1) the polymerization of two styrene monomers,
 (2) the addition of a styrene monomer to the end of a growing polymer chain, and (3) the
 linking of two polymer chains.  Download the three files associated with each reaction.
-The file names for each reaction use the abbreviation `M' for monomer and `P'
-for polymer.  The first reaction uses the prefix `M-M' for the pre-reaction template,
+The first reaction uses the prefix `M-M' for the pre-reaction template,
 post-reaction template, and reaction map file:
 \begin{itemize}
 \item \href{\filepath tutorial8/M-M_pre.mol}{\textit{M-M$\_$pre.mol}},
-\item \href{\filepath tutorial8/M-M_post.mol}{\textit{M-M$\_$post.mol}}.
-\item \href{\filepath tutorial8/M-M.rxnmap}{\textit{M-M.rxnmap}},
+\item \href{\filepath tutorial8/M-M_post.mol}{\textit{M-M$\_$post.mol}},
+\item \href{\filepath tutorial8/M-M.rxnmap}{\textit{M-M.rxnmap}}.
 \end{itemize}
 The second reaction uses the prefix `M-P',
 \begin{itemize}
-\item \href{\filepath tutorial8/M-P.rxnmap}{\textit{M-P.rxnmap}},
 \item \href{\filepath tutorial8/M-P_pre.lmpmol}{\textit{M-P$\_$pre.mol}},
-\item \href{\filepath tutorial8/M-P_post.lmpmol}{\textit{M-P$\_$post.mol}}.
+\item \href{\filepath tutorial8/M-P_post.lmpmol}{\textit{M-P$\_$post.mol}},
+\item \href{\filepath tutorial8/M-P.rxnmap}{\textit{M-P.rxnmap}}.
 \end{itemize}
 The third reaction uses the prefix `P-P',
 \begin{itemize}
-\item \href{\filepath tutorial8/P-P.rxnmap}{\textit{P-P.rxnmap}},
 \item \href{\filepath tutorial8/P-P_pre.lmpmol}{\textit{P-P$\_$pre.mol}},
-\item \href{\filepath tutorial8/P-P_post.lmpmol}{\textit{P-P$\_$post.mol}}.
+\item \href{\filepath tutorial8/P-P_post.lmpmol}{\textit{P-P$\_$post.mol}},
+\item \href{\filepath tutorial8/P-P.rxnmap}{\textit{P-P.rxnmap}}.
 \end{itemize}
+Here, the file names for each reaction use the abbreviation `M' for monomer and `P'
+for polymer.
 
 \subsubsection{Simulating the reaction}
 
 The first step, before simulating the reaction, is to import the previously
-generated configuration.  Create a new input file named \textit{polymerize.lmp},
-and copy the following lines into it:
-{\normalsize
-\begin{verbatim}
+generated configuration.  Open the file named \flecmd{polymerize.lmp},
+which should contain the following lines:
+\begin{lstlisting}
 units real
 boundary p p p
 atom_style full
@@ -4125,96 +4125,112 @@ angle_style class2
 bond_style class2
 dihedral_style class2
 improper_style class2
-pair_modify tail yes mix sixthpower
 
+pair_modify tail yes mix sixthpower
 special_bonds lj/coul 0 0 1
 
-read_data CNT-PS-mix.data &
+read_data mixing.data &
   extra/bond/per/atom 5  &
   extra/angle/per/atom 15 &
   extra/dihedral/per/atom 15 &
   extra/improper/per/atom 25 &
   extra/special/per/atom 25
-\end{verbatim}
-}
-Here, the \textit{read$\_$data} command is used to import \textit{cnt-nylon-mix.data}.
-Then, let us import all six molecules templates using the \textit{molecule} command:
-{\normalsize
-\begin{verbatim}
-molecule mol1 M-M_pre.lmpmol
-molecule mol2 M-M_post.lmpmol
-molecule mol3 M-P_pre.lmpmol
-molecule mol4 M-P_post.lmpmol
-molecule mol5 P-P_pre.lmpmol
-molecule mol6 P-P_post.lmpmol
-\end{verbatim}
-}
+\end{lstlisting}
+Here, the \lmpcmd{read$\_$data} command is used to import the
+previously generated \flecmd{mixing.data} file.  All other commands
+have been introduced in earlier parts of the tutorial.
+
+Then, let us import all six molecules templates using the \lmpcmd{molecule} command:
+\begin{lstlisting}
+molecule mol1 M-M_pre.mol
+molecule mol2 M-M_post.mol
+molecule mol3 M-P_pre.mol
+molecule mol4 M-P_post.mol
+molecule mol5 P-P_pre.mol
+molecule mol6 P-P_post.mol
+\end{lstlisting}
 In order to follow the evolution of the reaction with time, let us generate images
-of the system using \textit{dump image}:
-{\normalsize
-\begin{verbatim}
-    dump mydmp all image 1000 dump.mix.*.ppm &
-    type type shiny 0.1 box no 0.01 &
-    view 90 0 zoom 1.5 fsaa yes bond atom 0.5
-  dump_modify mydmp backcolor white &
-    acolor cp gray acolor c=1 gray &
-    acolor c= gray acolor c1 gray &
-    acolor c2 gray acolor c3 gray &
-    adiam cp 0.3 adiam c=1 0.3 &
-    adiam c= 0.3 adiam c1 0.3 &
-    adiam c2 0.3 adiam c3 0.3 &
-    acolor hc white adiam hc 0.15
-\end{verbatim}
-}
-Then, using the \textit{fix bond/react},
-{\normalsize
-\begin{verbatim}
+of the system using \lmpcmd{dump image}:
+\begin{lstlisting}
+dump viz all image 200 myimage-*.ppm &
+  type type shiny 0.1 box no 0.01 size 1000 1000 &
+  view 90 0 zoom 1.8 fsaa yes bond atom 0.5
+dump_modify viz backcolor white &
+  acolor cp gray acolor c=1 gray &
+  acolor c= gray acolor c1 deeppink &
+  acolor c2 gray deeppink c3 deeppink &
+  adiam cp 0.3 adiam c=1 0.3 &
+  adiam c= 0.3 adiam c1 0.3 &
+  adiam c2 0.3 adiam c3 0.3 &
+  acolor hc white adiam hc 0.15
+\end{lstlisting}
+
+Let us use \lmpcmd{fix bond/react} by adding the following
+line to \flecmd{polymerize.lmp}:
+\begin{lstlisting}
 fix rxn all bond/react &
   stabilization yes statted_grp 0.03 &
   react R1 all 1 0 3.0 mol1 mol2 M-M.rxnmap &
   react R2 all 1 0 3.0 mol3 mol4 M-P.rxnmap &
   react R3 all 1 0 5.0 mol5 mol6 P-P.rxnmap
-\end{verbatim}
-}
-With the \textit{stabilization} keyword, the \textit{bond/react} command will
-stabilize the atoms involved in the reaction using the \textit{nve/limit}
+\end{lstlisting}
+With the \lmpcmd{stabilization} keyword, the \lmpcmd{bond/react} command will
+stabilize the atoms involved in the reaction using the \lmpcmd{nve/limit}
 command with a maximum displacement of $0.03\,\mathrm{\AA{}}$ (a command that was
 used, for instance, in \hyperref[sheared-confined-label]{Tutorial 4}).  By default,
-each reaction is stabilized for 60 time steps.  Each \textit{react} keyword
-corresponds to a reaction, e.g.,~a transformation of \textit{mol1} into \textit{mol2}
-based on the atom map \textit{M-M.rxnmap}.  Implementation details about each reaction,
+each reaction is stabilized for 60 time steps.  Each \lmpcmd{react} keyword
+corresponds to a reaction, e.g.,~a transformation of \lmpcmd{mol1} into \lmpcmd{mol2}
+based on the atom map \lmpcmd{M-M.rxnmap}.  Implementation details about each reaction,
 such as the reaction distance cutoffs and the frequency with which to search for
 reaction sties, are also specified in this command.
 
-\textit{Fix bond/react} creates several groups of atoms that are dynamically updated
-to keep track of which atoms are being stabilized, and which atoms are undergoing
-dynamics using the system-wide time integrator (\textit{fix nvt}, \textit{fix npt}, etc.).
-When using reaction stabilization, there should not be a time integrator that acts on
-the ``all'' group.  The name of the group of atoms that are not currently undergoing
-stabilization is derived by appending `\_REACT' to the user-provided prefix.  The
-following commands use the NVT ensemble to perform time integration:
-{\normalsize
-\begin{verbatim}
-fix mynvt statted_grp_REACT nvt $
-  temp 530 530 100
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{REACT-final.png}
+\caption{Final configuration for \hyperref[bond-react-label]{Tutorial 8}.
+The atoms from the formed polymer named \lmpcmd{c1}, \lmpcmd{c2}, and 
+\lmpcmd{c3} are colored in pink.}
+\label{fig:REACT-final}
+\end{figure}
+
+\begin{note}
+The command \lmpcmd{fix bond/react} creates several groups of atoms that are dynamically updated
+to track which atoms are being stabilized and which atoms are undergoing
+dynamics with the system-wide time integrator (here, \lmpcmd{fix nvt}).
+When reaction stabilization is employed, there should not be a time integrator acting on
+the group \lmpcmd{all}.  Instead, the group of atoms not currently
+undergoing stabilization is named by appending `\_REACT' to the user-provided prefix.
+\end{note}
+
+Add the following commands to \flecmd{polymerize.lmp} to operate in the NVT ensemble
+while ensuring that the CNT remains centered in the simulation box:
+\begin{lstlisting}
+fix mynvt statted_grp_REACT nvt temp 530 530 100
+group CNT molecule 1 2 3
+fix myrec CNT recenter NULL 0 0 shift all
 
 thermo 1000
-thermo_style custom step temp press $
-  density f_rxn[*]
+thermo_style custom step temp press density f_rxn[*]
 
-run 10000
-\end{verbatim}
-}
-Here, in addition, the \textit{thermo custom} command was called and was
-asked to print the cumulative reaction counts from \textit{fix rxn}.
-The number of reaction, $N_r$, can be seen to increase with time
-(Fig.~\ref{fig:evolution-reacting}).
+run 25000
+\end{lstlisting}
+Here, the \lmpcmd{thermo custom} command is used
+to print the cumulative reaction counts from \lmpcmd{fix rxn}.
+Run the simulation using LAMMPS.  As the simulation progresses, polymer chains are
+observed forming (Fig.~\ref{fig:REACT-final}).  During this reaction process, the
+temperature of the system remains well-controlled (Fig.~\ref{fig:evolution-reacting}\,a),
+while the number of reactions, $N_r$, increases with time (Fig.~\ref{fig:evolution-reacting}\,b).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{REACT-reacting}
-\caption{Evolution of the reaction counts, $\text{N}_r$,
-as a function of the time, $t$, during the reaction.}
+\caption{a) Evolution of the system temperature, $T$,
+as a function of the time, $t$, during the polymerization step of
+\hyperref[bond-react-label]{Tutorial 8}.
+b) Evolution of the three reaction counts, corresponding respecively to
+the polymerization of two styrene monomers (Rnx~1), the  addition of a styrene
+monomer to the end of a growing polymer chain (Rnx~2), and to the linking
+of two polymer chains (Rnx~3).}
 \label{fig:evolution-reacting}
 \end{figure}
 
