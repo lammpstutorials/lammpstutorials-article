@@ -17,11 +17,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up TeX Live (LaTeX environment) and install latexmk
-      - name: Install LaTeX and latexmk
+      # Step 2: Install LaTeX tools and missing packages
+      - name: Install LaTeX and required packages
         run: |
           sudo apt-get update
           sudo apt-get install -y texlive texlive-latex-extra texlive-fonts-recommended texlive-xetex latexmk
+          sudo apt-get install -y texlive-fonts-extra
 
       # Step 3: Install make (required to run your Makefile)
       - name: Install make
