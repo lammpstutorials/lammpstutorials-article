@@ -14,9 +14,9 @@ more accessible to new users.
 - Tutorial 7: Free energy calculation
 - Tutorial 8: Reactive Molecular Dynamics
 
-## Files
+## Input files
 
-All the files corresponding to the tutorials can be found in the 
+All the input files from the tutorials can be found in the 
 [**files/**](files/) folder. The Python scripts used to generate the plots 
 are also provided.
 
@@ -25,26 +25,22 @@ follow the tutorial. These files can be downloaded from the LAMMPS-GUI by
 selecting `Start Tutorial X`. The solutions to the tutorials are provided 
 within the solution repository located in each tutorial folder.
 
-## Link
-
-https://github.com/lammpstutorials/lammpstutorials-article/actions/runs/12458522247/artifacts/2354075042
+## PDF
 
 Access the last version of the `.pdf` from
-[the Actions tab](https://github.com/lammpstutorials/lammpstutorials-article/actions/runs/12458522247/artifacts/2354075042),
+[the Actions tab](https://github.com/lammpstutorials/lammpstutorials-article/actions/runs/12458522247/artifacts/2354075042) here on GitHub,
 or clone this repository and compile the `.tex` file yourself by typing in a terminal:
 
 ```
 make
 ```
+This will generate the `.pdf` version of the tutorial. Ensure you have LaTeX and the necessary dependencies installed on your system before attempting to compile.
 
 ## Contributing
 
-We welcome contributions. If you encounter any issues, have suggestions, 
-or want to ask questions, please feel free to open an issue in this 
-repository.  Your feedback can help us improve the tutorials and make them 
-more useful for everyone.
+We welcome contributions to improve the tutorials. If you encounter any issues, have suggestions, or want to ask questions, please open an issue in this repository. You can also contribute by submitting a pull request to improve the tutorials or fix any bugs.
+Your feedback and contributions help make the tutorials more useful for everyone.
 
 ## License
 
-This project is licensed under the XXX License - see the 
-[LICENSE](LICENSE) file for details.
+This project is licensed under the Creative Commons Attribution 4.0 International License. This license covers all the input [**files/**](files/) and tutorial content. For more details, see the [LICENSE](LICENSE) file.
