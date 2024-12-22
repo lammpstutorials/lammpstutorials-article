@@ -39,6 +39,8 @@
 \usepackage[title]{appendix}
 \usepackage{csquotes}
 
+% \usepackage{inconsolata}  % Load a font with no ligatures
+
 \usepackage[
     type={CC},
     modifier={by-nc-sa},
@@ -62,7 +64,6 @@
 \definecolor{listing}{rgb}{0.95,0.95,0.95}
 \definecolor{command}{rgb}{0.15,0.15,0.15}
 \definecolor{download}{rgb}{0.039,0.616,0.851}
-%\definecolor{note}{rgb}{0.92,0.98,1.00}
 \definecolor{note}{rgb}{1,0.988,0.93}
 \definecolor{note_listing}{rgb}{0.94,0.925,0.86}
 
@@ -90,16 +91,16 @@
   bottom=5pt, % Extra bottom padding
 }
 
+\DisableLigatures{encoding = *, family = *} % Deal with ligature problem when copy-pasting "fi"
+
 \renewcommand{\floatpagefraction}{0.8} % At least 80% of a page must be used by floats
 \renewcommand{\textfraction}{0.1} % At least 10% of a page must contain text
 
-% \renewcommand{\emph}[1]{\underline{#1}} % make \emph{} use underline instead of italic
-% S.G.: I went back to italic since all the other italic commands were replaced
 \newcommand{\lmpcmd}[1]{\hspace{0pt}\colorbox{listing}{\textcolor{command}{\small{#1}}}\hspace{0pt}} % lammps command
+% \newcommand{\lmpcmd}[1]{\hspace{0pt}\colorbox{listing}{\textcolor{command}{\texttt{#1}}}\hspace{0pt}} % lammps command
 \newcommand{\lmpcmdnote}[1]{\hspace{0pt}\colorbox{note_listing}{\textcolor{command}{\small{#1}}}\hspace{0pt}} % lammps command inside note
 \newcommand{\flrcmd}[1]{\textcolor{command}{\texttt{#1}}} % folder in monopace
 \newcommand{\flecmd}[1]{\textcolor{command}{\texttt{#1}}} % files name in monopace
-%\newcommand{\guicmd}[1]{\textcolor{command}{\texttt{\enquote{#1}}}} % LAMMPS-GUI commands in quotation monopace
 \newcommand{\guicmd}[1]{\textcolor{command}{\texttt{«#1»}}} % LAMMPS-GUI commands in French quotation monopace
 \newcommand{\dwlcmd}[1]{\textcolor{download}{\texttt{#1}}} % downloadable files in monopace blue
 
