@@ -433,16 +433,17 @@ are displayed in \guicmd{quoted monospace}.
 The objective of this tutorial is to perform a simple MD simulation
 using LAMMPS.  The system consists of a Lennard-Jones fluid composed of neutral
 particles with two different effective diameters, contained within a
-cubic box with periodic boundary conditions (Fig.~\ref{fig:LJ-avarar}).  In
-this tutorial, the temperature of the system is maintained using a
-Langevin thermostat~\cite{schneider1978molecular}, and basic quantities,
+cubic box with periodic boundary conditions (Fig.~\ref{fig:LJ-avatar}).  In
+this tutorial, simple MD simulations in the microcanonical
+(NVE) and canonical (NVT) ensembles are performed, and basic quantities,
 including potential and kinetic energies, are calculated from the simulation.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{LJ-avatar}
 \caption{The binary mixture simulated in \hyperref[lennard-jones-label]{Tutorial 1},
-with the small atoms of type 1 in green and large atoms of type 2 in blue.}
+with the atoms of type 1 represented as small green spheres and lge atoms of type 2
+as large blue spheres.}
 \label{fig:LJ-avatar}
 \end{figure}
 
@@ -1554,7 +1555,7 @@ as $(L_\text{cnt}-L_\text{cnt-0})/L_\text{cnt-0}$, where $L_\text{cnt-0}$ is the
 Right-click inside the \guicmd{Output} window, and select
 \guicmd{Export YAML data to file}.  Call the output \flecmd{unbreakable.yaml}, and save
 it within the same folder as the input files, where a Python script named
-\href{\filepath tutorial2/yaml-reader.py}{\dwlcmd{yaml-reader.py}} should also
+\href{\filepath tutorial2/unbreakable-yaml-reader.py}{\dwlcmd{unbreakable-yaml-reader.py}} should also
 be located.  When executed using Python, this .py file first imports
 the \flecmd{unbreakable.yaml} file.  Then, a certain pattern is
 identified and stored as a string character named `docs'.  The string is
@@ -1688,11 +1689,13 @@ VMD~\cite{vmd_home,humphrey1996vmd} with the \guicmd{DynamicBonds} representatio
 
 Looking at the evolution of the energy, one can see that the total
 energy $E_\text{tot}$ is initially increasing with the deformation.  When
-bonds break, the energy relaxes abruptly,
-as can be seen near $t=110~\text{ps}$ and again near $t=130~\text{ps}$ in
-Fig.~\ref{fig:CNT-deformed-breakable}\,a.  Using the same script as previously to
-import the data into Python, the stress-strain
-curve can be generated, see Fig.~\ref{fig:CNT-deformed-breakable}\,b.
+bonds break, the energy relaxes abruptly, as can be seen near $t=32~\text{ps}$ in Fig.~\ref{fig:CNT-breakable-energy-stress}\,a.
+Using a similar script as previously,
+i.e.,~\href{\filepath tutorial2/unbreakable-yaml-reader.py}{\dwlcmd{unbreakable-yaml-reader.py}},
+import the data into Python and generate the stress-strain curve (Fig.~\ref{fig:CNT-breakable-energy-stress}\,b).  The 
+stress-strain curve reveals a linear (elastic) regime where $F_\text{cnt} \propto \Delta L_\text{cnt}$
+for $\Delta L_\text{cnt} < 5\,\%$, and a non-linear (plastic) regime
+for $5\,\% < \Delta L_\text{cnt} < 25\,\%$.
 
 \begin{figure}
 \centering
@@ -1932,7 +1935,7 @@ Now that the water reservoir is equilibrated, we can safely add the PEG polymer
 to the water.  The PEG molecule topology was downloaded from the ATB repository
 \cite{malde2011automated, oostenbrink2004biomolecular}.  It has a formula
 $\text{C}_{16}\text{H}_{34}\text{O}_{9}$, and the parameters are taken from
-the GROMOS 54A7 force field~\cite{schmid2011definition}.
+the GROMOS 54A7 force field~\cite{schmid2011definition} (Fig.~\ref{fig:PEG-in-vacuum}).
 
 \begin{figure}
 \centering
@@ -3716,10 +3719,8 @@ timestep 2.0
 run 50000
 \end{lstlisting}
 Run the simulation with LAMMPS.  The number of atoms in the
-central region, $n_\mathrm{center}$, reaches
-its equilibrium value after approximately $40\,\text{ps}$
-(Fig.~\ref{fig:US-density-evolution}).  A snapshot of the
-equilibrated system is shown in Fig.~\ref{fig:US-system-unbiased}.
+central region, $n_\mathrm{center}$, reaches its equilibrium value after approximately $40\,\text{ps}$
+(Fig.~\ref{fig:US-density-evolution}).  A snapshot of the equilibrated system is shown in Fig.~\ref{fig:US-system-unbiased}.
 
 \paragraph{Run and data acquisition}
 

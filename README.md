@@ -14,12 +14,6 @@ more accessible to new users.
 
 ## Tutorials
 
-<p float="right">
-    <a href="https://github.com/lammpstutorials/lammpstutorials-article">
-        <img src="representative-image/lammps-tutorials.png" width="32%" />
-    </a>
-</p>
-
 - Tutorial 1: Lennard-Jones fluid
 - Tutorial 2: Pulling on a carbon nanotube
 - Tutorial 3: Polymer in water
@@ -62,13 +56,13 @@ This project is licensed under the Creative Commons Attribution 4.0 Internationa
 
 ## Authors
 
-- [Simon Gravelle](https://github.com/simongravelle) (corr. author),
-  Université Grenoble Alpes, CNRS, LIPhy, 38000 Grenoble, France.
+- [Simon Gravelle](https://github.com/simongravelle) (corresponding author),
+  Univ. Grenoble Alpes, CNRS, LIPhy, 38000 Grenoble, France
 - [Jacob R. Gissinger](https://www.stevens.edu/profile/jgissing),
-  Stevens Institute of Technology, Hoboken, NJ 07030, USA.
+  Stevens Institute of Technology, Hoboken, NJ 07030, USA
 - [Axel Kohlmeyer](https://sites.google.com/site/akohlmey),
   Institute for Computational Molecular Science, Temple University, Philadelphia,
-  PA 19122, USA.
+  PA 19122, USA
 
 
 
@@ -76,8 +70,8 @@ This project is licensed under the Creative Commons Attribution 4.0 Internationa
 
 - Simon Gravelle acknowledges funding from the European Union's Horizon 2020
   research and innovation programme under the Marie Skłodowska-Curie grant
-  agreement N°101065060.
-- Axel Kohlmeyer acknowledges financial support from Sandia National Laboratories
+  agreement No 101065060.
+- Axel Kohlmeyer acknowledges financial support by Sandia National Laboratories
   under POs 2149742 and 2407526.
 
 
