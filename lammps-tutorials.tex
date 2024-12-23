@@ -2766,7 +2766,10 @@ higher than what would be measured in the absence of walls.
 \centering
 \includegraphics[width=0.55\linewidth]{SIO}
 \caption{A portion of the silicon dioxide structure as simulated during
-\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  Atoms are colored by their charges.}
+\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  Atoms are colored
+by their charges: the hydrogen atoms appear as small greenish spheres, silicon
+atoms as large orange spheres, and oxygen atoms as blue spheres of intermediate
+size.}
 \label{fig:SIO}
 \end{figure}
 
@@ -3124,9 +3127,8 @@ At the end of the simulation, hydroxyl (-OH) groups can be seen at the interface
 \includegraphics[width=\linewidth]{SIO-decorated}
 \caption{Cracked silicon oxide after the addition of hydrogen atoms
 during \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  The atoms
-are colored by their charges.  Dangling oxygen groups appear in greenish, bulk
-Si atoms with a charge of about $1.8~\text{e}$ appear in red/orange, and bulk
-O atoms with a charge of about $-0.9 ~ \text{e}$ appear in blue.}
+are colored by their charges, with the newly added hydrogen atoms appearing as small
+greenish spheres.}
 \label{fig:SIO-decorated}
 \end{figure}
 
@@ -3135,10 +3137,11 @@ O atoms with a charge of about $-0.9 ~ \text{e}$ appear in blue.}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.55\linewidth]{GCMC}
-\caption{Water molecules adsorbed in cracked silica (SiO$_2$) material as simulated
-during \hyperref[gcmc-silica-label]{Tutorial 6}.  Water molecules are colored in
-cyan and white, oxygen (O) atoms from SiO$_2$ in red, and silicon (Si) atoms in yellow.}
+\includegraphics[width=0.6\linewidth]{GCMC}
+\caption{Water molecules (H$_2$O) adsorbed in cracked silica (SiO$_2$) material as simulated
+during \hyperref[gcmc-silica-label]{Tutorial 6}.  The oxygen atoms of the water
+molecules are represented in cyan, the silicon atoms in yellow, and the oxygen
+atoms of the solid in red.}
 \label{fig:GCMC}
 \end{figure}
 
@@ -3208,11 +3211,6 @@ thermo 250
 thermo_style custom step temp etotal vol density
 \end{lstlisting}
 
-% SG
-% FROM . Chem. Phys. 97, 2682–2689 (1992)
-% https://doi.org/10.1063/1.463056
-% 3 steps only. Say that its too fast to be correct. Show density.
-% Show rdf instead of box size?
 Finally, let us implement the annealing procedure which
 consists of three consecutive runs.  This procedure was inspired
 by Ref.\,\cite{della1992molecular}.  First, to melt the system,
@@ -3255,12 +3253,10 @@ will be located next to \flecmd{generate.lmp} (Fig.~\ref{fig:GCMC-snapshot}).
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GCMC-dimension}
-\caption{a) Temperature $T$ as a function of time $t$
-during the annealing of the silica system
-from \hyperref[gcmc-silica-label]{Tutorial 6}.
-b) System density $\rho$ during
-annealing.  The vertical dashed lines mark the transition between the different
-phases of the simulation.}
+\caption{a) Temperature $T$ as a function of time $t$ during the annealing
+of the silica system from \hyperref[gcmc-silica-label]{Tutorial 6}.
+b) System density $\rho$ during the annealing process.  The vertical dashed lines
+mark the transition between the different phases of the simulation.}
 \label{fig:GCMC-dimension}
 \end{figure}
 
@@ -3269,7 +3265,7 @@ phases of the simulation.}
 \includegraphics[width=0.9\linewidth]{GCMC-generate}
 \caption{Amorphous silica ($\text{SiO}_2$) simulated
 during \hyperref[gcmc-silica-label]{Tutorial 6}.  Silicon atoms are
-represented in yellow, and the oxygen atoms in red.}
+represented in yellow, and oxygen atoms in red.}
 \label{fig:GCMC-snapshot}
 \end{figure}
 
@@ -3313,16 +3309,17 @@ write_data cracking.data
 \end{lstlisting}
 The \lmpcmd{fix nvt} command is employed to control the temperature of the system.
 As observed from the generated images, the atoms
-progressively adjust to the changing box dimensions. At some point, bonds begin to break,
-leading to the appearance of dislocations (Fig.~\ref{fig:GCMC-cracked}).
+progressively adjust to the changing box dimensions.  At some point,
+bonds begin to break, leading to the appearance of
+dislocations (Fig.~\ref{fig:GCMC-cracked}).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GCMC-cracked}
 \caption{Block of silica from \hyperref[gcmc-silica-label]{Tutorial 6}
 after deformation.  Silicon atoms are represented in yellow,
-and the oxygen atoms in red.  The crack was induced by the
-imposed deformation of the box along the $x$-axis.}
+and oxygen atoms in red.  The crack was induced by the
+imposed deformation of the box along the $x$-axis (i.e.,~the horizontal axis).}
 \label{fig:GCMC-cracked}
 \end{figure}
 
@@ -3332,7 +3329,7 @@ imposed deformation of the box along the $x$-axis.}
 the Monte Carlo method in the grand canonical ensemble (GCMC).  In short, the
 system is placed into contact with a virtual reservoir of a given chemical potential
 $\mu$, and multiple attempts to insert water molecules at random positions are
-made. Each attempt is either accepted or rejected based on energy considerations.
+made.  Each attempt is either accepted or rejected based on energy considerations.
 For further details, please refer to classical textbooks like Ref.~\citenum{frenkel2023understanding}.
 
 \paragraph{Using hydrid potentials}
@@ -3539,7 +3536,7 @@ insertions of molecules would occur during the short duration of this simulation
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GCMC-number}
-\caption{Number of water molecules $N_\text{H2O}$ as a function of the time $t$
+\caption{Number of water molecules, $N_\text{H2O}$, as a function of time, $t$,
 as extracted from \hyperref[gcmc-silica-label]{Tutorial 6}.}
 \label{fig:GCMC-number}
 \end{figure}
@@ -3568,10 +3565,10 @@ atoms in yellow, and the oxygen atoms of the solid in red.}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.55\linewidth]{US}
-\caption{Atoms as simulated during \hyperref[umbrella-sampling-label]{Tutorial 7}.
-Only the atom colored in pink feels the additional force used for the umbrella
-sampling method.}
+\includegraphics[width=0.7\linewidth]{US}
+\caption{System simulated during \hyperref[umbrella-sampling-label]{Tutorial 7}.
+The pink atom explores the energetically unfavorable central area of the simulation
+box thanks to the additional potential imposed during umbrella sampling.}
 \label{fig:US}
 \end{figure}
 
@@ -3747,8 +3744,8 @@ LAMMPS.
 \includegraphics[width=\linewidth]{US-density-evolution}
 \caption{Evolution of the number of atoms $n_\text{center}$ in the central
 region \lmpcmd{mymes} as a function of time $t$ during equilibration.  The dark line
-is $n_\text{center} = 22 \exp(-t/160)+5$ and serves as a guide for the eyes.  Here, $U_0 = 0.36~\text{kcal/mol}$,
-$\delta = 0.5~\text{\AA{}}$, and $x_0 = 5~\text{\AA{}}$.}
+is $n_\text{center} = 22 \exp(-t/160)+5$ and serves as a guide for the eyes.
+Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\AA{}}$.}
 \label{fig:US-density-evolution}
 \end{figure}
 
@@ -3962,9 +3959,10 @@ long and computationally expensive simulations.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-free-energy}
-\caption{The potential $U$ as a function of $x$, measured using umbrella sampling
-(blue disks), is compared to the imposed potential given in Eq.~\eqref{eq:U}
-(dark line). Parameters are $U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$,
+\caption{The potential $U$ as a function of $x$, measured using umbrella
+sampling during \hyperref[umbrella-sampling-label]{Tutorial 7} (blue disks),
+is compared to the imposed potential given in Eq.~\eqref{eq:U}
+(dark line).  Parameters are $U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$,
 and $x_0 = 10~\text{\AA{}}$.}
 \label{fig:US-freenergy}
 \end{figure}
