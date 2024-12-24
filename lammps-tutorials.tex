@@ -1217,15 +1217,13 @@ all assigned a value of -1, and will therefore always be colored their default b
 
 In this tutorial, the system of interest is a small, single-walled
 carbon nanotube (CNT) in an empty box (Fig.~\ref{fig:CNT}).  The CNT is
-strained by fixing atoms at one end and moving atoms at the
-other end with constant velocity.  To illustrate the difference between
-conventional and reactive force fields, this % SG: I am not sure why typelabel_paper was cited here. Am I wrong to remove it?
+strained by imposing a constant velocity on the edge atoms.
+To illustrate the difference between conventional and reactive force fields, this
 tutorial is divided into two parts: in the first part, a conventional molecular force
 field (called OPLS-AA~\cite{jorgensenDevelopmentTestingOPLS1996}) is
 used and the bonds between the atoms of the CNT are unbreakable.  In the
 second part, a reactive force field (called AIREBO
-\cite{stuart2000reactive}) is used, allowing for the breaking of
-chemical bonds when the CNT experiences large strain.
+\cite{stuart2000reactive}) is used, which allows chemical bonds to break under large strain.
 
 To set up this tutorial, select \guicmd{Start Tutorial 2} from the
 \guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.  This will
@@ -1463,7 +1461,7 @@ they would if no other command was applied to them).
 
 \begin{note}
   The \lmpcmdnote{velocity set}
-  commands impose the velocity of a group of atoms at the start of a run but do
+  command imposes the velocity of a group of atoms at the start of a run but does
   not enforce the velocity during the entire simulation.  When \lmpcmdnote{velocity set}
   is used in combination with \lmpcmdnote{setforce 0 0 0}, as is the case here, the
   atoms won't feel any force during the entire simulation.  According to the Newton
@@ -1744,7 +1742,7 @@ a function of time.  The GROMOS 54A7 force field~\cite{schmid2011definition} is 
 for the PEG, the SPC/Fw model~\cite{wu2006flexible} is used for the water, and the
 long-range Coulomb interactions are solved using the PPPM solver~\cite{luty1996calculating}.
 This tutorial was inspired by a publication by Liese and coworkers, in which molecular
-dynamics simulations are compared with force spectroscopy experiments~\cite{liese2017hydration}.
+dynamics simulations are compared with force spectroscopy experiments, see Ref.\,~\citenum{liese2017hydration}.
 
 \subsubsection{Preparing the water reservoir}
 
@@ -1906,9 +1904,9 @@ system can also be seen in Fig.~\ref{fig:PEG-water}.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-density}
-\caption{a) Temperature of the water reservoir from
-\hyperref[all-atom-label]{Tutorial 3} with time $t$.  The horizontal dashed line is
-the target temperature of 300\,K.  b) Evolution of the density $\rho$.}
+\caption{a) Temperature ($T$) of the water reservoir from
+\hyperref[all-atom-label]{Tutorial 3} as a function of the ($t$).  The horizontal dashed line is
+the target temperature of 300\,K.  b) Evolution of the system density ($\rho$) with $t$.}
 \label{fig:PEG-density}
 \end{figure}
 
