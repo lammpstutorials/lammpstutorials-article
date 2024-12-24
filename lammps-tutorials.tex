@@ -1072,8 +1072,7 @@ is done using two \lmpcmd{compute} commands:  the first counts the
 coordinated atoms, and the second calculates the average over all type 1
 atoms.  Add the following lines to \flecmd{improved.md.lmp}:
 \begin{lstlisting}
-compute coor12 grp_t1 coord/atom cutoff 2 &
-  group grp_t2
+compute coor12 grp_t1 coord/atom cutoff 2 group grp_t2
 compute sumcoor12 grp_t1 reduce ave c_coor12
 \end{lstlisting}
 The \lmpcmd{compute reduce ave} command is used to average the per-atom
@@ -1128,7 +1127,8 @@ run 300000
 \includegraphics[width=\linewidth]{LJ-mixing}
 \caption{a)~Evolution of the numbers $N_\text{1, in}$ and $N_\text{2, in}$ of atoms
 of types 1 and 2, respectively, within the \lmpcmd{cyl\_in} region as functions
-of time $t$.  b)~Evolution of the coordination number $C_{1-2}$ between atoms of types 1 and 2.}
+of time $t$.  b)~Evolution of the coordination number $C_{1-2}$ (compute \lmpcmd{sumcoor12})
+between atoms of types 1 and 2.} 
 \label{fig:mixing}
 \end{figure}
 
@@ -1143,14 +1143,14 @@ keyword in the Langevin thermostat, which ensures that the total random
 force applied to the atoms is equal to zero.
 
 \begin{note}
-The steps to ensure no initial linear momentum and no net random
+The steps to ensure no initial linear momentum and no net total
 force are important to prevent the system from starting to drift or move as a
 whole.  For a bulk system with periodic boundary conditions, it is
-expected to remain in place.  Thus, when computing the temperature from the
+expected to remain in place.  Accordingly, when computing the temperature from the
 kinetic energy, we use $3N-3$ degrees of freedom since there is no
 global translation.  In a drifting system, some of the kinetic energy is
 due to the drift, which means the system itself cools down.  In
-extreme cases, it can freeze and drift very fast.  This phenomenon is
+extreme cases, the system can freeze while its center of mass drifts very quickly.  This phenomenon is
 sometimes referred to as the ``flying ice cube syndrome''~\cite{wong2016good}.
 \end{note}
 
@@ -1175,7 +1175,7 @@ expected during mixing.  This can be observed using the entry
 \caption{Snapshot of the binary mixture simulated
   during \hyperref[lennard-jones-label]{Tutorial 1} with atoms of type 1
   colored according to their computed $1-2$ coordination
-  number \lmpcmd{c\_coor12}, ranging from turquoise, \lmpcmd{c\_coor12 = 0},
+  number from the compute \lmpcmd{coor12}, ranging from turquoise,\lmpcmd{c\_coor12 = 0},
   to yellow, \lmpcmd{c\_coor12 = 1}, and red, \lmpcmd{c\_coor12 = 2}.}
 \label{fig:coords-viz}
 \end{figure}
@@ -1186,15 +1186,16 @@ Here are some suggestions for further experiments with this system that
 may lead to additional insights into how different systems are configured
 and how various features function:
 \begin{itemize}
-\item Use Nos\'e--Hoover thermostat (\lmpcmd{fix nvt}) instead of Langevin
+\item Use the Nos\'e--Hoover thermostat (\lmpcmd{fix nvt}) instead of the Langevin thermostat
   (\lmpcmd{fix nve} + \lmpcmd{fix langevin}).
-\item Omit the energy minimization step for both, Nos\'e--Hoover and Langevin.
+\item Omit the energy minimization step before starting the MD simulation using either
+the Nos\'e--Hoover or the Langevin thermostat.
 \item Apply the thermostat to only one type of atoms and observe the
   temperature for each type separately.
 \item Append an NVE run (i.e.~without any thermostat) and observe the energy levels.
 \end{itemize}
 
-Another useful experiment to try is to color the atoms in the \guicmd{Slide Show}
+Another useful experiment is coloring the atoms in the \guicmd{Slide Show}
 according to an observable, such as their respective coordination
 numbers.  To do this, replace the
 \lmpcmd{dump} and \lmpcmd{dump\_modify} commands with the following lines:
@@ -1205,7 +1206,7 @@ dump viz all image 100 myimage.md.*.ppm v_coor12 &
 dump_modify viz adiam 1 1 adiam 2 3 backcolor white &
   amap -1 2 ca 0.0 4 min royalblue 0 turquoise 1 yellow max red
 \end{lstlisting}
-Run LAMMPS again.  Now, the atoms of type 1 are colored based on the value
+Run LAMMPS again.  Atoms of type 1 are now colored based on the value
 of \lmpcmd{c\_coor12}, which is mapped continuously from turquoise to yellow
 and red for atoms with the highest coordination (Fig.~\ref{fig:coords-viz}).
 In the definition of the variable \lmpcmd{v\_coor12}, atoms of type 2 are
