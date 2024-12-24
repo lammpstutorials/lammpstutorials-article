@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./dependencies/.github/generateREADME.sh
+.dependencies/.github/generateREADME.sh
