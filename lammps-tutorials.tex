@@ -1621,7 +1621,7 @@ the \flecmd{breakable.data} contains the information
 required for placing the atoms in the box, but no bond/angle/dihedral information.
 Another difference between the \flecmd{unbreakable.data} and \flecmd{breakable.data} files
 is that, here, a larger distance of 120~Ångströms was used for the box size along
-the $x$ axis, to allow for larger deformation of the CNT.
+the $x$-axis, to allow for larger deformation of the CNT.
 
 \paragraph{Start the simulation}
 
@@ -1985,12 +1985,12 @@ that can be extremely large.  If the cutoff is too large, too many water
 molecules will unnecessarily be deleted.
 
 Let us use the \lmpcmd{fix npt} to control the temperature, as
-well as the pressure by allowing the box size to be rescaled along the $x$ axis:
+well as the pressure by allowing the box size to be rescaled along the $x$-axis:
 \begin{lstlisting}
 fix mynpt all npt temp 300 300 100 x 1 1 1000
 \end{lstlisting}
 Let us also use the \lmpcmd{recenter} command to always keep the PEG at
-the position $0 0 0$:
+the position $(0,~0,~0)$:
 \begin{lstlisting}
 fix myrct PEG recenter 0 0 0 shift all
 \end{lstlisting}
@@ -2044,9 +2044,8 @@ only contains two lines:
 kspace_style pppm 1e-5
 read_restart merge.restart
 \end{lstlisting}
-Next, we'll create new atom groups, each containing a single atom: the oxygen
-atoms located at the ends of the chain.  The atoms of type \lmpcmd{OAlc}
-correspond to the hydroxy (alcohol) group oxygen atoms located at the ends
+Next, we'll create new atom groups, each containing a single oxygen atom.  The atoms of type OAlc
+correspond to the hydroxyl (alcohol) group oxygen atoms located at the ends
 of the PEG molecule, which we will use to apply the force.  Add the
 following lines to \flecmd{pull.lmp}:
 \begin{lstlisting}
@@ -2058,10 +2057,10 @@ variable end2 atom v_oxies*(x<v_xcm)
 group topull1 variable end1
 group topull2 variable end2
 \end{lstlisting}
-These lines identify the oxygen atoms (\lmpcmd{OAlc}) at the ends of the PEG
-molecule and calculates their center of mass along the $x$ axis.  It then
-divides these atoms into two groups, \lmpcmd{OAlc} (i.e.,~the OAlc atom to
-the right of the center) and \lmpcmd{OAlc} (i.e.,~the OAlc atom to the right
+These lines identify the oxygen atoms (type OAlc) at the ends of the PEG
+molecule and calculates their center of mass along the $x$-axis.  It then
+divides these atoms into two groups, \lmpcmd{end1} (i.e.,~the OAlc atom to
+the right of the center) and \lmpcmd{end2} (i.e.,~the OAlc atom to the right
 of the center), for applying force during the stretching process.
 
 Add the following \lmpcmd{dump} command to create images of the system:
@@ -2089,7 +2088,7 @@ fix myrct PEG recenter 0 0 0 shift all
 
 To investigate the stretching of the PEG molecule, let us compute its radius of
 gyration~\cite{fixmanRadiusGyrationPolymer1962a} and the angles of its dihedral
-constraints using the following conmmands:
+constraints using the following commands:
 \begin{lstlisting}
 compute rgyr PEG gyration
 compute prop PEG property/local dtype
@@ -2101,9 +2100,9 @@ thermo_style custom step temp etotal c_rgyr
 thermo 250
 dump mydmp all local 100 pull.dat index c_dphi c_prop
 \end{lstlisting}
-Since the dihedral angle $\phi$ is returned as a vector by the compute
-\lmpcmd{dihedral/local} command, it needs to be printed to a file using
-the \lmpcmd{dump} command.
+By contrast with the radius of gyration (compute \lmpcmd{rgyr}), the dihedral angle  % SG: why is c_prop not printed?
+$\phi$ (compute \lmpcmd{dphi}) is returned as a vector by the \lmpcmd{compute dihedral/local} 
+command and must be written to a file using the \lmpcmd{dump local} command.
 
 Finally, let us simulate 15 picoseconds without any external force:
 \begin{lstlisting}
@@ -2111,16 +2110,16 @@ run 15000
 \end{lstlisting}
 This initial run will serve as a benchmark to quantify the changes caused by
 the applied force in later steps.  Next, let us apply a force to the two selected
-oxygen atoms using two \lmpcmd{add\_force} commands, and then run the simulation
+oxygen atoms using two \lmpcmd{addforce} commands, and then run the simulation
 for an extra 15~ps:
 \begin{lstlisting}
 fix myaf1 topull1 addforce 10 0 0
 fix myaf2 topull2 addforce -10 0 0
 run 15000
 \end{lstlisting}
-The force magnitude of $10\,\text{kcal/mol/\AA{}}$ corresponds to $0.67\,\text{nN}$
-and was selected to be sufficiently large to overcome both thermal agitation and
-the entropic contributions from both the water and PEG molecules.
+Each applied force has a magnitude of $10\,\text{kcal/mol/\AA{}}$, corresponding to $0.67\,\text{nN}$.
+This value was chosen to be sufficiently large to overcome both the thermal agitation and
+the entropic contributions from the molecules.
 
 Run the \flecmd{pull.lmp} file using LAMMPS.  From the generated images of the system,
 you should observe that the PEG molecule eventually aligns
@@ -2130,7 +2129,7 @@ time indicates that the PEG quickly adjusts to the external force
 (Fig.~\ref{fig:PEG-distance}\,a).  Additionally, from the values of the dihedral angles
 printed in the \flecmd{pull.dat} file, you can create a histogram
 of dihedral angles for a specific type.  For example, the angle $\phi$ for dihedrals
-of type 1 (C-C-OE-C) is shown in Fig.~\ref{fig:PEG-distance}\,b.
+of type 1 (C-C-OE-C) is shown in Fig.~\ref{fig:PEG-distance}\,b. % SG: is it type 1 or 2?
 
 \begin{figure}
 \centering
@@ -2147,7 +2146,7 @@ as simulated during \hyperref[all-atom-label]{Tutorial 3}.}
 the radius of gyration $R_\text{gyr}$ of the PEG molecule
 from \hyperref[all-atom-label]{Tutorial 3}, with the force
 applied starting at $t = 15\,\text{ps}$.  b) Histograms of the dihedral angles of type 2
-in the absence (orange) and in the presence (blue) of the applied force.}
+in the absence (orange) and in the presence (blue) of the applied force.} % SG: is it type 1 or 2?
 \label{fig:PEG-distance}
 \end{figure}
 
@@ -2730,10 +2729,10 @@ As expected for such Couette flow geometry, the fluid velocity increases linearl
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{NANOSHEAR-profiles}
-\caption{a) Water density $\rho$ along the \textit{z} axis as
+\caption{a) Water density $\rho$ along the $z$-axis as
 simulated in \hyperref[sheared-confined-label]{Tutorial 4}.
 b) Velocity profiles for water (blue) and walls
-(orange) along the $z$ axis.}
+(orange) along the $z$-axis.}
 % The line is a linear fit assuming
 % that the pore size is $h = 1.8\,\text{nm}$.}
 \label{fig:NANOSHEAR-profiles}
@@ -3719,7 +3718,7 @@ central region, $n_\mathrm{center}$, reaches its equilibrium value after approxi
 \paragraph{Run and data acquisition}
 
 Once the system is equilibrated, we will record the density profile of
-the atoms along the $x$ axis using the \lmpcmd{ave/chunk} command.
+the atoms along the $x$-axis using the \lmpcmd{ave/chunk} command.
 Add the following line to \flecmd{free-energy.lmp}:
 \begin{lstlisting}
 reset_timestep 0
