@@ -12,4 +12,7 @@ clean:
 	lammps-tutorials.log \
 	lammps-tutorials.out \
 	lammps-tutorials.bbl \
-	lammps-tutorials.blg
+	lammps-tutorials.blg \
+	lammps-tutorials.fdb_latexmk \
+	lammps-tutorials.suppinfo \
+	lammps-tutorials.fls

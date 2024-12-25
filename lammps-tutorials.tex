@@ -177,12 +177,10 @@
   suite of tutorials designed to make learning LAMMPS more accessible to
   new users.  The first four tutorials cover the basics of running
   molecular simulations in LAMMPS with systems of varying complexities,
-  including a simple fluid and a carbon nanotube.  The last three
+  including a simple fluid and a carbon nanotube.  The last four
   tutorials address more advanced molecular simulation techniques,
-  specifically the use of a reactive force field, enhanced sampling, and
-  grand canonical Monte Carlo.
-  % AK: ideally, there would be an eighth tutorial showcasing both
-  % fix bond/react and how to benefit from type labels in its use.
+  specifically the use of a reactive force field, grand canonical Monte Carlo,
+  enhanced sampling, and REACTER protocol.
   In addition, we introduce LAMMPS--GUI, an enhanced graphical text
   editor with syntax highlighting, command completion, context help,
   plus built--in visualization and plotting facilities, and the ability
@@ -433,16 +431,17 @@ are displayed in \guicmd{quoted monospace}.
 The objective of this tutorial is to perform a simple MD simulation
 using LAMMPS.  The system consists of a Lennard-Jones fluid composed of neutral
 particles with two different effective diameters, contained within a
-cubic box with periodic boundary conditions (Fig.~\ref{fig:LJ-avarar}).  In
-this tutorial, the temperature of the system is maintained using a
-Langevin thermostat~\cite{schneider1978molecular}, and basic quantities,
-including potential and kinetic energies, are calculated from the simulation.
+cubic box with periodic boundary conditions (Fig.~\ref{fig:LJ-avatar}).  In
+this tutorial, simple MD simulations in the microcanonical
+(NVE) and canonical (NVT) ensembles are performed, and basic quantities are calculated,
+including the potential and kinetic energies.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{LJ-avatar}
 \caption{The binary mixture simulated in \hyperref[lennard-jones-label]{Tutorial 1},
-with the small atoms of type 1 in green and large atoms of type 2 in blue.}
+with the atoms of type 1 represented as small green spheres and lge atoms of type 2
+as large blue spheres.}
 \label{fig:LJ-avatar}
 \end{figure}
 
@@ -1073,8 +1072,7 @@ is done using two \lmpcmd{compute} commands:  the first counts the
 coordinated atoms, and the second calculates the average over all type 1
 atoms.  Add the following lines to \flecmd{improved.md.lmp}:
 \begin{lstlisting}
-compute coor12 grp_t1 coord/atom cutoff 2 &
-  group grp_t2
+compute coor12 grp_t1 coord/atom cutoff 2 group grp_t2
 compute sumcoor12 grp_t1 reduce ave c_coor12
 \end{lstlisting}
 The \lmpcmd{compute reduce ave} command is used to average the per-atom
@@ -1129,7 +1127,8 @@ run 300000
 \includegraphics[width=\linewidth]{LJ-mixing}
 \caption{a)~Evolution of the numbers $N_\text{1, in}$ and $N_\text{2, in}$ of atoms
 of types 1 and 2, respectively, within the \lmpcmd{cyl\_in} region as functions
-of time $t$.  b)~Evolution of the coordination number $C_{1-2}$ between atoms of types 1 and 2.}
+of time $t$.  b)~Evolution of the coordination number $C_{1-2}$ (compute \lmpcmd{sumcoor12})
+between atoms of types 1 and 2.} 
 \label{fig:mixing}
 \end{figure}
 
@@ -1144,14 +1143,14 @@ keyword in the Langevin thermostat, which ensures that the total random
 force applied to the atoms is equal to zero.
 
 \begin{note}
-The steps to ensure no initial linear momentum and no net random
+The steps to ensure no initial linear momentum and no net total
 force are important to prevent the system from starting to drift or move as a
 whole.  For a bulk system with periodic boundary conditions, it is
-expected to remain in place.  Thus, when computing the temperature from the
+expected to remain in place.  Accordingly, when computing the temperature from the
 kinetic energy, we use $3N-3$ degrees of freedom since there is no
 global translation.  In a drifting system, some of the kinetic energy is
 due to the drift, which means the system itself cools down.  In
-extreme cases, it can freeze and drift very fast.  This phenomenon is
+extreme cases, the system can freeze while its center of mass drifts very quickly.  This phenomenon is
 sometimes referred to as the ``flying ice cube syndrome''~\cite{wong2016good}.
 \end{note}
 
@@ -1176,7 +1175,7 @@ expected during mixing.  This can be observed using the entry
 \caption{Snapshot of the binary mixture simulated
   during \hyperref[lennard-jones-label]{Tutorial 1} with atoms of type 1
   colored according to their computed $1-2$ coordination
-  number \lmpcmd{c\_coor12}, ranging from turquoise, \lmpcmd{c\_coor12 = 0},
+  number from the compute \lmpcmd{coor12}, ranging from turquoise,\lmpcmd{c\_coor12 = 0},
   to yellow, \lmpcmd{c\_coor12 = 1}, and red, \lmpcmd{c\_coor12 = 2}.}
 \label{fig:coords-viz}
 \end{figure}
@@ -1187,15 +1186,16 @@ Here are some suggestions for further experiments with this system that
 may lead to additional insights into how different systems are configured
 and how various features function:
 \begin{itemize}
-\item Use Nos\'e--Hoover thermostat (\lmpcmd{fix nvt}) instead of Langevin
+\item Use the Nos\'e--Hoover thermostat (\lmpcmd{fix nvt}) instead of the Langevin thermostat
   (\lmpcmd{fix nve} + \lmpcmd{fix langevin}).
-\item Omit the energy minimization step for both, Nos\'e--Hoover and Langevin.
+\item Omit the energy minimization step before starting the MD simulation using either
+the Nos\'e--Hoover or the Langevin thermostat.
 \item Apply the thermostat to only one type of atoms and observe the
   temperature for each type separately.
 \item Append an NVE run (i.e.~without any thermostat) and observe the energy levels.
 \end{itemize}
 
-Another useful experiment to try is to color the atoms in the \guicmd{Slide Show}
+Another useful experiment is coloring the atoms in the \guicmd{Slide Show}
 according to an observable, such as their respective coordination
 numbers.  To do this, replace the
 \lmpcmd{dump} and \lmpcmd{dump\_modify} commands with the following lines:
@@ -1206,7 +1206,7 @@ dump viz all image 100 myimage.md.*.ppm v_coor12 &
 dump_modify viz adiam 1 1 adiam 2 3 backcolor white &
   amap -1 2 ca 0.0 4 min royalblue 0 turquoise 1 yellow max red
 \end{lstlisting}
-Run LAMMPS again.  Now, the atoms of type 1 are colored based on the value
+Run LAMMPS again.  Atoms of type 1 are now colored based on the value
 of \lmpcmd{c\_coor12}, which is mapped continuously from turquoise to yellow
 and red for atoms with the highest coordination (Fig.~\ref{fig:coords-viz}).
 In the definition of the variable \lmpcmd{v\_coor12}, atoms of type 2 are
@@ -1217,15 +1217,13 @@ all assigned a value of -1, and will therefore always be colored their default b
 
 In this tutorial, the system of interest is a small, single-walled
 carbon nanotube (CNT) in an empty box (Fig.~\ref{fig:CNT}).  The CNT is
-strained by fixing atoms at one end and moving atoms at the
-other end with constant velocity.  To illustrate the difference between
-conventional and reactive force fields, this % SG: I am not sure why typelabel_paper was cited here. Am I wrong to remove it?
+strained by imposing a constant velocity on the edge atoms.
+To illustrate the difference between conventional and reactive force fields, this
 tutorial is divided into two parts: in the first part, a conventional molecular force
 field (called OPLS-AA~\cite{jorgensenDevelopmentTestingOPLS1996}) is
 used and the bonds between the atoms of the CNT are unbreakable.  In the
 second part, a reactive force field (called AIREBO
-\cite{stuart2000reactive}) is used, allowing for the breaking of
-chemical bonds when the CNT experiences large strain.
+\cite{stuart2000reactive}) is used, which allows chemical bonds to break under large strain.
 
 To set up this tutorial, select \guicmd{Start Tutorial 2} from the
 \guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.  This will
@@ -1463,7 +1461,7 @@ they would if no other command was applied to them).
 
 \begin{note}
   The \lmpcmdnote{velocity set}
-  commands impose the velocity of a group of atoms at the start of a run but do
+  command imposes the velocity of a group of atoms at the start of a run but does
   not enforce the velocity during the entire simulation.  When \lmpcmdnote{velocity set}
   is used in combination with \lmpcmdnote{setforce 0 0 0}, as is the case here, the
   atoms won't feel any force during the entire simulation.  According to the Newton
@@ -1554,7 +1552,7 @@ as $(L_\text{cnt}-L_\text{cnt-0})/L_\text{cnt-0}$, where $L_\text{cnt-0}$ is the
 Right-click inside the \guicmd{Output} window, and select
 \guicmd{Export YAML data to file}.  Call the output \flecmd{unbreakable.yaml}, and save
 it within the same folder as the input files, where a Python script named
-\href{\filepath tutorial2/yaml-reader.py}{\dwlcmd{yaml-reader.py}} should also
+\href{\filepath tutorial2/unbreakable-yaml-reader.py}{\dwlcmd{unbreakable-yaml-reader.py}} should also
 be located.  When executed using Python, this .py file first imports
 the \flecmd{unbreakable.yaml} file.  Then, a certain pattern is
 identified and stored as a string character named `docs'.  The string is
@@ -1623,7 +1621,7 @@ the \flecmd{breakable.data} contains the information
 required for placing the atoms in the box, but no bond/angle/dihedral information.
 Another difference between the \flecmd{unbreakable.data} and \flecmd{breakable.data} files
 is that, here, a larger distance of 120~Ångströms was used for the box size along
-the $x$ axis, to allow for larger deformation of the CNT.
+the $x$-axis, to allow for larger deformation of the CNT.
 
 \paragraph{Start the simulation}
 
@@ -1688,11 +1686,13 @@ VMD~\cite{vmd_home,humphrey1996vmd} with the \guicmd{DynamicBonds} representatio
 
 Looking at the evolution of the energy, one can see that the total
 energy $E_\text{tot}$ is initially increasing with the deformation.  When
-bonds break, the energy relaxes abruptly,
-as can be seen near $t=110~\text{ps}$ and again near $t=130~\text{ps}$ in
-Fig.~\ref{fig:CNT-deformed-breakable}\,a.  Using the same script as previously to
-import the data into Python, the stress-strain
-curve can be generated, see Fig.~\ref{fig:CNT-deformed-breakable}\,b.
+bonds break, the energy relaxes abruptly, as can be seen near $t=32~\text{ps}$ in Fig.~\ref{fig:CNT-breakable-energy-stress}\,a.
+Using a similar script as previously,
+i.e.,~\href{\filepath tutorial2/unbreakable-yaml-reader.py}{\dwlcmd{unbreakable-yaml-reader.py}},
+import the data into Python and generate the stress-strain curve (Fig.~\ref{fig:CNT-breakable-energy-stress}\,b).  The 
+stress-strain curve reveals a linear (elastic) regime where $F_\text{cnt} \propto \Delta L_\text{cnt}$
+for $\Delta L_\text{cnt} < 5\,\%$, and a non-linear (plastic) regime
+for $5\,\% < \Delta L_\text{cnt} < 25\,\%$.
 
 \begin{figure}
 \centering
@@ -1742,7 +1742,7 @@ a function of time.  The GROMOS 54A7 force field~\cite{schmid2011definition} is 
 for the PEG, the SPC/Fw model~\cite{wu2006flexible} is used for the water, and the
 long-range Coulomb interactions are solved using the PPPM solver~\cite{luty1996calculating}.
 This tutorial was inspired by a publication by Liese and coworkers, in which molecular
-dynamics simulations are compared with force spectroscopy experiments~\cite{liese2017hydration}.
+dynamics simulations are compared with force spectroscopy experiments, see Ref.\,~\citenum{liese2017hydration}.
 
 \subsubsection{Preparing the water reservoir}
 
@@ -1904,9 +1904,9 @@ system can also be seen in Fig.~\ref{fig:PEG-water}.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{PEG-density}
-\caption{a) Temperature of the water reservoir from
-\hyperref[all-atom-label]{Tutorial 3} with time $t$.  The horizontal dashed line is
-the target temperature of 300\,K.  b) Evolution of the density $\rho$.}
+\caption{a) Temperature ($T$) of the water reservoir from
+\hyperref[all-atom-label]{Tutorial 3} as a function of the ($t$).  The horizontal dashed line is
+the target temperature of 300\,K.  b) Evolution of the system density ($\rho$) with $t$.}
 \label{fig:PEG-density}
 \end{figure}
 
@@ -1932,7 +1932,7 @@ Now that the water reservoir is equilibrated, we can safely add the PEG polymer
 to the water.  The PEG molecule topology was downloaded from the ATB repository
 \cite{malde2011automated, oostenbrink2004biomolecular}.  It has a formula
 $\text{C}_{16}\text{H}_{34}\text{O}_{9}$, and the parameters are taken from
-the GROMOS 54A7 force field~\cite{schmid2011definition}.
+the GROMOS 54A7 force field~\cite{schmid2011definition} (Fig.~\ref{fig:PEG-in-vacuum}).
 
 \begin{figure}
 \centering
@@ -1985,12 +1985,12 @@ that can be extremely large.  If the cutoff is too large, too many water
 molecules will unnecessarily be deleted.
 
 Let us use the \lmpcmd{fix npt} to control the temperature, as
-well as the pressure by allowing the box size to be rescaled along the $x$ axis:
+well as the pressure by allowing the box size to be rescaled along the $x$-axis:
 \begin{lstlisting}
 fix mynpt all npt temp 300 300 100 x 1 1 1000
 \end{lstlisting}
 Let us also use the \lmpcmd{recenter} command to always keep the PEG at
-the position $0 0 0$:
+the position $(0,~0,~0)$:
 \begin{lstlisting}
 fix myrct PEG recenter 0 0 0 shift all
 \end{lstlisting}
@@ -2044,9 +2044,8 @@ only contains two lines:
 kspace_style pppm 1e-5
 read_restart merge.restart
 \end{lstlisting}
-Next, we'll create new atom groups, each containing a single atom: the oxygen
-atoms located at the ends of the chain.  The atoms of type \lmpcmd{OAlc}
-correspond to the hydroxy (alcohol) group oxygen atoms located at the ends
+Next, we'll create new atom groups, each containing a single oxygen atom.  The atoms of type OAlc
+correspond to the hydroxyl (alcohol) group oxygen atoms located at the ends
 of the PEG molecule, which we will use to apply the force.  Add the
 following lines to \flecmd{pull.lmp}:
 \begin{lstlisting}
@@ -2058,10 +2057,10 @@ variable end2 atom v_oxies*(x<v_xcm)
 group topull1 variable end1
 group topull2 variable end2
 \end{lstlisting}
-These lines identify the oxygen atoms (\lmpcmd{OAlc}) at the ends of the PEG
-molecule and calculates their center of mass along the $x$ axis.  It then
-divides these atoms into two groups, \lmpcmd{OAlc} (i.e.,~the OAlc atom to
-the right of the center) and \lmpcmd{OAlc} (i.e.,~the OAlc atom to the right
+These lines identify the oxygen atoms (type OAlc) at the ends of the PEG
+molecule and calculates their center of mass along the $x$-axis.  It then
+divides these atoms into two groups, \lmpcmd{end1} (i.e.,~the OAlc atom to
+the right of the center) and \lmpcmd{end2} (i.e.,~the OAlc atom to the right
 of the center), for applying force during the stretching process.
 
 Add the following \lmpcmd{dump} command to create images of the system:
@@ -2089,7 +2088,7 @@ fix myrct PEG recenter 0 0 0 shift all
 
 To investigate the stretching of the PEG molecule, let us compute its radius of
 gyration~\cite{fixmanRadiusGyrationPolymer1962a} and the angles of its dihedral
-constraints using the following conmmands:
+constraints using the following commands:
 \begin{lstlisting}
 compute rgyr PEG gyration
 compute prop PEG property/local dtype
@@ -2101,9 +2100,9 @@ thermo_style custom step temp etotal c_rgyr
 thermo 250
 dump mydmp all local 100 pull.dat index c_dphi c_prop
 \end{lstlisting}
-Since the dihedral angle $\phi$ is returned as a vector by the compute
-\lmpcmd{dihedral/local} command, it needs to be printed to a file using
-the \lmpcmd{dump} command.
+By contrast with the radius of gyration (compute \lmpcmd{rgyr}), the dihedral angle  % SG: why is c_prop not printed?
+$\phi$ (compute \lmpcmd{dphi}) is returned as a vector by the \lmpcmd{compute dihedral/local} 
+command and must be written to a file using the \lmpcmd{dump local} command.
 
 Finally, let us simulate 15 picoseconds without any external force:
 \begin{lstlisting}
@@ -2111,16 +2110,16 @@ run 15000
 \end{lstlisting}
 This initial run will serve as a benchmark to quantify the changes caused by
 the applied force in later steps.  Next, let us apply a force to the two selected
-oxygen atoms using two \lmpcmd{add\_force} commands, and then run the simulation
+oxygen atoms using two \lmpcmd{addforce} commands, and then run the simulation
 for an extra 15~ps:
 \begin{lstlisting}
 fix myaf1 topull1 addforce 10 0 0
 fix myaf2 topull2 addforce -10 0 0
 run 15000
 \end{lstlisting}
-The force magnitude of $10\,\text{kcal/mol/\AA{}}$ corresponds to $0.67\,\text{nN}$
-and was selected to be sufficiently large to overcome both thermal agitation and
-the entropic contributions from both the water and PEG molecules.
+Each applied force has a magnitude of $10\,\text{kcal/mol/\AA{}}$, corresponding to $0.67\,\text{nN}$.
+This value was chosen to be sufficiently large to overcome both the thermal agitation and
+the entropic contributions from the molecules.
 
 Run the \flecmd{pull.lmp} file using LAMMPS.  From the generated images of the system,
 you should observe that the PEG molecule eventually aligns
@@ -2130,7 +2129,7 @@ time indicates that the PEG quickly adjusts to the external force
 (Fig.~\ref{fig:PEG-distance}\,a).  Additionally, from the values of the dihedral angles
 printed in the \flecmd{pull.dat} file, you can create a histogram
 of dihedral angles for a specific type.  For example, the angle $\phi$ for dihedrals
-of type 1 (C-C-OE-C) is shown in Fig.~\ref{fig:PEG-distance}\,b.
+of type 1 (C-C-OE-C) is shown in Fig.~\ref{fig:PEG-distance}\,b. % SG: is it type 1 or 2?
 
 \begin{figure}
 \centering
@@ -2147,7 +2146,7 @@ as simulated during \hyperref[all-atom-label]{Tutorial 3}.}
 the radius of gyration $R_\text{gyr}$ of the PEG molecule
 from \hyperref[all-atom-label]{Tutorial 3}, with the force
 applied starting at $t = 15\,\text{ps}$.  b) Histograms of the dihedral angles of type 2
-in the absence (orange) and in the presence (blue) of the applied force.}
+in the absence (orange) and in the presence (blue) of the applied force.} % SG: is it type 1 or 2?
 \label{fig:PEG-distance}
 \end{figure}
 
@@ -2730,10 +2729,10 @@ As expected for such Couette flow geometry, the fluid velocity increases linearl
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{NANOSHEAR-profiles}
-\caption{a) Water density $\rho$ along the \textit{z} axis as
+\caption{a) Water density $\rho$ along the $z$-axis as
 simulated in \hyperref[sheared-confined-label]{Tutorial 4}.
 b) Velocity profiles for water (blue) and walls
-(orange) along the $z$ axis.}
+(orange) along the $z$-axis.}
 % The line is a linear fit assuming
 % that the pore size is $h = 1.8\,\text{nm}$.}
 \label{fig:NANOSHEAR-profiles}
@@ -2763,7 +2762,10 @@ higher than what would be measured in the absence of walls.
 \centering
 \includegraphics[width=0.55\linewidth]{SIO}
 \caption{A portion of the silicon dioxide structure as simulated during
-\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  Atoms are colored by their charges.}
+\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  Atoms are colored
+by their charges: the hydrogen atoms appear as small greenish spheres, silicon
+atoms as large orange spheres, and oxygen atoms as blue spheres of intermediate
+size.}
 \label{fig:SIO}
 \end{figure}
 
@@ -3121,9 +3123,8 @@ At the end of the simulation, hydroxyl (-OH) groups can be seen at the interface
 \includegraphics[width=\linewidth]{SIO-decorated}
 \caption{Cracked silicon oxide after the addition of hydrogen atoms
 during \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  The atoms
-are colored by their charges.  Dangling oxygen groups appear in greenish, bulk
-Si atoms with a charge of about $1.8~\text{e}$ appear in red/orange, and bulk
-O atoms with a charge of about $-0.9 ~ \text{e}$ appear in blue.}
+are colored by their charges, with the newly added hydrogen atoms appearing as small
+greenish spheres.}
 \label{fig:SIO-decorated}
 \end{figure}
 
@@ -3132,10 +3133,11 @@ O atoms with a charge of about $-0.9 ~ \text{e}$ appear in blue.}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.55\linewidth]{GCMC}
-\caption{Water molecules adsorbed in cracked silica (SiO$_2$) material as simulated
-during \hyperref[gcmc-silica-label]{Tutorial 6}.  Water molecules are colored in
-cyan and white, oxygen (O) atoms from SiO$_2$ in red, and silicon (Si) atoms in yellow.}
+\includegraphics[width=0.6\linewidth]{GCMC}
+\caption{Water molecules (H$_2$O) adsorbed in cracked silica (SiO$_2$) material as simulated
+during \hyperref[gcmc-silica-label]{Tutorial 6}.  The oxygen atoms of the water
+molecules are represented in cyan, the silicon atoms in yellow, and the oxygen
+atoms of the solid in red.}
 \label{fig:GCMC}
 \end{figure}
 
@@ -3205,11 +3207,6 @@ thermo 250
 thermo_style custom step temp etotal vol density
 \end{lstlisting}
 
-% SG
-% FROM . Chem. Phys. 97, 2682–2689 (1992)
-% https://doi.org/10.1063/1.463056
-% 3 steps only. Say that its too fast to be correct. Show density.
-% Show rdf instead of box size?
 Finally, let us implement the annealing procedure which
 consists of three consecutive runs.  This procedure was inspired
 by Ref.\,\cite{della1992molecular}.  First, to melt the system,
@@ -3252,12 +3249,10 @@ will be located next to \flecmd{generate.lmp} (Fig.~\ref{fig:GCMC-snapshot}).
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GCMC-dimension}
-\caption{a) Temperature $T$ as a function of time $t$
-during the annealing of the silica system
-from \hyperref[gcmc-silica-label]{Tutorial 6}.
-b) System density $\rho$ during
-annealing.  The vertical dashed lines mark the transition between the different
-phases of the simulation.}
+\caption{a) Temperature $T$ as a function of time $t$ during the annealing
+of the silica system from \hyperref[gcmc-silica-label]{Tutorial 6}.
+b) System density $\rho$ during the annealing process.  The vertical dashed lines
+mark the transition between the different phases of the simulation.}
 \label{fig:GCMC-dimension}
 \end{figure}
 
@@ -3266,7 +3261,7 @@ phases of the simulation.}
 \includegraphics[width=0.9\linewidth]{GCMC-generate}
 \caption{Amorphous silica ($\text{SiO}_2$) simulated
 during \hyperref[gcmc-silica-label]{Tutorial 6}.  Silicon atoms are
-represented in yellow, and the oxygen atoms in red.}
+represented in yellow, and oxygen atoms in red.}
 \label{fig:GCMC-snapshot}
 \end{figure}
 
@@ -3310,16 +3305,17 @@ write_data cracking.data
 \end{lstlisting}
 The \lmpcmd{fix nvt} command is employed to control the temperature of the system.
 As observed from the generated images, the atoms
-progressively adjust to the changing box dimensions. At some point, bonds begin to break,
-leading to the appearance of dislocations (Fig.~\ref{fig:GCMC-cracked}).
+progressively adjust to the changing box dimensions.  At some point,
+bonds begin to break, leading to the appearance of
+dislocations (Fig.~\ref{fig:GCMC-cracked}).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GCMC-cracked}
 \caption{Block of silica from \hyperref[gcmc-silica-label]{Tutorial 6}
 after deformation.  Silicon atoms are represented in yellow,
-and the oxygen atoms in red.  The crack was induced by the
-imposed deformation of the box along the $x$-axis.}
+and oxygen atoms in red.  The crack was induced by the
+imposed deformation of the box along the $x$-axis (i.e.,~the horizontal axis).}
 \label{fig:GCMC-cracked}
 \end{figure}
 
@@ -3329,7 +3325,7 @@ imposed deformation of the box along the $x$-axis.}
 the Monte Carlo method in the grand canonical ensemble (GCMC).  In short, the
 system is placed into contact with a virtual reservoir of a given chemical potential
 $\mu$, and multiple attempts to insert water molecules at random positions are
-made. Each attempt is either accepted or rejected based on energy considerations.
+made.  Each attempt is either accepted or rejected based on energy considerations.
 For further details, please refer to classical textbooks like Ref.~\citenum{frenkel2023understanding}.
 
 \paragraph{Using hydrid potentials}
@@ -3536,7 +3532,7 @@ insertions of molecules would occur during the short duration of this simulation
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GCMC-number}
-\caption{Number of water molecules $N_\text{H2O}$ as a function of the time $t$
+\caption{Number of water molecules, $N_\text{H2O}$, as a function of time, $t$,
 as extracted from \hyperref[gcmc-silica-label]{Tutorial 6}.}
 \label{fig:GCMC-number}
 \end{figure}
@@ -3565,10 +3561,10 @@ atoms in yellow, and the oxygen atoms of the solid in red.}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.55\linewidth]{US}
-\caption{Atoms as simulated during \hyperref[umbrella-sampling-label]{Tutorial 7}.
-Only the atom colored in pink feels the additional force used for the umbrella
-sampling method.}
+\includegraphics[width=0.7\linewidth]{US}
+\caption{System simulated during \hyperref[umbrella-sampling-label]{Tutorial 7}.
+The pink atom explores the energetically unfavorable central area of the simulation
+box thanks to the additional potential imposed during umbrella sampling.}
 \label{fig:US}
 \end{figure}
 
@@ -3716,15 +3712,13 @@ timestep 2.0
 run 50000
 \end{lstlisting}
 Run the simulation with LAMMPS.  The number of atoms in the
-central region, $n_\mathrm{center}$, reaches
-its equilibrium value after approximately $40\,\text{ps}$
-(Fig.~\ref{fig:US-density-evolution}).  A snapshot of the
-equilibrated system is shown in Fig.~\ref{fig:US-system-unbiased}.
+central region, $n_\mathrm{center}$, reaches its equilibrium value after approximately $40\,\text{ps}$
+(Fig.~\ref{fig:US-density-evolution}).  A snapshot of the equilibrated system is shown in Fig.~\ref{fig:US-system-unbiased}.
 
 \paragraph{Run and data acquisition}
 
 Once the system is equilibrated, we will record the density profile of
-the atoms along the $x$ axis using the \lmpcmd{ave/chunk} command.
+the atoms along the $x$-axis using the \lmpcmd{ave/chunk} command.
 Add the following line to \flecmd{free-energy.lmp}:
 \begin{lstlisting}
 reset_timestep 0
@@ -3746,8 +3740,8 @@ LAMMPS.
 \includegraphics[width=\linewidth]{US-density-evolution}
 \caption{Evolution of the number of atoms $n_\text{center}$ in the central
 region \lmpcmd{mymes} as a function of time $t$ during equilibration.  The dark line
-is $n_\text{center} = 22 \exp(-t/160)+5$ and serves as a guide for the eyes.  Here, $U_0 = 0.36~\text{kcal/mol}$,
-$\delta = 0.5~\text{\AA{}}$, and $x_0 = 5~\text{\AA{}}$.}
+is $n_\text{center} = 22 \exp(-t/160)+5$ and serves as a guide for the eyes.
+Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\AA{}}$.}
 \label{fig:US-density-evolution}
 \end{figure}
 
@@ -3961,9 +3955,10 @@ long and computationally expensive simulations.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{US-free-energy}
-\caption{The potential $U$ as a function of $x$, measured using umbrella sampling
-(blue disks), is compared to the imposed potential given in Eq.~\eqref{eq:U}
-(dark line). Parameters are $U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$,
+\caption{The potential $U$ as a function of $x$, measured using umbrella
+sampling during \hyperref[umbrella-sampling-label]{Tutorial 7} (blue disks),
+is compared to the imposed potential given in Eq.~\eqref{eq:U}
+(dark line).  Parameters are $U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$,
 and $x_0 = 10~\text{\AA{}}$.}
 \label{fig:US-freenergy}
 \end{figure}

@@ -5,12 +5,6 @@ more accessible to new users.
 
 ## Tutorials
 
-<p float="right">
-    <a href="https://github.com/lammpstutorials/lammpstutorials-article">
-        <img src="representative-image/lammps-tutorials.png" width="32%" />
-    </a>
-</p>
-
 - Tutorial 1: Lennard-Jones fluid
 - Tutorial 2: Pulling on a carbon nanotube
 - Tutorial 3: Polymer in water
