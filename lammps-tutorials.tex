@@ -2199,7 +2199,7 @@ kspace_style pppm/tip4p 1.0e-5
 kspace_modify slab 3.0
 \end{lstlisting}
 These lines are used to define the most basic parameters, including the
-\lmpcmd{atom}, \lmpcmd{bond}, and \lmpcmd{angle} styles, as well as interaction
+atom, bond, and angle styles, as well as interaction
 potential.  Here, \lmpcmd{lj/cut/tip4p/long} imposes a Lennard-Jones potential with
 a cut-off at $12\,\text{$\text{\AA{}}$}$ and a long-range Coulomb potential.
 
@@ -2238,12 +2238,11 @@ $\text{xlo}=-3$ and $\text{xlo}=3$, and because we have previously chosen a latt
 factor of 4.04, the region box extends from $-12.12~\text{\AA{}}$ to $12.12~\text{\AA{}}$
 along the $x$ direction.  The \lmpcmd{create\_box} command creates a simulation box with
 5 types of atoms: the oxygen and hydrogen of the water molecules, the two ions ($\text{Na}^+$,
-$\text{Cl}^-$), and the atom of the walls.  The \lmpcmd{create\_box} command extends over 6
-lines thanks to the $\&$ character.  The second and third lines are used to indicate that the
-simulation contains 1 type of bond and 1 type of angle (both required by the water molecule).
-The parameters for these bond and angle constraints will be given later.  The three last
-lines are for memory allocation.  The \lmpcmd{labelmap} command assigns alphanumeric type labels
-to each numeric atom type, bond type, and angle type.
+$\text{Cl}^-$), and the atoms from the walls.  The simulation contains 1 type of bond
+and 1 type of angle (both required by the water molecules).
+The parameters for these bond and angle constraints will be given later.  The \lmpcmd{extra/ (...)}
+keywords are for memory allocation.  Finally, the \lmpcmd{labelmap} commands assign
+alphanumeric type labels to each numeric atom type, bond type, and angle type.
 
 Now, we can add atoms to the system.  First, let us create two sub-regions corresponding
 respectively to the two solid walls, and create a larger region from the union of the
@@ -2260,7 +2259,7 @@ forming fcc solids.
 
 To add the water molecules, the molecule
 template called \href{\filepath tutorial4/water.mol}{\dwlcmd{water.mol}}
-must be located next to \flecmd{}.  The template contains all the
+must be located next to \flecmd{create.lmp}.  The template contains all the
 necessary information concerning the water molecule, such as atom positions,
 bonds, and angles.  Add the following lines to \flecmd{create.lmp}:
 \begin{lstlisting}
@@ -2421,7 +2420,7 @@ cell boundaries.}
 
 Let us move the atoms and place them in more energetically favorable positions
 before starting the actual molecular dynamics simulation.  Although we refer to this step as
-\emph{energy minimization}, it is not a conventional \emph{minimization}
+\emph{energy minimization}, it is not a conventional minimization
 like that performed in the first tutorial; \hyperref[lennard-jones-label]{Lennard-Jones fluid}.
 Instead, we will conduct a molecular dynamics simulation, employing certain techniques
 to prevent the system from exploding due to overlapping atoms.
@@ -2599,9 +2598,10 @@ run 30000
 
 write_data equilibrate.data nocoeff
 \end{lstlisting}
-Run the \flecmd{input.lmp} file using LAMMPS.  As seen from the values of
-\lmpcmd{deltaz}, the distance between the two walls reaches
-an equilibrium value (Fig.~\ref{fig:NANOSHEAR-equilibration}).
+Run the \flecmd{input.lmp} file using LAMMPS.  Both the pressure and the distance
+between the two walls show oscillations at the start of the simulation
+but eventually stabilize at their equilibrium values toward
+the end of the simulation (Fig.~\ref{fig:NANOSHEAR-equilibration}).
 
 \begin{note}
 Note that it is generally recommended to run a longer equilibration.  In this case,
@@ -2739,7 +2739,7 @@ b) Velocity profiles for water (blue) and walls
 \end{figure}
 
 From the force applied by the fluid on the solid, one can extract the stress
-within the fluid, which enables the measurement of its viscosity $\dot{\eta}$
+within the fluid, which enables the measurement of its viscosity $\eta$
 according to $\eta = \tau / \dot{\gamma}$ where $\tau$ is the stress applied by
 the fluid on the shearing wall, and $\dot{\gamma}$ the shear rate
 \cite{gravelle2021violations}.  Here, the shear rate is
