@@ -41,6 +41,6 @@ dump_modify viz adiam 1 1 adiam 2 3 acolor 1 turquoise acolor 2 royalblue backco
 # 5) Run
 velocity all create 1.0 49284 mom yes dist gaussian
 fix mynve all nve
-fix mylgv all langevin 1.0 1.0 0.1 1530917 zero yes
+fix mylgv all langevin 1.0 1.0 0.1 10917 zero yes
 timestep 0.005
 run 300000

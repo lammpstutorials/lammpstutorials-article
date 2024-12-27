@@ -791,7 +791,7 @@ Now, we change the \lmpcmd{Run} section to (note the shorter run time):
 \begin{lstlisting}
 # 5) Run
 fix mynve all nve
-fix mylgv all langevin 1.0 1.0 0.1 1530917
+fix mylgv all langevin 1.0 1.0 0.1 10917
 timestep 0.005
 run 15000
 \end{lstlisting}
@@ -806,7 +806,7 @@ thermostat, the atoms are subject to friction and random noise (in the form
 of randomly added velocities).  Since a constant friction term removes
 more kinetic energy from fast atoms and less from slow atoms, the system
 will eventually reach a dynamic equilibrium where the kinetic energy
-removed and added are about the same.  The number 1530917 is a
+removed and added are about the same.  The number 10917 is a
 seed used to initialize the random number generator used inside of
 \lmpcmd{fix langevin}; you can change it to perform statistically
 independent simulations.  In the presence of a thermostat, the MD simulation
@@ -868,7 +868,7 @@ images.  The window also allows you to export the animation to a movie
 image files.
 
 The rendering of the system can be further adjusted using the many
-options of the \lmpcmd{dump image} command.  Fir instance, the value for the
+options of the \lmpcmd{dump image} command.  For instance, the value for the
 \lmpcmd{shiny} keyword is used to adjust the shininess of the atoms, the
 \lmpcmd{box} keyword adds or removes a representation of the box, and
 the \lmpcmd{view} and \lmpcmd{zoom} keywords adjust the camera (and so
@@ -1115,7 +1115,7 @@ Finally, add the following lines to \flecmd{improved.md.lmp}:
 # 5) Run
 velocity all create 1.0 49284 mom yes dist gaussian
 fix mynve all nve
-fix mylgv all langevin 1.0 1.0 0.1 1530917 zero yes
+fix mylgv all langevin 1.0 1.0 0.1 10917 zero yes
 timestep 0.005
 run 300000
 \end{lstlisting}
