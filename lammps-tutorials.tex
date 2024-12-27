@@ -4313,71 +4313,80 @@ use the ``Command'' key (\cmd) in place of the
 
 \subsection{Installation}
 
-Precompiled versions of LAMMPS--GUI are available for Linux, {macOS}, and
-Windows.  The Linux version is provided in two formats: as compressed tar
-archive (.tar.gz) and as a Flatpak bundle~\cite{flatpak_home}.  The {macOS}
-version is distributed as a .dmg installer image, while the Windows version comes
-as an executable installer package.
+Precompiled versions of \lammpsgui{} are available for Linux, {macOS},
+and Windows on the LAMMPS GitHub Release
+page~\cite{lammps_github_release}.  The Linux version is provided in two
+formats: as compressed tar archive (.tar.gz) and as a Flatpak
+bundle~\cite{flatpak_home}.  The {macOS} version is distributed as a
+.dmg installer image, while the Windows version comes as an executable
+installer package.
 
-\subsubsection{Installing the Linux .tar.gz variant}
+\subsubsection{Installing the Linux .tar.gz Package}
 
-Download the archive (e.g.,~LAMMPS-Linux-x86\_64-GUI-29Aug2024\_update1.tar.gz)
+Download the archive (e.g.,~LAMMPS-Linux-x86\_64-GUI-29Aug2024\_update2.tar.gz)
 and unpack it.  This will create a folder named LAMMPS\_GUI containing the
 included commands, which can be launched directly using ``./lammps-gui'' or
 ``./lmp'', for example.  Adding this folder to the PATH environment
 variable will make these commands accessible from everywhere, without the
 need for the ``./'' prefix.
 
-\subsubsection{Installing Linux .flatpak variant}
+\subsubsection{Installing the Linux Flatpak Bundle}
 
-Download the bundle file and then install it using the following command:
-\begin{lstlisting}
+You have to have Flatpak support installed on Linux machine to be able
+to use the Flatpak bundle.  Download the bundle file
+(e.g.,~LAMMPS-Linux-x86\_64-GUI-29Aug2024\_update2.flatpak) and then
+install it using the following command:
+\begin{lstlisting}[language=tcl]
 flatpak install --user \
-    LAMMPS-Linux-x86_64-GUI-29Aug2024_update1.flatpak
+    LAMMPS-Linux-x86_64-GUI-29Aug2024_update2.flatpak
 \end{lstlisting}
-This will integrate LAMMPS--GUI into your desktop environment
+This will integrate \lammpsgui{} into your desktop environment
 (e.g.,~GNOME, KDE, XFCE) where it should appear in the ``Applications''
 menu under ``Science''.  Additionally, the ``.lmp'' file extension will be
-registered to launch LAMMPS--GUI when opening a file with this
-extension in the desktop's file manager.  You can then
-launch LAMMPS--GUI from the command line using the following command:
-\begin{lstlisting}
+registered to launch \lammpsgui{} when opening a file with this
+extension in the desktop's file manager.
+
+You can also launch \lammpsgui{} from the command line using the following command:
+\begin{lstlisting}[language=tcl]
 flatpak run org.lammps.lammps-gui
 \end{lstlisting}
-Similarly, for the LAMMPS command-line version, use:
-\begin{lstlisting}
+Similarly, for launching the LAMMPS command-line executable, use:
+\begin{lstlisting}[language=tcl]
 flatpak run --command=lmp org.lammps.lammps-gui -in in.lmp
 \end{lstlisting}
 
-\subsubsection{Installing the macOS .dmg package}
+\subsubsection{Installing the macOS Application Bundle}
 
-After downloading the LAMMPS-macOS-multiarch-GUI-29Aug2024\_update1.dmg file,
-double-click on it and then drag the LAMMPS\_GUI app bundle
-into the Applications folder shown in the dialog that opens.  To
-enable command-line access, follow the instructions in the README.txt
-file.
+After downloading the macOS app bundle image file
+(e.g.,~LAMMPS-macOS-multiarch-GUI-29Aug2024\_update2.dmg), double-click
+on it.  In the dialog that opens drag the LAMMPS\_GUI app bundle into
+the Applications folder.  To enable command-line access, follow the
+instructions in the README.txt file.  These macOS app-bundles contain
+native executables for both, Intel and Apple CPUs.
 
 After installation, you can launch LAMMPS\_GUI from the Applications
-folder.  Additionally, you can drag an input file onto the app or open files with the
-``.lmp'' extension.  Note that the LAMMPS--GUI bundle is currently not
-cryptographically signed, so macOS may initially prevent it from launching.
-If this happens, you can adjust the settings in the ``Security \& Privacy" system
-preferences dialog to allow access.
+folder.  Additionally, you can drag an input file onto the app or open
+files with the ``.lmp'' extension.  Note that the \lammpsgui{} app bundle is
+currently not cryptographically signed, so macOS may initially prevent
+it from launching.  If this happens, you need to adjust the settings in
+the ``Security \& Privacy" system preferences dialog to allow access.
 
-\subsubsection{Installing the Windows .exe package}
+\subsubsection{Installing the Windows package}
 
-Download the LAMMPS-Win10-64bit-GUI-29Aug2024\_update.exe installer.
-Windows may warn you that the file is from an unknown developer
-and was downloaded from the internet.  This happens because neither the
-installer nor the LAMMPS--GUI application (or any other applications inside)
-have been cryptographically signed.  You will need to choose to keep the file,
-and when launching the installer again, confirm that you want to run it despite the warning.
+Download the \lammpsgui{} installer for Windows
+(e.g.,~LAMMPS-Win10-64bit-GUI-29Aug2024\_update2.exe).  Windows may warn
+you that the file is from an unknown developer and was downloaded from
+the internet.  This happens because neither the installer nor the
+\lammpsgui{} application (or any other included applications) have been
+cryptographically signed.  You will need to choose to keep the file, and
+when launching the installer, confirm that you want to run it despite
+the warning.
 
-After installation, a new entry should appear in the Start menu.  Additionally,
-the ``.lmp'' file extension should be registered with  Windows File
-Explorer to open LAMMPS--GUI when opening a file with that
-extension.  The ``lammps-gui'' and ``lmp'' commands should also be available
-in the command line, either in a Command Prompt or Terminal window.
+After installation, a new entry should appear in the Start menu.
+Additionally, the ``.lmp'' file extension should be registered with
+Windows File Explorer to open \lammpsgui{} when opening a file with the
+``.lmp`` extension.  The ``lammps-gui'' and ``lmp'' commands should also
+be available in the command line.
 
 \subsection{Opening, Editing, and Saving Files}
 
