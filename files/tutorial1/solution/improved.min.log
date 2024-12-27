@@ -4,7 +4,7 @@ Created orthogonal box = (-20 -20 -20) to (20 20 20)
   1 by 1 by 1 MPI processor grid
 Created 1000 atoms
   using lattice units in orthogonal box = (-20 -20 -20) to (20 20 20)
-  create_atoms CPU = 0.002 seconds
+  create_atoms CPU = 0.001 seconds
 Created 150 atoms
   using lattice units in orthogonal box = (-20 -20 -20) to (20 20 20)
   create_atoms CPU = 0.000 seconds
@@ -128,9 +128,9 @@ Per MPI rank memory allocation (min/avg/max) = 10.44 | 10.44 | 10.44 Mbytes
        980  -1.3509009     -0.00062855692
        990  -1.3621364     -0.00057827024
       1000  -1.3722835     -0.00049492281
-Loop time of 0.756427 on 8 procs for 1000 steps with 1150 atoms
+Loop time of 0.126597 on 8 procs for 1000 steps with 1150 atoms
 
-869.8% CPU use with 1 MPI tasks x 8 OpenMP threads
+884.9% CPU use with 1 MPI tasks x 8 OpenMP threads
 
 Minimization stats:
   Stopping criterion = max iterations
@@ -144,12 +144,12 @@ Minimization stats:
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 0.2483     | 0.2483     | 0.2483     |   0.0 | 32.83
-Neigh   | 0.11973    | 0.11973    | 0.11973    |   0.0 | 15.83
-Comm    | 0.10413    | 0.10413    | 0.10413    |   0.0 | 13.77
-Output  | 0.0049911  | 0.0049911  | 0.0049911  |   0.0 |  0.66
-Modify  | 0.091781   | 0.091781   | 0.091781   |   0.0 | 12.13
-Other   |            | 0.1875     |            |       | 24.79
+Pair    | 0.045      | 0.045      | 0.045      |   0.0 | 35.55
+Neigh   | 0.022573   | 0.022573   | 0.022573   |   0.0 | 17.83
+Comm    | 0.015767   | 0.015767   | 0.015767   |   0.0 | 12.45
+Output  | 0.000642   | 0.000642   | 0.000642   |   0.0 |  0.51
+Modify  | 0.014301   | 0.014301   | 0.014301   |   0.0 | 11.30
+Other   |            | 0.02832    |            |       | 22.37
 
 Nlocal:           1150 ave        1150 max        1150 min
 Histogram: 1 0 0 0 0 0 0 0 0 0

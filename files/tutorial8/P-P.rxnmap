@@ -1,4 +1,9 @@
-this is a map file
+# LAMMPS Input File (License CC BY 4.0)
+# By Simon Gravelle, Jacob R. Gissinger, and Axel Kohlmeyer  
+# The DOI will be added upon publication
+# Find more on GitHub: https://github.com/lammpstutorials
+
+# this is a map file
 
 2 edgeIDs
 50 equivalences

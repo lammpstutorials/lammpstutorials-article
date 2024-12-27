@@ -10,20 +10,20 @@ improved.md.lmp
 
 # 2) solution files
 # only downloaded on request
-solution/initial.lmp
-solution/initial.log
-solution/initial.parta.dat
-solution/initial.partb.dat
-solution/initial.run0.png
-solution/initial.min.png
-solution/initial.mp4
+solution/improved.md.dat
+solution/improved.md.lmp
+solution/improved.md.log
+solution/improved.md.mp4
+solution/improved.md.png
+solution/improved.min.data
 solution/improved.min.lmp
 solution/improved.min.log
 solution/improved.min.png
-solution/improved.md.lmp
-solution/improved.md.log
-solution/improved.md.dat
-solution/improved.md.png
-solution/min_coords.data
+solution/initial.lmp
+solution/initial.log
+solution/initial.min.png
+solution/initial.mp4
+solution/initial.png
+
 
 # 3) folders not known to LAMMPS GUI will be skipped

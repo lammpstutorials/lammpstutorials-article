@@ -1,7 +1,7 @@
-# LAMMPS input script by Simon Gravelle
-# This input is part of a tutorial from https://lammpstutorials.github.io
-# Last tested using the 2Aug2023 stable LAMMPS version
-# This file was released under the GNU general public license v3.0
+# LAMMPS Input File (License CC BY 4.0)
+# By Simon Gravelle, Jacob R. Gissinger, and Axel Kohlmeyer  
+# The DOI will be added upon publication
+# Find more on GitHub: https://github.com/lammpstutorials
 
 labelmap atom 1 OE 2 C 3 HC 4 H 5 CPos 6 OAlc 7 OW 8 HW
 labelmap bond 1 g4 2 g18 3 g26 4 g27 5 g56 6 g71 7 OW-HW
