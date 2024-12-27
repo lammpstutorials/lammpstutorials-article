@@ -1664,7 +1664,7 @@ but that after a few steps, it reaches the target value.
 
 After equilibration, let us set the velocity of the edges equal to
 $75~\text{m/s}$ (or $0.75~\text{\AA{}/ps}$) and run for a longer duration than
-previously. Add the following lines into \flecmd{breakable.lmp}:
+previously.  Add the following lines into \flecmd{breakable.lmp}:
 \begin{lstlisting}
 velocity cnt_top set 0.75 0 0
 velocity cnt_bot set -0.75 0 0
@@ -1942,7 +1942,7 @@ atoms in red, and the hydrogen atoms in white.}
 \end{figure}
 
 Open the file named \flecmd{merge.lmp} that was downloaded
-alongside \flecmd{water.lmp} during the tutorial setup. It only contain one line:
+alongside \flecmd{water.lmp} during the tutorial setup.  It only contain one line:
 \begin{lstlisting}
 read_restart water.restart
 \end{lstlisting}
@@ -3492,7 +3492,7 @@ to use two thermostats here because the number of water molecules will fluctuate
 with time.  The \lmpcmd{compute\_modify} command with the \lmpcmd{dynamic yes}
 option for water is used to specify that the number of molecules will not be constant.
 
-Finally, let us use the \textit{fix gcmc} and perform the grand canonical Monte
+Finally, let us use the \lmpcmd{fix gcmc} and perform the grand canonical Monte
 Carlo steps.  Add the following lines into \flecmd{gcmc.lmp}:
 \begin{lstlisting}
 variable tfac equal 5.0/3.0
@@ -3505,12 +3505,10 @@ of the inserted water molecules by taking into account the internal degrees of
 freedom.  Here, 100 insertion and deletion attemps are made every 100 steps.
 
 \begin{note}
-At a pressure of $p = 100\ \text{bar}$, the chemical potential of water
-vapor at $T = 300\ \text{K}$ can be calculated using as
-$\mu = \mu^\circ + RT \ln (\frac{p}{p_0}),$
-where $\mu_0$ is the standard chemical potential
-at $p^\circ = 1 \, \text{bar}$, \(R = 8.314\ \text{J/mol·K}\) is
-the gas constant, \(T = 300\ \text{K}\) is the temperature.
+At a pressure of $p = 100\ \text{bar}$, the chemical potential of water vapor at $T = 300\ \text{K}$
+can be calculated using as $\mu = \mu_0 + RT \ln (\frac{p}{p_0}),$ where $\mu_0$ is the standard
+chemical potential (typically taken at a pressure $p_0 = 1 \, \text{bar}$), \(R = 8.314\ \text{J/mol·K}\)
+is the gas constant, \(T = 300\ \text{K}\) is the temperature.
 \end{note}
 
 Finally, let us print some information and run for 25\,ps:
@@ -3617,7 +3615,7 @@ $\sigma$ and $\epsilon$ and for the repulsive potential $U$, which are $U_0$, $\
 to create a Weeks-Chandler-Andersen (WCA) potential, which is a truncated and
 purely repulsive LJ potential~\cite{weeks1971role}.  It was calculated
 as $2^{1/6} \sigma$.  The potential is also shifted to be
-equal to 0 at the cut-off using the \lmpcmd{pair\_modify}.  The system of unit
+equal to 0 at the cut-off using the \lmpcmd{pair\_modify} command.  The system of unit
 \lmpcmd{real}, in which energy is in kcal/mol, distance in Ångstrom, or time in
 femtosecond, has been chosen for practical reasons: the WHAM algorithm used in
 the second part of the tutorial automatically assumes the energy to be in kcal/mol.
@@ -4122,21 +4120,21 @@ linking of two polymer chains.  Download the three files associated with each re
 The first reaction uses the prefix `M-M' for the pre-reaction template,
 post-reaction template, and reaction map file:
 \begin{itemize}
-\item \href{\filepath tutorial8/M-M_pre.mol}{\textit{M-M$\_$pre.mol}},
-\item \href{\filepath tutorial8/M-M_post.mol}{\textit{M-M$\_$post.mol}},
-\item \href{\filepath tutorial8/M-M.rxnmap}{\textit{M-M.rxnmap}}.
+\item \href{\filepath tutorial8/M-M_pre.mol}{\dwlcmd{M-M$\_$pre.mol}},
+\item \href{\filepath tutorial8/M-M_post.mol}{\dwlcmd{M-M$\_$post.mol}},
+\item \href{\filepath tutorial8/M-M.rxnmap}{\dwlcmd{M-M.rxnmap}}.
 \end{itemize}
 The second reaction uses the prefix `M-P',
 \begin{itemize}
-\item \href{\filepath tutorial8/M-P_pre.lmpmol}{\textit{M-P$\_$pre.mol}},
-\item \href{\filepath tutorial8/M-P_post.lmpmol}{\textit{M-P$\_$post.mol}},
-\item \href{\filepath tutorial8/M-P.rxnmap}{\textit{M-P.rxnmap}}.
+\item \href{\filepath tutorial8/M-P_pre.lmpmol}{\dwlcmd{M-P$\_$pre.mol}},
+\item \href{\filepath tutorial8/M-P_post.lmpmol}{\dwlcmd{M-P$\_$post.mol}},
+\item \href{\filepath tutorial8/M-P.rxnmap}{\dwlcmd{M-P.rxnmap}}.
 \end{itemize}
 The third reaction uses the prefix `P-P',
 \begin{itemize}
-\item \href{\filepath tutorial8/P-P_pre.lmpmol}{\textit{P-P$\_$pre.mol}},
-\item \href{\filepath tutorial8/P-P_post.lmpmol}{\textit{P-P$\_$post.mol}},
-\item \href{\filepath tutorial8/P-P.rxnmap}{\textit{P-P.rxnmap}}.
+\item \href{\filepath tutorial8/P-P_pre.lmpmol}{\dwlcmd{P-P$\_$pre.mol}},
+\item \href{\filepath tutorial8/P-P_post.lmpmol}{\dwlcmd{P-P$\_$post.mol}},
+\item \href{\filepath tutorial8/P-P.rxnmap}{\dwlcmd{P-P.rxnmap}}.
 \end{itemize}
 Here, the file names for each reaction use the abbreviation `M' for monomer and `P'
 for polymer.
