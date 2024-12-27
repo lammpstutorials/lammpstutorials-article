@@ -3963,6 +3963,14 @@ and $x_0 = 10~\text{\AA{}}$.}
 \subsection{Tutorial 8: Reactive Molecular Dynamics}
 \label{bond-react-label}
 
+The goal of this tutorial is to create a model of a carbon nanotube (CNT) embedded
+in a polymer melt made of polystyrene (PS) (Fig.~\ref{fig:REACT}).  The
+REACTER protocol is used to simulate the polymerization of styrene monomers, and the
+polymerization reaction is followed in time \cite{gissinger2017polymer, gissinger2020reacter, gissinger2024molecular}.
+In contrast with AIREBO (\hyperref[carbon-nanotube-label]{Tutorial 2})
+and ReaxFF (\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}), the REACTER
+protocol relies on the use of a \textit{classical} force field.
+
 \begin{figure}
 \centering
 \includegraphics[width=0.7\linewidth]{REACT.png}
@@ -3971,14 +3979,6 @@ The system consists of 200 styrene molecules packed around a single-walled
 CNT, with a mass density for the whole system of $0.9~\text{g/cm}^3$.}
 \label{fig:REACT}
 \end{figure}
-
-The goal of this tutorial is to create a model of a carbon nanotube (CNT) embedded
-in a polymer melt made of polystyrene (PS) (Fig.~\ref{fig:REACT}).  The
-REACTER protocol is used to simulate the polymerization of styrene monomers, and the
-polymerization reaction is followed in time \cite{gissinger2017polymer, gissinger2020reacter, gissinger2024molecular}.
-In contrast with AIREBO (\hyperref[carbon-nanotube-label]{Tutorial 2})
-and ReaxFF (\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}), the REACTER
-protocol relies on the use of a \textit{classical} force field.
 
 \subsubsection{Creating the system}
 
