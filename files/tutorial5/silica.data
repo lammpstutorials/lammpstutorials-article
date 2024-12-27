@@ -1,3 +1,8 @@
+# LAMMPS Input File (License CC BY 4.0)
+# By Simon Gravelle, Jacob R. Gissinger, and Axel Kohlmeyer  
+# The DOI will be added upon publication
+# Find more on GitHub: https://github.com/lammpstutorials
+
 LAMMPS data file via write_data, version 3 Nov 2022, timestep = 5720000
 
 576 atoms

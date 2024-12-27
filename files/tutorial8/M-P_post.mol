@@ -1,4 +1,9 @@
-chain_plus_styrene_reacted
+# LAMMPS Input File (License CC BY 4.0)
+# By Simon Gravelle, Jacob R. Gissinger, and Axel Kohlmeyer  
+# The DOI will be added upon publication
+# Find more on GitHub: https://github.com/lammpstutorials
+
+# chain_plus_styrene_reacted
 
      46 atoms
      48 bonds

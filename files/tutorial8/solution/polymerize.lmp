@@ -1,3 +1,8 @@
+# Python script (License CC BY 4.0)
+# By Simon Gravelle, Jacob R. Gissinger, and Axel Kohlmeyer  
+# The DOI will be added upon publication
+# Find more on GitHub: https://github.com/lammpstutorials
+
 # polymerization of PS-CNT composite using REACTER
 
 units real

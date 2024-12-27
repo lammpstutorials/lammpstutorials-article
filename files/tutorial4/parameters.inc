@@ -1,3 +1,7 @@
+# LAMMPS Input File (License CC BY 4.0)
+# By Simon Gravelle, Jacob R. Gissinger, and Axel Kohlmeyer  
+# The DOI will be added upon publication
+# Find more on GitHub: https://github.com/lammpstutorials
 
 mass O 15.9994
 mass H 1.008
