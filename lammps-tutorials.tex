@@ -102,6 +102,10 @@
 \newcommand{\guicmd}[1]{\textcolor{command}{\texttt{«#1»}}} % LAMMPS-GUI commands in French quotation monopace
 \newcommand{\dwlcmd}[1]{\textcolor{download}{\texttt{#1}}} % downloadable files in monopace blue
 
+% The DisableLigatures command above turns the longer dash (--) into two dashes.
+% This works around it by using \lammpsgui{} instead and making the longer dash explicit.
+\newcommand{\lammpsgui}{\textsf{LAMMPS\textendash GUI}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% IMPORTANT USER CONFIGURATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -181,11 +185,11 @@
   tutorials address more advanced molecular simulation techniques,
   specifically the use of a reactive force field, grand canonical Monte Carlo,
   enhanced sampling, and REACTER protocol.
-  In addition, we introduce LAMMPS--GUI, an enhanced graphical text
+  In addition, we introduce \lammpsgui{}, an enhanced graphical text
   editor with syntax highlighting, command completion, context help,
   plus built--in visualization and plotting facilities, and the ability
   to run LAMMPS directly on the input file while tracking its progress.
-  LAMMPS--GUI is used as the primary tool in the tutorials to edit
+  \lammpsgui{} is used as the primary tool in the tutorials to edit
   inputs, run LAMMPS, extract data, and visualize the simulated systems.
 \end{abstract}
 
@@ -314,12 +318,12 @@ of water molecules is tracked over time~\cite{gissinger2020reacter}.
 
 This set of tutorials assumes no prior knowledge of the LAMMPS software
 itself.  To complete the tutorials, a text editor and a suitable LAMMPS
-executable are required.  We use LAMMPS--GUI~\cite{lammps_gui_docs}
+executable are required.  We use \lammpsgui{}~\cite{lammps_gui_docs}
 here, as it offers features that make it particularly convenient for
 tutorials, but other console or graphical text editors, such as GNU nano,
 vi/vim, Emacs, Notepad, Gedit, and Visual Studio Code, can also be
 used.  LAMMPS can be executed either directly from
-LAMMPS--GUI (\hyperref[using-lammps-gui-label]{Appendix~\ref{using-lammps-gui-label}})
+\lammpsgui{} (\hyperref[using-lammps-gui-label]{Appendix~\ref{using-lammps-gui-label}})
 or from the command line (\hyperref[command-line-label]{Appendix~\ref{command-line-label}}),
 the latter of which requires some familiarity with executing commands
 from a terminal or command-line prompt.
@@ -341,18 +345,17 @@ and molecular simulations~\cite{sklogwiki_main_page}.
 
 \subsection{Software/system requirements}
 
-The LAMMPS release version 29Aug2024~\cite{lammps_code} and the
-matching LAMMPS--GUI software version 1.6.11 are required to follow the
-tutorials, as they include features that were first introduced in these versions.
-For Linux (x86\_64 CPU), macOS (BigSur or later), and Windows (10
-and 11) you can download a precompiled LAMMPS package from the LAMMPS
-release page on GitHub
-(\href{https://github.com/lammps/lammps/releases}{github.com/lammps/lammps/releases}).
-Select a package with `GUI' in the file name, which includes
-both LAMMPS--GUI and a LAMMPS console executable.  These
-precompiled packages are designed to be portable, and therefore omit support for
-parallel execution with MPI.  Instructions for installing LAMMPS--GUI and
-using its most relevant features for the tutorials are provided in 
+The LAMMPS release version 29Aug2024~\cite{lammps_code} and the matching
+\lammpsgui{} software version 1.6.11 are required to follow the
+tutorials, as they include features that were first introduced in these
+versions.  For Linux (x86\_64 CPU), macOS (BigSur or later), and Windows
+(10 and 11) you can download a precompiled LAMMPS package from the
+LAMMPS release page on GitHub~\cite{lammps_github_release}.
+Select a package with `GUI' in the file name, which includes both,
+\lammpsgui{} and a LAMMPS command line executable.  These precompiled
+packages are designed to be portable, and therefore omit support for
+parallel execution with MPI.  Instructions for installing \lammpsgui{}
+and using its most relevant features for the tutorials are provided in
 \hyperref[using-lammps-gui-label]{Appendix~\ref{using-lammps-gui-label}}.
 
 LAMMPS versions are generally backward compatible, meaning that old
@@ -360,12 +363,12 @@ input files typically work with newer versions of LAMMPS.  However,
 forward compatibility is not as strong, so
 newer input files may not work with older versions.  As a result, it is
 usually possible to follow this tutorial with more recent releases of
-LAMMPS--GUI and LAMMPS, though older versions may require some minor adjustments.
+\lammpsgui{} and LAMMPS, though older versions may require some minor adjustments.
 These tutorials will be periodically updated to ensure compatibility
 and take advantage of new features in the latest stable version of LAMMPS.
 
 For some tutorials, external tools are required for plotting and
-visualization, as the corresponding functionality in LAMMPS--GUI is
+visualization, as the corresponding functionality in \lammpsgui{} is
 limited.  Suitable external tools for plotting include Python with
 Pandas/Matplotlib~\cite{van1995python,hunter2007Matplotlib}, XmGrace,
 Gnuplot, Microsoft Excel, and LibreOffice Calc.  For visualization,
@@ -377,9 +380,9 @@ and OVITO~\cite{ovito_home,ovito_paper}.
 % SG: I placed a reference of Appendix B before, so I dont think that sentence is
 % necessary here.
 
-\subsection{About LAMMPS--GUI}
+\subsection{About \lammpsgui{}}
 
-LAMMPS--GUI is a graphical text editor, enhanced for editing LAMMPS input
+\lammpsgui{} is a graphical text editor, enhanced for editing LAMMPS input
 files and linked to the LAMMPS library, allowing it to run LAMMPS
 directly.  The text editor functions similarly to other graphical editors,
 such as Notepad or Gedit, but offers the following enhancements specifically for LAMMPS:
@@ -403,8 +406,8 @@ such as Notepad or Gedit, but offers the following enhancements specifically for
   \item Use of wizard dialogs to set up tutorials
 \end{itemize}
 \hyperref[using-lammps-gui-label]{Appendix~\ref{using-lammps-gui-label}}
-contains basic instructions for installation and using LAMMPS--GUI with
-the tutorials presented here.  A complete description of all LAMMPS--GUI
+contains basic instructions for installation and using \lammpsgui{} with
+the tutorials presented here.  A complete description of all \lammpsgui{}
 features can be found in the LAMMPS manual~\cite{lammps_gui_docs}.
 
 \section{Content and links}
@@ -416,11 +419,11 @@ and inputs required to follow the tutorials are available from a
 dedicated GitHub organization account,
 \href{https://github.com/lammpstutorials}{github.com/lammpstutorials}.
 These files can also be downloaded by clicking \guicmd{Start LAMMPS Tutorial X}
-(where \texttt{X} = 1...8) from the \guicmd{Tutorials} menu of LAMMPS--GUI.
+(where \texttt{X} = 1...8) from the \guicmd{Tutorials} menu of \lammpsgui{}.
 
 In the following, all LAMMPS input or console commands are formatted
 with a \lmpcmd{colored background}.  Keyboard shortcuts and
-file names are formatted in \flecmd{monospace}, and LAMMPS--GUI options and menus
+file names are formatted in \flecmd{monospace}, and \lammpsgui{} options and menus
 are displayed in \guicmd{quoted monospace}.
 % S.G.: I removed "folder names" because all folders will eventually be removed (TO CONTROL BEFORE SUBMITTING)
 % S.G.: I removed "Section titles" as well because it seems to be using a different style
@@ -451,10 +454,10 @@ To run a simulation using LAMMPS, you need to write an input script containing
 a series of commands for LAMMPS to execute.  For clarity, the
 input scripts for this tutorial will be divided into five categories,
 which will be filled out step by step.  To set up this tutorial, select
-\guicmd{Start LAMMPS Tutorial 1} from the \guicmd{Tutorials} menu of LAMMPS--GUI, and
+\guicmd{Start LAMMPS Tutorial 1} from the \guicmd{Tutorials} menu of \lammpsgui{}, and
 follow the instructions.  This will select (or create, if needed) a folder,
 place the initial input file \flecmd{initial.lmp} in it, and
-open the file in the LAMMPS--GUI editor.  The editor should display the
+open the file in the \lammpsgui{} editor.  The editor should display the
 following content:
 \begin{lstlisting}
 # PART A - ENERGY MINIMIZATION
@@ -465,7 +468,7 @@ following content:
 # 5) Run
 \end{lstlisting}
 Everything that appears after a hash symbol ($\#$) is a comment
-and ignored by LAMMPS.  LAMMPS--GUI will color such comments in red.
+and ignored by LAMMPS.  \lammpsgui{} will color such comments in red.
 These five categories are not required in every input script and do not
 necessarily need to be in that exact order.  For instance, the \lmpcmd{Settings}
 and the \lmpcmd{Visualization} categories could be inverted, or
@@ -525,7 +528,7 @@ to avoid confusion when sharing input files with other LAMMPS users.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GUI-1.png}
-\caption{A screenshot of the LAMMPS--GUI \guicmd{Editor} window during
+\caption{A screenshot of the \lammpsgui{} \guicmd{Editor} window during
   \hyperref[lennard-jones-label]{Tutorial 1}.  The coloring of the text
   is based on the syntax for LAMMPS input files.  The pop-up menu is the
   context menu for right-clicking on the \lmpcmd{atom\_style} line.}
@@ -533,7 +536,7 @@ to avoid confusion when sharing input files with other LAMMPS users.
 \end{figure}
 
 Each LAMMPS command is accompanied by extensive online documentation
-that details the different options for that command.  From the LAMMPS--GUI
+that details the different options for that command.  From the \lammpsgui{}
 editor buffer, you can access the documentation by
 right-clicking on a line containing a command (e.g.,~\lmpcmd{units lj}) and
 selecting \guicmd{View documentation for (\dots)}\,.  This action will
@@ -623,7 +626,7 @@ $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
 \centering
 \includegraphics[width=0.55\linewidth]{LJ}
 \caption{The binary mixture simulated in \hyperref[lennard-jones-label]{Tutorial 1}.
-  This image was generated directly from the LAMMPS--GUI.  Atoms of
+  This image was generated directly from the \lammpsgui{}.  Atoms of
   type 1 are represented as small red spheres, atoms of type 2 as large
   green spheres, and the edges of the simulation box are represented as blue sticks.}
 \label{fig:LJ}
@@ -650,7 +653,7 @@ without actually running the simulation.  The \lmpcmd{post no} option disables
 the post-run summary and statistics output.
 
 You can now run LAMMPS.  The simulation should finish quickly, and with the default
-settings, LAMMPS--GUI will open two windows: one displaying the console
+settings, \lammpsgui{} will open two windows: one displaying the console
 output and another with a chart.  The \guicmd{Output} window will display information from
 the executed commands, including the total energy and pressure at step 0,
 as specified by the thermodynamic data request.  Since no actual simulation
@@ -688,9 +691,9 @@ energy. % SG: I don't think that its true, its rather the algorithm
 Note that, except for trivial systems, minimization algorithms will find a
 local minimum rather than the global minimum.
 
-Run the minimization and observe that LAMMPS--GUI captures the output
+Run the minimization and observe that \lammpsgui{} captures the output
 and update the chart in real time (see Fig.~\ref{fig:chart-log}).  This run executes quickly (depending
-on your computer's capabilities), but LAMMPS--GUI may fail to capture some
+on your computer's capabilities), but \lammpsgui{} may fail to capture some
 of the thermodynamic data.  In that
 case, use the \guicmd{Preferences} dialog to reduce the data update
 interval and switch to single-threaded, unaccelerated execution in the
@@ -701,7 +704,7 @@ fresh, resetting the system and re-executing the script from the beginning.
 \centering
 \includegraphics[width=0.49\linewidth]{chart-1}
 \includegraphics[width=0.497\linewidth]{output-1}
-\caption{\guicmd{Charts} (left) and \guicmd{Output} (right) windows of LAMMPS--GUI
+\caption{\guicmd{Charts} (left) and \guicmd{Output} (right) windows of \lammpsgui{}
   after performing the minimization simulation of \hyperref[lennard-jones-label]{Tutorial 1}.}
   % SG: TODO - retake the snapshot with the same data as the next figure
 \label{fig:chart-log}
@@ -943,7 +946,7 @@ minimization step, eliminating the need to repeat the system creation and minimi
 
 Run the \flecmd{improved.min.lmp} file using LAMMPS.  At the end of the simulation,
 a file called \flecmd{improved.min.data} is created.  You can view the contents
-of this file from the LAMMPS--GUI, by right-clicking on the file name in
+of this file from the \lammpsgui{}, by right-clicking on the file name in
 the editor and selecting the entry \guicmd{View file `improved.min.data'}.
 
 The created \flecmd{.data} file contains all the information necessary to
@@ -1160,7 +1163,7 @@ variables \lmpcmd{n1\_in} and \lmpcmd{n2\_in}, you can track the number
 of atoms in each region as a function of time
 (Fig.~\ref{fig:mixing}\,a).  To view their evolution, select the entries
 \guicmd{v\_n1\_in} or \guicmd{v\_n2\_in} in the \guicmd{Select data} drop-down
-menu in the \guicmd{Charts} window of LAMMPS--GUI.
+menu in the \guicmd{Charts} window of \lammpsgui{}.
 
 In addition, as the mixing progresses, the average coordination number
 between atoms of types 1 and 2 increases from about $0.01$ to $0.04$
@@ -1226,7 +1229,7 @@ second part, a reactive force field (called AIREBO
 \cite{stuart2000reactive}) is used, which allows chemical bonds to break under large strain.
 
 To set up this tutorial, select \guicmd{Start Tutorial 2} from the
-\guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.  This will
+\guicmd{Tutorials} menu of \lammpsgui{} and follow the instructions.  This will
 select a folder, create one if necessary, and place several files into it.
 The initial input file, set up for a single-point energy
 calculation, will also be loaded into the editor under the name
@@ -1751,7 +1754,7 @@ A rectangular box of water is created and equilibrated at ambient temperature an
 pressure.  The SPC/Fw water model is used~\cite{wu2006flexible}, which is
 a flexible variant of the rigid SPC (simple point charge) model~\cite{berendsen1981interaction}.
 To set up this tutorial, select \guicmd{Start Tutorial 3} from the
-\guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.
+\guicmd{Tutorials} menu of \lammpsgui{} and follow the instructions.
 The editor should display the following content corresponding to \flecmd{water.lmp}:
 \begin{lstlisting}
 units real
@@ -1915,7 +1918,7 @@ The binary file created by the \lmpcmdnote{write\_restart} command contains the
 complete state of the simulation, including atomic positions, velocities, and
 box dimensions (similar to \lmpcmdnote{write\_data}), but also the groups,
 the compute, or the \lmpcmdnote{atom\_style}.  Use the \guicmd{Inspect Restart}
-option of the LAMMPS--GUI to vizualize the content saved in \flecmd{water.restart}.
+option of the \lammpsgui{} to vizualize the content saved in \flecmd{water.restart}.
 \end{note}
 
 \begin{figure}
@@ -2186,7 +2189,7 @@ desired temperature and pressure.
 \paragraph{System generation}
 
 To set up this tutorial, select \guicmd{Start Tutorial 4} from the
-\guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.
+\guicmd{Tutorials} menu of \lammpsgui{} and follow the instructions.
 The editor should display the following content corresponding to \flecmd{create.lmp}:
 \begin{lstlisting}
 boundary p p f
@@ -2783,7 +2786,7 @@ The first action we need to perform here is to relax the structure with ReaxFF,
 which we are gonna do using molecular dynamics.  As always, to make sure that the system
 equilibrates nicely, we will us track certain parameters over time.  To set up this
 tutorial, select \guicmd{Start Tutorial 5} from the
-\guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.
+\guicmd{Tutorials} menu of \lammpsgui{} and follow the instructions.
 The editor should display the following content corresponding to \flecmd{relax.lmp}:
 \begin{lstlisting}
 units real
@@ -3152,7 +3155,7 @@ potential of water within a nanoporous SiO$_2$ structure.
 \subsubsection{Generation of the silica block}
 
 \noindent To begin this tutorial, select \guicmd{Start Tutorial 6} from the
-\guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.
+\guicmd{Tutorials} menu of \lammpsgui{} and follow the instructions.
 The editor should display the following content corresponding to \flecmd{generate.lmp}:
 \begin{lstlisting}
 units metal
@@ -3597,7 +3600,7 @@ favorable area to explore.
 \paragraph{Basic LAMMPS parameters}
 
 To begin this tutorial, select \guicmd{Start Tutorial 7} from the
-\guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.
+\guicmd{Tutorials} menu of \lammpsgui{} and follow the instructions.
 The editor should display the following content corresponding to \flecmd{free-energy.lmp}:
 \begin{lstlisting}
 variable sigma equal 3.405
@@ -3986,7 +3989,7 @@ protocol relies on the use of a \textit{classical} force field.
 \subsubsection{Creating the system}
 
 To begin this tutorial, select \guicmd{Start Tutorial 8} from the
-\guicmd{Tutorials} menu of LAMMPS--GUI and follow the instructions.
+\guicmd{Tutorials} menu of \lammpsgui{} and follow the instructions.
 The editor should display the following content corresponding to \flecmd{mixing.lmp}:
 \begin{lstlisting}
 units real
@@ -4273,7 +4276,7 @@ S.G. conceived and wrote the original online tutorials and underlying Sphinx doc
 for \href{https://lammpstutorials.github.io}{lammpstutorials.github.io}.
 J.G. is the principal author of \lmpcmd{fix bond/react} and \lmpcmd{type labels}
 support in LAMMPS.  He revised the tutorials to incorporate type labels and wrote Tutorial 8.
-A.K. developed the LAMMPS--GUI software and assisted in revising the
+A.K. developed the \lammpsgui{} software and assisted in revising the
 tutorials for use with it.  All authors participated in the revision and finalization
 of the manuscript.
 
@@ -4298,7 +4301,7 @@ POs~2149742 and 2407526.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{appendices}
-\section{Using LAMMPS--GUI}
+\section{Using \lammpsgui{}}
 \label{using-lammps-gui-label}
 
 \begin{note}
@@ -4378,10 +4381,10 @@ in the command line, either in a Command Prompt or Terminal window.
 
 \subsection{Opening, Editing, and Saving Files}
 
-LAMMPS--GUI can be launched from the command line, as explained above, where you
+\lammpsgui{} can be launched from the command line, as explained above, where you
 can either launch it without arguments or provide one file name as an argument.  All
 other arguments will be ignored.  For example:
-\begin{lstlisting}
+\begin{lstlisting}[language=tcl]
 lammps-gui input.lmp
 \end{lstlisting}
 Files can also be opened from the ``File'' menu.  You can select a
@@ -4403,9 +4406,9 @@ commands, there will be completion pop-ups for their
 keywords or when a filename is expected, in which case,
 the pop-up will list files in the current folder.
 
-As soon as LAMMPS--GUI recognizes a command line, it applies syntax
+As soon as \lammpsgui{} recognizes a command line, it applies syntax
 highlighting according to built-in categories.  This can help
-detect typos, since those may cause LAMMPS--GUI not to
+detect typos, since those may cause \lammpsgui{} not to
 recognize the syntax and thus not apply or partially apply
 the syntax highlighting.  When you press the \texttt{Tab} key, the line will be
 reformatted.  Consistent formatting can improve the readability of
@@ -4418,7 +4421,7 @@ buffer can be saved by selecting ``Save'' or ``Save As...'' from the
 of the status bar, or use the \texttt{Ctrl--S} keyboard shortcut.
 
 \begin{note}
-When LAMMPS--GUI opens a file, it will \emph{switch} the working directory
+When \lammpsgui{} opens a file, it will \emph{switch} the working directory
 to the folder that contains the input file.  The same happens when saving to
 a different folder than the current working directory.  The current working
 directory can be seen in the status bar at the bottom right.  This is important
@@ -4431,7 +4434,7 @@ which are typically expected to be in the same folder as the input file.
 %the ``Save'' or ``Save As'' entry in the ``File'' menu, using the
 %\texttt{Ctrl--S} keyboard shortcut or by clicking on the ``Save'' icon
 %at the bottom left of the \textit{Editor} window status bar.  For
-%running LAMMPS in LAMMPS--GUI it is not required to save the buffer.
+%running LAMMPS in \lammpsgui{} it is not required to save the buffer.
 %The current contents of the buffer will be passed on to LAMMPS.
 %However, if you prefer to have your editor buffer automatically saved
 %before launching a run or exiting the LAMMPS-GUI, there is a setting for this
@@ -4442,7 +4445,7 @@ which are typically expected to be in the same folder as the input file.
 % mention no log file -> Output window -> Save to file
 % SG: the "no log file" is already specified in the "The Output Window" subsection, so may be unecessary?
 
-From within the LAMMPS--GUI main window, LAMMPS can be started either from
+From within the \lammpsgui{} main window, LAMMPS can be started either from
 the \guicmd{Run} menu by selecting the \guicmd{Run LAMMPS from Editor Buffer} entry,
 using the keyboard shortcut Ctrl-Enter (Command-Enter on macOS), or by clicking the
 green \guicmd{Run} button in the status bar.  While LAMMPS is running, a message on
@@ -4485,13 +4488,13 @@ by clicking the \guicmd{lens} button located next to the data drop-down menu.
 \subsection{Preferences}
 
 The Preferences dialog allows customization of the behavior and appearance of
-LAMMPS--GUI.  Among other options:
+\lammpsgui{}.  Among other options:
 \begin{itemize}
 \item In the \guicmd{General Settings} tab, the \guicmd{Data update interval} setting
 allows you to define the time interval, in milliseconds, between data updates during
 a LAMMPS run.  By default, the data for the \guicmd{Charts} and \guicmd{Output}
 windows is updated every 10 milliseconds.  Set this to 100 milliseconds or more
-if LAMMPS--GUI consumes too many resources during a run.  The \guicmd{Charts update interval}
+if \lammpsgui{} consumes too many resources during a run.  The \guicmd{Charts update interval}
 controls the time interval between redrawing the plots in the \guicmd{Charts} window, in milliseconds.
 \item The \guicmd{Accelerators} tab enables you to select an accelerator package
 for LAMMPS to use.  Only settings supported by the LAMMPS library and local hardware
@@ -4499,7 +4502,7 @@ are available.  The \guicmd{Number of threads} field allows you to set the maxim
 number of threads for accelerator packages that utilize threading.
 \item The \guicmd{Editor Settings} tab allows you to adjust the settings of the editor
 window.  Select the \guicmd{Auto-save on Run and Quit} option to automatically save changes
-made to the \flecmd{.lmp} file upon closing LAMMPS--GUI.
+made to the \flecmd{.lmp} file upon closing \lammpsgui{}.
 \end{itemize}
 See Ref.\,\citenum{lammps_gui_docs} for a full list of options.
 
