@@ -7,20 +7,19 @@
 free-sampling.lmp
 umbrella-sampling.meta
 umbrella-sampling.lmp
-wham
 
 # 2) solution files
 # only downloaded on request
-free-sampling.dat
-free-sampling.lmp
-free-sampling.log
-free-sampling.png
-umbrella-sampling.dat
-umbrella-sampling.lmp
-umbrella-sampling.log
-umbrella-sampling.png
-wham
-umbrella-sampling.meta
+solution/free-sampling.dat
+solution/free-sampling.lmp
+solution/free-sampling.log
+solution/free-sampling.png
+solution/umbrella-sampling.dat
+solution/umbrella-sampling.lmp
+solution/umbrella-sampling.log
+solution/umbrella-sampling.png
+solution/wham
+solution/umbrella-sampling.meta
 
 # 3) support files
-
+wham
