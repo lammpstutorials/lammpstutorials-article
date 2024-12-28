@@ -7,35 +7,34 @@
 relax.lmp
 deform.lmp
 decorate.lmp
-reaxCHOFe.inc
 silica.data
 
 # 2) solution files
 # only downloaded on request
-decorate-H.histo
-decorate.lmp
-decorate.log
-decorate-O.histo
-decorate.png
-decorate-Si.histo
-decorate.species
-deform.data
-deform.lmp
-deform.log
-deform-mod.data
-deform-O.histo
-deform.png
-deform-Si.histo
-deform.species
-reaxCHOFe.inc
-relax.data
-relax.lmp
-relax.log
-relax-O.histo
-relax.png
-relax-Si.histo
-relax.species
-silica.data
+solution/decorate-H.histo
+solution/decorate.lmp
+solution/decorate.log
+solution/decorate-O.histo
+solution/decorate.png
+solution/decorate-Si.histo
+solution/decorate.species
+solution/deform.data
+solution/deform.lmp
+solution/deform.log
+solution/deform-mod.data
+solution/deform-O.histo
+solution/deform.png
+solution/deform-Si.histo
+solution/deform.species
+solution/reaxCHOFe.inc
+solution/relax.data
+solution/relax.lmp
+solution/relax.log
+solution/relax-O.histo
+solution/relax.png
+solution/relax-Si.histo
+solution/relax.species
+solution/silica.data
 
 # 3) support files
-
+reaxCHOFe.inc

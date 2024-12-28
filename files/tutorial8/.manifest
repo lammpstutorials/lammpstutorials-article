@@ -20,25 +20,25 @@ styrene.mol
 
 # 2) solution files
 # only downloaded on request
-CNT.data
-mixing.log
-mixing.restart
-M-M_pre.mol
-M-P_post.mol
-M-P.rxnmap
-polymerize.log
-P-P_post.mol
-P-P.rxnmap
-mixing.data
-mixing.lmp
-mixing.png
-M-M_post.mol
-M-M.rxnmap
-M-P_pre.mol
-polymerize.data
-polymerize.lmp
-polymerize.png
-P-P_pre.mol
-styrene.mol
+solution/CNT.data
+solution/mixing.log
+solution/mixing.restart
+solution/M-M_pre.mol
+solution/M-P_post.mol
+solution/M-P.rxnmap
+solution/polymerize.log
+solution/P-P_post.mol
+solution/P-P.rxnmap
+solution/mixing.data
+solution/mixing.lmp
+solution/mixing.png
+solution/M-M_post.mol
+solution/M-M.rxnmap
+solution/M-P_pre.mol
+solution/polymerize.data
+solution/polymerize.lmp
+solution/polymerize.png
+solution/P-P_pre.mol
+solution/styrene.mol
 
 # 3) folders not known to LAMMPS GUI will be skipped
