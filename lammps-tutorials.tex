@@ -2347,7 +2347,7 @@ comparison, the water-water energy $\epsilon_\text{1-1}$ is only $0.185199\,\tex
 Therefore, to make the walls less hydrophilic, the value of $\epsilon_\text{O-WALL}$
 was reduced.
 
-The \flecmd{parameters.inc} file also contains the following two lines:
+Finally, the \flecmd{parameters.inc} file contains the following two lines:
 \begin{lstlisting}
 bond_coeff O-H 0 0.9572
 angle_coeff H-O-H 0 104.52
@@ -2732,17 +2732,17 @@ by the \lmpcmd{ave/chunk} commands, and three \flecmd{.dat} files are created fo
 the water, the walls, and the ions, respectively.  With values of \lmpcmd{10 15000 200000},
 the velocity \lmpcmd{vx} will be evaluated every 10 steps during the final 150,000
 steps of the simulations.  The result will be averaged and printed only once at the 200,000\,th step.
-Run the simulation using LAMMPS.  The averaged velocity and density
-profiles of the fluid are plotted in Fig.~\ref{fig:NANOSHEAR-profiles}.
-As expected for such Couette flow geometry, the fluid velocity increases linearly along $z$.
+Run the simulation using LAMMPS.  The averaged velocity
+profile for the fluid is plotted in Fig.~\ref{fig:NANOSHEAR-profiles}.
+As expected for such Couette flow geometry, the fluid velocity increases
+linearly along $z$, and is equal to the walls velocities at the fluid-solid
+interfaces (no-slip boundary conditions).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{NANOSHEAR-profiles}
-\caption{a) Water density $\rho$ along the $z$-axis as
-simulated in \hyperref[sheared-confined-label]{Tutorial 4}.
-b) Velocity profiles for water (blue) and walls
-(orange) along the $z$-axis.}
+\caption{Velocity profiles for water (blue) and walls (orange) along the $z$-axis as
+simulated in \hyperref[sheared-confined-label]{Tutorial 4}.}
 % The line is a linear fit assuming
 % that the pore size is $h = 1.8\,\text{nm}$.}
 \label{fig:NANOSHEAR-profiles}
@@ -2750,13 +2750,22 @@ b) Velocity profiles for water (blue) and walls
 
 From the force applied by the fluid on the solid, one can extract the stress
 within the fluid, which enables the measurement of its viscosity $\eta$
-according to $\eta = \tau / \dot{\gamma}$ where $\tau$ is the stress applied by
+according to
+\begin{equation}
+\eta = \tau / \dot{\gamma}
+\label{eq:eta}
+\end{equation}
+where $\tau$ is the stress applied by
 the fluid on the shearing wall, and $\dot{\gamma}$ the shear rate
 \cite{gravelle2021violations}.  Here, the shear rate is
-approximately $\dot{\gamma} = 16 \cdot 10^9\,\text{s}^{-1}$, and using a
-surface area of $A = 6 \cdot 10^{-18}\,\text{m}^2$, one obtains an estimate for
-the shear viscosity for the confined fluid of $\eta = 6.6\,\text{mPa.s}$.  The
-viscosity calculated at such a high shear rate may differ from the expected
+approximately $\dot{\gamma} = 20 \cdot 10^9\,\text{s}^{-1}$ (Fig.~\ref{fig:NANOSHEAR-profiles}),
+the average force on each wall is given by \lmpcmd{f\_mysf1[1]} and \lmpcmd{f\_mysf2[1]}
+and is approximately $2.7\,\mathrm{kcal/mol/\AA}$ in magnitude.  Using a surface area
+for the walls of $A = 6 \cdot 10^{-18}\,\text{m}^2$, one obtains an estimate for
+the shear viscosity for the confined fluid of $\eta = 3.1\,\text{mPa.s}$ using Eq.~\eqref{eq:eta}. 
+
+\begin{note}
+The viscosity calculated at such a high shear rate may differ from the expected
 \emph{bulk} value.  In general, it is recommended to use a lower value for the
 shear rate.  Note that for lower shear rates, the ratio of noise-to-signal is
 larger, and longer simulations are needed.  Another important point to consider
@@ -2764,6 +2773,7 @@ is that the viscosity of a fluid next to a solid surface is typically larger
 than in bulk due to interaction with the walls~\cite{wolde-kidanInterplayInterfacialViscosity2021}.
 Therefore, one expects the present simulation to yield a viscosity that is slightly
 higher than what would be measured in the absence of walls.
+\end{note}
 
 \subsection{Tutorial 5: Reactive silicon dioxide}
 \label{reactive-silicon-dioxide-label}
