@@ -1872,7 +1872,7 @@ the three dimensions of the box will be re-scaled simultaneously.
 Let us output the system into images by adding the following commands to \flecmd{water.lmp}:
 \begin{lstlisting}
 dump viz all image 250 myimage-*.ppm type type &
-  shiny 0.1 box no 0.01 view 0 90 zoom 3 size 1000 500
+  shiny 0.1 box no 0.01 view 0 90 zoom 3 size 1000 600
 dump_modify viz backcolor white &
   acolor OW red acolor HW white &
   adiam OW 3 adiam HW 1.5
@@ -1888,11 +1888,12 @@ variable rho equal ${myoxy}*${M}/(v_myvol*${NA}*${Atom}^3)
 thermo 500
 thermo_style custom step temp etotal v_myvol v_rho
 \end{lstlisting}
-The variable \lmpcmd{myoxy} represents the number of atoms divided by 3 ($N_\text{oxy}$),
-which corresponds to the number of molecules, and the variable \lmpcmd{myrho} is
-the density in kg/mol:
+Here, several variables are defined and used for converting the units of the
+density in kg/mol:  The variable \lmpcmd{myoxy} represents the number of
+atoms divided by 3,  which corresponds to the number of molecules, $N_\text{H2O}$,
+and the variable \lmpcmd{myrho} is the density in kg/mol:
 \begin{equation}
-\rho = \dfrac{N_\text{oxy}}{V N_\text{A}},
+\rho = \dfrac{N_\text{H2O}}{V N_\text{A}},
 \end{equation}
 where $V$ is the volume in m$^3$, $N_\text{A}$ the Avogadro number, and
 $M = 0.018$\,kg/mol the molar mass of water.
@@ -1946,10 +1947,9 @@ the GROMOS 54A7 force field~\cite{schmid2011definition} (Fig.~\ref{fig:PEG-in-va
 
 \begin{figure}
 \centering
-\includegraphics[width=0.45\linewidth]{PEG-in-vacuum}
+\includegraphics[width=0.8\linewidth]{PEG-in-vacuum}
 \caption{The PEG molecule from \hyperref[all-atom-label]{Tutorial 3}.
-The carbon atoms are in gray, the oxygen
-atoms in red, and the hydrogen atoms in white.}
+The carbon atoms are in gray, the oxygen atoms in red, and the hydrogen atoms in white.}
 \label{fig:PEG-in-vacuum}
 \end{figure}
 
@@ -1975,7 +1975,7 @@ Using the molecule template for the polymer called
 let us create a single molecule in the middle of the box by adding the following
 commands to \flecmd{merge.lmp}:
 \begin{lstlisting}
-molecule pegmol mol.mol
+molecule pegmol peg.mol
 create_atoms 0 single 0 0 0 mol pegmol 454756
 \end{lstlisting}
 Let us create a group for the atoms of the PEG (the previously created
@@ -2011,7 +2011,7 @@ Let us create images of the systems:
 \begin{lstlisting}
 dump viz all image 250 myimage-*.ppm type &
   type shiny 0.1 box no 0.01 &
-  view 0 90 zoom 3 fsaa yes bond atom 0.8 size 1000 500
+  view 0 90 zoom 3.3 fsaa yes bond atom 0.8 size 1100 600
 dump_modify viz backcolor white &
   acolor OW red acolor HW white &
   acolor OE darkred acolor OAlc darkred &
@@ -2028,7 +2028,7 @@ final state to a \lmpcmd{.restart} file.  Add the following lines to the data fi
 timestep 1.0
 run 10000
 
-write_restart mix.restart
+write_restart merge.restart
 \end{lstlisting}
 Run the simulation using LAMMPS.  From the outputs, you can make
 sure that the temperature remains close to the
@@ -2077,7 +2077,7 @@ Add the following \lmpcmd{dump} command to create images of the system:
 \begin{lstlisting}
 dump viz all image 250 myimage-*.ppm type &
   type shiny 0.1 box no 0.01 &
-  view 0 90 zoom 3 fsaa yes bond atom 0.8 size 1000 500
+  view 0 90 zoom 3.3 fsaa yes bond atom 0.8 size 1100 600
 dump_modify viz backcolor white &
   acolor OW red acolor HW white &
   acolor OE darkred acolor OAlc darkred &
@@ -2139,7 +2139,7 @@ time indicates that the PEG quickly adjusts to the external force
 (Fig.~\ref{fig:PEG-distance}\,a).  Additionally, from the values of the dihedral angles
 printed in the \flecmd{pull.dat} file, you can create a histogram
 of dihedral angles for a specific type.  For example, the angle $\phi$ for dihedrals
-of type 1 (C-C-OE-C) is shown in Fig.~\ref{fig:PEG-distance}\,b. % SG: is it type 1 or 2?
+of type 1 (C-C-OE-C) is shown in Fig.~\ref{fig:PEG-distance}\,b.
 
 \begin{figure}
 \centering
@@ -2155,8 +2155,8 @@ as simulated during \hyperref[all-atom-label]{Tutorial 3}.}
 \caption{a) Evolution of
 the radius of gyration $R_\text{gyr}$ of the PEG molecule
 from \hyperref[all-atom-label]{Tutorial 3}, with the force
-applied starting at $t = 15\,\text{ps}$.  b) Histograms of the dihedral angles of type 2
-in the absence (orange) and in the presence (blue) of the applied force.} % SG: is it type 1 or 2?
+applied starting at $t = 15\,\text{ps}$.  b) Histograms of the dihedral angles of type 1
+in the absence (orange) and in the presence (blue) of the applied force.}
 \label{fig:PEG-distance}
 \end{figure}
 
