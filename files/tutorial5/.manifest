@@ -4,10 +4,10 @@
 ##############################################################################
 # 1) input file templates and data files
 # the first file will be automatically loaded
-decorate.lmp
-deform.lmp
-reaxCHOFe.inc
 relax.lmp
+deform.lmp
+decorate.lmp
+reaxCHOFe.inc
 silica.data
 
 # 2) solution files

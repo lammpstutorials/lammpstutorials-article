@@ -4,8 +4,8 @@
 ##############################################################################
 # 1) input file templates
 # the first file will be automatically loaded
-CNT.data
 mixing.lmp
+CNT.data
 M-M_post.mol
 M-M_pre.mol
 M-M.rxnmap
@@ -16,7 +16,6 @@ polymerize.lmp
 P-P_post.mol
 P-P_pre.mol
 P-P.rxnmap
-solution
 styrene.mol
 
 # 2) solution files

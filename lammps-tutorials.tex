@@ -1294,11 +1294,16 @@ the force constants.
 
 The \lmpcmd{read\_data} command imports the
 \href{\filepath tutorial2/unbreakable.data}{\dwlcmd{unbreakable.data}}
-file, which contains information about the box
-size, atom positions, as well as the identity of the atoms that are
+file that should have been downloaded next
+to \lmpcmd{unbreakable.lmp} during the tutorial setup. This file
+contains information about the box size, atom positions, as well as the
+identity of the atoms that are
 linked by \lmpcmd{bonds}, \lmpcmd{angles}, \lmpcmd{dihedrals}, and
-\lmpcmd{impropers} interactions.  This file was created using VMD and TopoTools
-\cite{kohlmeyer2017topotools}.  The format details of the
+\lmpcmd{impropers} interactions. It was created using VMD and TopoTools
+\cite{kohlmeyer2017topotools}.
+
+\begin{note}
+The format details of the
 different sections in a data file change with different settings.  In
 particular, the \lmpcmd{Atoms} section may have a different number of
 columns, or the columns may represent different properties when the
@@ -1307,14 +1312,16 @@ VMD and TopoTools will add a comment (here \lmpcmd{\# molecular}) to the
 \lmpcmd{Atoms} header line in the data files that indicates the intended
 \lmpcmd{atom\_style}.  LAMMPS will print a warning when the chosen atom
 style does not match what is written in that comment.
+\end{note}
 
-This data file does not contain any sections with potential parameters; thus,
+The \flecmd{.data} file does not contain any sections with potential parameters; thus,
 we need to specify the parameters of both the bonded and
 non-bonded potentials.  The parameters we use are taken
 from the OPLS-AA (Optimized Potentials for Liquid Simulations-All-Atom)
 force field~\cite{jorgensenDevelopmentTestingOPLS1996}, and are given
-in a separate \lmpcmd{unbreakable.inc} file.  This file must be placed within the same
-directory as the input file \flecmd{unbreakable.lmp}, and contains the following lines:
+in a separate \lmpcmd{unbreakable.inc} file (also downloaded during
+the tutorial setup).  This file - that must be placed
+next to \flecmd{unbreakable.lmp} - contains the following lines:
 \begin{lstlisting}
 pair_coeff 1 1 0.066 3.4
 bond_coeff 1 469 1.4
@@ -1337,19 +1344,22 @@ $U_\theta = k_\theta ( \theta - \theta_0)^2$.  The
 \lmpcmd{dihedral\_coeff} and \lmpcmd{improper\_coeff} define the potentials
 for the constraints between 4 atoms.
 
+\begin{note}
 Rather than copying the contents of the file into the input, we
 incorporate it using the \lmpcmd{include} command.  Using \lmpcmd{include} allows
 us to conveniently reuse the parameter settings
 in other inputs or switch them with others.  This will become more general
 when using type labels, which is shown in the next
 tutorial~\cite{typelabel_paper}.
+\end{note}
 
 \paragraph{Prepare the initial state}
 
 In this tutorial, a deformation will be applied to the CNT by displacing
 the atoms located at its edges.  To achieve this, we will first isolate the
 atoms at the two edges and place them into groups named \lmpcmd{rtop} and
-\lmpcmd{rbot}.  Add the following lines to \flecmd{unbreakable.lmp}:
+\lmpcmd{rbot}.  Add the following lines to \flecmd{unbreakable.lmp},
+just before the \lmpcmd{run 0} command:
 \begin{lstlisting}
 group carbon_atoms type 1
 variable xmax equal bound(carbon_atoms,xmax)-0.5
@@ -1368,7 +1378,8 @@ bottom), $x_\text{min} > x > x_\text{max}$ (\lmpcmd{rmid}, for region middle),
 and $x > x_\text{max}$ (\lmpcmd{rtop}, for region top).
 
 Finally, let us define 3 groups of atoms corresponding to the atoms
-in each of the 3 regions by adding to \flecmd{unbreakable.lmp}:
+in each of the 3 regions by adding to \flecmd{unbreakable.lmp}
+just before the \lmpcmd{run 0} command:
 \begin{lstlisting}
 group cnt_top region rtop
 group cnt_bot region rbot
@@ -1394,6 +1405,7 @@ Run the simulation using LAMMPS.  The number of atoms in each group is given in
 the \guicmd{Output} window.  It is an important check to make sure that the number
 of atoms in each group corresponds to what is expected, as shown here:
 \begin{lstlisting}
+700 atoms in group carbon_atoms
 10 atoms in group cnt_top
 10 atoms in group cnt_bot
 680 atoms in group cnt_mid
@@ -1416,7 +1428,8 @@ and the middle panels in Fig.~\ref{fig:CNT-unbreakable}).
 
 \paragraph{The molecular dynamics}
 
-Let us give an initial temperature to the atoms of the group \lmpcmd{cnt\_mid}:
+Let us give an initial temperature to the atoms of the group \lmpcmd{cnt\_mid}
+by adding the following commands to \flecmd{unbreakable.lmp}:
 \begin{lstlisting}
 reset_atoms id sort yes
 velocity cnt_mid create 300 48455 mom yes rot yes
@@ -1434,7 +1447,7 @@ fix mynve1 cnt_top nve
 fix mynve2 cnt_bot nve
 fix mynvt cnt_mid nvt temp 300 300 100
 \end{lstlisting}
-The \lmpcmd{fix nve} are applied to the atoms of \lmpcmd{cnt\_top} and
+The \lmpcmd{fix nve} commands are applied to the atoms of \lmpcmd{cnt\_top} and
 \lmpcmd{cnt\_bot}, respectively, and will ensure that the positions of the atoms
 from these groups are recalculated at every step.  The \lmpcmd{fix nvt} does the
 same for the \lmpcmd{cnt\_mid} group, while also applying a Nos\'e-Hoover thermostat
@@ -1457,16 +1470,17 @@ the atoms of the edges will remain immobile during the simulation (or at least
 they would if no other command was applied to them).
 
 \begin{note}
-  The \lmpcmdnote{velocity set}
-  command imposes the velocity of a group of atoms at the start of a run but does
-  not enforce the velocity during the entire simulation.  When \lmpcmdnote{velocity set}
-  is used in combination with \lmpcmdnote{setforce 0 0 0}, as is the case here, the
-  atoms won't feel any force during the entire simulation.  According to the Newton
-  equation, no force means no acceleration, meaning that the initial velocity
-  will persist during the entire simulation, thus producing a constant velocity motion.
+The \lmpcmdnote{velocity set}
+command imposes the velocity of a group of atoms at the start of a run but does
+not enforce the velocity during the entire simulation.  When \lmpcmdnote{velocity set}
+is used in combination with \lmpcmdnote{setforce 0 0 0}, as is the case here, the
+atoms won't feel any force during the entire simulation.  According to the Newton
+equation, no force means no acceleration, meaning that the initial velocity
+will persist during the entire simulation, thus producing a constant velocity motion.
 \end{note}
 
 \paragraph{Outputs}
+
 Next, to measure the strain and stress applied to the CNT, let us create a
 variable for the distance $L_\text{cnt}$ between the two edges,
 as well as a variable $F_\text{cnt}$ for the force applied on the edges:
@@ -1487,7 +1501,8 @@ dump viz all image 500 myimage-*.ppm element type size &
 dump_modify viz pad 9 backcolor white adiam 1 0.85 bdiam 1 1.0
 \end{lstlisting}
 Let us run a small equilibration step to bring the system to the required
-temperature before applying any deformation:
+temperature before applying any deformation.  Replace the \lmpcmd{run 0 post no}
+command in \flecmd{unbreakable.lmp} with the following lines:
 \begin{lstlisting}
 compute Tmid cnt_mid temp
 thermo 100
@@ -1554,9 +1569,9 @@ be located.  When executed using Python, this .py file first imports
 the \flecmd{unbreakable.yaml} file.  Then, a certain pattern is
 identified and stored as a string character named `docs'.  The string is
 then converted into a list, and $F_\text{cnt}$ and $L_\text{cnt}$
-are extracted.  The stress and strain
-are then calculated, and the result is saved in a data file using the
-NumPy `savetxt' function.  `thermo[0]' can be used to access the
+are extracted.  The stress and strain are then calculated, and the result
+is saved in a data file named \flecmd{unbreakable.dat} using
+the NumPy `savetxt' function.  `thermo[0]' can be used to access the
 information from the first minimization run, and `thermo[1]' to access the
 information from the second MD run.  The data extracted from
 the \flecmd{unbreakable.yaml} file can then be used to plot the stress-strain
@@ -1601,13 +1616,11 @@ containing the parameters for AIREBO, and must be placed next
 to \lmpcmd{breakable.lmp}.
 
 \begin{note}
-  With the \lmpcmdnote{metal} units system, times are in picoseconds ($10^{-12}$\,s)
-  instead of femtoseconds ($10^{-15}$\,s) in the case of the \lmpcmdnote{real} units system.
-  It is important to keep this in mind when setting parameters that are expressed
-  in time unit, such as the timestep or the time constant of the thermostat.
+With the \lmpcmdnote{metal} units system, times are in picoseconds ($10^{-12}$\,s)
+instead of femtoseconds ($10^{-15}$\,s) in the case of the \lmpcmdnote{real} units system.
+It is important to keep this in mind when setting parameters that are expressed
+in time unit, such as the timestep or the time constant of the thermostat.
 \end{note}
-
-\paragraph{Adapt the topology file}
 
 Since bonds, angles, and dihedrals do not need to be
 explicitly set when using AIREBO, some simplification must be made to the

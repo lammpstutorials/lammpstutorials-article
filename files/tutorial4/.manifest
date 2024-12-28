@@ -4,12 +4,12 @@
 ##############################################################################
 # 1) input file templates and data files
 # the first file will be automatically loaded
-groups.inc
-parameters.inc
 create.lmp
 minimize.lmp
 equilibrate.lmp 
 shearing.lmp
+groups.inc
+parameters.inc
 water.mol
 
 # 2) solution files

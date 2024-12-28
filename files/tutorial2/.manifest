@@ -27,6 +27,7 @@ solution/breakable.log
 solution/breakable.png
 solution/breakable.dat
 solution/breakable-yaml-reader.py
+solution/breakable-with-tip.lmp
 
 # 3) support files
 unbreakable-yaml-reader.py

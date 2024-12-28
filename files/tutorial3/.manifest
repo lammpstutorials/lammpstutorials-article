@@ -4,12 +4,12 @@
 ##############################################################################
 # 1) input file templates and data files
 # the first file will be automatically loaded
-peg.mol
-water.mol
-parameters.inc
 water.lmp
 merge.lmp
 pull.lmp
+peg.mol
+water.mol
+parameters.inc
 
 # 2) solution files
 # only downloaded on request
