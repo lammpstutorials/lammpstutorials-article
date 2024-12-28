@@ -24,3 +24,9 @@ dump viz all image 100 myimage-*.ppm q &
   type shiny 0.1 box no 0.01 view 180 90 zoom 2.3 size 1200 500
 dump_modify viz adiam Si 2.6 adiam O 2.3 backcolor white &
   amap -1 2 ca 0.0 3 min royalblue 0 green max orangered
+
+fix myhis1 grpSi ave/histo 10 500 5000 -1.5 2.5 1000 v_vq &
+  file deform-Si.histo mode vector
+fix myhis2 grpO ave/histo 10 500 5000 -1.5 2.5 1000 v_vq &
+  file deform-O.histo mode vector
+fix myspec all reaxff/species 5 1 5 deform.species element Si O

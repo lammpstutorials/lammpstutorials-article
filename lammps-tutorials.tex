@@ -2821,10 +2821,13 @@ is a small amorphous silica structure.  This structure was created using a force
 Vashishta~\cite{vashishta1990interaction}.  If you open the \flecmd{silica.data}
 file, you will find in the \lmpcmd{Atoms} section that all silicon atoms have a
 charge of $q = 1.1\,\text{e}$, and all oxygen atoms have a charge of $q = -0.55\,\text{e}$.
+
+\begin{note}
 Assigning the same charge to all atoms of the same type is common with many
 force fields, including the force fields used in the previous tutorials.  This
 changes once ReaxFF is used: the charge of each atom will adjust to its local
 environment.
+\end{note}
 
 Next, copy the following three crucial lines into the \flecmd{relax.lmp} file:
 \begin{lstlisting}
@@ -2940,7 +2943,7 @@ after the deformation.}
 
 Let us apply a deformation to the structure to force some $\text{Si}-\text{O}$
 bonds to break (and eventually re-assemble).  Open the \flecmd{deform.lmp}
-file, which must constain the following lines:
+file, which must contain the following lines:
 \begin{lstlisting}
 units real
 atom_style full
@@ -3041,7 +3044,7 @@ a new column \lmpcmd{O2} appears in the \flecmd{deform.species} file.
 \subsubsection{Decorate the surface}
 
 Under ambient conditions, some of the surface $\text{SiO}_2$ atoms become chemically
-passivated by forming covalent bonds with hydrogen (H) atom~\cite{sulpizi2012silica}.
+passivated by forming covalent bonds with hydrogen (H) atoms~\cite{sulpizi2012silica}.
 We will add hydrogen atoms randomly to the cracked silica and observe how the
 system evolves.  To do so, we first need to modify the previously generated data
 file \flecmd{deform.data} and make space for a third atom type.
@@ -3068,7 +3071,7 @@ H 1.008
 (...)
 \end{lstlisting}
 
-Open the \flecmd{decorate.lmp} file, which must constain the following lines:
+Open the \flecmd{decorate.lmp} file, which must contain the following lines:
 \begin{lstlisting}
 units real
 atom_style full
@@ -3288,7 +3291,7 @@ represented in yellow, and oxygen atoms in red.}
 
 \subsubsection{Cracking the silica}
 
-Open the \flecmd{cracking.lmp} file, which must constain the following familiar lines:
+Open the \flecmd{cracking.lmp} file, which must contain the following familiar lines:
 \begin{lstlisting}
 units metal
 boundary p p p
@@ -3356,7 +3359,7 @@ combine water and silica, which necessitates the use
 of two force fields: Vashishta (for $\text{SiO}_2$), and
 TIP4P (for water).  Here, the TIP4P/2005 model is employed for the
 water~\cite{abascal2005general}.  Open the \flecmd{gcmc.lmp} file, which
-should constain the following lines:
+should contain the following lines:
 \begin{lstlisting}
 units metal
 boundary p p p
