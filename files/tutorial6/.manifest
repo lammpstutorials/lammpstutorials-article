@@ -4,9 +4,9 @@
 ##############################################################################
 # 1) input file templates and data files
 # the first file will be automatically loaded
+generate.lmp
 cracking.lmp
 gcmc.lmp
-generate.lmp
 H2O.mol
 
 # 2) solution files

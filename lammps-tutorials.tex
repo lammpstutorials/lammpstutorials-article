@@ -1294,11 +1294,16 @@ the force constants.
 
 The \lmpcmd{read\_data} command imports the
 \href{\filepath tutorial2/unbreakable.data}{\dwlcmd{unbreakable.data}}
-file, which contains information about the box
-size, atom positions, as well as the identity of the atoms that are
+file that should have been downloaded next
+to \lmpcmd{unbreakable.lmp} during the tutorial setup. This file
+contains information about the box size, atom positions, as well as the
+identity of the atoms that are
 linked by \lmpcmd{bonds}, \lmpcmd{angles}, \lmpcmd{dihedrals}, and
-\lmpcmd{impropers} interactions.  This file was created using VMD and TopoTools
-\cite{kohlmeyer2017topotools}.  The format details of the
+\lmpcmd{impropers} interactions. It was created using VMD and TopoTools
+\cite{kohlmeyer2017topotools}.
+
+\begin{note}
+The format details of the
 different sections in a data file change with different settings.  In
 particular, the \lmpcmd{Atoms} section may have a different number of
 columns, or the columns may represent different properties when the
@@ -1307,14 +1312,16 @@ VMD and TopoTools will add a comment (here \lmpcmd{\# molecular}) to the
 \lmpcmd{Atoms} header line in the data files that indicates the intended
 \lmpcmd{atom\_style}.  LAMMPS will print a warning when the chosen atom
 style does not match what is written in that comment.
+\end{note}
 
-This data file does not contain any sections with potential parameters; thus,
+The \flecmd{.data} file does not contain any sections with potential parameters; thus,
 we need to specify the parameters of both the bonded and
 non-bonded potentials.  The parameters we use are taken
 from the OPLS-AA (Optimized Potentials for Liquid Simulations-All-Atom)
 force field~\cite{jorgensenDevelopmentTestingOPLS1996}, and are given
-in a separate \lmpcmd{unbreakable.inc} file.  This file must be placed within the same
-directory as the input file \flecmd{unbreakable.lmp}, and contains the following lines:
+in a separate \lmpcmd{unbreakable.inc} file (also downloaded during
+the tutorial setup).  This file - that must be placed
+next to \flecmd{unbreakable.lmp} - contains the following lines:
 \begin{lstlisting}
 pair_coeff 1 1 0.066 3.4
 bond_coeff 1 469 1.4
@@ -1337,19 +1344,22 @@ $U_\theta = k_\theta ( \theta - \theta_0)^2$.  The
 \lmpcmd{dihedral\_coeff} and \lmpcmd{improper\_coeff} define the potentials
 for the constraints between 4 atoms.
 
+\begin{note}
 Rather than copying the contents of the file into the input, we
 incorporate it using the \lmpcmd{include} command.  Using \lmpcmd{include} allows
 us to conveniently reuse the parameter settings
 in other inputs or switch them with others.  This will become more general
 when using type labels, which is shown in the next
 tutorial~\cite{typelabel_paper}.
+\end{note}
 
 \paragraph{Prepare the initial state}
 
 In this tutorial, a deformation will be applied to the CNT by displacing
 the atoms located at its edges.  To achieve this, we will first isolate the
 atoms at the two edges and place them into groups named \lmpcmd{rtop} and
-\lmpcmd{rbot}.  Add the following lines to \flecmd{unbreakable.lmp}:
+\lmpcmd{rbot}.  Add the following lines to \flecmd{unbreakable.lmp},
+just before the \lmpcmd{run 0} command:
 \begin{lstlisting}
 group carbon_atoms type 1
 variable xmax equal bound(carbon_atoms,xmax)-0.5
@@ -1368,7 +1378,8 @@ bottom), $x_\text{min} > x > x_\text{max}$ (\lmpcmd{rmid}, for region middle),
 and $x > x_\text{max}$ (\lmpcmd{rtop}, for region top).
 
 Finally, let us define 3 groups of atoms corresponding to the atoms
-in each of the 3 regions by adding to \flecmd{unbreakable.lmp}:
+in each of the 3 regions by adding to \flecmd{unbreakable.lmp}
+just before the \lmpcmd{run 0} command:
 \begin{lstlisting}
 group cnt_top region rtop
 group cnt_bot region rbot
@@ -1394,6 +1405,7 @@ Run the simulation using LAMMPS.  The number of atoms in each group is given in
 the \guicmd{Output} window.  It is an important check to make sure that the number
 of atoms in each group corresponds to what is expected, as shown here:
 \begin{lstlisting}
+700 atoms in group carbon_atoms
 10 atoms in group cnt_top
 10 atoms in group cnt_bot
 680 atoms in group cnt_mid
@@ -1416,7 +1428,8 @@ and the middle panels in Fig.~\ref{fig:CNT-unbreakable}).
 
 \paragraph{The molecular dynamics}
 
-Let us give an initial temperature to the atoms of the group \lmpcmd{cnt\_mid}:
+Let us give an initial temperature to the atoms of the group \lmpcmd{cnt\_mid}
+by adding the following commands to \flecmd{unbreakable.lmp}:
 \begin{lstlisting}
 reset_atoms id sort yes
 velocity cnt_mid create 300 48455 mom yes rot yes
@@ -1434,7 +1447,7 @@ fix mynve1 cnt_top nve
 fix mynve2 cnt_bot nve
 fix mynvt cnt_mid nvt temp 300 300 100
 \end{lstlisting}
-The \lmpcmd{fix nve} are applied to the atoms of \lmpcmd{cnt\_top} and
+The \lmpcmd{fix nve} commands are applied to the atoms of \lmpcmd{cnt\_top} and
 \lmpcmd{cnt\_bot}, respectively, and will ensure that the positions of the atoms
 from these groups are recalculated at every step.  The \lmpcmd{fix nvt} does the
 same for the \lmpcmd{cnt\_mid} group, while also applying a Nos\'e-Hoover thermostat
@@ -1457,16 +1470,17 @@ the atoms of the edges will remain immobile during the simulation (or at least
 they would if no other command was applied to them).
 
 \begin{note}
-  The \lmpcmdnote{velocity set}
-  command imposes the velocity of a group of atoms at the start of a run but does
-  not enforce the velocity during the entire simulation.  When \lmpcmdnote{velocity set}
-  is used in combination with \lmpcmdnote{setforce 0 0 0}, as is the case here, the
-  atoms won't feel any force during the entire simulation.  According to the Newton
-  equation, no force means no acceleration, meaning that the initial velocity
-  will persist during the entire simulation, thus producing a constant velocity motion.
+The \lmpcmdnote{velocity set}
+command imposes the velocity of a group of atoms at the start of a run but does
+not enforce the velocity during the entire simulation.  When \lmpcmdnote{velocity set}
+is used in combination with \lmpcmdnote{setforce 0 0 0}, as is the case here, the
+atoms won't feel any force during the entire simulation.  According to the Newton
+equation, no force means no acceleration, meaning that the initial velocity
+will persist during the entire simulation, thus producing a constant velocity motion.
 \end{note}
 
 \paragraph{Outputs}
+
 Next, to measure the strain and stress applied to the CNT, let us create a
 variable for the distance $L_\text{cnt}$ between the two edges,
 as well as a variable $F_\text{cnt}$ for the force applied on the edges:
@@ -1487,7 +1501,8 @@ dump viz all image 500 myimage-*.ppm element type size &
 dump_modify viz pad 9 backcolor white adiam 1 0.85 bdiam 1 1.0
 \end{lstlisting}
 Let us run a small equilibration step to bring the system to the required
-temperature before applying any deformation:
+temperature before applying any deformation.  Replace the \lmpcmd{run 0 post no}
+command in \flecmd{unbreakable.lmp} with the following lines:
 \begin{lstlisting}
 compute Tmid cnt_mid temp
 thermo 100
@@ -1554,9 +1569,9 @@ be located.  When executed using Python, this .py file first imports
 the \flecmd{unbreakable.yaml} file.  Then, a certain pattern is
 identified and stored as a string character named `docs'.  The string is
 then converted into a list, and $F_\text{cnt}$ and $L_\text{cnt}$
-are extracted.  The stress and strain
-are then calculated, and the result is saved in a data file using the
-NumPy `savetxt' function.  `thermo[0]' can be used to access the
+are extracted.  The stress and strain are then calculated, and the result
+is saved in a data file named \flecmd{unbreakable.dat} using
+the NumPy `savetxt' function.  `thermo[0]' can be used to access the
 information from the first minimization run, and `thermo[1]' to access the
 information from the second MD run.  The data extracted from
 the \flecmd{unbreakable.yaml} file can then be used to plot the stress-strain
@@ -1601,13 +1616,11 @@ containing the parameters for AIREBO, and must be placed next
 to \lmpcmd{breakable.lmp}.
 
 \begin{note}
-  With the \lmpcmdnote{metal} units system, times are in picoseconds ($10^{-12}$\,s)
-  instead of femtoseconds ($10^{-15}$\,s) in the case of the \lmpcmdnote{real} units system.
-  It is important to keep this in mind when setting parameters that are expressed
-  in time unit, such as the timestep or the time constant of the thermostat.
+With the \lmpcmdnote{metal} units system, times are in picoseconds ($10^{-12}$\,s)
+instead of femtoseconds ($10^{-15}$\,s) in the case of the \lmpcmdnote{real} units system.
+It is important to keep this in mind when setting parameters that are expressed
+in time unit, such as the timestep or the time constant of the thermostat.
 \end{note}
-
-\paragraph{Adapt the topology file}
 
 Since bonds, angles, and dihedrals do not need to be
 explicitly set when using AIREBO, some simplification must be made to the
@@ -1859,7 +1872,7 @@ the three dimensions of the box will be re-scaled simultaneously.
 Let us output the system into images by adding the following commands to \flecmd{water.lmp}:
 \begin{lstlisting}
 dump viz all image 250 myimage-*.ppm type type &
-  shiny 0.1 box no 0.01 view 0 90 zoom 3 size 1000 500
+  shiny 0.1 box no 0.01 view 0 90 zoom 3 size 1000 600
 dump_modify viz backcolor white &
   acolor OW red acolor HW white &
   adiam OW 3 adiam HW 1.5
@@ -1875,11 +1888,12 @@ variable rho equal ${myoxy}*${M}/(v_myvol*${NA}*${Atom}^3)
 thermo 500
 thermo_style custom step temp etotal v_myvol v_rho
 \end{lstlisting}
-The variable \lmpcmd{myoxy} represents the number of atoms divided by 3 ($N_\text{oxy}$),
-which corresponds to the number of molecules, and the variable \lmpcmd{myrho} is
-the density in kg/mol:
+Here, several variables are defined and used for converting the units of the
+density in kg/mol:  The variable \lmpcmd{myoxy} represents the number of
+atoms divided by 3,  which corresponds to the number of molecules, $N_\text{H2O}$,
+and the variable \lmpcmd{myrho} is the density in kg/mol:
 \begin{equation}
-\rho = \dfrac{N_\text{oxy}}{V N_\text{A}},
+\rho = \dfrac{N_\text{H2O}}{V N_\text{A}},
 \end{equation}
 where $V$ is the volume in m$^3$, $N_\text{A}$ the Avogadro number, and
 $M = 0.018$\,kg/mol the molar mass of water.
@@ -1933,10 +1947,9 @@ the GROMOS 54A7 force field~\cite{schmid2011definition} (Fig.~\ref{fig:PEG-in-va
 
 \begin{figure}
 \centering
-\includegraphics[width=0.45\linewidth]{PEG-in-vacuum}
+\includegraphics[width=0.8\linewidth]{PEG-in-vacuum}
 \caption{The PEG molecule from \hyperref[all-atom-label]{Tutorial 3}.
-The carbon atoms are in gray, the oxygen
-atoms in red, and the hydrogen atoms in white.}
+The carbon atoms are in gray, the oxygen atoms in red, and the hydrogen atoms in white.}
 \label{fig:PEG-in-vacuum}
 \end{figure}
 
@@ -1962,7 +1975,7 @@ Using the molecule template for the polymer called
 let us create a single molecule in the middle of the box by adding the following
 commands to \flecmd{merge.lmp}:
 \begin{lstlisting}
-molecule pegmol mol.mol
+molecule pegmol peg.mol
 create_atoms 0 single 0 0 0 mol pegmol 454756
 \end{lstlisting}
 Let us create a group for the atoms of the PEG (the previously created
@@ -1998,7 +2011,7 @@ Let us create images of the systems:
 \begin{lstlisting}
 dump viz all image 250 myimage-*.ppm type &
   type shiny 0.1 box no 0.01 &
-  view 0 90 zoom 3 fsaa yes bond atom 0.8 size 1000 500
+  view 0 90 zoom 3.3 fsaa yes bond atom 0.8 size 1100 600
 dump_modify viz backcolor white &
   acolor OW red acolor HW white &
   acolor OE darkred acolor OAlc darkred &
@@ -2015,7 +2028,7 @@ final state to a \lmpcmd{.restart} file.  Add the following lines to the data fi
 timestep 1.0
 run 10000
 
-write_restart mix.restart
+write_restart merge.restart
 \end{lstlisting}
 Run the simulation using LAMMPS.  From the outputs, you can make
 sure that the temperature remains close to the
@@ -2064,7 +2077,7 @@ Add the following \lmpcmd{dump} command to create images of the system:
 \begin{lstlisting}
 dump viz all image 250 myimage-*.ppm type &
   type shiny 0.1 box no 0.01 &
-  view 0 90 zoom 3 fsaa yes bond atom 0.8 size 1000 500
+  view 0 90 zoom 3.3 fsaa yes bond atom 0.8 size 1100 600
 dump_modify viz backcolor white &
   acolor OW red acolor HW white &
   acolor OE darkred acolor OAlc darkred &
@@ -2126,7 +2139,7 @@ time indicates that the PEG quickly adjusts to the external force
 (Fig.~\ref{fig:PEG-distance}\,a).  Additionally, from the values of the dihedral angles
 printed in the \flecmd{pull.dat} file, you can create a histogram
 of dihedral angles for a specific type.  For example, the angle $\phi$ for dihedrals
-of type 1 (C-C-OE-C) is shown in Fig.~\ref{fig:PEG-distance}\,b. % SG: is it type 1 or 2?
+of type 1 (C-C-OE-C) is shown in Fig.~\ref{fig:PEG-distance}\,b.
 
 \begin{figure}
 \centering
@@ -2142,8 +2155,8 @@ as simulated during \hyperref[all-atom-label]{Tutorial 3}.}
 \caption{a) Evolution of
 the radius of gyration $R_\text{gyr}$ of the PEG molecule
 from \hyperref[all-atom-label]{Tutorial 3}, with the force
-applied starting at $t = 15\,\text{ps}$.  b) Histograms of the dihedral angles of type 2
-in the absence (orange) and in the presence (blue) of the applied force.} % SG: is it type 1 or 2?
+applied starting at $t = 15\,\text{ps}$.  b) Histograms of the dihedral angles of type 1
+in the absence (orange) and in the presence (blue) of the applied force.}
 \label{fig:PEG-distance}
 \end{figure}
 
@@ -2334,7 +2347,7 @@ comparison, the water-water energy $\epsilon_\text{1-1}$ is only $0.185199\,\tex
 Therefore, to make the walls less hydrophilic, the value of $\epsilon_\text{O-WALL}$
 was reduced.
 
-The \flecmd{parameters.inc} file also contains the following two lines:
+Finally, the \flecmd{parameters.inc} file contains the following two lines:
 \begin{lstlisting}
 bond_coeff O-H 0 0.9572
 angle_coeff H-O-H 0 104.52
@@ -2719,17 +2732,17 @@ by the \lmpcmd{ave/chunk} commands, and three \flecmd{.dat} files are created fo
 the water, the walls, and the ions, respectively.  With values of \lmpcmd{10 15000 200000},
 the velocity \lmpcmd{vx} will be evaluated every 10 steps during the final 150,000
 steps of the simulations.  The result will be averaged and printed only once at the 200,000\,th step.
-Run the simulation using LAMMPS.  The averaged velocity and density
-profiles of the fluid are plotted in Fig.~\ref{fig:NANOSHEAR-profiles}.
-As expected for such Couette flow geometry, the fluid velocity increases linearly along $z$.
+Run the simulation using LAMMPS.  The averaged velocity
+profile for the fluid is plotted in Fig.~\ref{fig:NANOSHEAR-profiles}.
+As expected for such Couette flow geometry, the fluid velocity increases
+linearly along $z$, and is equal to the walls velocities at the fluid-solid
+interfaces (no-slip boundary conditions).
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{NANOSHEAR-profiles}
-\caption{a) Water density $\rho$ along the $z$-axis as
-simulated in \hyperref[sheared-confined-label]{Tutorial 4}.
-b) Velocity profiles for water (blue) and walls
-(orange) along the $z$-axis.}
+\caption{Velocity profiles for water (blue) and walls (orange) along the $z$-axis as
+simulated in \hyperref[sheared-confined-label]{Tutorial 4}.}
 % The line is a linear fit assuming
 % that the pore size is $h = 1.8\,\text{nm}$.}
 \label{fig:NANOSHEAR-profiles}
@@ -2737,13 +2750,22 @@ b) Velocity profiles for water (blue) and walls
 
 From the force applied by the fluid on the solid, one can extract the stress
 within the fluid, which enables the measurement of its viscosity $\eta$
-according to $\eta = \tau / \dot{\gamma}$ where $\tau$ is the stress applied by
+according to
+\begin{equation}
+\eta = \tau / \dot{\gamma}
+\label{eq:eta}
+\end{equation}
+where $\tau$ is the stress applied by
 the fluid on the shearing wall, and $\dot{\gamma}$ the shear rate
 \cite{gravelle2021violations}.  Here, the shear rate is
-approximately $\dot{\gamma} = 16 \cdot 10^9\,\text{s}^{-1}$, and using a
-surface area of $A = 6 \cdot 10^{-18}\,\text{m}^2$, one obtains an estimate for
-the shear viscosity for the confined fluid of $\eta = 6.6\,\text{mPa.s}$.  The
-viscosity calculated at such a high shear rate may differ from the expected
+approximately $\dot{\gamma} = 20 \cdot 10^9\,\text{s}^{-1}$ (Fig.~\ref{fig:NANOSHEAR-profiles}),
+the average force on each wall is given by \lmpcmd{f\_mysf1[1]} and \lmpcmd{f\_mysf2[1]}
+and is approximately $2.7\,\mathrm{kcal/mol/\AA}$ in magnitude.  Using a surface area
+for the walls of $A = 6 \cdot 10^{-18}\,\text{m}^2$, one obtains an estimate for
+the shear viscosity for the confined fluid of $\eta = 3.1\,\text{mPa.s}$ using Eq.~\eqref{eq:eta}. 
+
+\begin{note}
+The viscosity calculated at such a high shear rate may differ from the expected
 \emph{bulk} value.  In general, it is recommended to use a lower value for the
 shear rate.  Note that for lower shear rates, the ratio of noise-to-signal is
 larger, and longer simulations are needed.  Another important point to consider
@@ -2751,6 +2773,7 @@ is that the viscosity of a fluid next to a solid surface is typically larger
 than in bulk due to interaction with the walls~\cite{wolde-kidanInterplayInterfacialViscosity2021}.
 Therefore, one expects the present simulation to yield a viscosity that is slightly
 higher than what would be measured in the absence of walls.
+\end{note}
 
 \subsection{Tutorial 5: Reactive silicon dioxide}
 \label{reactive-silicon-dioxide-label}
@@ -2798,10 +2821,13 @@ is a small amorphous silica structure.  This structure was created using a force
 Vashishta~\cite{vashishta1990interaction}.  If you open the \flecmd{silica.data}
 file, you will find in the \lmpcmd{Atoms} section that all silicon atoms have a
 charge of $q = 1.1\,\text{e}$, and all oxygen atoms have a charge of $q = -0.55\,\text{e}$.
+
+\begin{note}
 Assigning the same charge to all atoms of the same type is common with many
 force fields, including the force fields used in the previous tutorials.  This
 changes once ReaxFF is used: the charge of each atom will adjust to its local
 environment.
+\end{note}
 
 Next, copy the following three crucial lines into the \flecmd{relax.lmp} file:
 \begin{lstlisting}
@@ -2917,7 +2943,7 @@ after the deformation.}
 
 Let us apply a deformation to the structure to force some $\text{Si}-\text{O}$
 bonds to break (and eventually re-assemble).  Open the \flecmd{deform.lmp}
-file, which must constain the following lines:
+file, which must contain the following lines:
 \begin{lstlisting}
 units real
 atom_style full
@@ -3018,7 +3044,7 @@ a new column \lmpcmd{O2} appears in the \flecmd{deform.species} file.
 \subsubsection{Decorate the surface}
 
 Under ambient conditions, some of the surface $\text{SiO}_2$ atoms become chemically
-passivated by forming covalent bonds with hydrogen (H) atom~\cite{sulpizi2012silica}.
+passivated by forming covalent bonds with hydrogen (H) atoms~\cite{sulpizi2012silica}.
 We will add hydrogen atoms randomly to the cracked silica and observe how the
 system evolves.  To do so, we first need to modify the previously generated data
 file \flecmd{deform.data} and make space for a third atom type.
@@ -3045,7 +3071,7 @@ H 1.008
 (...)
 \end{lstlisting}
 
-Open the \flecmd{decorate.lmp} file, which must constain the following lines:
+Open the \flecmd{decorate.lmp} file, which must contain the following lines:
 \begin{lstlisting}
 units real
 atom_style full
@@ -3265,7 +3291,7 @@ represented in yellow, and oxygen atoms in red.}
 
 \subsubsection{Cracking the silica}
 
-Open the \flecmd{cracking.lmp} file, which must constain the following familiar lines:
+Open the \flecmd{cracking.lmp} file, which must contain the following familiar lines:
 \begin{lstlisting}
 units metal
 boundary p p p
@@ -3333,7 +3359,7 @@ combine water and silica, which necessitates the use
 of two force fields: Vashishta (for $\text{SiO}_2$), and
 TIP4P (for water).  Here, the TIP4P/2005 model is employed for the
 water~\cite{abascal2005general}.  Open the \flecmd{gcmc.lmp} file, which
-should constain the following lines:
+should contain the following lines:
 \begin{lstlisting}
 units metal
 boundary p p p
@@ -3666,6 +3692,9 @@ $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\
 We impose the force $F(x)$ to the atoms in the simulation
 using the \lmpcmd{fix addforce} command.  Add the following
 lines to \flecmd{free-energy.lmp}:
+% SG: apparently variable can't be cutted in 2 lines, either warn the reader, or find
+% a way to write these commands on the entire width of the page, or divide the variables
+% into several variables
 \begin{lstlisting}
 variable U atom ${U0}*atan((x+${x0})/${dlt})&
     -${U0}*atan((x-${x0})/${dlt})
@@ -3743,7 +3772,8 @@ Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\
 
 \paragraph{Data analysis}
 
-Once the simulation is complete, the density profile shows that the density in the center of the box is
+Once the simulation is complete, the density profile from \flecmd{free-sampling.dat}
+shows that the density in the center of the box is
 about two orders of magnitude lower than inside the reservoir (Fig.~\ref{fig:US-density}\,a).
 Next, we plot $-R T \ln(\rho/\rho_\mathrm{bulk})$ (i.e.~Eq.~\eqref{eq:G} where
 the pressure ratio $p/p_\mathrm{bulk}$ is replaced by the density ratio
@@ -3801,7 +3831,7 @@ unbiased free energy profile.
 
 \paragraph{LAMMPS input script}
 
-Open the file named \lmpcmd{umbrella-sampling.lmp}, which should
+Open the file named \flecmd{umbrella-sampling.lmp}, which should
 contain the following lines:
 \begin{lstlisting}
 variable sigma equal 3.405
@@ -3824,7 +3854,7 @@ difference is the introduction of the variable $k$, which will be used for
 the biasing potential.
 
 Let us create a simulation box with two atom types, including a single particle of type 2,
-by adding the following lines to \lmpcmd{umbrella-sampling.lmp}:
+by adding the following lines to \flecmd{umbrella-sampling.lmp}:
 \begin{lstlisting}
 region myreg block -50 50 -15 15 -50 50
 create_box 2 myreg
@@ -3925,7 +3955,7 @@ saved in the \flecmd{umbrella-sampling.i.dat} files,
 we use the WHAM algorithm as implemented by Marc Grossfield~\cite{grossfieldimplementation}.
 You can download it from \href{http://membrane.urmc.rochester.edu/?page_id=126}{Alan Grossfield}'s
 website.  The executable called \flecmd{wham} generated by following the instructions
-from the website must be placed next to \lmpcmd{umbrella-sampling.lmp}.  To apply
+from the website must be placed next to \flecmd{umbrella-sampling.lmp}.  To apply
 the WHAM algorithm to our simulation, we need a metadata file containing:
 \begin{itemize}
 \item the paths to all the data files,
@@ -3933,7 +3963,7 @@ the WHAM algorithm to our simulation, we need a metadata file containing:
 \item the values of $k$.
 \end{itemize}
 Download the \href{\filepath tutorial7/umbrella-sampling.meta}{\dwlcmd{umbrella-sampling.meta}} file
-and save it next to \lmpcmd{umbrella-sampling.lmp}.  Then, run the WHAM algorithm
+and save it next to \flecmd{umbrella-sampling.lmp}.  Then, run the WHAM algorithm
 by typing the following command in the terminal:
 \begin{lstlisting}
 ./wham -30 30 50 1e-8 119.8 0 \
@@ -4187,7 +4217,7 @@ dump viz all image 200 myimage-*.ppm &
 dump_modify viz backcolor white &
   acolor cp gray acolor c=1 gray &
   acolor c= gray acolor c1 deeppink &
-  acolor c2 gray deeppink c3 deeppink &
+  acolor c2 gray acolor c3 deeppink &
   adiam cp 0.3 adiam c=1 0.3 &
   adiam c= 0.3 adiam c1 0.3 &
   adiam c2 0.3 adiam c3 0.3 &

@@ -5,7 +5,7 @@
 
 group H2O type O H
 group Na type Na+
-group Cl type Cl−
+group Cl type Cl-
 group ions union Na Cl
 group fluid union H2O ions
 

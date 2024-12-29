@@ -5,8 +5,8 @@
 # 1) input file templates and data files
 # the first file will be automatically loaded
 free-sampling.lmp
-umbrella-sampling.meta
 umbrella-sampling.lmp
+umbrella-sampling.meta
 
 # 2) solution files
 # only downloaded on request

@@ -4,9 +4,9 @@
 ##############################################################################
 # 1) input file templates and data files
 # the first file will be automatically loaded
-decorate.lmp
-deform.lmp
 relax.lmp
+deform.lmp
+decorate.lmp
 silica.data
 
 # 2) solution files
