@@ -17,10 +17,9 @@ read_data create.data
 include parameters.inc
 include groups.inc
 
-fix mynve fluid nve/limit 0.1
+fix nvelim fluid nve/limit 0.1
 fix myber fluid temp/berendsen 1 1 100
-fix myshk H2O shake 1.0e-5 200 0 b O-H a H-O-H
-timestep 0.5
+timestep 0.25
 
 dump mydmp all image 200 myimage-*.ppm type type &
   shiny 0.1 box no 0.01 view 90 0 zoom 1.8
@@ -35,15 +34,13 @@ compute Tfluid fluid temp
 thermo_modify temp Tfluid
 thermo 200
 
-run 4000
+run 8000
 
+unfix nvelim
+fix mynve fluid nve
+fix myshk H2O shake 1.0e-5 200 0 b O-H a H-O-H
 fix myber fluid temp/berendsen 300 300 100
 timestep 1.0
-
-run 4000
-
-unfix mynve
-fix mynve fluid nve
 
 run 4000
 

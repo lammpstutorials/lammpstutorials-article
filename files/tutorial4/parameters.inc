@@ -16,5 +16,5 @@ pair_coeff Cl- Cl- 0.1500 4.04470
 pair_coeff WALL WALL 11.697 2.574
 pair_coeff O WALL 0.4 2.86645
 
-bond_coeff O-H 0 0.9572
-angle_coeff H-O-H 0 104.52
+bond_coeff O-H 5000 0.9572
+angle_coeff H-O-H 400 104.52
