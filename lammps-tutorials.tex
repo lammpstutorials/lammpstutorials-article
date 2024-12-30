@@ -2429,13 +2429,15 @@ cell boundaries.}
 \paragraph{Energy minimization}
 
 Let us move the atoms and place them in more energetically favorable positions
-before starting the actual molecular dynamics simulation.  Although we refer to this step as
-\emph{energy minimization}, it is not a conventional minimization
-like that performed in the first tutorial; \hyperref[lennard-jones-label]{Lennard-Jones fluid}.
-Instead, we will conduct a molecular dynamics simulation, employing certain techniques
-to prevent the system from exploding due to overlapping atoms.
+before starting the actual molecular dynamics simulation.
+% SG: removed the nve/limit part for compatibility with shake
+% Although we refer to this step as
+% \emph{energy minimization}, it is not a conventional minimization
+% like that performed in the first tutorial; \hyperref[lennard-jones-label]{Lennard-Jones fluid}.
+% Instead, we will conduct a molecular dynamics simulation, employing certain techniques
+% to prevent the system from exploding due to overlapping atoms.
 
-Open the \flecmd{minimize.lmp} file that was downloaded alongside
+Open the \flecmd{equilibrate.lmp} file that was downloaded alongside
 \flecmd{create.lmp} during the tutorial setup.  It contains the following lines:
 \begin{lstlisting}
 boundary p p f
@@ -2455,30 +2457,30 @@ include groups.inc
 The only difference from the previous input is that, instead of creating a new
 box and new atoms, we open the previously created \flecmd{create.data} file.
 
-Now, let us create a first simulation step using a relatively small
-timestep ($0.5\,\text{fs}$) and a low temperature of $T = 1\,\text{K}$:
+Now, let us use the SHAKE algorithm to maintain the shape of the
+water molecules~\cite{ryckaert1977numerical, andersen1983rattle}.
 \begin{lstlisting}
-fix mynve fluid nve/limit 0.1
-fix myber fluid temp/berendsen 1 1 100
-fix myshk H2O shake 1.0e-5 200 0 b O-H a H-O-H
-timestep 0.5
+fix myshk H2O shake 1.0e-5 200 0 b O-H a H-O-H kbond 2000
 \end{lstlisting}
-Similar to the \lmpcmd{fix nve} command, the \lmpcmd{fix nve/limit} command performs constant
-NVE integration to update the positions and velocities of the atoms at each
-timestep.  The difference is that \lmpcmd{fix nve/limit} also limits the maximum
-distance atoms can travel during each timestep, with a chosen maximum distance
-of $0.1~\text{\AA{}}$.  Since the \lmpcmd{fix nve/limit} is applied to the
-group \lmpcmd{fluid}, only the water molecules and ions will move.
-The \lmpcmd{fix temp/berendsen} command rescales the velocities of the atoms
-to ensure the system reaches the desired temperature of $1~\text{K}$.
-The SHAKE algorithm is used in order to maintain
-the shape of the water molecules~\cite{ryckaert1977numerical, andersen1983rattle}.
+Here the SHAKE algorithm applies to the \lmpcmd{O-H} bond and the \lmpcmd{H-O-H} angle
+of the water molecules.  The \lmpcmd{kbond} keyword specifies the force constant that will be
+used to apply a restraint force when used during minimization.  This last keyword is important
+here, because the spring constants of the rigid water molecules were set
+to 0 (see the \flecmd{parameter.inc} file).
+% Similar to the \lmpcmd{fix nve} command, the \lmpcmd{fix nve/limit} command performs constant
+% NVE integration to update the positions and velocities of the atoms at each
+% timestep.  The difference is that \lmpcmd{fix nve/limit} also limits the maximum
+% distance atoms can travel during each timestep, with a chosen maximum distance
+% of $0.1~\text{\AA{}}$.  Since the \lmpcmd{fix nve/limit} is applied to the
+% group \lmpcmd{fluid}, only the water molecules and ions will move.
+% The \lmpcmd{fix temp/berendsen} command rescales the velocities of the atoms
+% to ensure the system reaches the desired temperature of $1~\text{K}$.
 
 Let us also create images of the system and control
 the printing of thermodynamic outputs by adding the following lines
-to \flecmd{minimize.lmp}:
+to \flecmd{equilibrate.lmp}:
 \begin{lstlisting}
-dump mydmp all image 200 myimage-*.ppm type type &
+  dump mydmp all image 1 myimage-*.ppm type type &
   shiny 0.1 box no 0.01 view 90 0 zoom 1.8
 dump_modify mydmp backcolor white &
   acolor O red adiam O 2 &
@@ -2487,83 +2489,66 @@ dump_modify mydmp backcolor white &
   acolor Cl- cyan adiam Cl- 3 &
   acolor WALL gray adiam WALL 3
 
-compute Tfluid fluid temp
-thermo 200
-thermo_modify temp Tfluid
+thermo 1
+thermo_style custom step temp etotal press
 \end{lstlisting}
-The \lmpcmd{thermo\_modify} ensures that the fluid temperature \lmpcmd{Tfluid}
-is printed, and not the temperature of the entire system (which is less relevant
-with frozen walls).
+% The \lmpcmd{thermo\_modify} ensures that the fluid temperature \lmpcmd{Tfluid}
+% is printed, and not the temperature of the entire system (which is less relevant
+% with frozen walls).
 
-Let us run for 4000 steps by adding the following lines into \flecmd{minimize.lmp}:
+Let us perform an energy minization by adding the following lines to \flecmd{equilibrate.lmp}:
 \begin{lstlisting}
-run 4000
+minimize 1.0e-6 1.0e-6 1000 1000
+reset_timestep 0
 \end{lstlisting}
-When running the \flecmd{minimize.lmp} file with LAMMPS, you should observe that the
-total energy of the system is initially very high but rapidly decreases,
-eventually reaching a plateau (Fig.~\ref{fig:NANOSHEAR-minimization}).  From the generated
-images of the system, you will notice that some of the atoms are moving, particularly
-those that were initially in problematic positions.
+When running the \flecmd{equilibrate.lmp} file with LAMMPS, you should observe that the
+total energy of the system is initially very high but rapidly decreases.  From the generated
+images of the system, you will notice that the atoms and molecules are moving to adopt more favorable positions.
 
-To better equilibrate the system, we will perform two additional steps
-with a larger timestep and a higher imposed temperature.  Add the following lines
-to \flecmd{minimize.lmp}:
-\begin{lstlisting}
-fix myber fluid temp/berendsen 300 300 100
-timestep 1.0
+% To better equilibrate the system, we will perform two additional steps
+% with a larger timestep and a higher imposed temperature.  Add the following lines
+% to \flecmd{minimize.lmp}:
+% \begin{lstlisting}
+% fix myber fluid temp/berendsen 300 300 100
+% timestep 1.0
 
-run 4000
+% run 4000
 
-unfix mynve
-fix mynve fluid nve
+% unfix mynve
+% fix mynve fluid nve
 
-run 4000
+% run 4000
 
-write_data minimize.data nocoeff
-\end{lstlisting}
-For the last step, since the system is reaching a more
-equilibrated step, it is no longer necessary to use the \lmpcmd{nve/limit} command.
-Instead, we use the classic \lmpcmd{fix nve} command.
+% write_data minimize.data nocoeff
+% \end{lstlisting}
+% For the last step, since the system is reaching a more
+% equilibrated step, it is no longer necessary to use the \lmpcmd{nve/limit} command.
+% Instead, we use the classic \lmpcmd{fix nve} command.
 
-When running the \flecmd{minimize.lmp} file with LAMMPS, you should observe that the
-the temperature reaches the desired value of $300\,\text{K}$, and that the total
-energy reaches a plateau (Fig.~\ref{fig:NANOSHEAR-minimization}).  The generated file
-\flecmd{minimize.data} contains the final state of the system.
+% When running the \flecmd{minimize.lmp} file with LAMMPS, you should observe that the
+% the temperature reaches the desired value of $300\,\text{K}$, and that the total
+% energy reaches a plateau (Fig.~\ref{fig:NANOSHEAR-minimization}).  The generated file
+% \flecmd{minimize.data} contains the final state of the system.
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{NANOSHEAR-minimization}
-\caption{a) Temperature of the fluid as a function of time $t$ during the
-minimization step of \hyperref[sheared-confined-label]{Tutorial 4}.
-The horizontal dashed line is the target temperature, $T = 300$\,K, and the
-vertical dotted lines are the transitions between the different steps
-of the minimization.  b) Total
-energy $E_\text{tot}$ of the system as a function of the time $t$.}
-\label{fig:NANOSHEAR-minimization}
-\end{figure}
+% \begin{figure}
+% \centering
+% \includegraphics[width=\linewidth]{NANOSHEAR-minimization}
+% \caption{a) Temperature of the fluid as a function of time $t$ during the
+% minimization step of \hyperref[sheared-confined-label]{Tutorial 4}.
+% The horizontal dashed line is the target temperature, $T = 300$\,K, and the
+% vertical dotted lines are the transitions between the different steps
+% of the minimization.  b) Total
+% energy $E_\text{tot}$ of the system as a function of the time $t$.}
+% \label{fig:NANOSHEAR-minimization}
+% \end{figure}
 
 \paragraph{System equilibration}
 
 Let us equilibrate further the entire system by letting both fluid and piston
-relax at ambient temperature.  Open the \flecmd{equilibrate.lmp} file that was
-downloaded during the tutorial setup.  It contains the following lines:
-\begin{lstlisting}
-boundary p p f
-units real
-atom_style full
-bond_style harmonic
-angle_style harmonic
-pair_style lj/cut/tip4p/long O H O-H H-O-H 0.1546 12.0
-kspace_style pppm/tip4p 1.0e-5
-kspace_modify slab 3.0
+relax at ambient temperature.  Here, the commands are written within the same
+\flecmd{equilibrate.lmp} file, right after the \lmpcmd{reset\_timestep} command.
 
-read_data minimize.data
-
-include parameters.inc
-include groups.inc
-\end{lstlisting}
-
-Let us update the positions of \emph{all} the atoms and use a Nosé-Hoover
+Let us update the positions of all the atoms and use a Nosé-Hoover
 thermostat.  Add the following lines to \flecmd{equilibrate.lmp}:
 \begin{lstlisting}
 fix mynvt all nvt temp 300 300 100
@@ -2576,6 +2561,7 @@ but will keep the system in the center of the box, which makes the
 visualization easier.  Then, add the following lines into \flecmd{equilibrate.lmp}
 for the trajectory visualization:
 \begin{lstlisting}
+undump mydmp
 dump mydmp all image 250 myimage-*.ppm type type &
   shiny 0.1 box no 0.01 view 90 0 zoom 1.8
 dump_modify mydmp backcolor white &
@@ -2585,6 +2571,8 @@ dump_modify mydmp backcolor white &
   acolor Cl- cyan adiam Cl- 3 &
   acolor WALL gray adiam WALL 3
 \end{lstlisting}
+The \lmpcmd{undump} command is used to cancel the previous \lmpcmd{dump} command.
+Then, a new \lmpcmd{dump} command with a larger dumping period is used.
 
 To monitor the system equilibration, let us print the distance between
 the two walls.  Add the following lines to \flecmd{equilibrate.lmp}:
@@ -2608,7 +2596,7 @@ run 30000
 
 write_data equilibrate.data nocoeff
 \end{lstlisting}
-Run the \flecmd{input.lmp} file using LAMMPS.  Both the pressure and the distance
+Run the \flecmd{equilibrate.lmp} file using LAMMPS.  Both the pressure and the distance
 between the two walls show oscillations at the start of the simulation
 but eventually stabilize at their equilibrium values toward
 the end of the simulation (Fig.~\ref{fig:NANOSHEAR-equilibration}).
@@ -4235,8 +4223,7 @@ fix rxn all bond/react &
 \end{lstlisting}
 With the \lmpcmd{stabilization} keyword, the \lmpcmd{bond/react} command will
 stabilize the atoms involved in the reaction using the \lmpcmd{nve/limit}
-command with a maximum displacement of $0.03\,\mathrm{\AA{}}$ (a command that was
-used, for instance, in \hyperref[sheared-confined-label]{Tutorial 4}).  By default,
+command with a maximum displacement of $0.03\,\mathrm{\AA{}}$.  By default,
 each reaction is stabilized for 60 time steps.  Each \lmpcmd{react} keyword
 corresponds to a reaction, e.g.,~a transformation of \lmpcmd{mol1} into \lmpcmd{mol2}
 based on the atom map \lmpcmd{M-M.rxnmap}.  Implementation details about each reaction,

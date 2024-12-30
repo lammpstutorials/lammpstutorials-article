@@ -12,16 +12,34 @@ pair_style lj/cut/tip4p/long O H O-H H-O-H 0.1546 12.0
 kspace_style pppm/tip4p 1.0e-5
 kspace_modify slab 3.0
 
-read_data minimize.data
+read_data create.data
 
 include parameters.inc
 include groups.inc
+
+fix myshk H2O shake 1.0e-5 200 0 b O-H a H-O-H kbond 2000
+
+dump mydmp all image 1 myimage-*.ppm type type &
+  shiny 0.1 box no 0.01 view 90 0 zoom 1.8
+dump_modify mydmp backcolor white &
+  acolor O red adiam O 2 &
+  acolor H white adiam H 1 &
+  acolor Na+ blue adiam Na+ 2.5 &
+  acolor Cl- cyan adiam Cl- 3 &
+  acolor WALL gray adiam WALL 3
+
+thermo 1
+thermo_style custom step temp etotal press
+
+minimize 1.0e-6 1.0e-6 1000 1000
+reset_timestep 0
 
 fix mynvt all nvt temp 300 300 100
 fix myshk H2O shake 1.0e-5 200 0 b O-H a H-O-H
 fix myrct all recenter NULL NULL 0
 timestep 1.0
 
+undump mydmp
 dump mydmp all image 250 myimage-*.ppm type type &
   shiny 0.1 box no 0.01 view 90 0 zoom 1.8
 dump_modify mydmp backcolor white &
@@ -41,3 +59,7 @@ thermo_style custom step temp etotal press v_deltaz
 run 30000
 
 write_data equilibrate.data nocoeff
+
+
+
+
