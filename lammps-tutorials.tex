@@ -196,10 +196,10 @@
 \section{Introduction}
 
 Molecular Simulations (MS) can be used to model a large variety of
-atomic and coarse--grained systems, including solids, fluids, polymers, and
-biomolecules, as well as complex interfaces and multi-component systems.
-Various MS methods exist -- Molecular Dynamics (MD) and Monte Carlo (MC)
-being among the most commonly used.  MD is the preferred method for
+atomic and coarse-grained systems, including solids, fluids, polymers,
+and biomolecules, as well as complex interfaces and multi-component
+systems.  While various MS methods exist, Molecular Dynamics (MD) and
+Monte Carlo (MC) are most commonly used.  MD is the preferred method for
 obtaining the accurate dynamics of a system, as it relies on solving
 Newton's equations of motion.  For systems with many degrees of freedom
 or complex energy landscapes, the MC method can be a better choice than
@@ -223,11 +223,11 @@ LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator)
 tool.  Over the years, a broad variety of particle interaction models
 have been implemented in LAMMPS, enabling it to model a wide range of
 systems, including atomic, polymeric, biological, metallic, reactive, granular,
-mesoscale, grid--free continuum, and coarse--grained systems
+mesoscale, grid-free continuum, and coarse-grained systems
 \cite{thompson2022lammps}.  LAMMPS can be used on a single CPU core, a
 multi-socket and multi-core server, an HPC cluster, or a high-end
 supercomputing system.  It can efficiently handle complex and large-scale
-simulations, including hybrid MPI--OpenMP parallelization
+simulations, including hybrid MPI-OpenMP parallelization
 and MPI + GPU acceleration (for a subset of its functionality).
 
 LAMMPS requires users to write detailed input files, a task that
@@ -271,8 +271,8 @@ to import LAMMPS-generated YAML log files into Python. %, and
 % without an external tool. SG: I removed the last part as it not really one
 % of the main goal of tutorial 2.
 
-In \hyperref[all-atom-label]{tutorial 3}, two components --
-liquid water (flexible three-point model) and a polymer molecule -- are merged and equilibrated.  A long-range
+In \hyperref[all-atom-label]{tutorial 3}, two components -
+liquid water (flexible three-point model) and a polymer molecule - are merged and equilibrated.  A long-range
 solver is used to handle the electrostatic interactions accurately, and
 the system is equilibrated in the isothermal-isobaric (NPT) ensemble.  A
 stretching force is applied to the polymer.  Through this relatively
@@ -709,7 +709,7 @@ the simulation box, with some in very close proximity to each other.
 This proximity results in a large initial potential energy due to the repulsive branch of the
 Lennard-Jones potential [i.e.,~the term in $1/r^{12}$ in Eq.~\eqref{eq:LJ}].
 As the energy minimization progresses, the
-energy decreases -- first rapidly -- then more gradually,
+energy decreases - first rapidly - then more gradually,
 before plateauing at a negative value.  This indicates that the atoms
 have moved to reasonable distances from one another.
 
@@ -1181,10 +1181,10 @@ Here are some suggestions for further experiments with this system that
 may lead to additional insights into how different systems are configured
 and how various features function:
 \begin{itemize}
-\item Use the Nos\'e--Hoover thermostat (\lmpcmd{fix nvt}) instead of the Langevin thermostat
+\item Use the Nos\'e-Hoover thermostat (\lmpcmd{fix nvt}) instead of the Langevin thermostat
   (\lmpcmd{fix nve} + \lmpcmd{fix langevin}).
 \item Omit the energy minimization step before starting the MD simulation using either
-the Nos\'e--Hoover or the Langevin thermostat.
+the Nos\'e-Hoover or the Langevin thermostat.
 \item Apply the thermostat to only one type of atoms and observe the
   temperature for each type separately.
 \item Append an NVE run (i.e.~without any thermostat) and observe the energy levels.
@@ -3709,10 +3709,10 @@ When combining these two commands, the MD simulation operates
 in the NVT ensemble, maintaining a constant number of
 atoms $N$, constant volume $V$, and a temperature $T$ that
 fluctuates around a target value.
-% SG: may be discuss the choice of constant "500" --> chosen for a relatiely weak coupling with thermostat (add a box?)
+% SG: may be discuss the choice of constant "500" -> chosen for a relatiely weak coupling with thermostat (add a box?)
 
 To ensure that the equilibration time is sufficient, we will track the evolution of
-the number of atoms in the central -- energetically unfavorable -- region,
+the number of atoms in the central - energetically unfavorable - region,
 referred to as \lmpcmd{mymes}, using the \lmpcmd{n\_center} variable:
 \begin{lstlisting}
 region mymes block -${x0} ${x0} INF INF INF INF
@@ -4420,7 +4420,7 @@ lammps-gui input.lmp
 Files can also be opened from the ``File'' menu.  You can select a
 file through a dialog and then open it.  Additionally, a history of
 the last five opened files is maintained, with entries to open them directly.
-Finally, the \texttt{Ctrl--O} keyboard shortcut can also be used to open a file.
+Finally, the \texttt{Ctrl-O} keyboard shortcut can also be used to open a file.
 
 When integrated into a desktop environment, it is also possible to open
 files with a ``.lmp'' extension or use drag-and-drop.
@@ -4448,7 +4448,7 @@ If the file in the editor has unsaved changes, the word
 ``\*modified\*'' will appear in the window title.  The current input
 buffer can be saved by selecting ``Save'' or ``Save As...'' from the
 ``File'' menu.  You can also click the ``Save'' icon on the left side
-of the status bar, or use the \texttt{Ctrl--S} keyboard shortcut.
+of the status bar, or use the \texttt{Ctrl-S} keyboard shortcut.
 
 \begin{note}
 When \lammpsgui{} opens a file, it will \emph{switch} the working directory
@@ -4462,7 +4462,7 @@ which are typically expected to be in the same folder as the input file.
 
 %The contents of the \textit{Editor} window can be saved by either using
 %the ``Save'' or ``Save As'' entry in the ``File'' menu, using the
-%\texttt{Ctrl--S} keyboard shortcut or by clicking on the ``Save'' icon
+%\texttt{Ctrl-S} keyboard shortcut or by clicking on the ``Save'' icon
 %at the bottom left of the \textit{Editor} window status bar.  For
 %running LAMMPS in \lammpsgui{} it is not required to save the buffer.
 %The current contents of the buffer will be passed on to LAMMPS.
