@@ -245,7 +245,7 @@ interactions between atoms (the so-called force field)
 simulation software, they may occasionally be constrained by the
 features available in a given package.  The tutorials in this
 article aim to flatten the learning curve and guide users in
-performing accurate, reliable MS with LAMMPS.
+performing accurate and reliable molecular simulations with LAMMPS.
 
 \subsection{Scope}
 
@@ -263,41 +263,40 @@ ensembles.
 In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system
 is introduced, where atoms are connected by bonds: a small carbon
 nanotube.  The use of both classical and reactive force fields (here,
-AIREBO) is illustrated.  An external deformation is applied to the CNT,
-and its deformation is measured.  This tutorial also demonstrates the use
-of an external tool to visualize breaking bonds, and show the possibility
-to import LAMMPS-generated YAML log files into Python. %, and
-% demonstrates how available LAMMPS features can be used to do the same
-% without an external tool. SG: I removed the last part as it not really one
-% of the main goal of tutorial 2.
+OPLS-AA and AIREBO) is illustrated.  An external deformation is applied
+to the CNT, and its deformation is measured.  This tutorial also
+demonstrates the use of an external tool to visualize breaking bonds,
+and show the possibility to import LAMMPS-generated YAML log files into
+Python.
 
-In \hyperref[all-atom-label]{tutorial 3}, two components -
-liquid water (flexible three-point model) and a polymer molecule - are merged and equilibrated.  A long-range
-solver is used to handle the electrostatic interactions accurately, and
-the system is equilibrated in the isothermal-isobaric (NPT) ensemble.  A
-stretching force is applied to the polymer.  Through this relatively
-complex solvated polymer system, the tutorial demonstrates how to use
-type labels to make molecule files more generic and easier to manage~\cite{typelabel_paper}.
+In \hyperref[all-atom-label]{tutorial 3}, two components - liquid water
+(flexible three-point model) and a polymer molecule - are merged and
+equilibrated.  A long-range solver is used to handle the electrostatic
+interactions accurately, and the system is equilibrated in the
+isothermal-isobaric (NPT) ensemble; then a stretching force is applied
+to the polymer.  Through this relatively complex solvated polymer
+system, the tutorial demonstrates how to use type labels to make
+molecule files more generic and easier to manage~\cite{typelabel_paper}.
 
-In \hyperref[sheared-confined-label]{tutorial 4}, an electrolyte is confined between
-two walls, illustrating the specifics of simulating systems
-with fluid-solid interfaces.  The tutorial uses a slightly more
-complex water model than \hyperref[all-atom-label]{tutorial 3}: the rigid
-four-point model, TIP4P/2005~\cite{abascal2005general}.  Non-equilibrium MD is
-performed by imposing shear on the fluid through the moving walls,
-and the fluid velocity profile is extracted.
+In \hyperref[sheared-confined-label]{tutorial 4}, an electrolyte is
+confined between two walls, illustrating the specifics of simulating
+systems with fluid-solid interfaces.  The tutorial uses a slightly more
+complex water model than \hyperref[all-atom-label]{tutorial 3}: the
+rigid four-point model TIP4P/2005~\cite{abascal2005general}.  A
+non-equilibrium MD is performed by imposing shear on the fluid through
+moving the walls, and the fluid velocity profile is extracted.
 
 In \hyperref[reactive-silicon-dioxide-label]{tutorial 5}, the ReaxFF
-reactive force field is used, specifically designed
-to simulate chemical reactions by dynamically adjusting
-atomic interactions \cite{van2001reaxff}.  ReaxFF includes charge equilibration
-(QEq), a method that allows the partial charges of atoms
-to adjust according to their local environment.
+reactive force field is used, specifically designed to simulate chemical
+reactions by dynamically adjusting atomic interactions
+\cite{van2001reaxff}.  ReaxFF includes charge equilibration (QEq), a
+method that allows the partial charges of atoms to adjust according to
+their local environment.
 
 In \hyperref[gcmc-silica-label]{tutorial 6}, a Monte Carlo simulation in
-the Grand Canonical ensemble is implemented to demonstrate how
-LAMMPS can be used to simulate an open system that exchange
-particles with a reservoir.
+the Grand Canonical ensemble is implemented to demonstrate how LAMMPS
+can be used to simulate an open system that exchanges particles with a
+reservoir.
 
 In \hyperref[umbrella-sampling-label]{tutorial 7}, an advanced free
 energy method called umbrella sampling is implemented.  By calculating
@@ -318,13 +317,14 @@ This set of tutorials assumes no prior knowledge of the LAMMPS software
 itself.  To complete the tutorials, a text editor and a suitable LAMMPS
 executable are required.  We use \lammpsgui{}~\cite{lammps_gui_docs}
 here, as it offers features that make it particularly convenient for
-tutorials, but other console or graphical text editors, such as GNU nano,
-vi/vim, Emacs, Notepad, Gedit, and Visual Studio Code, can also be
-used.  LAMMPS can be executed either directly from
-\lammpsgui{} (\hyperref[using-lammps-gui-label]{Appendix~\ref{using-lammps-gui-label}})
-or from the command-line (\hyperref[command-line-label]{Appendix~\ref{command-line-label}}),
-the latter of which requires some familiarity with executing commands
-from a terminal or command-line prompt.
+tutorials, but other console or graphical text editors, such as GNU
+nano, vi/vim, Emacs, Notepad, Gedit, and Visual Studio Code can also be
+used.  LAMMPS can be executed either directly from \lammpsgui{}
+(\hyperref[using-lammps-gui-label]{Appendix~\ref{using-lammps-gui-label}})
+or from a command prompt
+(\hyperref[command-line-label]{Appendix~\ref{command-line-label}}), the
+latter of which requires some familiarity with executing commands from a
+terminal or command-line prompt.
 
 In addition, prior knowledge of the theoretical basics of molecular
 simulations and statistical physics is highly beneficial.  Users may
@@ -343,27 +343,29 @@ and molecular simulations~\cite{sklogwiki_main_page}.
 
 \subsection{Software/system requirements}
 
-The LAMMPS release version 29Aug2024~\cite{lammps_code} and the matching
-\lammpsgui{} software version 1.6.11 are required to follow the
-tutorials, as they include features that were first introduced in these
-versions.  For Linux (x86\_64 CPU), macOS (BigSur or later), and Windows
-(10 and 11) you can download a precompiled LAMMPS package from the
-LAMMPS release page on GitHub~\cite{lammps_github_release}.
-Select a package with `GUI' in the file name, which includes both,
-\lammpsgui{} and a LAMMPS command-line executable.  These precompiled
-packages are designed to be portable, and therefore omit support for
-parallel execution with MPI.  Instructions for installing \lammpsgui{}
-and using its most relevant features for the tutorials are provided in
+The LAMMPS stable release version 29Aug2024\_update2~\cite{lammps_code}
+and the matching \lammpsgui{} software version 1.6.12 are required to
+follow the tutorials, as they include features that were first
+introduced in these versions.  For Linux (x86\_64 CPU), macOS (BigSur or
+later), and Windows (10 and 11) you can download a precompiled LAMMPS
+package from the LAMMPS release page on
+GitHub~\cite{lammps_github_release}.  Select a package with `GUI' in the
+file name, which includes both, \lammpsgui{} and the LAMMPS command-line
+executable.  These precompiled packages are designed to be portable, and
+therefore omit support for parallel execution with MPI.  Instructions
+for installing \lammpsgui{} and using its most relevant features for the
+tutorials are provided in
 \hyperref[using-lammps-gui-label]{Appendix~\ref{using-lammps-gui-label}}.
 
 LAMMPS versions are generally backward compatible, meaning that old
 input files typically work with newer versions of LAMMPS.  However,
-forward compatibility is not as strong, so
-newer input files may not work with older versions.  As a result, it is
-usually possible to follow this tutorial with more recent releases of
-\lammpsgui{} and LAMMPS, though older versions may require some minor adjustments.
-These tutorials will be periodically updated to ensure compatibility
-and take advantage of new features in the latest stable version of LAMMPS.
+forward compatibility is not as strong, so input files written for a
+newer version may not always work with an older versions.  As a result,
+it is usually possible to follow this tutorial with more recent releases
+of \lammpsgui{} and LAMMPS; older versions may require some (minor)
+adjustments.  These tutorials will be periodically updated to ensure
+compatibility and take advantage of new features in the latest stable
+version of LAMMPS.
 
 For some tutorials, external tools are required for plotting and
 visualization, as the corresponding functionality in \lammpsgui{} is
