@@ -1,6 +1,5 @@
   using 8 OpenMP thread(s) per MPI task
 using multi-threaded neighbor list subroutines
-WARNING: Detected non-ASCII characters in input. Will try to continue by replacing with ASCII equivalents where known. (src/input.cpp:478)
 Lattice spacing in x,y,z = 4.04 4.04 4.04
 Created orthogonal box = (-12.12 -12.12 -20.2) to (12.12 12.12 20.2)
   1 by 1 by 1 MPI processor grid
@@ -8,7 +7,7 @@ Created 432 atoms
   using lattice units in orthogonal box = (-12.12 -12.12 -20.2) to (12.12 12.12 20.2)
   create_atoms CPU = 0.006 seconds
 Read molecule template h2omol:
-# Water molecule.
+# LAMMPS Input File (License CC BY 4.0)
   1 molecules
   0 fragments
   3 atoms with max type 2
@@ -21,7 +20,7 @@ Created 1944 atoms
   create_atoms CPU = 0.002 seconds
 Created 15 atoms
   using lattice units in orthogonal box = (-12.12 -12.12 -20.2) to (12.12 12.12 20.2)
-  create_atoms CPU = 0.004 seconds
+  create_atoms CPU = 0.005 seconds
 Created 15 atoms
   using lattice units in orthogonal box = (-12.12 -12.12 -20.2) to (12.12 12.12 20.2)
   create_atoms CPU = 0.004 seconds
@@ -63,7 +62,7 @@ PPPM initialization ...
   estimated relative force accuracy = 1.0535666e-05
   using double precision KISS FFT
   3d grid and FFT values/proc = 39375 19440
-WARNING: Communication cutoff 0 is shorter than a bond length based estimate of 3.4358. This may lead to errors. (src/comm.cpp:731)
+WARNING: Communication cutoff 0 is shorter than a bond length based estimate of 3.4358. This may lead to errors. (src/comm.cpp:730)
 WARNING: Increasing communication cutoff to 15.1118 for TIP4P pair style (src/KSPACE/pair_lj_cut_tip4p_long.cpp:497)
 Generated 9 of 10 mixed pair_coeff terms from geometric mixing rule
 Last active /omp style is kspace_style pppm/tip4p/omp
@@ -86,9 +85,9 @@ Setting up Verlet run ...
 Per MPI rank memory allocation (min/avg/max) = 19.16 | 19.16 | 19.16 Mbytes
    Step          Temp          E_pair         E_mol          TotEng         Press     
          0   0              501411.03      0              501411.03      6165751.9    
-Loop time of 0.000133443 on 8 procs for 0 steps with 1680 atoms
+Loop time of 3.207e-06 on 8 procs for 0 steps with 1680 atoms
 
-81.7% CPU use with 1 MPI tasks x 8 OpenMP threads
+155.9% CPU use with 1 MPI tasks x 8 OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
@@ -100,7 +99,7 @@ Neigh   | 0          | 0          | 0          |   0.0 |  0.00
 Comm    | 0          | 0          | 0          |   0.0 |  0.00
 Output  | 0          | 0          | 0          |   0.0 |  0.00
 Modify  | 0          | 0          | 0          |   0.0 |  0.00
-Other   |            | 0.0001334  |            |       |100.00
+Other   |            | 3.207e-06  |            |       |100.00
 
 Nlocal:           1680 ave        1680 max        1680 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
