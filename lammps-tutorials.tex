@@ -1719,16 +1719,34 @@ Here, the potential is AIREBO, and the CNT is breakable.}
 
 \paragraph{Tip: bonds representation with AIREBO}
 
-In the following input file,
-\href{\filepath tutorial2/breakable-with-tip.lmp}{\dwlcmd{breakable-with-tip.lmp}},
-a trick is used to represent bonds while using AIREBO.  A detailled
-explanation of the script is beyong the scope of the present tutorial.
-In short, the trick is to use AIREBO with the molecular atom
-style, and use the \lmpcmd{bond/break} command to update the status of the bonds
-during the simulation:
+In the input file
+% do not wrap this line
+\href{\filepath tutorial2/solution/breakable-with-tip.lmp}{\dwlcmd{solution/breakable-with-tip.lmp}},
+% do not wrap this line
+which is an alternate solution for \flecmd{breakable.lmp}, a trick is
+used to represent bonds while using AIREBO.  A detailed explanation of
+the script is beyond the scope of the present tutorial.  In short, the
+trick is to use AIREBO with the \lmpcmd{molecular} atom style, and use
+the \lmpcmd{fix bond/break} and \lmpcmd{fix bond/create/angle} commands
+to update the status of the bonds during the simulation:
 \begin{lstlisting}
 fix break all bond/break 1000 1 2.5
+fix form all bond/create/angle 1000 1 1 2.0 1 aconstrain 90.0 180
 \end{lstlisting}
+
+This ``hack'' works because AIREBO does not pay any attention to bonded
+interactions and computes the bond topology dynamically inside the pair
+style.  Thus adding bonds of bond style \lmpcmd{zero} does not add any
+interactions but allow the visualization of them with \lmpcmd{dump
+  image}.  It is, however needed to change the \lmpcmd{special\_bonds}
+setting to disable any neighbor list exclusions as they are common for
+force fields with explicit bonds.
+\begin{lstlisting}
+bond_style zero
+bond_coeff 1 1.4
+special_bonds lj/coul 1.0 1.0 1.0
+\end{lstlisting}
+
 % S.G.: we could write a bit more about it
 
 \subsection{Tutorial 3: Polymer in water}
