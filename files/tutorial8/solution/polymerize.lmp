@@ -1,5 +1,5 @@
 # Python script (License CC BY 4.0)
-# By Simon Gravelle, Jacob R. Gissinger, and Axel Kohlmeyer  
+# By Simon Gravelle, Jacob R. Gissinger, and Axel Kohlmeyer
 # The DOI will be added upon publication
 # Find more on GitHub: https://github.com/lammpstutorials
 
@@ -52,7 +52,7 @@ fix rxn all bond/react &
   react R3 all 1 0 5.0 mol5 mol6 P-P.rxnmap
 
 fix mynvt statted_grp_REACT nvt temp 530 530 100
-group CNT molecule 1 2 3
+group CNT molecule 1
 fix myrec CNT recenter NULL 0 0 shift all
 
 thermo 200
