@@ -10,7 +10,10 @@ unbreakable.inc
 breakable.lmp
 breakable.data
 
-# 2) solution files
+# 2) support files
+CH.airebo
+
+# 3) solution files
 # only downloaded on request
 solution/unbreakable.lmp
 solution/unbreakable.data
@@ -29,6 +32,6 @@ solution/breakable.dat
 solution/breakable-yaml-reader.py
 solution/breakable-with-tip.lmp
 
-# 3) support files
+# 4) extra files
 unbreakable-yaml-reader.py
-CH.airebo
+

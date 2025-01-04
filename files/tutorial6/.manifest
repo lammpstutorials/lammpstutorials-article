@@ -9,7 +9,10 @@ cracking.lmp
 gcmc.lmp
 H2O.mol
 
-# 2) solution files
+# 2) support files
+SiO.1990.vashishta
+
+# 3) solution files
 # only downloaded on request
 solution/cracking.data
 solution/cracking-mod.data
@@ -25,7 +28,3 @@ solution/cracking.log
 solution/gcmc.png
 solution/generate.lmp
 solution/H2O.mol
-
-# 3) support files
-SiO.1990.vashishta
-
