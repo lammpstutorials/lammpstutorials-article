@@ -339,7 +339,7 @@ tutorials, users can also refer to \textit{Basic Concepts for Simple and
   with Applications to Soft Matter} by Jean-Pierre Hansen and Ian Ranald
 McDonald~\cite{hansen2013theory}.  For more resources, the SklogWiki
 platform provies a wide range of information information on statistical mechanics
-and molecular simulations~\cite{sklogwiki_main_page}. 
+and molecular simulations~\cite{sklogwiki_main_page}.
 
 \subsection{Software/system requirements}
 
@@ -498,7 +498,7 @@ The first line, \lmpcmd{units lj}, specifies the use of
 a popular choice for simulations that explore general statistical mechanical
 principles, as it emphasizes relative differences between parameters rather than
 representing any specific material.  The second line, \lmpcmd{dimension 3}, specifies that the simulation is conducted
-in 3D space, as opposed to 2D, where atoms are confined to move only in the 
+in 3D space, as opposed to 2D, where atoms are confined to move only in the
 xy-plane.  The third line, \lmpcmd{atom\_style atomic}, designates
 the atomic style for representing simple, individual particles.
 In this style, each particle is treated as a point with a mass, making it the
@@ -681,7 +681,7 @@ the potential energy.  By default, LAMMPS uses the conjugate gradient (CG)
 algorithm~\cite{hestenes1952methods}.  The simulation will stop as soon
 as the minimizer algorithm cannot find a way to lower the potential
 energy. % SG: I don't think that its true, its rather the algorithm
-% will stop when one of the four criteria is met. Axel, what do you think? 
+% will stop when one of the four criteria is met. Axel, what do you think?
 % I propose to replace by "when specific convergence criteria are met"
 Note that, except for trivial systems, minimization algorithms will find a
 local minimum rather than the global minimum.
@@ -1135,7 +1135,7 @@ force applied to the atoms is equal to zero.
 \caption{a)~Evolution of the numbers $N_\text{1, in}$ and $N_\text{2, in}$ of atoms
 of types 1 and 2, respectively, within the \lmpcmd{cyl\_in} region as functions
 of time $t$.  b)~Evolution of the coordination number $C_{1-2}$ (compute \lmpcmd{sumcoor12})
-between atoms of types 1 and 2.} 
+between atoms of types 1 and 2.}
 \label{fig:mixing}
 \end{figure}
 
@@ -1699,7 +1699,7 @@ energy $E_\text{tot}$ is initially increasing with the deformation.  When
 bonds break, the energy relaxes abruptly, as can be seen near $t=32~\text{ps}$ in Fig.~\ref{fig:CNT-breakable-energy-stress}\,a.
 Using a similar script as previously,
 i.e.,~\href{\filepath tutorial2/unbreakable-yaml-reader.py}{\dwlcmd{unbreakable-yaml-reader.py}},
-import the data into Python and generate the stress-strain curve (Fig.~\ref{fig:CNT-breakable-energy-stress}\,b).  The 
+import the data into Python and generate the stress-strain curve (Fig.~\ref{fig:CNT-breakable-energy-stress}\,b).  The
 stress-strain curve reveals a linear (elastic) regime where $F_\text{cnt} \propto \Delta L_\text{cnt}$
 for $\Delta L_\text{cnt} < 5\,\%$, and a non-linear (plastic) regime
 for $5\,\% < \Delta L_\text{cnt} < 25\,\%$.
@@ -2129,7 +2129,7 @@ thermo 250
 dump mydmp all local 100 pull.dat index c_dphi c_prop
 \end{lstlisting}
 By contrast with the radius of gyration (compute \lmpcmd{rgyr}), the dihedral angle  % SG: why is c_prop not printed?
-$\phi$ (compute \lmpcmd{dphi}) is returned as a vector by the \lmpcmd{compute dihedral/local} 
+$\phi$ (compute \lmpcmd{dphi}) is returned as a vector by the \lmpcmd{compute dihedral/local}
 command and must be written to a file using the \lmpcmd{dump local} command.
 
 Finally, let us simulate 15 picoseconds without any external force:
@@ -2768,7 +2768,7 @@ approximately $\dot{\gamma} = 20 \cdot 10^9\,\text{s}^{-1}$ (Fig.~\ref{fig:NANOS
 the average force on each wall is given by \lmpcmd{f\_mysf1[1]} and \lmpcmd{f\_mysf2[1]}
 and is approximately $2.7\,\mathrm{kcal/mol/\AA}$ in magnitude.  Using a surface area
 for the walls of $A = 6 \cdot 10^{-18}\,\text{m}^2$, one obtains an estimate for
-the shear viscosity for the confined fluid of $\eta = 3.1\,\text{mPa.s}$ using Eq.~\eqref{eq:eta}. 
+the shear viscosity for the confined fluid of $\eta = 3.1\,\text{mPa.s}$ using Eq.~\eqref{eq:eta}.
 
 \begin{note}
 The viscosity calculated at such a high shear rate may differ from the expected
@@ -4008,7 +4008,7 @@ protocol relies on the use of a \textit{classical} force field.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.7\linewidth]{REACT.png}
+\includegraphics[width=\linewidth]{REACT.png}
 \caption{Initial configuration for \hyperref[bond-react-label]{Tutorial 8}.
 The system consists of 200 styrene molecules packed around a single-walled
 CNT, with a mass density for the whole system of $0.9~\text{g/cm}^3$.}
@@ -4039,7 +4039,7 @@ The \lmpcmd{class2} styles compute a 6/9 Lennard-Jones potential~\cite{sun1998co
 The \textit{class2} bond, angle, dihedral, and improper styles are used as
 well, see the documentation for a description of their respective potentials.
 The \lmpcmd{mix sixthpower} imposes the following mixing rule for the calculation
-of the cross coefficients: 
+of the cross coefficients:
 \begin{eqnarray}
 \nonumber
 \sigma_{ij} & = & 2^{-1/6} (\sigma^6_i+\sigma_j^6)^{1/6}, ~ \text{and} \\
@@ -4073,7 +4073,7 @@ Then, let us densify the system to a target value of $0.9~\text{g/cm}^3$
 by manually shrinking the simulation box at a constant rate.  The dimension parallel
 to the CNT axis is maintained fixed because the CNT is periodic in that direction.
 Add the following commands to \flecmd{mixing.lmp}:
-% SG: I removed the loop local, unless its important? But if it is, we have to 
+% SG: I removed the loop local, unless its important? But if it is, we have to
 % explain what it does and why it was chosen here.
 \begin{lstlisting}
 velocity all create 530 9845 dist gaussian rot yes
@@ -4089,7 +4089,7 @@ thermo_style custom step temp pe etotal press density
 run 9000
 \end{lstlisting}
 The \lmpcmd{fix halt} command is used to stop the box shrinkage once the
-target density is reached. 
+target density is reached.
 
 For the next stage of the simulation, we will use \lmpcmd{dump image} to
 output images every 200 steps:
@@ -4114,7 +4114,7 @@ unfix mydef
 unfix myhal
 reset_timestep 0
 
-group CNT molecule 1 2 3
+group CNT molecule 1
 fix myrec CNT recenter NULL 0 0 units box shift all
 
 run 10000
@@ -4250,9 +4250,9 @@ reaction sties, are also specified in this command.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.7\linewidth]{REACT-final.png}
+\includegraphics[width=\linewidth]{REACT-final.png}
 \caption{Final configuration for \hyperref[bond-react-label]{Tutorial 8}.
-The atoms from the formed polymer named \lmpcmd{c1}, \lmpcmd{c2}, and 
+The atoms from the formed polymer named \lmpcmd{c1}, \lmpcmd{c2}, and
 \lmpcmd{c3} are colored in pink.}
 \label{fig:REACT-final}
 \end{figure}
@@ -4262,7 +4262,7 @@ The command \lmpcmd{fix bond/react} creates several groups of atoms that are dyn
 to track which atoms are being stabilized and which atoms are undergoing
 dynamics with the system-wide time integrator (here, \lmpcmd{fix nvt}).
 When reaction stabilization is employed, there should not be a time integrator acting on
-the group \lmpcmd{all}.  Instead, the group of atoms not currently
+the group \mbox{\lmpcmd{all}.}  Instead, the group of atoms not currently
 undergoing stabilization is named by appending `\_REACT' to the user-provided prefix.
 \end{note}
 
@@ -4291,10 +4291,10 @@ while the number of reactions, $N_r$, increases with time (Fig.~\ref{fig:evoluti
 \caption{a) Evolution of the system temperature, $T$,
 as a function of the time, $t$, during the polymerization step of
 \hyperref[bond-react-label]{Tutorial 8}.
-b) Evolution of the three reaction counts, corresponding respecively to
-the polymerization of two styrene monomers (Rnx~1), the  addition of a styrene
-monomer to the end of a growing polymer chain (Rnx~2), and to the linking
-of two polymer chains (Rnx~3).}
+b) Evolution of the three reaction counts, corresponding respectively to
+the polymerization of two styrene monomers (Rxn~1), the  addition of a styrene
+monomer to the end of a growing polymer chain (Rxn~2), and to the linking
+of two polymer chains (Rxn~3).}
 \label{fig:evolution-reacting}
 \end{figure}
 
