@@ -1,5 +1,5 @@
 # LAMMPS Input File (License CC BY 4.0)
-# By Simon Gravelle, Jacob R. Gissinger, and Axel Kohlmeyer  
+# By Simon Gravelle, Jacob R. Gissinger, and Axel Kohlmeyer
 # The DOI will be added upon publication
 # Find more on GitHub: https://github.com/lammpstutorials
 
@@ -63,7 +63,7 @@ Charges
      10  0.128800
      11 -0.173400
      12  0.140300
-     13  0.051600
+     13  0.051800
      14 -0.069600
      15  0.035400
      16  0.035400
