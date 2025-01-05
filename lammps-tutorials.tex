@@ -2163,7 +2163,7 @@ in the absence (orange) and in the presence (blue) of the applied force.}
 \paragraph{Tip: using external visualization tools}
 
 Trajectories can be visualized using external tools such as VMD
-or Ovito \cite{humphrey1996vmd, ovito_paper}.  To do so, the IDs and
+or OVITO~\cite{humphrey1996vmd, ovito_paper}.  To do so, the IDs and
 positions of the atoms must be regularly written to a file during the
 simulation.  This can be accomplished by adding a \lmpcmd{dump}
 command to the input file.  For instance, create a duplicate of \flecmd{pull.lmp}
@@ -2176,7 +2176,7 @@ Then, replace the existing \lmpcmd{dump} and \lmpcmd{dump\_modify} commands with
 dump mydmp all atom 1000 pull.lammpstrj
 \end{lstlisting}
 Running the \flecmd{pull-with-tip.lmp} file using LAMMPS will generate a trajectory file
-named \flecmd{pull.lammpstrj}, which can be opened in Ovito or VMD.
+named \flecmd{pull.lammpstrj}, which can be opened in OVITO or VMD.
 
 \subsection{Tutorial 4: Nanosheared electrolyte}
 \label{sheared-confined-label}
