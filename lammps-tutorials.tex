@@ -639,7 +639,7 @@ The \lmpcmd{thermo 10} command instructs LAMMPS to print thermodynamic
 information to the console every specified number of steps, in this case,
 every 10 simulation steps.  The \lmpcmd{thermo\_style custom} command
 defines the specific outputs, which in this case are the step number
-(\lmpcmd{step}), total energy (\lmpcmd{etotal}), and pressure (\lmpcmd{press}).
+(\lmpcmd{step}), total energy $E$ (\lmpcmd{etotal}), and pressure $p$ (\lmpcmd{press}).
 The \lmpcmd{run 0 post no} command instructs LAMMPS to initialize forces and energy
 without actually running the simulation.  The \lmpcmd{post no} option disables
 the post-run summary and statistics output.
@@ -711,8 +711,9 @@ fresh, resetting the system and re-executing the script from the beginning.
 \label{fig:chart-log}
 \end{figure}
 
-The potential energy decreases from a positive value to a negative value
-(Figs.~\ref{fig:chart-log} and~\ref{fig:evolution-energy}\,a).  The
+The potential energy, $U$, decreases from a positive value to a negative value
+(Figs.~\ref{fig:chart-log} and~\ref{fig:evolution-energy}\,a).  Note that $E = U$ 
+during energy minization, as the kinetic energy $K = 0$.  The
 initially positive potential energy is expected, as the atoms are
 created at random positions within the simulation box, with some in very
 close proximity to each other.  This proximity results in a large
@@ -757,10 +758,10 @@ update the output frequency from 10 to 50 as soon as \lmpcmd{PART B} of
 the simulation starts.  In addition, a new \lmpcmd{thermo\_style}
 command is introduced to specify the thermodynamic information LAMMPS should
 print during during \lmpcmd{PART B}.  This adjustment is done because during molecular
-dynamics, the system exhibits non-zero temperature (\lmpcmd{temp})
-and kinetic energy (\lmpcmd{ke}), which are useful to monitor.
-The \lmpcmd{pe} keyword represents the potential energy of the system, such that
-\lmpcmd{pe} + \lmpcmd{ke} = \lmpcmd{etotal}.
+dynamics, the system exhibits non-zero temperature $T$
+(and thus non-zero kinetic energy $K$), which are useful to monitor.
+The \lmpcmd{pe} keyword represents the potential energy of the system, $E$, such that
+$U + K = E$.
 
 Then, add a second \lmpcmd{Run} category by including the following
 lines in \lmpcmd{PART B} of \flecmd{initial.lmp}:
@@ -822,12 +823,11 @@ canonical or NVT ensemble.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{LJ-energy}
-\caption{(a) Potential energy ($p_\text{e}$) of the binary mixture
-as a function of the step during energy minimization in \hyperref[lennard-jones-label]{Tutorial 1}.
-(b) Potential energy ($p_\text{e}$) as a function of time during
-molecular dynamics in the NVT ensemble.  (c) Kinetic energy
-($k_\text{e}$) during energy minimization.  (d) Kinetic energy
-($k_\text{e}$) during molecular dynamics.}
+\caption{(a) Potential energy, $U$, of the binary mixture as a function of the
+step during energy minimization in \hyperref[lennard-jones-label]{Tutorial 1}.
+(b) Potential energy, $U$, as a function of time during molecular dynamics in
+the NVT ensemble.  (c) Kinetic energy, $K$, during energy minimization.
+(d) Kinetic energy, $K$, during molecular dynamics.}
 \label{fig:evolution-energy}
 \end{figure}
 
@@ -835,11 +835,11 @@ Run the simulation again using \lammpsgui{}.  From the information
 printed in the \guicmd{Output} window, one can see that the temperature
 starts from 0 but rapidly reaches the requested value and
 stabilizes itself near $T=1$ temperature units.  One can also observe that
-the potential energy, $p_\text{e}$, rapidly decreases during energy
+the potential energy, $U$, rapidly decreases during energy
 minimization (see also Fig.~\ref{fig:evolution-energy}\,a).  After
-the molecular dynamics simulation starts, $p_\text{e}$ increases until
+the molecular dynamics simulation starts, $U$ increases until
 it reaches a plateau value of about -0.25.  The kinetic energy,
-$k_\text{e}$, is equal to zero during energy minimization and then
+$K$, is equal to zero during energy minimization and then
 increases rapidly during molecular dynamics until it reaches
 a plateau value of about 1.5 (Fig.~\ref{fig:evolution-energy}\,d).
 
@@ -1555,7 +1555,7 @@ $0.001\,\text{\AA{}/fs}$.
 \caption{a) Evolution of the length $L_\text{cnt}$ of the CNT with time,
 as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
 The CNT starts deforming at $t = 5\,\text{ps}$, and $L_\text{cnt-0}$ is the
-CNT initial length.  b) Evolution of the total energy $E_\text{tot}$ of the system
+CNT initial length.  b) Evolution of the total energy $E$ of the system
 with time $t$.  Here, the potential is OPLS-AA, and the CNT is unbreakable.}
 \label{fig:CNT-unbreakable-LE}
 \end{figure}
@@ -1711,7 +1711,7 @@ VMD~\cite{vmd_home,humphrey1996vmd} with the \guicmd{DynamicBonds} representatio
 \end{figure}
 
 Looking at the evolution of the energy, one can see that the total
-energy $E_\text{tot}$ is initially increasing with the deformation.  When
+energy $E$ is initially increasing with the deformation.  When
 bonds break, the energy relaxes abruptly, as can be seen near $t=32~\text{ps}$ in Fig.~\ref{fig:CNT-breakable-energy-stress}\,a.
 Using a similar script as previously,
 i.e.,~\href{\filepath tutorial2/unbreakable-yaml-reader.py}{\dwlcmd{unbreakable-yaml-reader.py}},
@@ -1723,7 +1723,7 @@ for $5\,\% < \Delta L_\text{cnt} < 25\,\%$.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{CNT-breakable-stress-energy}
-\caption{a) Evolution of the total energy $E_\text{tot}$ of the CNT with time $t$.
+\caption{a) Evolution of the total energy $E$ of the CNT with time $t$.
 b) Stress applied on the CNT during deformation, $F_\text{cnt}/A_\text{cnt}$,
 where $F_\text{cnt}$ is the force and $A_\text{cnt}$ the CNT surface area,
 as a function of the strain, $\Delta L_\text{cnt} = (L_\text{cnt}-L_\text{cnt-0}/L_\text{cnt-0})$, where
@@ -4177,7 +4177,7 @@ The final state is shown in Fig.~\ref{fig:REACT}.
 \includegraphics[width=\linewidth]{REACT-mixing}
 \caption{a) Evolution of the density, $\rho$, as a function of the
 time, $t$, during equilibration of the system from \hyperref[bond-react-label]{Tutorial 8}.
-b) Evolution of the total energy, $E_\text{tot}$, of the system.
+b) Evolution of the total energy, $E$, of the system.
 The vertical dashed lines mark the transition between the different
 phases of the simulation.}
 \label{fig:evolution-density}
