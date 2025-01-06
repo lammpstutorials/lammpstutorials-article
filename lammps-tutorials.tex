@@ -230,22 +230,23 @@ supercomputing system.  It can efficiently handle complex and large-scale
 simulations, including hybrid MPI-OpenMP parallelization
 and MPI + GPU acceleration (for a subset of its functionality).
 
-LAMMPS requires users to write detailed input files, a task that
-can be particularly challenging for new users.  Although its
-documentation extensively describes all available features~\cite{lammps_docs},
+LAMMPS requires users to write detailed input files, a task that can be
+particularly challenging for new users.  Although its documentation
+extensively describes all available features~\cite{lammps_docs},
 navigating it can be challenging.  Much of the information may be
-unnecessary for common use cases, and the detailed manual can
-often feel overwhelming.  Beyond the intrinsic complexity of LAMMPS, performing accurate
-MS requires several complex, system-specific decisions regarding
-the physics to be modeled, such as selecting the thermodynamic
+unnecessary for common use cases, and the detailed manual can often feel
+overwhelming.  Beyond the intrinsic complexity of LAMMPS, performing
+accurate MS requires several complex, system-specific decisions
+regarding the physics to be modeled, such as selecting the thermodynamic
 ensemble (e.g.,~micro-canonical, grand-canonical), determining the
 simulation duration, and choosing the sets of parameters describing the
 interactions between atoms (the so-called force field)
-\cite{wong2016good, van2018validation, prasad2018best}.  While these choices are independent of the
-simulation software, they may occasionally be constrained by the
-features available in a given package.  The tutorials in this
-article aim to flatten the learning curve and guide users in
-performing accurate and reliable molecular simulations with LAMMPS.
+\cite{wong2016good, van2018validation, prasad2018best}.  While these
+choices are independent of the simulation software, they may
+occasionally be constrained by the features available in a given
+package.  The tutorials in this article aim to flatten the learning
+curve and guide users in performing accurate and reliable molecular
+simulations with LAMMPS.
 
 \subsection{Scope}
 
@@ -263,11 +264,12 @@ ensembles.
 In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system
 is introduced, where atoms are connected by bonds: a small carbon
 nanotube.  The use of both classical and reactive force fields (here,
-OPLS-AA and AIREBO) is illustrated.  An external deformation is applied
-to the CNT, and its deformation is measured.  This tutorial also
-demonstrates the use of an external tool to visualize breaking bonds,
-and show the possibility to import LAMMPS-generated YAML log files into
-Python.
+OPLS-AA~\cite{jorgensenDevelopmentTestingOPLS1996} and
+AIREBO~\cite{stuart2000reactive}, respectively) is illustrated.  An
+external deformation is applied to the CNT, and its deformation is
+measured.  This tutorial also demonstrates the use of an external tool
+to visualize breaking bonds, and show the possibility to import
+LAMMPS-generated YAML log files into Python.
 
 In \hyperref[all-atom-label]{tutorial 3}, two components - liquid water
 (flexible three-point model) and a polymer molecule - are merged and
@@ -280,9 +282,9 @@ molecule files more generic and easier to manage~\cite{typelabel_paper}.
 
 In \hyperref[sheared-confined-label]{tutorial 4}, an electrolyte is
 confined between two walls, illustrating the specifics of simulating
-systems with fluid-solid interfaces.  The tutorial uses a slightly more
-complex water model than \hyperref[all-atom-label]{tutorial 3}: the
-rigid four-point model TIP4P/2005~\cite{abascal2005general}.  A
+systems with fluid-solid interfaces.  With the rigid four-point
+TIP4P/2005~\cite{abascal2005general} water model, this tutorial uses a
+more complex water model than \hyperref[all-atom-label]{tutorial 3}.  A
 non-equilibrium MD is performed by imposing shear on the fluid through
 moving the walls, and the fluid velocity profile is extracted.
 
@@ -653,15 +655,16 @@ steps were performed, the \guicmd{Charts} window will be empty.
 
 \paragraph{Snapshot Image}
 
-At this point, you can create a snapshot image of the
-current system using the \guicmd{Image Viewer} window, which can be
-accessed by clicking the \guicmd{Create Image} button in the \guicmd{Run} menu.
-The image viewer works by instructing LAMMPS to render an image of the current system using
-its internal rendering library via the \lmpcmd{dump image} command.  The
-resulting image is then displayed, with various buttons available to adjust
-the view and rendering style.  The image shown in
-Fig.~\ref{fig:LJ} was created this way.  This will always capture the current
-state of the system.  Save the image for future comparisons.
+At this point, you can create a snapshot image of the current system
+using the \guicmd{Image Viewer} window, which can be accessed by
+clicking the \guicmd{Create Image} button in the \guicmd{Run} menu.  The
+image viewer works by instructing LAMMPS to render an image of the
+current system using its internal rendering library via the \lmpcmd{dump
+  image} command.  The resulting image is then displayed, with various
+buttons available to adjust the view and rendering style.  The image
+shown in Fig.~\ref{fig:LJ} was created this way.  This will always
+capture the current state of the system.  Save the image for future
+comparisons.
 
 \paragraph{Energy minimization}
 
@@ -1211,23 +1214,24 @@ all assigned a value of -1, and will therefore always be colored their default b
 
 In this tutorial, the system of interest is a small, single-walled
 carbon nanotube (CNT) in an empty box (Fig.~\ref{fig:CNT}).  The CNT is
-strained by imposing a constant velocity on the edge atoms.
-To illustrate the difference between conventional and reactive force fields, this
-tutorial is divided into two parts: in the first part, a conventional molecular force
-field (called OPLS-AA~\cite{jorgensenDevelopmentTestingOPLS1996}) is
-used and the bonds between the atoms of the CNT are unbreakable.  In the
-second part, a reactive force field (called AIREBO
-\cite{stuart2000reactive}) is used, which allows chemical bonds to break under large strain.
+strained by imposing a constant velocity on the edge atoms.  To
+illustrate the difference between conventional and reactive force
+fields, this tutorial is divided into two parts: in the first part, a
+conventional molecular force field (called
+OPLS-AA~\cite{jorgensenDevelopmentTestingOPLS1996}) is used and the
+bonds between the atoms of the CNT are unbreakable.  In the second part,
+a reactive force field (called AIREBO~\cite{stuart2000reactive}) is
+used, which allows chemical bonds to break under large strain.
 
 To set up this tutorial, select \guicmd{Start Tutorial 2} from the
-\guicmd{Tutorials} menu of \lammpsgui{} and follow the instructions.  This will
-select a folder, create one if necessary, and place several files into it.
-The initial input file, set up for a single-point energy
+\guicmd{Tutorials} menu of \lammpsgui{} and follow the instructions.
+This will select a folder, create one if necessary, and place several
+files into it.  The initial input file, set up for a single-point energy
 calculation, will also be loaded into the editor under the name
-\flecmd{unbreakable.lmp}.  Additional files are a data file containing the
-CNT topology and geometry, named \flecmd{unbreakable.data}, a parameters file
-named \flecmd{unbreakable.inc}, as well as the scripts required for the second part
-of the tutorial.
+\flecmd{unbreakable.lmp}.  Additional files are a data file containing
+the CNT topology and geometry, named \flecmd{unbreakable.data}, a
+parameters file named \flecmd{unbreakable.inc}, as well as the scripts
+required for the second part of the tutorial.
 
 \begin{figure}
 \centering
