@@ -359,23 +359,23 @@ for installing \lammpsgui{} and using its most relevant features for the
 tutorials are provided in
 \hyperref[using-lammps-gui-label]{Appendix~\ref{using-lammps-gui-label}}.
 
-LAMMPS versions are generally backward compatible, meaning that old
-input files typically work with newer versions of LAMMPS.  However,
-forward compatibility is not as strong, so input files written for a
-newer version may not always work with an older versions.  As a result,
-it is usually possible to follow this tutorial with more recent releases
-of \lammpsgui{} and LAMMPS; older versions may require some (minor)
-adjustments.  These tutorials will be periodically updated to ensure
-compatibility and take advantage of new features in the latest stable
+LAMMPS versions are generally backward compatible, meaning that older
+input files typically work the same with newer versions of LAMMPS.
+However, forward compatibility is not as strong, so input files written
+for a newer version may not always work with older versions.  As a
+result, it is usually possible to follow this tutorial with more recent
+releases of \lammpsgui{} and LAMMPS; older versions may require some
+(minor) adjustments.  These tutorials will be periodically updated to
+ensure compatibility and benefit from new features in the latest stable
 version of LAMMPS.
 
 For some tutorials, external tools are required for plotting and
 visualization, as the corresponding functionality in \lammpsgui{} is
-limited.  Suitable external tools for plotting include Python with
+limited.  Suitable tools for plotting include Python with
 Pandas/Matplotlib~\cite{van1995python,hunter2007Matplotlib}, XmGrace,
-Gnuplot, Microsoft Excel, and LibreOffice Calc.  For visualization,
-suitable external tools include VMD~\cite{vmd_home,humphrey1996vmd}
-and OVITO~\cite{ovito_home,ovito_paper}.
+Gnuplot, Microsoft Excel, or LibreOffice Calc.  For visualization,
+suitable tools include VMD~\cite{vmd_home,humphrey1996vmd} and
+OVITO~\cite{ovito_home,ovito_paper}.
 
 \subsection{About \lammpsgui{}}
 
@@ -385,7 +385,7 @@ directly.  The text editor functions similarly to other graphical
 editors, such as Notepad or Gedit, but offers the following enhancements
 specifically for LAMMPS:
 \begin{itemize}
-  \item Use of wizard dialogs to set up the tutorials
+  \item Wizard dialogs to set up these tutorials
   \item Auto-completion of LAMMPS commands and options
   \item Context-sensitive online help
   \item Syntax highlighting for LAMMPS input files
@@ -393,7 +393,7 @@ specifically for LAMMPS:
   \item Visualization using LAMMPS' built-in renderer
   \item Start and stop simulations via mouse or keyboard
   \item Monitoring of simulation progress
-  \item Dynamic capture of output in a text window
+  \item Dynamic capture of LAMMPS output in a text window
   \item Automatic plotting of thermodynamic data during runs
   \item Capture of ``dump image'' outputs for animations
   \item Export of thermodynamic data for external plotting
@@ -425,34 +425,27 @@ are displayed in \guicmd{quoted monospace}.
 \subsection{Tutorial 1: Lennard-Jones fluid}
 \label{lennard-jones-label}
 
-The objective of this tutorial is to perform a simple MD simulation
-using LAMMPS.  The system consists of a Lennard-Jones fluid composed of neutral
-particles with two different effective diameters, contained within a
-cubic box with periodic boundary conditions (Fig.~\ref{fig:LJ-avatar}).  In
-this tutorial, simple MD simulations in the microcanonical
-(NVE) and canonical (NVT) ensembles are performed, and basic quantities are calculated,
-including the potential and kinetic energies.
-
-\begin{figure}
-\centering
-\includegraphics[width=0.55\linewidth]{LJ-avatar}
-\caption{The binary mixture simulated in \hyperref[lennard-jones-label]{Tutorial 1},
-with the atoms of type 1 represented as small green spheres and lge atoms of type 2
-as large blue spheres.}
-\label{fig:LJ-avatar}
-\end{figure}
+The objective of this tutorial is to perform simple MD simulations
+using LAMMPS.  The system consists of a Lennard-Jones fluid composed of
+neutral particles with two different effective diameters, contained
+within a cubic box with periodic boundary conditions
+(Fig.~\ref{fig:LJ-avatar}).  In this tutorial, basic MD simulations in
+the microcanonical (NVE) and canonical (NVT) ensembles are performed,
+and basic quantities are calculated, including the potential and kinetic
+energies.
 
 \subsubsection{My first input}
 
-To run a simulation using LAMMPS, you need to write an input script containing
-a series of commands for LAMMPS to execute.  For clarity, the
-input scripts for this tutorial will be divided into five categories,
-which will be filled out step by step.  To set up this tutorial, select
-\guicmd{Start LAMMPS Tutorial 1} from the \guicmd{Tutorials} menu of \lammpsgui{}, and
-follow the instructions.  This will select (or create, if needed) a folder,
-place the initial input file \flecmd{initial.lmp} in it, and
-open the file in the \lammpsgui{} editor.  The editor should display the
-following content:
+To run a simulation using LAMMPS, you need to write an input script
+containing a series of commands for LAMMPS to execute, similar to Python
+or Bash scripts.  For clarity, the input scripts for this tutorial will
+be divided into five categories, which will be filled out step by step.
+To set up this tutorial, select \guicmd{Start LAMMPS Tutorial 1} from
+the \guicmd{Tutorials} menu of \lammpsgui{}, and follow the
+instructions.  This will select (or create, if needed) a folder, place
+the initial input file \flecmd{initial.lmp} in it, and open the file in
+the \lammpsgui{} \guicmd{Editor} window.  It should display the following
+content:
 \begin{lstlisting}
 # PART A - ENERGY MINIMIZATION
 # 1) Initialization
@@ -492,52 +485,66 @@ dimension 3
 atom_style atomic
 boundary p p p
 \end{lstlisting}
-The first line, \lmpcmd{units lj}, specifies the use of
-\emph{reduced} units, where all quantities are dimensionless.  This unit system is
-a popular choice for simulations that explore general statistical mechanical
-principles, as it emphasizes relative differences between parameters rather than
-representing any specific material.  The second line, \lmpcmd{dimension 3}, specifies that the simulation is conducted
-in 3D space, as opposed to 2D, where atoms are confined to move only in the
-xy-plane.  The third line, \lmpcmd{atom\_style atomic}, designates
-the atomic style for representing simple, individual particles.
-In this style, each particle is treated as a point with a mass, making it the
-most basic atom style.  Other atom styles can incorporate additional attributes for atoms,
-such as charges, bonds, or molecule IDs, depending on the requirements of the simulated model.
-The last line, \lmpcmd{boundary p p p}, indicates that periodic boundary
-conditions are applied along all three directions of space, where the three
-p stand for $x$, $y$, and $z$, respectively.  Alternatives are fixed non-periodic
-(f), shrink-wrapped non-periodic (s), and shrink-wrapped non-periodic
-with minimum (m).  For non-periodic boundaries, different options
-can be assigned to each dimension, making configurations like \lmpcmd{boundary p p fm}
-valid for systems such as slab geometries.
-
-\begin{note}
-Strictly speaking, none of the four commands specified in the
-Initialization section are mandatory, as
-they correspond to the default settings for their respective global properties.
-However, explicitly specifying these defaults is considered good practice
-to avoid confusion when sharing input files with other LAMMPS users.
-\end{note}
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GUI-1.png}
 \caption{A screenshot of the \lammpsgui{} \guicmd{Editor} window during
-  \hyperref[lennard-jones-label]{Tutorial 1}.  The coloring of the text
-  is based on the syntax for LAMMPS input files.  The pop-up menu is the
+  \hyperref[lennard-jones-label]{Tutorial 1}.  The pop-up menu is the
   context menu for right-clicking on the \lmpcmd{units lj} command.}
 \label{fig:GUI-1}
 \end{figure}
 
+The first line, \lmpcmd{units lj}, specifies the use of \emph{reduced}
+units, where all quantities are dimensionless.  This unit system is a
+popular choice for simulations that explore general statistical
+mechanical principles, as it emphasizes relative differences between
+parameters rather than representing any specific material.  The second
+line, \lmpcmd{dimension 3}, specifies that the simulation is conducted
+in 3D space, as opposed to 2D, where atoms are confined to move only in
+the xy-plane.  The third line, \lmpcmd{atom\_style atomic}, designates
+the atomic style for representing simple, individual point particles.
+In this style, each particle is treated as a point with a mass, making
+it the most basic atom style.  Other atom styles can incorporate
+additional attributes for atoms, such as charges, bonds, or molecule
+IDs, depending on the requirements of the simulated model.  The last
+line, \lmpcmd{boundary p p p}, indicates that periodic boundary
+conditions are applied along all three directions of space, where the
+three p stand for $x$, $y$, and $z$, respectively.  Alternatives are
+fixed non-periodic (f), shrink-wrapped non-periodic (s), and
+shrink-wrapped non-periodic with minimum (m).  For non-periodic
+boundaries, different options can be assigned to each dimension, making
+configurations like \lmpcmd{boundary p p fm} valid for systems such as
+slab geometries.
+
+\begin{note}
+  Strictly speaking, none of the four commands specified in the
+  Initialization section are mandatory, as they correspond to the
+  default settings for their respective global properties.  However,
+  explicitly specifying these defaults is considered good practice to
+  avoid confusion when sharing input files with other LAMMPS users.
+\end{note}
+
 Each LAMMPS command is accompanied by extensive online documentation
-that details the different options for that command.  From the \lammpsgui{}
-editor buffer, you can access the documentation by
-right-clicking on a line containing a command (e.g.,~\lmpcmd{units lj}) and
-selecting \guicmd{View Documentation for `units'}.  This action will
-prompt your web browser to open the corresponding URL for the online manual.
-A screenshot of this context menu is shown in Fig.~\ref{fig:GUI-1}.
+that details the different options for that command.  From the
+\lammpsgui{} editor buffer, you can access the documentation by
+right-clicking on a line containing a command (e.g.,~\lmpcmd{units lj})
+and selecting \guicmd{View Documentation for `units'}.  This action
+should prompt your web browser to open the corresponding URL for the
+online manual.  A screenshot of this context menu is shown in
+Fig.~\ref{fig:GUI-1}.
 
 \paragraph{System definition}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{LJ-avatar}
+\caption{The binary mixture simulated in
+  \hyperref[lennard-jones-label]{Tutorial 1}, with the atoms of type 1
+  represented as small green spheres and lge atoms of type 2 as large
+  blue spheres.}
+\label{fig:LJ-avatar}
+\end{figure}
 
 The next step is to create the simulation box and populate it with atoms.
 Modify the \lmpcmd{System definition} category of \flecmd{initial.lmp} as shown below:
@@ -548,11 +555,11 @@ create_box 2 simbox
 create_atoms 1 random 1500 34134 simbox overlap 0.3
 create_atoms 2 random 100 12756 simbox overlap 0.3
 \end{lstlisting}
-The first line, \lmpcmd{region simbox (...)}, defines a region
-named \lmpcmd{simbox} that is a block (i.e.,~a rectangular
-cuboid) extending from -20 to 20 units along all three spatial dimensions.
-The second line, \lmpcmd{create\_box 2 simbox}, initializes a simulation box
-based on the region \lmpcmd{simbox} and reserves space for two types of atoms.
+The first line, \lmpcmd{region simbox (...)}, defines a region named
+\lmpcmd{simbox} that is a block (i.e.,~a rectangular cuboid) extending
+from -20 to 20 units along all three spatial dimensions.  The second
+line, \lmpcmd{create\_box 2 simbox}, initializes a simulation box based
+on the region \lmpcmd{simbox} and reserves space for two types of atoms.
 
 \begin{note}
 From this point on, any command referencing an atom type larger than 2
