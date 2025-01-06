@@ -1682,10 +1682,11 @@ but that after a few steps, it reaches the target value.
 
 \begin{note}
   Bonds cannot be displayed by the \lmpcmdnote{dump image} when using
-  the \lmpcmdnote{atom\_style atomic}, as it contains no bonds.  A tip
-  for displaying bonds with the present system using LAMMPS is provided
-  at the end of the tutorial.  You can also use external tools like VMD
-  or OVITO (see \hyperref[tip-dynamic-bonds]{tip for tutorial 3}).
+  the \lmpcmdnote{atom\_style atomic}, as it contains no bonds.  A
+  \hyperref[tip-dynamic-bonds]{tip for displaying bonds} with the
+  present system using LAMMPS is provided at the end of the tutorial.
+  You can also use external tools like VMD or OVITO (see the
+  \hyperref[tip-external-viz]{tip for tutorial 3}).
 \end{note}
 
 \paragraph{Launch the deformation}
@@ -1767,6 +1768,22 @@ special_bonds lj/coul 1.0 1.0 1.0
 \subsection{Tutorial 3: Polymer in water}
 \label{all-atom-label}
 
+The goal of this tutorial is to use LAMMPS to solvate a small
+hydrophilic polymer (PEG - polyethylene glycol) in a reservoir of water
+(Fig.~\ref{fig:PEG}).  Once the water reservoir is properly equilibrated
+at the desired temperature and pressure, the polymer molecule is added
+and a constant stretching force is applied to both ends of the polymer.
+The evolution of the polymer length is measured as a function of time.
+The GROMOS 54A7 force field~\cite{schmid2011definition} is used for the
+PEG, the SPC/Fw model~\cite{wu2006flexible} is used for the water, and
+the long-range Coulomb interactions are solved using the PPPM
+solver~\cite{luty1996calculating}.  This tutorial was inspired by a
+publication by Liese and coworkers, in which molecular dynamics
+simulations are compared with force spectroscopy experiments, see
+Ref.\,~\citenum{liese2017hydration}.
+
+\subsubsection{Preparing the water reservoir}
+
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{PEG}
@@ -1775,19 +1792,6 @@ simulated during \hyperref[all-atom-label]{Tutorial 3}.  Water molecules are
 represented as a transparent continuum field for clarity.}
 \label{fig:PEG}
 \end{figure}
-
-\noindent The goal of this tutorial is to use LAMMPS to solvate a small hydrophilic
-polymer (PEG - polyethylene glycol) in a reservoir of water (Fig.~\ref{fig:PEG}).
-Once the water reservoir is properly equilibrated at the desired temperature and
-pressure, the polymer molecule is added and a constant stretching force is applied
-to both ends of the polymer.  The evolution of the polymer length is measured as
-a function of time.  The GROMOS 54A7 force field~\cite{schmid2011definition} is used
-for the PEG, the SPC/Fw model~\cite{wu2006flexible} is used for the water, and the
-long-range Coulomb interactions are solved using the PPPM solver~\cite{luty1996calculating}.
-This tutorial was inspired by a publication by Liese and coworkers, in which molecular
-dynamics simulations are compared with force spectroscopy experiments, see Ref.\,~\citenum{liese2017hydration}.
-
-\subsubsection{Preparing the water reservoir}
 
 In this tutorial, the water reservoir is first prepared in the absence of the polymer.
 A rectangular box of water is created and equilibrated at ambient temperature and
@@ -1844,12 +1848,12 @@ include parameters.inc
 \end{lstlisting}
 
 \begin{note}
-This tutorial uses type labels~\cite{typelabel_paper} to map each of the
-numeric atom types with a string (see the \flecmd{parameters.inc} file):
-\lmpcmdnote{labelmap atom 1 OE 2 C 3 HC 4 H 5 CPos 6 OAlc 7 OW 8 HW}
-Therefore, the oxygen and hydrogen atoms of water (respectively types 7 and 8)
-can be referred to as `OW' and `HW', respectively.  Similar maps are used for
-the bond types, angle types, and dihedral types.
+  This tutorial uses type labels~\cite{typelabel_paper} to map each
+  numeric atom type to a string (see the \flecmd{parameters.inc} file):
+  \lmpcmdnote{labelmap atom 1 OE 2 C 3 HC 4 H 5 CPos 6 OAlc 7 OW 8 HW}
+  Therefore, the oxygen and hydrogen atoms of water (respectively types
+  7 and 8) can be referred to as `OW' and `HW', respectively.  Similar
+  maps are used for the bond types, angle types, and dihedral types.
 \end{note}
 
 Let us create water molecules.  To do so, let us import a molecule template called
@@ -2194,13 +2198,14 @@ in the absence (orange) and in the presence (blue) of the applied force.}
 \end{figure}
 
 \paragraph{Tip: using external visualization tools}
+\label{tip-external-viz}
 
-Trajectories can be visualized using external tools such as VMD
-or OVITO~\cite{humphrey1996vmd, ovito_paper}.  To do so, the IDs and
+Trajectories can be visualized using external tools such as VMD or
+OVITO~\cite{humphrey1996vmd, ovito_paper}.  To do so, the IDs and
 positions of the atoms must be regularly written to a file during the
-simulation.  This can be accomplished by adding a \lmpcmd{dump}
-command to the input file.  For instance, create a duplicate of \flecmd{pull.lmp}
-and name it
+simulation.  This can be accomplished by adding a \lmpcmd{dump} command
+to the input file.  For instance, create a duplicate of
+\flecmd{pull.lmp} and name it
 % do not wrap this line
 \href{\filepath tutorial3/solution/pull-with-tip.lmp}{\dwlcmd{pull-with-tip.lmp}}.
 % do not wrap this line
@@ -2212,13 +2217,14 @@ Running the \flecmd{pull-with-tip.lmp} file using LAMMPS will generate a traject
 named \flecmd{pull.lammpstrj}, which can be opened in OVITO or VMD.
 
 \begin{note}
-Since the trajectory dump file does not contain information about topology and atom
-types, it is usually preferred to first write out a data file and import it directly
-(in the case of OVITO) or convert it to a PSF file (for VMD).  This allows the topology
-to be loaded before \emph{adding} the
-trajectory file to it.  When using \lammpsgui{}, this process can be automated
-through the \guicmd{View in OVITO} or \guicmd{View in VMD} options in the \guicmd{Run} menu.
-Afterward, only the trajectory dump needs to be added.
+  Since the trajectory dump file does not contain information about
+  topology and elements, it is usually preferred to first write out a
+  data file and import it directly (in the case of OVITO) or convert it
+  to a PSF file (for VMD).  This allows the topology to be loaded before
+  \emph{adding} the trajectory file to it.  When using \lammpsgui{},
+  this process can be automated through the \guicmd{View in OVITO} or
+  \guicmd{View in VMD} options in the \guicmd{Run} menu.  Afterwards
+  only the trajectory dump needs to be added.
 \end{note}
 
 \subsection{Tutorial 4: Nanosheared electrolyte}
@@ -2235,7 +2241,7 @@ imposed lateral motion of the walls.}
 \label{fig:NANOSHEAR}
 \end{figure}
 
-\noindent The objective of this tutorial is to simulate an electrolyte
+The objective of this tutorial is to simulate an electrolyte
 nanoconfined and sheared between two walls (Fig.~\ref{fig:NANOSHEAR}).  The density
 and velocity profiles of the fluid in the direction normal to the walls are
 extracted to highlight the effect of confining a fluid on its local properties.
@@ -3214,7 +3220,7 @@ atoms of the solid in red.}
 \label{fig:GCMC}
 \end{figure}
 
-\noindent The objective of this tutorial is to combine molecular dynamics and
+The objective of this tutorial is to combine molecular dynamics and
 grand canonical Monte Carlo simulations to compute the adsorption of water
 molecules in cracked silica material (Fig.~\ref{fig:GCMC}).  This tutorial
 illustrates the use of the grand canonical ensemble in molecular simulation, an
@@ -3224,7 +3230,7 @@ potential of water within a nanoporous SiO$_2$ structure.
 
 \subsubsection{Generation of the silica block}
 
-\noindent To begin this tutorial, select \guicmd{Start Tutorial 6} from the
+To begin this tutorial, select \guicmd{Start Tutorial 6} from the
 \guicmd{Tutorials} menu of \lammpsgui{} and follow the instructions.
 The editor should display the following content corresponding to \flecmd{generate.lmp}:
 \begin{lstlisting}
@@ -3394,21 +3400,21 @@ imposed deformation of the box along the $x$-axis (i.e.,~the horizontal axis).}
 
 \subsubsection{Adding water}
 
-\noindent To add the water molecules to the silica, we will employ
-the Monte Carlo method in the grand canonical ensemble (GCMC).  In short, the
-system is placed into contact with a virtual reservoir of a given chemical potential
-$\mu$, and multiple attempts to insert water molecules at random positions are
-made.  Each attempt is either accepted or rejected based on energy considerations.
-For further details, please refer to classical textbooks like Ref.~\citenum{frenkel2023understanding}.
+To add the water molecules to the silica, we will employ the Monte Carlo
+method in the grand canonical ensemble (GCMC).  In short, the system is
+placed into contact with a virtual reservoir of a given chemical
+potential $\mu$, and multiple attempts to insert water molecules at
+random positions are made.  Each attempt is either accepted or rejected
+based on energy considerations.  For further details, please refer to
+classical textbooks like Ref.~\citenum{frenkel2023understanding}.
 
 \paragraph{Using hydrid potentials}
 
-\noindent The first particularly of our system is that it
-combine water and silica, which necessitates the use
-of two force fields: Vashishta (for $\text{SiO}_2$), and
-TIP4P (for water).  Here, the TIP4P/2005 model is employed for the
-water~\cite{abascal2005general}.  Open the \flecmd{gcmc.lmp} file, which
-should contain the following lines:
+The first particularly of our system is that it combine water and
+silica, which necessitates the use of two force fields: Vashishta (for
+$\text{SiO}_2$), and TIP4P (for water).  Here, the TIP4P/2005 model is
+employed for the water~\cite{abascal2005general}.  Open the
+\flecmd{gcmc.lmp} file, which should contain the following lines:
 \begin{lstlisting}
 units metal
 boundary p p p
@@ -3639,21 +3645,24 @@ box thanks to the additional potential imposed during umbrella sampling.}
 \label{fig:US}
 \end{figure}
 
-\noindent The objective of this tutorial is to measure the free energy profile
-of particles through a barrier potential using two methods: free sampling and
-umbrella sampling~\cite{kastner2011umbrella, allen2017computer, frenkel2023understanding} (Fig.~\ref{fig:US}).
-To simplify the process and minimize computation time, the barrier potential will be
-imposed on the atoms using an additional force, mimicking the presence of a repulsive
-area in the middle of the simulation box without needing to simulate additional atoms.
-The procedure is valid for more complex systems and can be adapted to many other
-situations, such as measuring adsorption barriers near an interface or calculating
-translocation barriers through a membrane~\cite{wilson1997adsorption, makarov2009computer,
-gravelle2021adsorption, loche2022molecular, hayatifar2024probing}.
+The objective of this tutorial is to measure the free energy profile of
+particles through a barrier potential using two methods: free sampling
+and umbrella sampling~\cite{kastner2011umbrella, allen2017computer,
+  frenkel2023understanding} (Fig.~\ref{fig:US}).  To simplify the
+process and minimize computation time, the barrier potential will be
+imposed on the atoms using an additional force, mimicking the presence
+of a repulsive area in the middle of the simulation box without needing
+to simulate additional atoms.  The procedure is valid for more complex
+systems and can be adapted to many other situations, such as measuring
+adsorption barriers near an interface or calculating translocation
+barriers through a membrane~\cite{wilson1997adsorption,
+  makarov2009computer, gravelle2021adsorption, loche2022molecular,
+  hayatifar2024probing}.
 
 \subsubsection{Method 1: Free sampling}
-The most direct way to calculate a free energy profile is to extract the partition
-function from a classical (i.e.~unbiased) molecular dynamics simulation, and
-then estimate the Gibbs free energy by using
+The most direct way to calculate a free energy profile is to extract the
+partition function from a classical (i.e.~unbiased) molecular dynamics
+simulation, and then estimate the Gibbs free energy by using
 \begin{equation}
 \Delta G = -RT \ln(p/p_0),
 \label{eq:G}
