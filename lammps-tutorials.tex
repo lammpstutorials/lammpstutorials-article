@@ -2160,6 +2160,34 @@ in the absence (orange) and in the presence (blue) of the applied force.}
 \label{fig:PEG-distance}
 \end{figure}
 
+\paragraph{Tip: using external visualization tools}
+
+Trajectories can be visualized using external tools such as VMD
+or OVITO~\cite{humphrey1996vmd, ovito_paper}.  To do so, the IDs and
+positions of the atoms must be regularly written to a file during the
+simulation.  This can be accomplished by adding a \lmpcmd{dump}
+command to the input file.  For instance, create a duplicate of \flecmd{pull.lmp}
+and name it
+% do not wrap this line
+\href{\filepath tutorial3/solution/pull-with-tip.lmp}{\dwlcmd{pull-with-tip.lmp}}.
+% do not wrap this line
+Then, replace the existing \lmpcmd{dump} and \lmpcmd{dump\_modify} commands with:
+\begin{lstlisting}
+dump mydmp all atom 1000 pull.lammpstrj
+\end{lstlisting}
+Running the \flecmd{pull-with-tip.lmp} file using LAMMPS will generate a trajectory file
+named \flecmd{pull.lammpstrj}, which can be opened in OVITO or VMD.
+
+\begin{note}
+Since the trajectory dump file does not contain information about topology and atom
+types, it is usually preferred to first write out a data file and import it directly
+(in the case of OVITO) or convert it to a PSF file (for VMD).  This allows the topology
+to be loaded before \emph{adding} the
+trajectory file to it.  When using \lammpsgui{}, this process can be automated
+through the \guicmd{View in OVITO} or \guicmd{View in VMD} options in the \guicmd{Run} menu.
+Afterward, only the trajectory dump needs to be added.
+\end{note}
+
 \subsection{Tutorial 4: Nanosheared electrolyte}
 \label{sheared-confined-label}
 
