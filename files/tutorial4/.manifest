@@ -6,7 +6,7 @@
 # the first file will be automatically loaded
 create.lmp
 minimize.lmp
-equilibrate.lmp 
+equilibrate.lmp
 shearing.lmp
 groups.inc
 parameters.inc

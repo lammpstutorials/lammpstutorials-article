@@ -172,25 +172,23 @@
   topic of MD simulations.  LAMMPS is one such versatile molecular
   simulation code, designed for modeling particle-based systems across a
   broad range of materials science and computational chemistry
-  applications, including atomistic, coarse--grained, mesoscale,
+  applications, including atomistic, coarse-grained, mesoscale,
   grid-free continuum, and discrete element models.  LAMMPS is capable
   of efficiently running simulations of varying sizes from small desktop
   computers to large-scale supercomputing environments.  Its flexibility
   and extensibility make it ideal for complex and extensive simulations
-  of atomic and molecular systems, and beyond.  This article introduces a
-  suite of tutorials designed to make learning LAMMPS more accessible to
-  new users.  The first four tutorials cover the basics of running
-  molecular simulations in LAMMPS with systems of varying complexities,
-  including a simple fluid and a carbon nanotube.  The last four
-  tutorials address more advanced molecular simulation techniques,
-  specifically the use of a reactive force field, grand canonical Monte Carlo,
-  enhanced sampling, and REACTER protocol.
-  In addition, we introduce \lammpsgui{}, an enhanced graphical text
-  editor with syntax highlighting, command completion, context help,
-  plus built--in visualization and plotting facilities, and the ability
-  to run LAMMPS directly on the input file while tracking its progress.
-  \lammpsgui{} is used as the primary tool in the tutorials to edit
-  inputs, run LAMMPS, extract data, and visualize the simulated systems.
+  of atomic and molecular systems, and beyond.  This article introduces
+  a suite of tutorials designed to make learning LAMMPS more accessible
+  to new users.  The first four tutorials cover the basics of running
+  molecular simulations in LAMMPS with systems of varying complexities.
+  The second four tutorials address more advanced molecular simulation
+  techniques, specifically the use of a reactive force field, grand
+  canonical Monte Carlo, enhanced sampling, and the REACTER protocol.
+  In addition, we introduce \lammpsgui{}, an enhanced cross-platform
+  graphical text editor specifically designed for use with LAMMPS and
+  able to run LAMMPS directly on the edited input.  \lammpsgui{} is used
+  as the primary tool in the tutorials to edit inputs, run LAMMPS,
+  extract data, and visualize the simulated systems.
 \end{abstract}
 
 \end{frontmatter}
@@ -198,10 +196,10 @@
 \section{Introduction}
 
 Molecular Simulations (MS) can be used to model a large variety of
-atomic and coarse--grained systems, including solids, fluids, polymers, and
-biomolecules, as well as complex interfaces and multi-component systems.
-Various MS methods exist -- Molecular Dynamics (MD) and Monte Carlo (MC)
-being among the most commonly used.  MD is the preferred method for
+atomic and coarse-grained systems, including solids, fluids, polymers,
+and biomolecules, as well as complex interfaces and multi-component
+systems.  While various MS methods exist, Molecular Dynamics (MD) and
+Monte Carlo (MC) are most commonly used.  MD is the preferred method for
 obtaining the accurate dynamics of a system, as it relies on solving
 Newton's equations of motion.  For systems with many degrees of freedom
 or complex energy landscapes, the MC method can be a better choice than
@@ -225,29 +223,30 @@ LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator)
 tool.  Over the years, a broad variety of particle interaction models
 have been implemented in LAMMPS, enabling it to model a wide range of
 systems, including atomic, polymeric, biological, metallic, reactive, granular,
-mesoscale, grid--free continuum, and coarse--grained systems
+mesoscale, grid-free continuum, and coarse-grained systems
 \cite{thompson2022lammps}.  LAMMPS can be used on a single CPU core, a
 multi-socket and multi-core server, an HPC cluster, or a high-end
 supercomputing system.  It can efficiently handle complex and large-scale
-simulations, including hybrid MPI--OpenMP parallelization
+simulations, including hybrid MPI-OpenMP parallelization
 and MPI + GPU acceleration (for a subset of its functionality).
 
-LAMMPS requires users to write detailed input files, a task that
-can be particularly challenging for new users.  Although its
-documentation extensively describes all available features~\cite{lammps_docs},
+LAMMPS requires users to write detailed input files, a task that can be
+particularly challenging for new users.  Although its documentation
+extensively describes all available features~\cite{lammps_docs},
 navigating it can be challenging.  Much of the information may be
-unnecessary for common use cases, and the detailed manual can
-often feel overwhelming.  Beyond the intrinsic complexity of LAMMPS, performing accurate
-MS requires several complex, system-specific decisions regarding
-the physics to be modeled, such as selecting the thermodynamic
+unnecessary for common use cases, and the detailed manual can often feel
+overwhelming.  Beyond the intrinsic complexity of LAMMPS, performing
+accurate MS requires several complex, system-specific decisions
+regarding the physics to be modeled, such as selecting the thermodynamic
 ensemble (e.g.,~micro-canonical, grand-canonical), determining the
 simulation duration, and choosing the sets of parameters describing the
 interactions between atoms (the so-called force field)
-\cite{wong2016good, van2018validation, prasad2018best}.  While these choices are independent of the
-simulation software, they may occasionally be constrained by the
-features available in a given package.  The tutorials in this
-article aim to flatten the learning curve and guide users in
-performing accurate, reliable MS with LAMMPS.
+\cite{wong2016good, van2018validation, prasad2018best}.  While these
+choices are independent of the simulation software, they may
+occasionally be constrained by the features available in a given
+package.  The tutorials in this article aim to flatten the learning
+curve and guide users in performing accurate and reliable molecular
+simulations with LAMMPS.
 
 \subsection{Scope}
 
@@ -265,41 +264,41 @@ ensembles.
 In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system
 is introduced, where atoms are connected by bonds: a small carbon
 nanotube.  The use of both classical and reactive force fields (here,
-AIREBO) is illustrated.  An external deformation is applied to the CNT,
-and its deformation is measured.  This tutorial also demonstrates the use
-of an external tool to visualize breaking bonds, and show the possibility
-to import LAMMPS-generated YAML log files into Python. %, and
-% demonstrates how available LAMMPS features can be used to do the same
-% without an external tool. SG: I removed the last part as it not really one
-% of the main goal of tutorial 2.
+OPLS-AA~\cite{jorgensenDevelopmentTestingOPLS1996} and
+AIREBO~\cite{stuart2000reactive}, respectively) is illustrated.  An
+external deformation is applied to the CNT, and its deformation is
+measured.  This tutorial also demonstrates the use of an external tool
+to visualize breaking bonds, and show the possibility to import
+LAMMPS-generated YAML log files into Python.
 
-In \hyperref[all-atom-label]{tutorial 3}, two components --
-liquid water (flexible three-point model) and a polymer molecule -- are merged and equilibrated.  A long-range
-solver is used to handle the electrostatic interactions accurately, and
-the system is equilibrated in the isothermal-isobaric (NPT) ensemble.  A
-stretching force is applied to the polymer.  Through this relatively
-complex solvated polymer system, the tutorial demonstrates how to use
-type labels to make molecule files more generic and easier to manage~\cite{typelabel_paper}.
+In \hyperref[all-atom-label]{tutorial 3}, two components - liquid water
+(flexible three-point model) and a polymer molecule - are merged and
+equilibrated.  A long-range solver is used to handle the electrostatic
+interactions accurately, and the system is equilibrated in the
+isothermal-isobaric (NPT) ensemble; then a stretching force is applied
+to the polymer.  Through this relatively complex solvated polymer
+system, the tutorial demonstrates how to use type labels to make
+molecule files more generic and easier to manage~\cite{typelabel_paper}.
 
-In \hyperref[sheared-confined-label]{tutorial 4}, an electrolyte is confined between
-two walls, illustrating the specifics of simulating systems
-with fluid-solid interfaces.  The tutorial uses a slightly more
-complex water model than \hyperref[all-atom-label]{tutorial 3}: the rigid
-four-point model, TIP4P/2005~\cite{abascal2005general}.  Non-equilibrium MD is
-performed by imposing shear on the fluid through the moving walls,
-and the fluid velocity profile is extracted.
+In \hyperref[sheared-confined-label]{tutorial 4}, an electrolyte is
+confined between two walls, illustrating the specifics of simulating
+systems with fluid-solid interfaces.  With the rigid four-point
+TIP4P/2005~\cite{abascal2005general} water model, this tutorial uses a
+more complex water model than \hyperref[all-atom-label]{tutorial 3}.  A
+non-equilibrium MD is performed by imposing shear on the fluid through
+moving the walls, and the fluid velocity profile is extracted.
 
 In \hyperref[reactive-silicon-dioxide-label]{tutorial 5}, the ReaxFF
-reactive force field is used, specifically designed
-to simulate chemical reactions by dynamically adjusting
-atomic interactions \cite{van2001reaxff}.  ReaxFF includes charge equilibration
-(QEq), a method that allows the partial charges of atoms
-to adjust according to their local environment.
+reactive force field is used, specifically designed to simulate chemical
+reactions by dynamically adjusting atomic interactions
+\cite{van2001reaxff}.  ReaxFF includes charge equilibration (QEq), a
+method that allows the partial charges of atoms to adjust according to
+their local environment.
 
 In \hyperref[gcmc-silica-label]{tutorial 6}, a Monte Carlo simulation in
-the Grand Canonical ensemble is implemented to demonstrate how
-LAMMPS can be used to simulate an open system that exchange
-particles with a reservoir.
+the Grand Canonical ensemble is implemented to demonstrate how LAMMPS
+can be used to simulate an open system that exchanges particles with a
+reservoir.
 
 In \hyperref[umbrella-sampling-label]{tutorial 7}, an advanced free
 energy method called umbrella sampling is implemented.  By calculating
@@ -320,13 +319,14 @@ This set of tutorials assumes no prior knowledge of the LAMMPS software
 itself.  To complete the tutorials, a text editor and a suitable LAMMPS
 executable are required.  We use \lammpsgui{}~\cite{lammps_gui_docs}
 here, as it offers features that make it particularly convenient for
-tutorials, but other console or graphical text editors, such as GNU nano,
-vi/vim, Emacs, Notepad, Gedit, and Visual Studio Code, can also be
-used.  LAMMPS can be executed either directly from
-\lammpsgui{} (\hyperref[using-lammps-gui-label]{Appendix~\ref{using-lammps-gui-label}})
-or from the command-line (\hyperref[command-line-label]{Appendix~\ref{command-line-label}}),
-the latter of which requires some familiarity with executing commands
-from a terminal or command-line prompt.
+tutorials, but other console or graphical text editors, such as GNU
+nano, vi/vim, Emacs, Notepad, Gedit, and Visual Studio Code can also be
+used.  LAMMPS can be executed either directly from \lammpsgui{}
+(\hyperref[using-lammps-gui-label]{Appendix~\ref{using-lammps-gui-label}})
+or from a command prompt
+(\hyperref[command-line-label]{Appendix~\ref{command-line-label}}), the
+latter of which requires some familiarity with executing commands from a
+terminal or command-line prompt.
 
 In addition, prior knowledge of the theoretical basics of molecular
 simulations and statistical physics is highly beneficial.  Users may
@@ -345,60 +345,59 @@ and molecular simulations~\cite{sklogwiki_main_page}.
 
 \subsection{Software/system requirements}
 
-The LAMMPS release version 29Aug2024~\cite{lammps_code} and the matching
-\lammpsgui{} software version 1.6.11 are required to follow the
-tutorials, as they include features that were first introduced in these
-versions.  For Linux (x86\_64 CPU), macOS (BigSur or later), and Windows
-(10 and 11) you can download a precompiled LAMMPS package from the
-LAMMPS release page on GitHub~\cite{lammps_github_release}.
-Select a package with `GUI' in the file name, which includes both,
-\lammpsgui{} and a LAMMPS command-line executable.  These precompiled
-packages are designed to be portable, and therefore omit support for
-parallel execution with MPI.  Instructions for installing \lammpsgui{}
-and using its most relevant features for the tutorials are provided in
+The LAMMPS stable release version 29Aug2024\_update2~\cite{lammps_code}
+and the matching \lammpsgui{} software version 1.6.12 are required to
+follow the tutorials, as they include features that were first
+introduced in these versions.  For Linux (x86\_64 CPU), macOS (BigSur or
+later), and Windows (10 and 11) you can download a precompiled LAMMPS
+package from the LAMMPS release page on
+GitHub~\cite{lammps_github_release}.  Select a package with `GUI' in the
+file name, which includes both, \lammpsgui{} and the LAMMPS command-line
+executable.  These precompiled packages are designed to be portable, and
+therefore omit support for parallel execution with MPI.  Instructions
+for installing \lammpsgui{} and using its most relevant features for the
+tutorials are provided in
 \hyperref[using-lammps-gui-label]{Appendix~\ref{using-lammps-gui-label}}.
 
-LAMMPS versions are generally backward compatible, meaning that old
-input files typically work with newer versions of LAMMPS.  However,
-forward compatibility is not as strong, so
-newer input files may not work with older versions.  As a result, it is
-usually possible to follow this tutorial with more recent releases of
-\lammpsgui{} and LAMMPS, though older versions may require some minor adjustments.
-These tutorials will be periodically updated to ensure compatibility
-and take advantage of new features in the latest stable version of LAMMPS.
+LAMMPS versions are generally backward compatible, meaning that older
+input files typically work the same with newer versions of LAMMPS.
+However, forward compatibility is not as strong, so input files written
+for a newer version may not always work with older versions.  As a
+result, it is usually possible to follow this tutorial with more recent
+releases of \lammpsgui{} and LAMMPS; older versions may require some
+(minor) adjustments.  These tutorials will be periodically updated to
+ensure compatibility and benefit from new features in the latest stable
+version of LAMMPS.
 
 For some tutorials, external tools are required for plotting and
 visualization, as the corresponding functionality in \lammpsgui{} is
-limited.  Suitable external tools for plotting include Python with
+limited.  Suitable tools for plotting include Python with
 Pandas/Matplotlib~\cite{van1995python,hunter2007Matplotlib}, XmGrace,
-Gnuplot, Microsoft Excel, and LibreOffice Calc.  For visualization,
-suitable external tools include VMD~\cite{vmd_home,humphrey1996vmd}
-and OVITO~\cite{ovito_home,ovito_paper}.
+Gnuplot, Microsoft Excel, or LibreOffice Calc.  For visualization,
+suitable tools include VMD~\cite{vmd_home,humphrey1996vmd} and
+OVITO~\cite{ovito_home,ovito_paper}.
 
 \subsection{About \lammpsgui{}}
 
-\lammpsgui{} is a graphical text editor, enhanced for editing LAMMPS input
-files and linked to the LAMMPS library, allowing it to run LAMMPS
-directly.  The text editor functions similarly to other graphical editors,
-such as Notepad or Gedit, but offers the following enhancements specifically for LAMMPS:
+\lammpsgui{} is a graphical text editor, enhanced for editing LAMMPS
+input files and linked to the LAMMPS library, allowing it to run LAMMPS
+directly.  The text editor functions similarly to other graphical
+editors, such as Notepad or Gedit, but offers the following enhancements
+specifically for LAMMPS:
 \begin{itemize}
+  \item Wizard dialogs to set up these tutorials
   \item Auto-completion of LAMMPS commands and options
+  \item Context-sensitive online help
   \item Syntax highlighting for LAMMPS input files
-  \item Visualization using LAMMPS built-in renderer
+  \item Syntax-aware line indentation
+  \item Visualization using LAMMPS' built-in renderer
   \item Start and stop simulations via mouse or keyboard
   \item Monitoring of simulation progress
+  \item Dynamic capture of LAMMPS output in a text window
   \item Automatic plotting of thermodynamic data during runs
   \item Capture of ``dump image'' outputs for animations
   \item Export of thermodynamic data for external plotting
-  \item Support for OpenMP threading or GPU acceleration
-  \item Context-sensitive online help (via right-click)
-  \item Customization of settings through a preferences dialog
-  \item Syntax-aware line indentation
-  \item Display of line numbers
-  \item Capture of output in a text window
   \item Inspection of binary restart files
-  \item Viewing of plain text files
-  \item Use of wizard dialogs to set up tutorials
 \end{itemize}
 \hyperref[using-lammps-gui-label]{Appendix~\ref{using-lammps-gui-label}}
 contains basic instructions for installation and using \lammpsgui{} with
@@ -426,34 +425,27 @@ are displayed in \guicmd{quoted monospace}.
 \subsection{Tutorial 1: Lennard-Jones fluid}
 \label{lennard-jones-label}
 
-The objective of this tutorial is to perform a simple MD simulation
-using LAMMPS.  The system consists of a Lennard-Jones fluid composed of neutral
-particles with two different effective diameters, contained within a
-cubic box with periodic boundary conditions (Fig.~\ref{fig:LJ-avatar}).  In
-this tutorial, simple MD simulations in the microcanonical
-(NVE) and canonical (NVT) ensembles are performed, and basic quantities are calculated,
-including the potential and kinetic energies.
-
-\begin{figure}
-\centering
-\includegraphics[width=0.55\linewidth]{LJ-avatar}
-\caption{The binary mixture simulated in \hyperref[lennard-jones-label]{Tutorial 1},
-with the atoms of type 1 represented as small green spheres and lge atoms of type 2
-as large blue spheres.}
-\label{fig:LJ-avatar}
-\end{figure}
+The objective of this tutorial is to perform simple MD simulations
+using LAMMPS.  The system consists of a Lennard-Jones fluid composed of
+neutral particles with two different effective diameters, contained
+within a cubic box with periodic boundary conditions
+(Fig.~\ref{fig:LJ-avatar}).  In this tutorial, basic MD simulations in
+the microcanonical (NVE) and canonical (NVT) ensembles are performed,
+and basic quantities are calculated, including the potential and kinetic
+energies.
 
 \subsubsection{My first input}
 
-To run a simulation using LAMMPS, you need to write an input script containing
-a series of commands for LAMMPS to execute.  For clarity, the
-input scripts for this tutorial will be divided into five categories,
-which will be filled out step by step.  To set up this tutorial, select
-\guicmd{Start LAMMPS Tutorial 1} from the \guicmd{Tutorials} menu of \lammpsgui{}, and
-follow the instructions.  This will select (or create, if needed) a folder,
-place the initial input file \flecmd{initial.lmp} in it, and
-open the file in the \lammpsgui{} editor.  The editor should display the
-following content:
+To run a simulation using LAMMPS, you need to write an input script
+containing a series of commands for LAMMPS to execute, similar to Python
+or Bash scripts.  For clarity, the input scripts for this tutorial will
+be divided into five categories, which will be filled out step by step.
+To set up this tutorial, select \guicmd{Start LAMMPS Tutorial 1} from
+the \guicmd{Tutorials} menu of \lammpsgui{}, and follow the
+instructions.  This will select (or create, if needed) a folder, place
+the initial input file \flecmd{initial.lmp} in it, and open the file in
+the \lammpsgui{} \guicmd{Editor} window.  It should display the following
+content:
 \begin{lstlisting}
 # PART A - ENERGY MINIMIZATION
 # 1) Initialization
@@ -493,55 +485,70 @@ dimension 3
 atom_style atomic
 boundary p p p
 \end{lstlisting}
-The first line, \lmpcmd{units lj}, specifies the use of
-\emph{reduced} units, where all quantities are dimensionless.  This unit system is
-a popular choice for simulations that explore general statistical mechanical
-principles, as it emphasizes relative differences between parameters rather than
-representing any specific material.  The second line, \lmpcmd{dimension 3}, specifies that the simulation is conducted
-in 3D space, as opposed to 2D, where atoms are confined to move only in the
-xy-plane.  The third line, \lmpcmd{atom\_style atomic}, designates
-the atomic style for representing simple, individual particles.
-In this style, each particle is treated as a point with a mass, making it the
-most basic atom style.  Other atom styles can incorporate additional attributes for atoms,
-such as charges, bonds, or molecule IDs, depending on the requirements of the simulated model.
-The last line, \lmpcmd{boundary p p p}, indicates that periodic boundary
-conditions are applied along all three directions of space, where the three
-p stand for $x$, $y$, and $z$, respectively.  Alternatives are fixed non-periodic
-(f), shrink-wrapped non-periodic (s), and shrink-wrapped non-periodic
-with minimum (m).  For non-periodic boundaries, different options
-can be assigned to each dimension, making configurations like \lmpcmd{boundary p p fm}
-valid for systems such as slab geometries.
-
-\begin{note}
-Strictly speaking, none of the four commands specified in the
-Initialization section are mandatory, as
-they correspond to the default settings for their respective global properties.
-However, explicitly specifying these defaults is considered good practice
-to avoid confusion when sharing input files with other LAMMPS users.
-\end{note}
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{GUI-1.png}
-\caption{A screenshot of the \lammpsgui{} \guicmd{Editor} window during
-  \hyperref[lennard-jones-label]{Tutorial 1}.  The coloring of the text
-  is based on the syntax for LAMMPS input files.  The pop-up menu is the
+\includegraphics[width=0.85\linewidth]{GUI-1.png}
+\caption{Screenshot of the \lammpsgui{} \guicmd{Editor} window during
+  \hyperref[lennard-jones-label]{Tutorial 1}.  The pop-up menu is the
   context menu for right-clicking on the \lmpcmd{units lj} command.}
 \label{fig:GUI-1}
 \end{figure}
 
+The first line, \lmpcmd{units lj}, specifies the use of \emph{reduced}
+units, where all quantities are dimensionless.  This unit system is a
+popular choice for simulations that explore general statistical
+mechanical principles, as it emphasizes relative differences between
+parameters rather than representing any specific material.  The second
+line, \lmpcmd{dimension 3}, specifies that the simulation is conducted
+in 3D space, as opposed to 2D, where atoms are confined to move only in
+the xy-plane.  The third line, \lmpcmd{atom\_style atomic}, designates
+the atomic style for representing simple, individual point particles.
+In this style, each particle is treated as a point with a mass, making
+it the most basic atom style.  Other atom styles can incorporate
+additional attributes for atoms, such as charges, bonds, or molecule
+IDs, depending on the requirements of the simulated model.  The last
+line, \lmpcmd{boundary p p p}, indicates that periodic boundary
+conditions are applied along all three directions of space, where the
+three p stand for $x$, $y$, and $z$, respectively.  Alternatives are
+fixed non-periodic (f), shrink-wrapped non-periodic (s), and
+shrink-wrapped non-periodic with minimum (m).  For non-periodic
+boundaries, different options can be assigned to each dimension, making
+configurations like \lmpcmd{boundary p p fm} valid for systems such as
+slab geometries.
+
+\begin{note}
+  Strictly speaking, none of the four commands specified in the
+  Initialization section are mandatory, as they correspond to the
+  default settings for their respective global properties.  However,
+  explicitly specifying these defaults is considered good practice to
+  avoid confusion when sharing input files with other LAMMPS users.
+\end{note}
+
 Each LAMMPS command is accompanied by extensive online documentation
-that details the different options for that command.  From the \lammpsgui{}
-editor buffer, you can access the documentation by
-right-clicking on a line containing a command (e.g.,~\lmpcmd{units lj}) and
-selecting \guicmd{View Documentation for `units'}.  This action will
-prompt your web browser to open the corresponding URL for the online manual.
-A screenshot of this context menu is shown in Fig.~\ref{fig:GUI-1}.
+that details the different options for that command.  From the
+\lammpsgui{} editor buffer, you can access the documentation by
+right-clicking on a line containing a command (e.g.,~\lmpcmd{units lj})
+and selecting \guicmd{View Documentation for `units'}.  This action
+should prompt your web browser to open the corresponding URL for the
+online manual.  A screenshot of this context menu is shown in
+Fig.~\ref{fig:GUI-1}.
 
 \paragraph{System definition}
 
-The next step is to create the simulation box and populate it with atoms.
-Modify the \lmpcmd{System definition} category of \flecmd{initial.lmp} as shown below:
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{LJ-avatar}
+\caption{The binary mixture simulated in
+  \hyperref[lennard-jones-label]{Tutorial 1}, with the atoms of type 1
+  represented as small green spheres and lge atoms of type 2 as large
+  blue spheres.}
+\label{fig:LJ-avatar}
+\end{figure}
+
+The next step is to create the simulation box and populate it with
+atoms.  Modify the \lmpcmd{System definition} category of
+\flecmd{initial.lmp} as shown below:
 \begin{lstlisting}
 # 2) System definition
 region simbox block -20 20 -20 20 -20 20
@@ -549,30 +556,30 @@ create_box 2 simbox
 create_atoms 1 random 1500 34134 simbox overlap 0.3
 create_atoms 2 random 100 12756 simbox overlap 0.3
 \end{lstlisting}
-The first line, \lmpcmd{region simbox (...)}, defines a region
-named \lmpcmd{simbox} that is a block (i.e.,~a rectangular
-cuboid) extending from -20 to 20 units along all three spatial dimensions.
-The second line, \lmpcmd{create\_box 2 simbox}, initializes a simulation box
-based on the region \lmpcmd{simbox} and reserves space for two types of atoms.
+The first line, \lmpcmd{region simbox (...)}, defines a region named
+\lmpcmd{simbox} that is a block (i.e.,~a rectangular cuboid) extending
+from -20 to 20 units along all three spatial dimensions.  The second
+line, \lmpcmd{create\_box 2 simbox}, initializes a simulation box based
+on the region \lmpcmd{simbox} and reserves space for two types of atoms.
 
 \begin{note}
-From this point on, any command referencing an atom type larger than 2
-will trigger an error.  While it is possible to allocate more atom types
-than needed, you must assign a mass and provide force field parameters for
-each type.  Failing to do so will cause LAMMPS to terminate with an error.
+  From this point on, any command referencing an atom type larger than 2
+  will trigger an error.  While it is possible to allocate more atom
+  types than needed, you must assign a mass and provide force field
+  parameters for each atom type.  Failing to do so will cause LAMMPS to
+  terminate with an error.
 \end{note}
 
-The third line, \lmpcmd{create\_atoms (\dots)}, generates 1500 atoms of type
-1 at random positions within the
-\lmpcmd{simbox} region.  The integer 34134 is a seed for the
-internal random number generator, which can be changed to produce different
-sequences of random numbers and, consequently, different initial atom positions.
-The fourth line adds 100 atoms of type 2.
-Both \lmpcmd{create\_atoms} commands use the optional argument
-\lmpcmd{overlap 0.3}, which enforces a minimum distance of 0.3
-units between the randomly placed atoms.  This constraint helps avoid
-``close contacts'' between atoms, which can lead to excessively
-large forces and simulation instability.
+The third line, \lmpcmd{create\_atoms (\dots)}, generates 1500 atoms of
+type 1 at random positions within the \lmpcmd{simbox} region.  The
+integer 34134 is a seed for the internal random number generator, which
+can be changed to produce different sequences of random numbers and,
+consequently, different initial atom positions.  The fourth line adds
+100 atoms of type 2.  Both \lmpcmd{create\_atoms} commands use the
+optional argument \lmpcmd{overlap 0.3}, which enforces a minimum
+distance of 0.3 units between the randomly placed atoms.  This
+constraint helps avoid ``close contacts'' between atoms, which can lead
+to excessively large forces and simulation instability.
 
 \paragraph{Settings}
 
@@ -586,11 +593,11 @@ pair_style lj/cut 4.0
 pair_coeff 1 1 1.0 1.0
 pair_coeff 2 2 0.5 3.0
 \end{lstlisting}
-The two \lmpcmd{mass} commands assign a mass of 1.0 and 5.0 units
-to the atoms of type 1 and 2, respectively.  The third line,
-\lmpcmd{pair\_style lj/cut 4.0}, specifies that the atoms
-will be interacting through a Lennard-Jones (LJ) potential with a
-cut-off equal to $r_c = 4.0$ length units \cite{wang2020lennard,fischer2023history}:
+The two \lmpcmd{mass} commands assign a mass of 1.0 and 5.0 units to the
+atoms of type 1 and 2, respectively.  The third line,
+\lmpcmd{pair\_style lj/cut 4.0}, specifies that the atoms will be
+interacting through a Lennard-Jones (LJ) potential with a cut-off equal
+to $r_c = 4.0$ length units~\cite{wang2020lennard,fischer2023history}:
 \begin{equation}
 E_{ij} (r) = 4 \epsilon_{ij} \left[ \left( \dfrac{\sigma_{ij}}{r} \right)^{12}
   - \left( \dfrac{\sigma_{ij}}{r} \right)^{6} \right], ~ \text{for} ~ r < r_c,
@@ -616,16 +623,6 @@ $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
 \end{note}
 
 \paragraph{Single-point energy}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.55\linewidth]{LJ}
-\caption{The binary mixture simulated in \hyperref[lennard-jones-label]{Tutorial 1}.
-  This image was generated directly from the \lammpsgui{}.  Atoms of
-  type 1 are represented as small red spheres, atoms of type 2 as large
-  green spheres, and the edges of the simulation box are represented as blue sticks.}
-\label{fig:LJ}
-\end{figure}
 
 The system is now fully parameterized, and the input is ready to compute
 forces.  Let us complete the two remaining categories,
@@ -656,15 +653,26 @@ steps were performed, the \guicmd{Charts} window will be empty.
 
 \paragraph{Snapshot Image}
 
-At this point, you can create a snapshot image of the
-current system using the \guicmd{Image Viewer} window, which can be
-accessed by clicking the \guicmd{Create Image} button in the \guicmd{Run} menu.
-The image viewer works by instructing LAMMPS to render an image of the current system using
-its internal rendering library via the \lmpcmd{dump image} command.  The
-resulting image is then displayed, with various buttons available to adjust
-the view and rendering style.  The image shown in
-Fig.~\ref{fig:LJ} was created this way.  This will always capture the current
-state of the system.  Save the image for future comparisons.
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{LJ}
+\caption{The binary mixture simulated in \hyperref[lennard-jones-label]{Tutorial 1}.
+  This image was generated directly from the \lammpsgui{}.  Atoms of
+  type 1 are represented as small red spheres, atoms of type 2 as large
+  green spheres, and the edges of the simulation box are represented as blue sticks.}
+\label{fig:LJ}
+\end{figure}
+
+At this point, you can create a snapshot image of the current system
+using the \guicmd{Image Viewer} window, which can be accessed by
+clicking the \guicmd{Create Image} button in the \guicmd{Run} menu.  The
+image viewer works by instructing LAMMPS to render an image of the
+current system using its internal rendering library via the \lmpcmd{dump
+  image} command.  The resulting image is then displayed, with various
+buttons available to adjust the view and rendering style.  The image
+shown in Fig.~\ref{fig:LJ} was created this way.  This will always
+capture the current state of the system.  Save the image for future
+comparisons.
 
 \paragraph{Energy minimization}
 
@@ -703,17 +711,17 @@ fresh, resetting the system and re-executing the script from the beginning.
 \label{fig:chart-log}
 \end{figure}
 
-The potential energy decreases from a positive value to a
-negative value (Figs.~\ref{fig:chart-log} and \ref{fig:evolution-energy}\,a).
-The initially positive potential energy is
-expected, as the atoms are created at random positions within
-the simulation box, with some in very close proximity to each other.
-This proximity results in a large initial potential energy due to the repulsive branch of the
-Lennard-Jones potential [i.e.,~the term in $1/r^{12}$ in Eq.~\eqref{eq:LJ}].
-As the energy minimization progresses, the
-energy decreases -- first rapidly -- then more gradually,
-before plateauing at a negative value.  This indicates that the atoms
-have moved to reasonable distances from one another.
+The potential energy decreases from a positive value to a negative value
+(Figs.~\ref{fig:chart-log} and~\ref{fig:evolution-energy}\,a).  The
+initially positive potential energy is expected, as the atoms are
+created at random positions within the simulation box, with some in very
+close proximity to each other.  This proximity results in a large
+initial potential energy due to the repulsive branch of the
+Lennard-Jones potential [i.e.,~the term in $1/r^{12}$ in
+Eq.~\eqref{eq:LJ}].  As the energy minimization progresses, the energy
+decreases - first rapidly - then more gradually, before plateauing at a
+negative value.  This indicates that the atoms have moved to reasonable
+distances from one another.
 
 Create and save a snapshot image of the simulation state after the
 minimization, and compare it to the initial image.  You should observe
@@ -770,12 +778,12 @@ steps for the \lmpcmd{run}, respectively, corresponding to a total
 duration of 250 time units.
 
 \begin{note}
-Since no other fix commands alter forces or velocities,
-and periodic boundary conditions are applied in all directions, the MD
-simulation will be performed in the microcanonical (NVE) ensemble,
-which maintains a constant number of particles and a fixed box volume.
-In this ensemble, the system does not exchange energy outside
-the simulation box.
+  Since no other fix commands alter forces or velocities, and periodic
+  boundary conditions are applied in all directions, the MD simulation
+  will be performed in the microcanonical (NVE) ensemble, which
+  maintains a constant number of particles and a fixed box volume.  In
+  this ensemble, the system does not exchange energy with anything
+  outside the simulation box.
 \end{note}
 
 Run the simulation using LAMMPS.  Initially, there is no equilibrium
@@ -785,7 +793,8 @@ decreases while the kinetic energy increases.  After approximately
 plateau, indicating that the system has reached equilibrium, with
 the total energy fluctuating around a certain constant value.
 
-Now, we change the \lmpcmd{Run} section to (note the shorter run time):
+Now, we change the \lmpcmd{Run} section to (note the smaller number of
+MD steps):
 \begin{lstlisting}
 # 5) Run
 fix mynve all nve
@@ -794,23 +803,35 @@ timestep 0.005
 run 15000
 \end{lstlisting}
 The new command adds a Langevin thermostat to the atoms in the group
-\lmpcmd{all}, with a desired target temperature of 1.0 temperature units
-throughout the run (the two numbers represent the target temperature at the beginning
-and at the end of the run, which allows for a temperature ramp if
-they differ)~\cite{schneider1978molecular}.  A \lmpcmd{damping}
-parameter of 0.1 is used.  The \lmpcmd{damping} parameter determines how
-rapidly the temperature is relaxed to its desired value.  In a Langevin
-thermostat, the atoms are subject to friction and random noise (in the form
-of randomly added velocities).  Since a constant friction term removes
-more kinetic energy from fast atoms and less from slow atoms, the system
-will eventually reach a dynamic equilibrium where the kinetic energy
-removed and added are about the same.  The number 10917 is a
-seed used to initialize the random number generator used inside of
-\lmpcmd{fix langevin}; you can change it to perform statistically
-independent simulations.  In the presence of a thermostat, the MD simulation
-will be performed in the canonical or NVT ensemble.
+\lmpcmd{all}, with a target temperature of 1.0 temperature units
+throughout the run (the two numbers represent the target temperature at
+the beginning and at the end of the run, which results in a temperature
+ramp if they differ)~\cite{schneider1978molecular}.  A \lmpcmd{damping}
+parameter of 0.1 is used.  It determines how rapidly the temperature is
+relaxed to its desired value.  In a Langevin thermostat, the atoms are
+subject to friction and random noise (in the form of randomly added
+velocities).  Since a constant friction term removes more kinetic energy
+from fast atoms and less from slow atoms, the system will eventually
+reach a dynamic equilibrium where the kinetic energy removed and added
+are about the same.  The number 10917 is a seed used to initialize the
+random number generator used inside of \lmpcmd{fix langevin}; you can
+change it to perform statistically independent simulations.  In the
+presence of a thermostat, the MD simulation will be performed in the
+canonical or NVT ensemble.
 
-Run the simulation again using LAMMPS.  From the information
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{LJ-energy}
+\caption{(a) Potential energy ($p_\text{e}$) of the binary mixture
+as a function of the step during energy minimization in \hyperref[lennard-jones-label]{Tutorial 1}.
+(b) Potential energy ($p_\text{e}$) as a function of time during
+molecular dynamics in the NVT ensemble.  (c) Kinetic energy
+($k_\text{e}$) during energy minimization.  (d) Kinetic energy
+($k_\text{e}$) during molecular dynamics.}
+\label{fig:evolution-energy}
+\end{figure}
+
+Run the simulation again using \lammpsgui{}.  From the information
 printed in the \guicmd{Output} window, one can see that the temperature
 starts from 0 but rapidly reaches the requested value and
 stabilizes itself near $T=1$ temperature units.  One can also observe that
@@ -819,33 +840,23 @@ minimization (see also Fig.~\ref{fig:evolution-energy}\,a).  After
 the molecular dynamics simulation starts, $p_\text{e}$ increases until
 it reaches a plateau value of about -0.25.  The kinetic energy,
 $k_\text{e}$, is equal to zero during energy minimization and then
-increases rapibly during molecular dynamics until it reaches
-a plateau value of about 1.5 (Fig.~\ref{fig:evolution-energy}\,b).
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{LJ-energy}
-\caption{Potential energy ($p_\text{e}$) of the binary mixture simulated
-during \hyperref[lennard-jones-label]{Tutorial 1} as a function of the step
-during energy minimization (a) and during molecular dynamics in the NVT ensemble (b).
-b)~Kinetic energy ($k_\text{e}$) during energy minimization (c) and during
-molecular dynamics (d).}
-\label{fig:evolution-energy}
-\end{figure}
+increases rapidly during molecular dynamics until it reaches
+a plateau value of about 1.5 (Fig.~\ref{fig:evolution-energy}\,d).
 
 \paragraph{Trajectory visualization}
 
 So far, the simulation has been mostly monitored through the analysis of
-thermodynamic information.  To better follow the evolution of the system and visualize
-the trajectories of the atoms, let us use the \lmpcmd{dump image} command to
-create snapshot images during the simulation.  We have already explored
-the \guicmd{Image Viewer} window.  Open it again and adjust the
-visualization to your liking using the available buttons.  Now you can
-copy the commands used to create this visualization to the clipboard
-by either using the \guicmd{Ctrl-D} keyboard shortcut or selecting
-\guicmd{Copy dump image command} from the \guicmd{File} menu.  This text
-can be pasted into the into the \lmpcmd{Visualization} section of
-\lmpcmd{PART B} of the \flecmd{initial.lmp} file.  This may look like the following:
+thermodynamic information.  To better follow the evolution of the system
+and visualize the trajectories of the atoms, let us use the \lmpcmd{dump
+  image} command to create snapshot images during the simulation.  We
+have already explored the \guicmd{Image Viewer} window.  Open it again
+and adjust the visualization to your liking using the available buttons.
+Now you can copy the commands used to create this visualization to the
+clipboard by either using the \guicmd{Ctrl-D} keyboard shortcut or
+selecting \guicmd{Copy dump image command} from the \guicmd{File} menu.
+This text can be pasted into the into the \lmpcmd{Visualization} section
+of \lmpcmd{PART B} of the \flecmd{initial.lmp} file.  This may look like
+the following:
 \begin{lstlisting}
 dump viz all image 100 myimage-*.ppm type type &
   size 800 800 zoom 1.452 shiny 0.7 fsaa yes &
@@ -929,30 +940,41 @@ write_data improved.min.data
 \end{lstlisting}
 
 \begin{note}
-A key improvement to the input is the addition of the
-\lmpcmd{write\_data} command.  This command writes the state
-of the system to a text file called \flecmd{improved.min.data}.
-This \flecmd{.data} file will be used later
-to restart the simulation from the final state of the energy
-minimization step, eliminating the need to repeat the system creation and minimization.
+  A key improvement to the input is the addition of the
+  \lmpcmd{write\_data} command.  This command writes the state of the
+  system to a text file called \flecmd{improved.min.data}.  This
+  \flecmd{.data} file will be used later to restart the simulation from
+  the final state of the energy minimization step, eliminating the need
+  to repeat the system creation and minimization.
 \end{note}
 
-Run the \flecmd{improved.min.lmp} file using LAMMPS.  At the end of the simulation,
-a file called \flecmd{improved.min.data} is created.  You can view the contents
-of this file from the \lammpsgui{}, by right-clicking on the file name in
-the editor and selecting the entry \guicmd{View file `improved.min.data'}.
+Run the \flecmd{improved.min.lmp} file using \lammpsgui{}.  At the end
+of the simulation, a file called \flecmd{improved.min.data} is created.
+You can view the contents of this file from \lammpsgui{}, by
+right-clicking on the file name in the editor and selecting the entry
+\guicmd{View file `improved.min.data'}.
 
-The created \flecmd{.data} file contains all the information necessary to
-restart the simulation, such as the number of atoms, the box size, the
-masses, and the pair coefficients.  This \flecmd{.data} file also contains the final
-positions of the atoms within the \lmpcmd{Atoms} section.  The first five
-columns of the \lmpcmd{Atoms} section correspond (from left to right) to
-the atom indexes (from 1 to the total number of atoms, 1150), the atom
-types (1 or 2 here), and the positions of the atoms $x$, $y$, $z$.  The
-last three columns are image flags that keep track of which atoms
-crossed the periodic boundary.  The exact format of each line in the
-\lmpcmd{Atoms} section depends on the choice of \lmpcmd{atom\_style}, which
-determines which per-atom data is set and stored internally in LAMMPS.
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{LJ-cylinder}
+\caption{Visualization of the improved binary mixture input after minimization
+  during \hyperref[lennard-jones-label]{Tutorial 1}.  Colors are the same as in
+  Fig.~\ref{fig:LJ}.}
+\label{fig:improved-min}
+\end{figure}
+
+The created \flecmd{.data} file contains all the information necessary
+to restart the simulation, such as the number of atoms, the box size,
+the masses, and the pair coefficients.  This \flecmd{.data} file also
+contains the final positions of the atoms within the \lmpcmd{Atoms}
+section.  The first five columns of the \lmpcmd{Atoms} section
+correspond (from left to right) to the atom indexes (from 1 to the total
+number of atoms, 1150), the atom types (1 or 2 here), and the positions
+of the atoms $x$, $y$, $z$.  The last three columns are image flags that
+keep track of which atoms crossed the periodic boundary.  The exact
+format of each line in the \lmpcmd{Atoms} section depends on the choice
+of \lmpcmd{atom\_style}, which determines which per-atom data is set and
+stored internally in LAMMPS.
 
 \begin{note}
 Instead of the \lmpcmdnote{write\_data} command, you can also use the
@@ -968,16 +990,6 @@ copy of the data file that works regardless of your LAMMPS version and platform.
 \end{note}
 
 \paragraph{Restarting from a saved configuration}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.55\linewidth]{LJ-cylinder}
-\caption{Improved visualization of the binary mixture simulated
-during \hyperref[lennard-jones-label]{Tutorial 1}.  The atoms of type 1 are
-represented as small red spheres, the atoms of type 2 as large green spheres,
-and the edges of the simulation box are represented as blue sticks.}
-\label{fig:improved-min}
-\end{figure}
 
 To continue a simulation from the saved configuration, open the
 \flecmd{improved.md.lmp} file, which was downloaded during the tutorial setup.
@@ -1012,6 +1024,7 @@ minimization.  To start the simulation from a clean slate, with only
 atoms of type 2 inside the cylinder and atoms of type 1 outside the
 cylinder, let us delete the misplaced atoms by adding the following
 commands to \flecmd{improved.md.lmp}:
+
 \begin{lstlisting}
 region cyl_in cylinder z 0 0 10 INF INF side in
 region cyl_out cylinder z 0 0 10 INF INF side out
@@ -1119,16 +1132,17 @@ fix mylgv all langevin 1.0 1.0 0.1 10917 zero yes
 timestep 0.005
 run 300000
 \end{lstlisting}
-Here, there are a few more differences from the previous simulation.  First,
-the \lmpcmd{velocity create} command assigns an initial velocity to each
-atom.  The initial velocity is chosen so that the average initial
-temperature is equal to 1.0 temperature units.  The additional keywords
-ensure that no linear momentum (\lmpcmd{mom yes}) is given to the
-system and that the generated velocities are distributed according to
-a Gaussian distribution.  Another improvement is the \lmpcmd{zero yes}
-keyword in the Langevin thermostat, which ensures that the total random
-force applied to the atoms is equal to zero.
-
+Here, there are a few more differences from the previous simulation.
+First, the \lmpcmd{velocity create} command assigns an initial velocity
+to each atom.  The initial velocity is chosen so that the average
+initial temperature is equal to 1.0 temperature units.  The additional
+keywords ensure that no linear momentum (\lmpcmd{mom yes}) is given to
+the system and that the generated velocities are distributed according
+to a Gaussian distribution.  Another improvement is the \lmpcmd{zero
+  yes} keyword in the Langevin thermostat, which ensures that the total
+random force applied to the atoms is equal to zero. These steps are
+important to prevent the system from starting to drift or move as a
+whole.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{LJ-mixing}
@@ -1140,15 +1154,14 @@ between atoms of types 1 and 2.}
 \end{figure}
 
 \begin{note}
-The steps to ensure no initial linear momentum and no net total
-force are important to prevent the system from starting to drift or move as a
-whole.  For a bulk system with periodic boundary conditions, it is
-expected to remain in place.  Accordingly, when computing the temperature from the
-kinetic energy, we use $3N-3$ degrees of freedom since there is no
-global translation.  In a drifting system, some of the kinetic energy is
-due to the drift, which means the system itself cools down.  In
-extreme cases, the system can freeze while its center of mass drifts very quickly.  This phenomenon is
-sometimes referred to as the ``flying ice cube syndrome''~\cite{wong2016good}.
+  A bulk system with periodic boundary conditions is expected to remain
+  in place.  Accordingly, when computing the temperature from the
+  kinetic energy, we use $3N-3$ degrees of freedom since there is no
+  global translation.  In a drifting system, some of the kinetic energy
+  is due to the drift, which means the system itself cools down.  In
+  extreme cases, the system can freeze while its center of mass drifts
+  very quickly.  This phenomenon is sometimes referred to as the
+  ``flying ice cube syndrome''~\cite{wong2016good}.
 \end{note}
 
 Run \flecmd{improved.md.lmp} and observe the mixing of the two populations
@@ -1166,6 +1179,22 @@ more particles of type 1 come into contact with particles of type 2, as
 expected during mixing.  This can be observed using the entry
 \guicmd{c\_sumcoor12} in the \guicmd{Charts} drop-down menu.
 
+\paragraph{Experiments}
+
+Here are some suggestions for further experiments with this system that
+may lead to additional insights into how different systems are configured
+and how various features function:
+\begin{itemize}
+\item Use the Nos\'e-Hoover thermostat (\lmpcmd{fix nvt}) instead of the Langevin thermostat
+  (\lmpcmd{fix nve} + \lmpcmd{fix langevin}).
+\item Omit the energy minimization step before starting the MD simulation using either
+the Nos\'e-Hoover or the Langevin thermostat.
+\item Apply the thermostat to only one type of atoms and observe the
+  temperature for each type separately.
+\item Append an NVE run (i.e.~without any thermostat) and observe the energy levels.
+\end{itemize}
+
+
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{LJ-coords}
@@ -1177,29 +1206,14 @@ expected during mixing.  This can be observed using the entry
 \label{fig:coords-viz}
 \end{figure}
 
-\paragraph{Experiments}
-
-Here are some suggestions for further experiments with this system that
-may lead to additional insights into how different systems are configured
-and how various features function:
-\begin{itemize}
-\item Use the Nos\'e--Hoover thermostat (\lmpcmd{fix nvt}) instead of the Langevin thermostat
-  (\lmpcmd{fix nve} + \lmpcmd{fix langevin}).
-\item Omit the energy minimization step before starting the MD simulation using either
-the Nos\'e--Hoover or the Langevin thermostat.
-\item Apply the thermostat to only one type of atoms and observe the
-  temperature for each type separately.
-\item Append an NVE run (i.e.~without any thermostat) and observe the energy levels.
-\end{itemize}
-
 Another useful experiment is coloring the atoms in the \guicmd{Slide Show}
 according to an observable, such as their respective coordination
 numbers.  To do this, replace the
 \lmpcmd{dump} and \lmpcmd{dump\_modify} commands with the following lines:
 \begin{lstlisting}
 variable coor12 atom (type==1)*(c_coor12)+(type==2)*-1
-dump viz all image 1000 myimage-*.ppm v_coor12 &
-  type shiny 0.1 box no 0.01 view 0 0 zoom 1.8 fsaa yes size 800 800
+dump viz all image 1000 myimage-*.ppm v_coor12 type &
+  shiny 0.1 box no 0.01 view 0 0 zoom 1.8 fsaa yes size 800 800
 dump_modify viz adiam 1 1 adiam 2 3 backcolor white &
   amap -1 2 ca 0.0 4 min royalblue 0 turquoise 1 yellow max red
 \end{lstlisting}
@@ -1214,23 +1228,24 @@ all assigned a value of -1, and will therefore always be colored their default b
 
 In this tutorial, the system of interest is a small, single-walled
 carbon nanotube (CNT) in an empty box (Fig.~\ref{fig:CNT}).  The CNT is
-strained by imposing a constant velocity on the edge atoms.
-To illustrate the difference between conventional and reactive force fields, this
-tutorial is divided into two parts: in the first part, a conventional molecular force
-field (called OPLS-AA~\cite{jorgensenDevelopmentTestingOPLS1996}) is
-used and the bonds between the atoms of the CNT are unbreakable.  In the
-second part, a reactive force field (called AIREBO
-\cite{stuart2000reactive}) is used, which allows chemical bonds to break under large strain.
+strained by imposing a constant velocity on the edge atoms.  To
+illustrate the difference between conventional and reactive force
+fields, this tutorial is divided into two parts: in the first part, a
+conventional molecular force field (called
+OPLS-AA~\cite{jorgensenDevelopmentTestingOPLS1996}) is used and the
+bonds between the atoms of the CNT are unbreakable.  In the second part,
+a reactive force field (called AIREBO~\cite{stuart2000reactive}) is
+used, which allows chemical bonds to break under large strain.
 
 To set up this tutorial, select \guicmd{Start Tutorial 2} from the
-\guicmd{Tutorials} menu of \lammpsgui{} and follow the instructions.  This will
-select a folder, create one if necessary, and place several files into it.
-The initial input file, set up for a single-point energy
+\guicmd{Tutorials} menu of \lammpsgui{} and follow the instructions.
+This will select a folder, create one if necessary, and place several
+files into it.  The initial input file, set up for a single-point energy
 calculation, will also be loaded into the editor under the name
-\flecmd{unbreakable.lmp}.  Additional files are a data file containing the
-CNT topology and geometry, named \flecmd{unbreakable.data}, a parameters file
-named \flecmd{unbreakable.inc}, as well as the scripts required for the second part
-of the tutorial.
+\flecmd{unbreakable.lmp}.  Additional files are a data file containing
+the CNT topology and geometry, named \flecmd{unbreakable.data}, a
+parameters file named \flecmd{unbreakable.inc}, as well as the scripts
+required for the second part of the tutorial.
 
 \begin{figure}
 \centering
@@ -1667,9 +1682,10 @@ but that after a few steps, it reaches the target value.
 
 \begin{note}
   Bonds cannot be displayed by the \lmpcmdnote{dump image} when using
-  the \lmpcmdnote{atom\_style atomic}, as it contains no bonds.
-  A tip for displaying bonds with the present system is provided at
-  the end of the tutorial.
+  the \lmpcmdnote{atom\_style atomic}, as it contains no bonds.  A tip
+  for displaying bonds with the present system using LAMMPS is provided
+  at the end of the tutorial.  You can also use external tools like VMD
+  or OVITO (see \hyperref[tip-dynamic-bonds]{tip for tutorial 3}).
 \end{note}
 
 \paragraph{Launch the deformation}
@@ -1718,18 +1734,35 @@ Here, the potential is AIREBO, and the CNT is breakable.}
 \end{figure}
 
 \paragraph{Tip: bonds representation with AIREBO}
+\label{tip-dynamic-bonds}
 
-In the following input file,
-\href{\filepath tutorial2/breakable-with-tip.lmp}{\dwlcmd{breakable-with-tip.lmp}},
-a trick is used to represent bonds while using AIREBO.  A detailled
-explanation of the script is beyong the scope of the present tutorial.
-In short, the trick is to use AIREBO with the molecular atom
-style, and use the \lmpcmd{bond/break} command to update the status of the bonds
-during the simulation:
+In the input file
+% do not wrap this line
+\href{\filepath tutorial2/solution/breakable-with-tip.lmp}{\dwlcmd{solution/breakable-with-tip.lmp}},
+% do not wrap this line
+which is an alternate solution for \flecmd{breakable.lmp}, a trick is
+used to represent bonds while using AIREBO.  A detailed explanation of
+the script is beyond the scope of the present tutorial.  In short, the
+trick is to use AIREBO with the \lmpcmd{molecular} atom style, and use
+the \lmpcmd{fix bond/break} and \lmpcmd{fix bond/create/angle} commands
+to update the status of the bonds during the simulation:
 \begin{lstlisting}
 fix break all bond/break 1000 1 2.5
+fix form all bond/create/angle 1000 1 1 2.0 1 aconstrain 90.0 180
 \end{lstlisting}
-% S.G.: we could write a bit more about it
+
+This ``hack'' works because AIREBO does not pay any attention to bonded
+interactions and computes the bond topology dynamically inside the pair
+style.  Thus adding bonds of bond style \lmpcmd{zero} does not add any
+interactions but allow the visualization of them with \lmpcmd{dump
+  image}.  It is, however needed to change the \lmpcmd{special\_bonds}
+setting to disable any neighbor list exclusions as they are common for
+force fields with explicit bonds.
+\begin{lstlisting}
+bond_style zero
+bond_coeff 1 1.4
+special_bonds lj/coul 1.0 1.0 1.0
+\end{lstlisting}
 
 \subsection{Tutorial 3: Polymer in water}
 \label{all-atom-label}
@@ -3727,10 +3760,10 @@ When combining these two commands, the MD simulation operates
 in the NVT ensemble, maintaining a constant number of
 atoms $N$, constant volume $V$, and a temperature $T$ that
 fluctuates around a target value.
-% SG: may be discuss the choice of constant "500" --> chosen for a relatiely weak coupling with thermostat (add a box?)
+% SG: may be discuss the choice of constant "500" -> chosen for a relatiely weak coupling with thermostat (add a box?)
 
 To ensure that the equilibration time is sufficient, we will track the evolution of
-the number of atoms in the central -- energetically unfavorable -- region,
+the number of atoms in the central - energetically unfavorable - region,
 referred to as \lmpcmd{mymes}, using the \lmpcmd{n\_center} variable:
 \begin{lstlisting}
 region mymes block -${x0} ${x0} INF INF INF INF
@@ -4011,7 +4044,7 @@ and $x_0 = 10~\text{\AA{}}$.}
 The goal of this tutorial is to create a model of a carbon nanotube (CNT) embedded
 in a polymer melt made of polystyrene (PS) (Fig.~\ref{fig:REACT}).  The
 REACTER protocol is used to simulate the polymerization of styrene monomers, and the
-polymerization reaction is followed in time \cite{gissinger2017polymer, gissinger2020reacter, gissinger2024molecular}.
+polymerization reaction is followed in time~\cite{gissinger2017polymer, gissinger2020reacter, gissinger2024molecular}.
 In contrast with AIREBO (\hyperref[carbon-nanotube-label]{Tutorial 2})
 and ReaxFF (\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}), the REACTER
 protocol relies on the use of a \textit{classical} force field.
@@ -4362,7 +4395,7 @@ installer package.
 \subsubsection{Installing the Linux .tar.gz Package}
 
 Download the archive (e.g.,~LAMMPS-Linux-x86\_64-GUI-29Aug2024\_update2.tar.gz)
-and unpack it.  This will create a folder named LAMMPS\_GUI containing the
+and unpack it.  This will create a folder named \lammpsgui{} containing the
 included commands, which can be launched directly using ``./lammps-gui'' or
 ``./lmp'', for example.  Adding this folder to the PATH environment
 variable will make these commands accessible from everywhere, without the
@@ -4397,12 +4430,12 @@ flatpak run --command=lmp org.lammps.lammps-gui -in in.lmp
 
 After downloading the macOS app bundle image file
 (e.g.,~LAMMPS-macOS-multiarch-GUI-29Aug2024\_update2.dmg), double-click
-on it.  In the dialog that opens drag the LAMMPS\_GUI app bundle into
+on it.  In the dialog that opens drag the \lammpsgui{} app bundle into
 the Applications folder.  To enable command-line access, follow the
 instructions in the README.txt file.  These macOS app-bundles contain
 native executables for both, Intel and Apple CPUs.
 
-After installation, you can launch LAMMPS\_GUI from the Applications
+After installation, you can launch \lammpsgui{} from the Applications
 folder.  Additionally, you can drag an input file onto the app or open
 files with the ``.lmp'' extension.  Note that the \lammpsgui{} app bundle is
 currently not cryptographically signed, so macOS may initially prevent
@@ -4437,7 +4470,7 @@ lammps-gui input.lmp
 Files can also be opened from the ``File'' menu.  You can select a
 file through a dialog and then open it.  Additionally, a history of
 the last five opened files is maintained, with entries to open them directly.
-Finally, the \texttt{Ctrl--O} keyboard shortcut can also be used to open a file.
+Finally, the \texttt{Ctrl-O} keyboard shortcut can also be used to open a file.
 
 When integrated into a desktop environment, it is also possible to open
 files with a ``.lmp'' extension or use drag-and-drop.
@@ -4465,7 +4498,7 @@ If the file in the editor has unsaved changes, the word
 ``\*modified\*'' will appear in the window title.  The current input
 buffer can be saved by selecting ``Save'' or ``Save As...'' from the
 ``File'' menu.  You can also click the ``Save'' icon on the left side
-of the status bar, or use the \texttt{Ctrl--S} keyboard shortcut.
+of the status bar, or use the \texttt{Ctrl-S} keyboard shortcut.
 
 \begin{note}
 When \lammpsgui{} opens a file, it will \emph{switch} the working directory
@@ -4479,7 +4512,7 @@ which are typically expected to be in the same folder as the input file.
 
 %The contents of the \textit{Editor} window can be saved by either using
 %the ``Save'' or ``Save As'' entry in the ``File'' menu, using the
-%\texttt{Ctrl--S} keyboard shortcut or by clicking on the ``Save'' icon
+%\texttt{Ctrl-S} keyboard shortcut or by clicking on the ``Save'' icon
 %at the bottom left of the \textit{Editor} window status bar.  For
 %running LAMMPS in \lammpsgui{} it is not required to save the buffer.
 %The current contents of the buffer will be passed on to LAMMPS.
