@@ -711,17 +711,17 @@ fresh, resetting the system and re-executing the script from the beginning.
 \label{fig:chart-log}
 \end{figure}
 
-The potential energy decreases from a positive value to a
-negative value (Figs.~\ref{fig:chart-log} and~\ref{fig:evolution-energy}\,a).
-The initially positive potential energy is
-expected, as the atoms are created at random positions within
-the simulation box, with some in very close proximity to each other.
-This proximity results in a large initial potential energy due to the repulsive branch of the
-Lennard-Jones potential [i.e.,~the term in $1/r^{12}$ in Eq.~\eqref{eq:LJ}].
-As the energy minimization progresses, the
-energy decreases - first rapidly - then more gradually,
-before plateauing at a negative value.  This indicates that the atoms
-have moved to reasonable distances from one another.
+The potential energy decreases from a positive value to a negative value
+(Figs.~\ref{fig:chart-log} and~\ref{fig:evolution-energy}\,a).  The
+initially positive potential energy is expected, as the atoms are
+created at random positions within the simulation box, with some in very
+close proximity to each other.  This proximity results in a large
+initial potential energy due to the repulsive branch of the
+Lennard-Jones potential [i.e.,~the term in $1/r^{12}$ in
+Eq.~\eqref{eq:LJ}].  As the energy minimization progresses, the energy
+decreases - first rapidly - then more gradually, before plateauing at a
+negative value.  This indicates that the atoms have moved to reasonable
+distances from one another.
 
 Create and save a snapshot image of the simulation state after the
 minimization, and compare it to the initial image.  You should observe
@@ -778,12 +778,12 @@ steps for the \lmpcmd{run}, respectively, corresponding to a total
 duration of 250 time units.
 
 \begin{note}
-Since no other fix commands alter forces or velocities,
-and periodic boundary conditions are applied in all directions, the MD
-simulation will be performed in the microcanonical (NVE) ensemble,
-which maintains a constant number of particles and a fixed box volume.
-In this ensemble, the system does not exchange energy outside
-the simulation box.
+  Since no other fix commands alter forces or velocities, and periodic
+  boundary conditions are applied in all directions, the MD simulation
+  will be performed in the microcanonical (NVE) ensemble, which
+  maintains a constant number of particles and a fixed box volume.  In
+  this ensemble, the system does not exchange energy with anything
+  outside the simulation box.
 \end{note}
 
 Run the simulation using LAMMPS.  Initially, there is no equilibrium
@@ -793,7 +793,8 @@ decreases while the kinetic energy increases.  After approximately
 plateau, indicating that the system has reached equilibrium, with
 the total energy fluctuating around a certain constant value.
 
-Now, we change the \lmpcmd{Run} section to (note the shorter run time):
+Now, we change the \lmpcmd{Run} section to (note the smaller number of
+MD steps):
 \begin{lstlisting}
 # 5) Run
 fix mynve all nve
@@ -802,21 +803,21 @@ timestep 0.005
 run 15000
 \end{lstlisting}
 The new command adds a Langevin thermostat to the atoms in the group
-\lmpcmd{all}, with a desired target temperature of 1.0 temperature units
-throughout the run (the two numbers represent the target temperature at the beginning
-and at the end of the run, which allows for a temperature ramp if
-they differ)~\cite{schneider1978molecular}.  A \lmpcmd{damping}
-parameter of 0.1 is used.  The \lmpcmd{damping} parameter determines how
-rapidly the temperature is relaxed to its desired value.  In a Langevin
-thermostat, the atoms are subject to friction and random noise (in the form
-of randomly added velocities).  Since a constant friction term removes
-more kinetic energy from fast atoms and less from slow atoms, the system
-will eventually reach a dynamic equilibrium where the kinetic energy
-removed and added are about the same.  The number 10917 is a
-seed used to initialize the random number generator used inside of
-\lmpcmd{fix langevin}; you can change it to perform statistically
-independent simulations.  In the presence of a thermostat, the MD simulation
-will be performed in the canonical or NVT ensemble.
+\lmpcmd{all}, with a target temperature of 1.0 temperature units
+throughout the run (the two numbers represent the target temperature at
+the beginning and at the end of the run, which results in a temperature
+ramp if they differ)~\cite{schneider1978molecular}.  A \lmpcmd{damping}
+parameter of 0.1 is used.  It determines how rapidly the temperature is
+relaxed to its desired value.  In a Langevin thermostat, the atoms are
+subject to friction and random noise (in the form of randomly added
+velocities).  Since a constant friction term removes more kinetic energy
+from fast atoms and less from slow atoms, the system will eventually
+reach a dynamic equilibrium where the kinetic energy removed and added
+are about the same.  The number 10917 is a seed used to initialize the
+random number generator used inside of \lmpcmd{fix langevin}; you can
+change it to perform statistically independent simulations.  In the
+presence of a thermostat, the MD simulation will be performed in the
+canonical or NVT ensemble.
 
 \begin{figure}
 \centering
@@ -824,13 +825,13 @@ will be performed in the canonical or NVT ensemble.
 \caption{Potential energy ($p_\text{e}$) of the binary mixture simulated
   during \hyperref[lennard-jones-label]{Tutorial 1} as a function of the
   step during energy minimization (a) and as a function of time during
-  molecular dynamics in the NVT ensemble (b).  b)~Kinetic energy
+  molecular dynamics in the NVT ensemble (b), and kinetic energy
   ($k_\text{e}$) during energy minimization (c) and during molecular
   dynamics (d).}
 \label{fig:evolution-energy}
 \end{figure}
 
-Run the simulation again using LAMMPS.  From the information
+Run the simulation again using \lammpsgui{}.  From the information
 printed in the \guicmd{Output} window, one can see that the temperature
 starts from 0 but rapidly reaches the requested value and
 stabilizes itself near $T=1$ temperature units.  One can also observe that
@@ -839,22 +840,23 @@ minimization (see also Fig.~\ref{fig:evolution-energy}\,a).  After
 the molecular dynamics simulation starts, $p_\text{e}$ increases until
 it reaches a plateau value of about -0.25.  The kinetic energy,
 $k_\text{e}$, is equal to zero during energy minimization and then
-increases rapibly during molecular dynamics until it reaches
-a plateau value of about 1.5 (Fig.~\ref{fig:evolution-energy}\,b).
+increases rapidly during molecular dynamics until it reaches
+a plateau value of about 1.5 (Fig.~\ref{fig:evolution-energy}\,d).
 
 \paragraph{Trajectory visualization}
 
 So far, the simulation has been mostly monitored through the analysis of
-thermodynamic information.  To better follow the evolution of the system and visualize
-the trajectories of the atoms, let us use the \lmpcmd{dump image} command to
-create snapshot images during the simulation.  We have already explored
-the \guicmd{Image Viewer} window.  Open it again and adjust the
-visualization to your liking using the available buttons.  Now you can
-copy the commands used to create this visualization to the clipboard
-by either using the \guicmd{Ctrl-D} keyboard shortcut or selecting
-\guicmd{Copy dump image command} from the \guicmd{File} menu.  This text
-can be pasted into the into the \lmpcmd{Visualization} section of
-\lmpcmd{PART B} of the \flecmd{initial.lmp} file.  This may look like the following:
+thermodynamic information.  To better follow the evolution of the system
+and visualize the trajectories of the atoms, let us use the \lmpcmd{dump
+  image} command to create snapshot images during the simulation.  We
+have already explored the \guicmd{Image Viewer} window.  Open it again
+and adjust the visualization to your liking using the available buttons.
+Now you can copy the commands used to create this visualization to the
+clipboard by either using the \guicmd{Ctrl-D} keyboard shortcut or
+selecting \guicmd{Copy dump image command} from the \guicmd{File} menu.
+This text can be pasted into the into the \lmpcmd{Visualization} section
+of \lmpcmd{PART B} of the \flecmd{initial.lmp} file.  This may look like
+the following:
 \begin{lstlisting}
 dump viz all image 100 myimage-*.ppm type type &
   size 800 800 zoom 1.452 shiny 0.7 fsaa yes &
@@ -938,30 +940,41 @@ write_data improved.min.data
 \end{lstlisting}
 
 \begin{note}
-A key improvement to the input is the addition of the
-\lmpcmd{write\_data} command.  This command writes the state
-of the system to a text file called \flecmd{improved.min.data}.
-This \flecmd{.data} file will be used later
-to restart the simulation from the final state of the energy
-minimization step, eliminating the need to repeat the system creation and minimization.
+  A key improvement to the input is the addition of the
+  \lmpcmd{write\_data} command.  This command writes the state of the
+  system to a text file called \flecmd{improved.min.data}.  This
+  \flecmd{.data} file will be used later to restart the simulation from
+  the final state of the energy minimization step, eliminating the need
+  to repeat the system creation and minimization.
 \end{note}
 
-Run the \flecmd{improved.min.lmp} file using LAMMPS.  At the end of the simulation,
-a file called \flecmd{improved.min.data} is created.  You can view the contents
-of this file from the \lammpsgui{}, by right-clicking on the file name in
-the editor and selecting the entry \guicmd{View file `improved.min.data'}.
+Run the \flecmd{improved.min.lmp} file using \lammpsgui{}.  At the end
+of the simulation, a file called \flecmd{improved.min.data} is created.
+You can view the contents of this file from \lammpsgui{}, by
+right-clicking on the file name in the editor and selecting the entry
+\guicmd{View file `improved.min.data'}.
 
-The created \flecmd{.data} file contains all the information necessary to
-restart the simulation, such as the number of atoms, the box size, the
-masses, and the pair coefficients.  This \flecmd{.data} file also contains the final
-positions of the atoms within the \lmpcmd{Atoms} section.  The first five
-columns of the \lmpcmd{Atoms} section correspond (from left to right) to
-the atom indexes (from 1 to the total number of atoms, 1150), the atom
-types (1 or 2 here), and the positions of the atoms $x$, $y$, $z$.  The
-last three columns are image flags that keep track of which atoms
-crossed the periodic boundary.  The exact format of each line in the
-\lmpcmd{Atoms} section depends on the choice of \lmpcmd{atom\_style}, which
-determines which per-atom data is set and stored internally in LAMMPS.
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{LJ-cylinder}
+\caption{Visualization of the improved binary mixture input after minimization
+  during \hyperref[lennard-jones-label]{Tutorial 1}.  Colors are the same as in
+  Fig.~\ref{fig:LJ}.}
+\label{fig:improved-min}
+\end{figure}
+
+The created \flecmd{.data} file contains all the information necessary
+to restart the simulation, such as the number of atoms, the box size,
+the masses, and the pair coefficients.  This \flecmd{.data} file also
+contains the final positions of the atoms within the \lmpcmd{Atoms}
+section.  The first five columns of the \lmpcmd{Atoms} section
+correspond (from left to right) to the atom indexes (from 1 to the total
+number of atoms, 1150), the atom types (1 or 2 here), and the positions
+of the atoms $x$, $y$, $z$.  The last three columns are image flags that
+keep track of which atoms crossed the periodic boundary.  The exact
+format of each line in the \lmpcmd{Atoms} section depends on the choice
+of \lmpcmd{atom\_style}, which determines which per-atom data is set and
+stored internally in LAMMPS.
 
 \begin{note}
 Instead of the \lmpcmdnote{write\_data} command, you can also use the
@@ -977,16 +990,6 @@ copy of the data file that works regardless of your LAMMPS version and platform.
 \end{note}
 
 \paragraph{Restarting from a saved configuration}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.55\linewidth]{LJ-cylinder}
-\caption{Improved visualization of the binary mixture simulated
-during \hyperref[lennard-jones-label]{Tutorial 1}.  The atoms of type 1 are
-represented as small red spheres, the atoms of type 2 as large green spheres,
-and the edges of the simulation box are represented as blue sticks.}
-\label{fig:improved-min}
-\end{figure}
 
 To continue a simulation from the saved configuration, open the
 \flecmd{improved.md.lmp} file, which was downloaded during the tutorial setup.
@@ -1021,6 +1024,7 @@ minimization.  To start the simulation from a clean slate, with only
 atoms of type 2 inside the cylinder and atoms of type 1 outside the
 cylinder, let us delete the misplaced atoms by adding the following
 commands to \flecmd{improved.md.lmp}:
+
 \begin{lstlisting}
 region cyl_in cylinder z 0 0 10 INF INF side in
 region cyl_out cylinder z 0 0 10 INF INF side out
@@ -1128,16 +1132,17 @@ fix mylgv all langevin 1.0 1.0 0.1 10917 zero yes
 timestep 0.005
 run 300000
 \end{lstlisting}
-Here, there are a few more differences from the previous simulation.  First,
-the \lmpcmd{velocity create} command assigns an initial velocity to each
-atom.  The initial velocity is chosen so that the average initial
-temperature is equal to 1.0 temperature units.  The additional keywords
-ensure that no linear momentum (\lmpcmd{mom yes}) is given to the
-system and that the generated velocities are distributed according to
-a Gaussian distribution.  Another improvement is the \lmpcmd{zero yes}
-keyword in the Langevin thermostat, which ensures that the total random
-force applied to the atoms is equal to zero.
-
+Here, there are a few more differences from the previous simulation.
+First, the \lmpcmd{velocity create} command assigns an initial velocity
+to each atom.  The initial velocity is chosen so that the average
+initial temperature is equal to 1.0 temperature units.  The additional
+keywords ensure that no linear momentum (\lmpcmd{mom yes}) is given to
+the system and that the generated velocities are distributed according
+to a Gaussian distribution.  Another improvement is the \lmpcmd{zero
+  yes} keyword in the Langevin thermostat, which ensures that the total
+random force applied to the atoms is equal to zero. These steps are
+important to prevent the system from starting to drift or move as a
+whole.
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{LJ-mixing}
@@ -1149,15 +1154,14 @@ between atoms of types 1 and 2.}
 \end{figure}
 
 \begin{note}
-The steps to ensure no initial linear momentum and no net total
-force are important to prevent the system from starting to drift or move as a
-whole.  For a bulk system with periodic boundary conditions, it is
-expected to remain in place.  Accordingly, when computing the temperature from the
-kinetic energy, we use $3N-3$ degrees of freedom since there is no
-global translation.  In a drifting system, some of the kinetic energy is
-due to the drift, which means the system itself cools down.  In
-extreme cases, the system can freeze while its center of mass drifts very quickly.  This phenomenon is
-sometimes referred to as the ``flying ice cube syndrome''~\cite{wong2016good}.
+  A bulk system with periodic boundary conditions is expected to remain
+  in place.  Accordingly, when computing the temperature from the
+  kinetic energy, we use $3N-3$ degrees of freedom since there is no
+  global translation.  In a drifting system, some of the kinetic energy
+  is due to the drift, which means the system itself cools down.  In
+  extreme cases, the system can freeze while its center of mass drifts
+  very quickly.  This phenomenon is sometimes referred to as the
+  ``flying ice cube syndrome''~\cite{wong2016good}.
 \end{note}
 
 Run \flecmd{improved.md.lmp} and observe the mixing of the two populations
@@ -1175,17 +1179,6 @@ more particles of type 1 come into contact with particles of type 2, as
 expected during mixing.  This can be observed using the entry
 \guicmd{c\_sumcoor12} in the \guicmd{Charts} drop-down menu.
 
-\begin{figure}
-\centering
-\includegraphics[width=0.55\linewidth]{LJ-coords}
-\caption{Snapshot of the binary mixture simulated
-  during \hyperref[lennard-jones-label]{Tutorial 1} with atoms of type 1
-  colored according to their computed $1-2$ coordination
-  number from the compute \lmpcmd{coor12}, ranging from turquoise,\lmpcmd{c\_coor12 = 0},
-  to yellow, \lmpcmd{c\_coor12 = 1}, and red, \lmpcmd{c\_coor12 = 2}.}
-\label{fig:coords-viz}
-\end{figure}
-
 \paragraph{Experiments}
 
 Here are some suggestions for further experiments with this system that
@@ -1201,14 +1194,26 @@ the Nos\'e-Hoover or the Langevin thermostat.
 \item Append an NVE run (i.e.~without any thermostat) and observe the energy levels.
 \end{itemize}
 
+
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{LJ-coords}
+\caption{Snapshot of the binary mixture simulated
+  during \hyperref[lennard-jones-label]{Tutorial 1} with atoms of type 1
+  colored according to their computed $1-2$ coordination
+  number from the compute \lmpcmd{coor12}, ranging from turquoise,\lmpcmd{c\_coor12 = 0},
+  to yellow, \lmpcmd{c\_coor12 = 1}, and red, \lmpcmd{c\_coor12 = 2}.}
+\label{fig:coords-viz}
+\end{figure}
+
 Another useful experiment is coloring the atoms in the \guicmd{Slide Show}
 according to an observable, such as their respective coordination
 numbers.  To do this, replace the
 \lmpcmd{dump} and \lmpcmd{dump\_modify} commands with the following lines:
 \begin{lstlisting}
 variable coor12 atom (type==1)*(c_coor12)+(type==2)*-1
-dump viz all image 1000 myimage-*.ppm v_coor12 &
-  type shiny 0.1 box no 0.01 view 0 0 zoom 1.8 fsaa yes size 800 800
+dump viz all image 1000 myimage-*.ppm v_coor12 type &
+  shiny 0.1 box no 0.01 view 0 0 zoom 1.8 fsaa yes size 800 800
 dump_modify viz adiam 1 1 adiam 2 3 backcolor white &
   amap -1 2 ca 0.0 4 min royalblue 0 turquoise 1 yellow max red
 \end{lstlisting}
