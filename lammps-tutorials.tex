@@ -758,9 +758,9 @@ system.  The \lmpcmd{thermo} command is called a second time to
 update the output frequency from 10 to 50 as soon as \lmpcmd{PART B} of
 the simulation starts.  In addition, a new \lmpcmd{thermo\_style}
 command is introduced to specify the thermodynamic information LAMMPS should
-print during during \lmpcmd{PART B}.  This adjustment is done because during molecular
-dynamics, the system exhibits non-zero temperature $T$
-(and thus non-zero kinetic energy $K$), which are useful to monitor.
+print during during \lmpcmd{PART B}.  This adjustment is made because, during
+molecular dynamics, the system exhibits a non-zero temperature $T$ (and
+consequently a non-zero kinetic energy $K$, keyword \lmpcmd{ke}), which are useful to monitor.
 The \lmpcmd{pe} keyword represents the potential energy of the system, $E$, such that
 $U + K = E$.
 
