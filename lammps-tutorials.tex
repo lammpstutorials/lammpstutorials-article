@@ -2178,7 +2178,15 @@ dump mydmp all atom 1000 pull.lammpstrj
 Running the \flecmd{pull-with-tip.lmp} file using LAMMPS will generate a trajectory file
 named \flecmd{pull.lammpstrj}, which can be opened in OVITO or VMD.
 
-Since the trajectory dump file does not contain information about topology and atom types, it is usually preferred to first write out a data file and import it directly (OVITO) or convert it to a PSF file (VMD) and load that before \emph{adding} the trajectory file to it.  When using \lammpsgui{} this process can be automated when using \guicmd{View in OVITO} or \guicmd{View in VMD} in the \guicmd{Run} menu. Then only the trajectory dump needs to be added.
+\begin{note}
+Since the trajectory dump file does not contain information about topology and atom
+types, it is usually preferred to first write out a data file and import it directly
+(in the case of OVITO) or convert it to a PSF file (for VMD).  This allows the topology
+to be loaded before \emph{adding} the
+trajectory file to it.  When using \lammpsgui{}, this process can be automated
+through the \guicmd{View in OVITO} or \guicmd{View in VMD} options in the \guicmd{Run} menu.
+Afterward, only the trajectory dump needs to be added.
+\end{note}
 
 \subsection{Tutorial 4: Nanosheared electrolyte}
 \label{sheared-confined-label}
