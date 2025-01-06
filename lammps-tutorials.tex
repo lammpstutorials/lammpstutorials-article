@@ -488,8 +488,8 @@ boundary p p p
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{GUI-1.png}
-\caption{A screenshot of the \lammpsgui{} \guicmd{Editor} window during
+\includegraphics[width=0.85\linewidth]{GUI-1.png}
+\caption{Screenshot of the \lammpsgui{} \guicmd{Editor} window during
   \hyperref[lennard-jones-label]{Tutorial 1}.  The pop-up menu is the
   context menu for right-clicking on the \lmpcmd{units lj} command.}
 \label{fig:GUI-1}
@@ -546,8 +546,9 @@ Fig.~\ref{fig:GUI-1}.
 \label{fig:LJ-avatar}
 \end{figure}
 
-The next step is to create the simulation box and populate it with atoms.
-Modify the \lmpcmd{System definition} category of \flecmd{initial.lmp} as shown below:
+The next step is to create the simulation box and populate it with
+atoms.  Modify the \lmpcmd{System definition} category of
+\flecmd{initial.lmp} as shown below:
 \begin{lstlisting}
 # 2) System definition
 region simbox block -20 20 -20 20 -20 20
@@ -562,23 +563,23 @@ line, \lmpcmd{create\_box 2 simbox}, initializes a simulation box based
 on the region \lmpcmd{simbox} and reserves space for two types of atoms.
 
 \begin{note}
-From this point on, any command referencing an atom type larger than 2
-will trigger an error.  While it is possible to allocate more atom types
-than needed, you must assign a mass and provide force field parameters for
-each type.  Failing to do so will cause LAMMPS to terminate with an error.
+  From this point on, any command referencing an atom type larger than 2
+  will trigger an error.  While it is possible to allocate more atom
+  types than needed, you must assign a mass and provide force field
+  parameters for each atom type.  Failing to do so will cause LAMMPS to
+  terminate with an error.
 \end{note}
 
-The third line, \lmpcmd{create\_atoms (\dots)}, generates 1500 atoms of type
-1 at random positions within the
-\lmpcmd{simbox} region.  The integer 34134 is a seed for the
-internal random number generator, which can be changed to produce different
-sequences of random numbers and, consequently, different initial atom positions.
-The fourth line adds 100 atoms of type 2.
-Both \lmpcmd{create\_atoms} commands use the optional argument
-\lmpcmd{overlap 0.3}, which enforces a minimum distance of 0.3
-units between the randomly placed atoms.  This constraint helps avoid
-``close contacts'' between atoms, which can lead to excessively
-large forces and simulation instability.
+The third line, \lmpcmd{create\_atoms (\dots)}, generates 1500 atoms of
+type 1 at random positions within the \lmpcmd{simbox} region.  The
+integer 34134 is a seed for the internal random number generator, which
+can be changed to produce different sequences of random numbers and,
+consequently, different initial atom positions.  The fourth line adds
+100 atoms of type 2.  Both \lmpcmd{create\_atoms} commands use the
+optional argument \lmpcmd{overlap 0.3}, which enforces a minimum
+distance of 0.3 units between the randomly placed atoms.  This
+constraint helps avoid ``close contacts'' between atoms, which can lead
+to excessively large forces and simulation instability.
 
 \paragraph{Settings}
 
@@ -592,11 +593,11 @@ pair_style lj/cut 4.0
 pair_coeff 1 1 1.0 1.0
 pair_coeff 2 2 0.5 3.0
 \end{lstlisting}
-The two \lmpcmd{mass} commands assign a mass of 1.0 and 5.0 units
-to the atoms of type 1 and 2, respectively.  The third line,
-\lmpcmd{pair\_style lj/cut 4.0}, specifies that the atoms
-will be interacting through a Lennard-Jones (LJ) potential with a
-cut-off equal to $r_c = 4.0$ length units~\cite{wang2020lennard,fischer2023history}:
+The two \lmpcmd{mass} commands assign a mass of 1.0 and 5.0 units to the
+atoms of type 1 and 2, respectively.  The third line,
+\lmpcmd{pair\_style lj/cut 4.0}, specifies that the atoms will be
+interacting through a Lennard-Jones (LJ) potential with a cut-off equal
+to $r_c = 4.0$ length units~\cite{wang2020lennard,fischer2023history}:
 \begin{equation}
 E_{ij} (r) = 4 \epsilon_{ij} \left[ \left( \dfrac{\sigma_{ij}}{r} \right)^{12}
   - \left( \dfrac{\sigma_{ij}}{r} \right)^{6} \right], ~ \text{for} ~ r < r_c,
@@ -622,16 +623,6 @@ $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
 \end{note}
 
 \paragraph{Single-point energy}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.55\linewidth]{LJ}
-\caption{The binary mixture simulated in \hyperref[lennard-jones-label]{Tutorial 1}.
-  This image was generated directly from the \lammpsgui{}.  Atoms of
-  type 1 are represented as small red spheres, atoms of type 2 as large
-  green spheres, and the edges of the simulation box are represented as blue sticks.}
-\label{fig:LJ}
-\end{figure}
 
 The system is now fully parameterized, and the input is ready to compute
 forces.  Let us complete the two remaining categories,
@@ -661,6 +652,16 @@ as specified by the thermodynamic data request.  Since no actual simulation
 steps were performed, the \guicmd{Charts} window will be empty.
 
 \paragraph{Snapshot Image}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{LJ}
+\caption{The binary mixture simulated in \hyperref[lennard-jones-label]{Tutorial 1}.
+  This image was generated directly from the \lammpsgui{}.  Atoms of
+  type 1 are represented as small red spheres, atoms of type 2 as large
+  green spheres, and the edges of the simulation box are represented as blue sticks.}
+\label{fig:LJ}
+\end{figure}
 
 At this point, you can create a snapshot image of the current system
 using the \guicmd{Image Viewer} window, which can be accessed by
@@ -817,6 +818,18 @@ seed used to initialize the random number generator used inside of
 independent simulations.  In the presence of a thermostat, the MD simulation
 will be performed in the canonical or NVT ensemble.
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{LJ-energy}
+\caption{Potential energy ($p_\text{e}$) of the binary mixture simulated
+  during \hyperref[lennard-jones-label]{Tutorial 1} as a function of the
+  step during energy minimization (a) and as a function of time during
+  molecular dynamics in the NVT ensemble (b).  b)~Kinetic energy
+  ($k_\text{e}$) during energy minimization (c) and during molecular
+  dynamics (d).}
+\label{fig:evolution-energy}
+\end{figure}
+
 Run the simulation again using LAMMPS.  From the information
 printed in the \guicmd{Output} window, one can see that the temperature
 starts from 0 but rapidly reaches the requested value and
@@ -828,17 +841,6 @@ it reaches a plateau value of about -0.25.  The kinetic energy,
 $k_\text{e}$, is equal to zero during energy minimization and then
 increases rapibly during molecular dynamics until it reaches
 a plateau value of about 1.5 (Fig.~\ref{fig:evolution-energy}\,b).
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{LJ-energy}
-\caption{Potential energy ($p_\text{e}$) of the binary mixture simulated
-during \hyperref[lennard-jones-label]{Tutorial 1} as a function of the step
-during energy minimization (a) and during molecular dynamics in the NVT ensemble (b).
-b)~Kinetic energy ($k_\text{e}$) during energy minimization (c) and during
-molecular dynamics (d).}
-\label{fig:evolution-energy}
-\end{figure}
 
 \paragraph{Trajectory visualization}
 
