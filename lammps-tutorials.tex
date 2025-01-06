@@ -589,7 +589,7 @@ The two \lmpcmd{mass} commands assign a mass of 1.0 and 5.0 units
 to the atoms of type 1 and 2, respectively.  The third line,
 \lmpcmd{pair\_style lj/cut 4.0}, specifies that the atoms
 will be interacting through a Lennard-Jones (LJ) potential with a
-cut-off equal to $r_c = 4.0$ length units \cite{wang2020lennard,fischer2023history}:
+cut-off equal to $r_c = 4.0$ length units~\cite{wang2020lennard,fischer2023history}:
 \begin{equation}
 E_{ij} (r) = 4 \epsilon_{ij} \left[ \left( \dfrac{\sigma_{ij}}{r} \right)^{12}
   - \left( \dfrac{\sigma_{ij}}{r} \right)^{6} \right], ~ \text{for} ~ r < r_c,
@@ -704,7 +704,7 @@ fresh, resetting the system and re-executing the script from the beginning.
 \end{figure}
 
 The potential energy decreases from a positive value to a
-negative value (Figs.~\ref{fig:chart-log} and \ref{fig:evolution-energy}\,a).
+negative value (Figs.~\ref{fig:chart-log} and~\ref{fig:evolution-energy}\,a).
 The initially positive potential energy is
 expected, as the atoms are created at random positions within
 the simulation box, with some in very close proximity to each other.
@@ -1749,8 +1749,6 @@ bond_style zero
 bond_coeff 1 1.4
 special_bonds lj/coul 1.0 1.0 1.0
 \end{lstlisting}
-
-% S.G.: we could write a bit more about it
 
 \subsection{Tutorial 3: Polymer in water}
 \label{all-atom-label}
@@ -4004,7 +4002,7 @@ and $x_0 = 10~\text{\AA{}}$.}
 The goal of this tutorial is to create a model of a carbon nanotube (CNT) embedded
 in a polymer melt made of polystyrene (PS) (Fig.~\ref{fig:REACT}).  The
 REACTER protocol is used to simulate the polymerization of styrene monomers, and the
-polymerization reaction is followed in time \cite{gissinger2017polymer, gissinger2020reacter, gissinger2024molecular}.
+polymerization reaction is followed in time~\cite{gissinger2017polymer, gissinger2020reacter, gissinger2024molecular}.
 In contrast with AIREBO (\hyperref[carbon-nanotube-label]{Tutorial 2})
 and ReaxFF (\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}), the REACTER
 protocol relies on the use of a \textit{classical} force field.
