@@ -22,7 +22,7 @@ group grp_t1_in intersect grp_t1 grp_in
 group grp_t2_out intersect grp_t2 grp_out
 delete_atoms group grp_t1_in
 delete_atoms group grp_t2_out
-# delete unnecessary groups
+# delete no longer needed groups
 group grp_in delete
 group grp_out delete
 group grp_t1_in delete

@@ -953,7 +953,7 @@ Run the \flecmd{improved.min.lmp} file using \lammpsgui{}.  At the end
 of the simulation, a file called \flecmd{improved.min.data} is created.
 You can view the contents of this file from \lammpsgui{}, by
 right-clicking on the file name in the editor and selecting the entry
-\guicmd{View file `improved.min.data'}.
+\guicmd{View file improved.min.data}.
 
 \begin{figure}
 \centering
@@ -1055,7 +1055,7 @@ Since LAMMPS has a limited number of custom groups (30), it is good practice
 to delete groups that are no longer needed.  This can be done by adding the
 following four commands to \flecmd{improved.md.lmp}:
 \begin{lstlisting}
-# delete unnecessary groups
+# delete no longer needed groups
 group grp_in delete
 group grp_out delete
 group grp_t1_in delete
@@ -1186,11 +1186,11 @@ Here are some suggestions for further experiments with this system that
 may lead to additional insights into how different systems are configured
 and how various features function:
 \begin{itemize}
-\item Use the Nos\'e-Hoover thermostat (\lmpcmd{fix nvt}) instead of the Langevin thermostat
+\item Use a Nos\'e-Hoover thermostat (\lmpcmd{fix nvt}) instead of a Langevin thermostat
   (\lmpcmd{fix nve} + \lmpcmd{fix langevin}).
 \item Omit the energy minimization step before starting the MD simulation using either
 the Nos\'e-Hoover or the Langevin thermostat.
-\item Apply the thermostat to only one type of atoms and observe the
+\item Apply a thermostat to only one type of atoms each and observe the
   temperature for each type separately.
 \item Append an NVE run (i.e.~without any thermostat) and observe the energy levels.
 \end{itemize}
