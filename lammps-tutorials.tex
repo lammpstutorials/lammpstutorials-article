@@ -953,7 +953,7 @@ Run the \flecmd{improved.min.lmp} file using \lammpsgui{}.  At the end
 of the simulation, a file called \flecmd{improved.min.data} is created.
 You can view the contents of this file from \lammpsgui{}, by
 right-clicking on the file name in the editor and selecting the entry
-\guicmd{View file `improved.min.data'}.
+\guicmd{View file improved.min.data}.
 
 \begin{figure}
 \centering
@@ -1055,7 +1055,7 @@ Since LAMMPS has a limited number of custom groups (30), it is good practice
 to delete groups that are no longer needed.  This can be done by adding the
 following four commands to \flecmd{improved.md.lmp}:
 \begin{lstlisting}
-# delete unnecessary groups
+# delete no longer needed groups
 group grp_in delete
 group grp_out delete
 group grp_t1_in delete
@@ -1186,11 +1186,11 @@ Here are some suggestions for further experiments with this system that
 may lead to additional insights into how different systems are configured
 and how various features function:
 \begin{itemize}
-\item Use the Nos\'e-Hoover thermostat (\lmpcmd{fix nvt}) instead of the Langevin thermostat
+\item Use a Nos\'e-Hoover thermostat (\lmpcmd{fix nvt}) instead of a Langevin thermostat
   (\lmpcmd{fix nve} + \lmpcmd{fix langevin}).
 \item Omit the energy minimization step before starting the MD simulation using either
 the Nos\'e-Hoover or the Langevin thermostat.
-\item Apply the thermostat to only one type of atoms and observe the
+\item Apply a thermostat to only one type of atoms each and observe the
   temperature for each type separately.
 \item Append an NVE run (i.e.~without any thermostat) and observe the energy levels.
 \end{itemize}
@@ -1287,15 +1287,16 @@ include unbreakable.inc
 run 0 post no
 \end{lstlisting}
 The chosen unit system is \lmpcmd{real} (therefore distances are in
-Ångstrom, times in femtosecond, and energies in kcal/mol), the
-\lmpcmd{atom\_style} is \lmpcmd{molecular} (therefore atoms are point particles
-that can form bonds with each other), and the boundary conditions are
-fixed.  The boundary conditions do not matter here, as the box
-boundaries were placed far from the CNT.  Just like in the previous
-tutorial, \hyperref[lennard-jones-label]{Lennard-Jones fluid}, the pair
-style is \lmpcmd{lj/cut} (i.e.~a Lennard-Jones potential with cutoff)
-and its cutoff is set to 14~Ångströms, which means that only the atoms
-closer than this distance interact through the Lennard-Jones potential.
+Ångströms (Å), times in femtoseconds (fs), and energies in kcal/mol), the
+\lmpcmd{atom\_style} is \lmpcmd{molecular} (therefore atoms are point
+particles that can form bonds with each other), and the boundary
+conditions are fixed.  The boundary conditions do not matter here, as
+the box boundaries were placed far from the CNT.  Just like in the
+previous tutorial, \hyperref[lennard-jones-label]{Lennard-Jones fluid},
+the pair style is \lmpcmd{lj/cut} (i.e.~a Lennard-Jones potential with
+cutoff) and its cutoff is set to 14~Å, which means that only the
+atoms closer than this distance interact through the Lennard-Jones
+potential.
 
 The \lmpcmd{bond\_style}, \lmpcmd{angle\_style},
 \lmpcmd{dihedral\_style}, and \lmpcmd{improper\_style} commands specify
@@ -1387,8 +1388,8 @@ region rmid block ${xmin} ${xmax} INF INF INF INF
 The first command includes all the atoms of type 1 (i.e.~all the atoms here)
 in a group named \lmpcmd{carbon\_atoms}.
 The variable $x_\text{max}$ corresponds to the coordinate of the
-last atoms along $x$ minus 0.5~Ångströms, and $x_\text{min}$ to the coordinate
-of the first atoms along $x$ plus 0.5~Ångströms.  Then, three regions are defined,
+last atoms along $x$ minus 0.5~Å, and $x_\text{min}$ to the coordinate
+of the first atoms along $x$ plus 0.5~Å.  Then, three regions are defined,
 corresponding to the following: $x < x_\text{min}$, (\lmpcmd{rbot}, for region
 bottom), $x_\text{min} > x > x_\text{max}$ (\lmpcmd{rmid}, for region middle),
 and $x > x_\text{max}$ (\lmpcmd{rtop}, for region top).
@@ -1607,46 +1608,51 @@ Here, the potential is OPLS-AA, and the CNT is unbreakable.}
 
 \subsubsection{Breakable bonds}
 
-When using a conventional molecular force field, as we have just done, the bonds between the atoms
-are non-breakable.  Let us perform a similar simulation and deform a small
-CNT again, but this time with a reactive force field that allows bonds
-to break if the applied deformation is large enough.
+When using a conventional molecular force field, as we have just done,
+the bonds between the atoms are non-breakable.  Let us perform a similar
+simulation and deform a small CNT again, but this time with a reactive
+force field that allows bonds to break if the applied deformation is
+large enough.
 
 \paragraph{Input file initialization}
 
-Open the input named
-\href{\filepath tutorial2/breakable.lmp}{\dwlcmd{breakable.lmp}} that should have
-been downloaded next to \lmpcmd{unbreakable.lmp} during the tutorial setup.
-There are only a few differences with the previous input.  First, the \lmpcmd{metal}
-units system is used instead of \lmpcmd{real}, which is
-required by the AIREBO force field.  A second difference is the use of the
-\lmpcmd{atom\_style atomic} instead of \lmpcmd{molecular}, since no explicit
-bond information is required with AIREBO.  The following commands are
-setting up the AIREBO force field:
+Open the input named \href{\filepath tutorial2/breakable.lmp}{\dwlcmd{breakable.lmp}}
+% don't wrap the line above
+that should have been downloaded next to \lmpcmd{unbreakable.lmp} during
+the tutorial setup.  There are only a few differences with the previous
+input.  First, the AIREBO force field requires the \lmpcmd{metal} units
+setting instead of \lmpcmd{real} for OPLS-AA.  A second difference is
+the use of \lmpcmd{atom\_style atomic} instead of
+\lmpcmd{molecular}, since no explicit bond information is required with
+AIREBO.  The following commands are setting up the AIREBO force field:
 \begin{lstlisting}
 pair_style airebo 3.0
 pair_coeff * * CH.airebo C
 \end{lstlisting}
-Here, \href{\filepath tutorial2/CH.airebo}{\dwlcmd{CH.airebo}} is the file
-containing the parameters for AIREBO, and must be placed next
-to \lmpcmd{breakable.lmp}.
+Here, \href{\filepath tutorial2/CH.airebo}{\dwlcmd{CH.airebo}} is the
+file containing the parameters for AIREBO, and must be placed next to
+\lmpcmd{breakable.lmp}.
 
 \begin{note}
-With the \lmpcmdnote{metal} units system, times are in picoseconds ($10^{-12}$\,s)
-instead of femtoseconds ($10^{-15}$\,s) in the case of the \lmpcmdnote{real} units system.
-It is important to keep this in mind when setting parameters that are expressed
-in time unit, such as the timestep or the time constant of the thermostat.
+  With \lmpcmdnote{metal} units, time values are in units of picoseconds
+  ($10^{-12}$\,s) instead of femtoseconds ($10^{-15}$\,s) in the case of
+  \lmpcmdnote{real} units.  It is important to keep this in mind when
+  setting parameters that are expressed units containing time, such as
+  the timestep or the time constant of a thermostat, or velocities.
 \end{note}
 
-Since bonds, angles, and dihedrals do not need to be
-explicitly set when using AIREBO, some simplification must be made to the
-\flecmd{.data} file.  The new \flecmd{.data}
-file is named \href{\filepath tutorial2/breakable.data}{\dwlcmd{breakable.data}},
-and must be placed within the same folder as the input file.  Just like \flecmd{unbreakable.data},
-the \flecmd{breakable.data} contains the information
-required for placing the atoms in the box, but no bond/angle/dihedral information.
-Another difference between the \flecmd{unbreakable.data} and \flecmd{breakable.data} files
-is that, here, a larger distance of 120~Ångströms was used for the box size along
+Since bonds, angles, and dihedrals do not need to be explicitly set when
+using AIREBO, some simplification must be made to the \flecmd{.data}
+file.  The new \flecmd{.data} file is named
+%
+\href{\filepath tutorial2/breakable.data}{\dwlcmd{breakable.data}},
+%
+and must be placed within the same folder as the input file.  Just like
+\flecmd{unbreakable.data}, the \flecmd{breakable.data} contains the
+information required for placing the atoms in the box, but no
+bond/angle/dihedral information.  Another difference between the
+\flecmd{unbreakable.data} and \flecmd{breakable.data} files is that,
+here, a larger distance of 120~Å was used for the box size along
 the $x$-axis, to allow for larger deformation of the CNT.
 
 \paragraph{Start the simulation}
@@ -1683,10 +1689,11 @@ but that after a few steps, it reaches the target value.
 
 \begin{note}
   Bonds cannot be displayed by the \lmpcmdnote{dump image} when using
-  the \lmpcmdnote{atom\_style atomic}, as it contains no bonds.  A tip
-  for displaying bonds with the present system using LAMMPS is provided
-  at the end of the tutorial.  You can also use external tools like VMD
-  or OVITO (see \hyperref[tip-dynamic-bonds]{tip for tutorial 3}).
+  the \lmpcmdnote{atom\_style atomic}, as it contains no bonds.  A
+  \hyperref[tip-dynamic-bonds]{tip for displaying bonds} with the
+  present system using LAMMPS is provided at the end of the tutorial.
+  You can also use external tools like VMD or OVITO (see the
+  \hyperref[tip-external-viz]{tip for tutorial 3}).
 \end{note}
 
 \paragraph{Launch the deformation}
@@ -1712,14 +1719,17 @@ VMD~\cite{vmd_home,humphrey1996vmd} with the \guicmd{DynamicBonds} representatio
 \end{figure}
 
 Looking at the evolution of the energy, one can see that the total
-energy $E$ is initially increasing with the deformation.  When
-bonds break, the energy relaxes abruptly, as can be seen near $t=32~\text{ps}$ in Fig.~\ref{fig:CNT-breakable-energy-stress}\,a.
-Using a similar script as previously,
-i.e.,~\href{\filepath tutorial2/unbreakable-yaml-reader.py}{\dwlcmd{unbreakable-yaml-reader.py}},
-import the data into Python and generate the stress-strain curve (Fig.~\ref{fig:CNT-breakable-energy-stress}\,b).  The
-stress-strain curve reveals a linear (elastic) regime where $F_\text{cnt} \propto \Delta L_\text{cnt}$
-for $\Delta L_\text{cnt} < 5\,\%$, and a non-linear (plastic) regime
-for $5\,\% < \Delta L_\text{cnt} < 25\,\%$.
+energy $E$ is initially increasing with the deformation.  When bonds
+break, the energy relaxes abruptly, as can be seen near $t=32~\text{ps}$
+in Fig.~\ref{fig:CNT-breakable-energy-stress}\,a.  Using a similar
+script as previously, i.e.,~\href{\filepath
+  tutorial2/unbreakable-yaml-reader.py}{\dwlcmd{unbreakable-yaml-reader.py}},
+import the data into Python and generate the stress-strain curve
+(Fig.~\ref{fig:CNT-breakable-energy-stress}\,b).  The stress-strain
+curve reveals a linear (elastic) regime where
+$F_\text{cnt} \propto \Delta L_\text{cnt}$ for
+$\Delta L_\text{cnt} < 5\,\%$, and a non-linear (plastic) regime for
+$5\,\% < \Delta L_\text{cnt} < 25\,\%$.
 
 \begin{figure}
 \centering
@@ -1768,25 +1778,28 @@ special_bonds lj/coul 1.0 1.0 1.0
 \subsection{Tutorial 3: Polymer in water}
 \label{all-atom-label}
 
+The goal of this tutorial is to use LAMMPS to solvate a small
+hydrophilic polymer (PEG - polyethylene glycol) in a reservoir of water
+(Fig.~\ref{fig:PEG}).  Once the water reservoir is properly equilibrated
+at the desired temperature and pressure, the polymer molecule is added
+and a constant stretching force is applied to both ends of the polymer.
+The evolution of the polymer length is measured as a function of time.
+The GROMOS 54A7 force field~\cite{schmid2011definition} is used for the
+PEG, the SPC/Fw model~\cite{wu2006flexible} is used for the water, and
+the long-range Coulomb interactions are solved using the PPPM
+solver~\cite{luty1996calculating}.  This tutorial was inspired by a
+publication by Liese and coworkers, in which molecular dynamics
+simulations are compared with force spectroscopy experiments, see
+Ref.\,~\citenum{liese2017hydration}.
+
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{PEG}
-\caption{The polymer molecule (PEG - PolyEthylene Glycol) solvated in water as
+\caption{The polymer molecule (PEG - polyethylene glycol) solvated in water as
 simulated during \hyperref[all-atom-label]{Tutorial 3}.  Water molecules are
 represented as a transparent continuum field for clarity.}
 \label{fig:PEG}
 \end{figure}
-
-\noindent The goal of this tutorial is to use LAMMPS to solvate a small hydrophilic
-polymer (PEG - PolyEthylene Glycol) in a reservoir of water (Fig.~\ref{fig:PEG}).
-Once the water reservoir is properly equilibrated at the desired temperature and
-pressure, the polymer molecule is added and a constant stretching force is applied
-to both ends of the polymer.  The evolution of the polymer length is measured as
-a function of time.  The GROMOS 54A7 force field~\cite{schmid2011definition} is used
-for the PEG, the SPC/Fw model~\cite{wu2006flexible} is used for the water, and the
-long-range Coulomb interactions are solved using the PPPM solver~\cite{luty1996calculating}.
-This tutorial was inspired by a publication by Liese and coworkers, in which molecular
-dynamics simulations are compared with force spectroscopy experiments, see Ref.\,~\citenum{liese2017hydration}.
 
 \subsubsection{Preparing the water reservoir}
 
@@ -1808,7 +1821,7 @@ kspace_style ewald 1e-5
 special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 angle yes
 \end{lstlisting}
 With the unit style \lmpcmd{real}, masses are in grams per mole, distances in
-Ångströms, time in femtoseconds, and energies in kcal/mole.  With the \lmpcmd{atom\_style full},
+Å, time in femtoseconds, and energies in kcal/mole.  With the \lmpcmd{atom\_style full},
 each atom is a dot with a mass and a charge that can be linked by bonds, angles,
 dihedrals, and/or impropers.  The \lmpcmd{bond\_style},
 \lmpcmd{angle\_style}, and \lmpcmd{dihedral\_style} commands define the potentials
@@ -1845,12 +1858,12 @@ include parameters.inc
 \end{lstlisting}
 
 \begin{note}
-This tutorial uses type labels~\cite{typelabel_paper} to map each of the
-numeric atom types with a string (see the \flecmd{parameters.inc} file):
-\lmpcmdnote{labelmap atom 1 OE 2 C 3 HC 4 H 5 CPos 6 OAlc 7 OW 8 HW}
-Therefore, the oxygen and hydrogen atoms of water (respectively types 7 and 8)
-can be referred to as `OW' and `HW', respectively.  Similar maps are used for
-the bond types, angle types, and dihedral types.
+  This tutorial uses type labels~\cite{typelabel_paper} to map each
+  numeric atom type to a string (see the \flecmd{parameters.inc} file):
+  \lmpcmdnote{labelmap atom 1 OE 2 C 3 HC 4 H 5 CPos 6 OAlc 7 OW 8 HW}
+  Therefore, the oxygen and hydrogen atoms of water (respectively types
+  7 and 8) can be referred to as `OW' and `HW', respectively.  Similar
+  maps are used for the bond types, angle types, and dihedral types.
 \end{note}
 
 Let us create water molecules.  To do so, let us import a molecule template called
@@ -1872,16 +1885,21 @@ of molecules.  Always check the number of created atoms in the \lmpcmd{log} file
 \begin{lstlisting}
 Created 2100 atoms
 \end{lstlisting}
-When LAMMPS fails to create the desired number of molecules, a WARNING appears.
-The molecule template called \href{\filepath tutorial3/water.mol}{\dwlcmd{water.mol}}
-must be downloaded and saved next to \flecmd{water.lmp}.  This template contains
-the necessary structural information of a water molecule, such as the number of
-atoms, or the IDs of the atoms that are connected by bonds and angles.
+When LAMMPS fails to create the desired number of molecules, a WARNING
+appears.  The molecule template called
+%
+\href{\filepath tutorial3/water.mol}{\dwlcmd{water.mol}}
+%
+must be downloaded and saved
+next to \flecmd{water.lmp}.  This template contains the necessary
+structural information of a water molecule, such as the number of atoms,
+or the IDs of the atoms that are connected by bonds and angles.
 
-Then, let us organize the atoms of types OW and HW of the water molecules in a
-group named \lmpcmd{H2O} and perform a small energy minimization.  The energy
-minimization is mandatory here because of the small \lmpcmd{overlap} value
-of 1~Ångstrom chosen in the \lmpcmd{create\_atoms} command.  Add the following lines into \flecmd{water.lmp}:
+Then, let us organize the atoms of types OW and HW of the water
+molecules in a group named \lmpcmd{H2O} and perform a small energy
+minimization.  The energy minimization is mandatory here because of the
+small \lmpcmd{overlap} value of 1~Å chosen in the \lmpcmd{create\_atoms}
+command.  Add the following lines into \flecmd{water.lmp}:
 \begin{lstlisting}
 group H2O type OW HW
 minimize 1.0e-4 1.0e-6 100 1000
@@ -1902,6 +1920,15 @@ The \lmpcmd{fix npt} allows us to impose both a temperature of $300\,\text{K}$
 (with a damping constant of $100\,\text{fs}$), and a pressure of 1 atmosphere
 (with a damping constant of $1000\,\text{fs}$).  With the \lmpcmd{iso} keyword,
 the three dimensions of the box will be re-scaled simultaneously.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{PEG-density}
+\caption{a) Temperature, $T$, of the water reservoir from \hyperref[all-atom-label]{Tutorial 3}
+as a function of the time, $t$.  The horizontal dashed line is the target temperature of 300\,K.
+b) Evolution of the system density, $\rho$, with $t$.}
+\label{fig:PEG-density}
+\end{figure}
 
 Let us output the system into images by adding the following commands to \flecmd{water.lmp}:
 \begin{lstlisting}
@@ -1945,15 +1972,6 @@ Run the input using LAMMPS.  The system reaches its equilibrium temperature
 after just a few picoseconds, and its equilibrium density after approximately
 10~picoseconds (Fig.~\ref{fig:PEG-density}).  A snapshot of the equilibrated
 system can also be seen in Fig.~\ref{fig:PEG-water}.
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{PEG-density}
-\caption{a) Temperature, $T$, of the water reservoir from \hyperref[all-atom-label]{Tutorial 3}
-as a function of the time, $t$.  The horizontal dashed line is the target temperature of 300\,K.
-b) Evolution of the system density, $\rho$, with $t$.}
-\label{fig:PEG-density}
-\end{figure}
 
 \begin{note}
 The binary file created by the \lmpcmdnote{write\_restart} command contains the
@@ -2003,7 +2021,6 @@ of the tutorial.  Add the following command to \flecmd{merge.lmp}:
 \begin{lstlisting}
 kspace_style pppm 1e-5
 \end{lstlisting}
-
 Using the molecule template for the polymer called
 \href{\filepath tutorial3/peg.mol}{\dwlcmd{peg.mol}},
 let us create a single molecule in the middle of the box by adding the following
@@ -2022,7 +2039,7 @@ crashing.  Add the following line into \flecmd{merge.lmp}:
 \begin{lstlisting}
 delete_atoms overlap 2.0 H2O PEG mol yes
 \end{lstlisting}
-Here the value of 2.0~Ångströms for the overlap cutoff was fixed arbitrarily and can
+Here the value of 2.0~Å for the overlap cutoff was fixed arbitrarily and can
 be chosen through trial and error.  If the cutoff is too small, the simulation will
 crash because atoms that are too close to each other undergo forces
 that can be extremely large.  If the cutoff is too large, too many water
@@ -2039,25 +2056,30 @@ the position $(0,~0,~0)$:
 fix myrct PEG recenter 0 0 0 shift all
 \end{lstlisting}
 Note that the \lmpcmd{recenter} command has no impact on the dynamics,
-it simply ensures that the system does not drift, which can be more practical for visualizing and analyzing the system
+it simply repositions the frame of reference so that any drift of the
+system is ignored, which can be convenient for visualizing and analyzing
+the system.
 
-Let us create images of the systems:
+\noindent Let us create images of the systems:
 \begin{lstlisting}
-dump viz all image 250 myimage-*.ppm type &
-  type shiny 0.1 box no 0.01 &
-  view 0 90 zoom 3.3 fsaa yes bond atom 0.8 size 1100 600
-dump_modify viz backcolor white &
-  acolor OW red acolor HW white &
-  acolor OE darkred acolor OAlc darkred &
-  acolor C gray acolor CPos gray &
-  acolor H white acolor HC white &
-  adiam OW 0.2 adiam HW 0.2 &
-  adiam C 2.8 adiam CPos 2.8 adiam OAlc 2.6 &
-  adiam H 1.4 adiam HC 1.4 adiam OE 2.6
+dump viz all image 250 myimage-*.ppm type type size 1100 600 &
+  box no 0.1 shiny 0.1 view 0 90 zoom 3.3 fsaa yes bond atom 0.8
+dump_modify viz backcolor white acolor OW red adiam OW 0.2 &
+  acolor OE darkred adiam OE 2.6 acolor HC white adiam HC 1.4 &
+  acolor H white adiam H 1.4 acolor CPos gray adiam CPos 2.8 &
+  acolor HW white adiam HW 0.2 acolor C gray  adiam C 2.8 &
+  acolor OAlc darkred adiam OAlc 2.6
 thermo 500
 \end{lstlisting}
-Finally, let us perform a short equilibration and save the
-final state to a \lmpcmd{.restart} file.  Add the following lines to the data file:
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{PEG-solvated}
+\caption{The PEG molecule solvated in water during
+\hyperref[all-atom-label]{Tutorial 3}.}
+\label{fig:PEG-solvated}
+\end{figure}
+Finally, to perform a short equilibration and save the final state to
+a \lmpcmd{.restart} file, add the following lines to the input:
 \begin{lstlisting}
 timestep 1.0
 run 10000
@@ -2070,14 +2092,6 @@ target value of $300~\text{K}$ throughout the entire simulation, and that
 the volume and total energy are almost constant, indicating
 that the system was in a reasonable configuration from the start.
 See a snapshot of the system in Fig.~\ref{fig:PEG-solvated}.
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{PEG-solvated}
-\caption{The PEG molecule solvated in water as simulated during
-\hyperref[all-atom-label]{Tutorial 3}.}
-\label{fig:PEG-solvated}
-\end{figure}
 
 \subsubsection{Stretching the PEG molecule}
 
@@ -2107,6 +2121,14 @@ divides these atoms into two groups, \lmpcmd{end1} (i.e.,~the OAlc atom to
 the right of the center) and \lmpcmd{end2} (i.e.,~the OAlc atom to the right
 of the center), for applying force during the stretching process.
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{PEG-in-water}
+\caption{PEG molecule stretched along the $x$ direction in water
+as simulated during \hyperref[all-atom-label]{Tutorial 3}.}
+\label{fig:PEG-in-water}
+\end{figure}
+
 Add the following \lmpcmd{dump} command to create images of the system:
 \begin{lstlisting}
 dump viz all image 250 myimage-*.ppm type &
@@ -2129,6 +2151,17 @@ timestep 1.0
 fix mynvt all nvt temp 300 300 100
 fix myrct PEG recenter 0 0 0 shift all
 \end{lstlisting}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{PEG-distance}
+\caption{a) Evolution of
+the radius of gyration $R_\text{gyr}$ of the PEG molecule
+from \hyperref[all-atom-label]{Tutorial 3}, with the force
+applied starting at $t = 15\,\text{ps}$.  b) Histograms of the dihedral angles of type 1
+in the absence (orange) and in the presence (blue) of the applied force.}
+\label{fig:PEG-distance}
+\end{figure}
 
 To investigate the stretching of the PEG molecule, let us compute its radius of
 gyration~\cite{fixmanRadiusGyrationPolymer1962a} and the angles of its dihedral
@@ -2175,33 +2208,15 @@ printed in the \flecmd{pull.dat} file, you can create a histogram
 of dihedral angles for a specific type.  For example, the angle $\phi$ for dihedrals
 of type 1 (C-C-OE-C) is shown in Fig.~\ref{fig:PEG-distance}\,b.
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{PEG-in-water}
-\caption{PEG molecule stretched along the $x$ direction in water
-as simulated during \hyperref[all-atom-label]{Tutorial 3}.}
-\label{fig:PEG-in-water}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{PEG-distance}
-\caption{a) Evolution of
-the radius of gyration $R_\text{gyr}$ of the PEG molecule
-from \hyperref[all-atom-label]{Tutorial 3}, with the force
-applied starting at $t = 15\,\text{ps}$.  b) Histograms of the dihedral angles of type 1
-in the absence (orange) and in the presence (blue) of the applied force.}
-\label{fig:PEG-distance}
-\end{figure}
-
 \paragraph{Tip: using external visualization tools}
+\label{tip-external-viz}
 
-Trajectories can be visualized using external tools such as VMD
-or OVITO~\cite{humphrey1996vmd, ovito_paper}.  To do so, the IDs and
+Trajectories can be visualized using external tools such as VMD or
+OVITO~\cite{humphrey1996vmd, ovito_paper}.  To do so, the IDs and
 positions of the atoms must be regularly written to a file during the
-simulation.  This can be accomplished by adding a \lmpcmd{dump}
-command to the input file.  For instance, create a duplicate of \flecmd{pull.lmp}
-and name it
+simulation.  This can be accomplished by adding a \lmpcmd{dump} command
+to the input file.  For instance, create a duplicate of
+\flecmd{pull.lmp} and name it
 % do not wrap this line
 \href{\filepath tutorial3/solution/pull-with-tip.lmp}{\dwlcmd{pull-with-tip.lmp}}.
 % do not wrap this line
@@ -2213,13 +2228,14 @@ Running the \flecmd{pull-with-tip.lmp} file using LAMMPS will generate a traject
 named \flecmd{pull.lammpstrj}, which can be opened in OVITO or VMD.
 
 \begin{note}
-Since the trajectory dump file does not contain information about topology and atom
-types, it is usually preferred to first write out a data file and import it directly
-(in the case of OVITO) or convert it to a PSF file (for VMD).  This allows the topology
-to be loaded before \emph{adding} the
-trajectory file to it.  When using \lammpsgui{}, this process can be automated
-through the \guicmd{View in OVITO} or \guicmd{View in VMD} options in the \guicmd{Run} menu.
-Afterward, only the trajectory dump needs to be added.
+  Since the trajectory dump file does not contain information about
+  topology and elements, it is usually preferred to first write out a
+  data file and import it directly (in the case of OVITO) or convert it
+  to a PSF file (for VMD).  This allows the topology to be loaded before
+  \emph{adding} the trajectory file to it.  When using \lammpsgui{},
+  this process can be automated through the \guicmd{View in OVITO} or
+  \guicmd{View in VMD} options in the \guicmd{Run} menu.  Afterwards
+  only the trajectory dump needs to be added.
 \end{note}
 
 \subsection{Tutorial 4: Nanosheared electrolyte}
@@ -2236,7 +2252,7 @@ imposed lateral motion of the walls.}
 \label{fig:NANOSHEAR}
 \end{figure}
 
-\noindent The objective of this tutorial is to simulate an electrolyte
+The objective of this tutorial is to simulate an electrolyte
 nanoconfined and sheared between two walls (Fig.~\ref{fig:NANOSHEAR}).  The density
 and velocity profiles of the fluid in the direction normal to the walls are
 extracted to highlight the effect of confining a fluid on its local properties.
@@ -2396,18 +2412,21 @@ pair_coeff Cl- Cl- 0.1500 4.04470
 pair_coeff WALL WALL 11.697 2.574
 pair_coeff O WALL 0.4 2.86645
 \end{lstlisting}
-Each \lmpcmd{pair\_coeff} assigns the depth of the LJ potential
-(in kcal/mole), and the distance (in Ångstroms) at which the particle-particle
-potential energy is 0.  As noted in previous tutorials, with the important exception of
-\lmpcmd{pair\_coeff O WALL}, pairwise interactions were only assigned between
-atoms of identical types.  By default, LAMMPS calculates the pair coefficients for the
-interactions between atoms of different types (i and j) by using geometric average:
-$\epsilon_{ij} = (\epsilon_{ii} + \epsilon_{jj})/2$,  $\sigma_{ij} = (\sigma_{ii} + \sigma_{jj})/2$.
-However, if the default value of $5.941\,\text{kcal/mol}$ was used for $\epsilon_\text{1-5}$, the solid
-walls would be extremely hydrophilic, causing the water molecules to form dense layers.  As a
-comparison, the water-water energy $\epsilon_\text{1-1}$ is only $0.185199\,\text{kcal/mol}$.
-Therefore, to make the walls less hydrophilic, the value of $\epsilon_\text{O-WALL}$
-was reduced.
+Each \lmpcmd{pair\_coeff} assigns the depth of the LJ potential (in
+kcal/mole), and the distance (in Ångströms) at which the
+particle-particle potential energy is 0.  As noted in previous
+tutorials, with the important exception of \lmpcmd{pair\_coeff O WALL},
+pairwise interactions were only assigned between atoms of identical
+types.  By default, LAMMPS calculates the pair coefficients for the
+interactions between atoms of different types (i and j) by using
+geometric average: $\epsilon_{ij} = (\epsilon_{ii} + \epsilon_{jj})/2$,
+$\sigma_{ij} = (\sigma_{ii} + \sigma_{jj})/2$.  However, if the default
+value of $5.941\,\text{kcal/mol}$ was used for $\epsilon_\text{1-5}$,
+the solid walls would be extremely hydrophilic, causing the water
+molecules to form dense layers.  As a comparison, the water-water energy
+$\epsilon_\text{1-1}$ is only $0.185199\,\text{kcal/mol}$.  Therefore,
+to make the walls less hydrophilic, the value of
+$\epsilon_\text{O-WALL}$ was reduced.
 
 Finally, the \flecmd{parameters.inc} file contains the following two lines:
 \begin{lstlisting}
@@ -2720,6 +2739,7 @@ fix myshk H2O shake 1.0e-5 200 0 b O-H a H-O-H
 fix myrct all recenter NULL NULL 0
 timestep 1.0
 \end{lstlisting}
+
 One key difference with the previous input is that, here, two thermostats are used,
 one for the fluid (\lmpcmd{mynvt1}) and one for the solid (\lmpcmd{mynvt2}).
 The combination of \lmpcmd{fix\_modify} with \lmpcmd{compute temp} ensures
@@ -3215,7 +3235,7 @@ atoms of the solid in red.}
 \label{fig:GCMC}
 \end{figure}
 
-\noindent The objective of this tutorial is to combine molecular dynamics and
+The objective of this tutorial is to combine molecular dynamics and
 grand canonical Monte Carlo simulations to compute the adsorption of water
 molecules in cracked silica material (Fig.~\ref{fig:GCMC}).  This tutorial
 illustrates the use of the grand canonical ensemble in molecular simulation, an
@@ -3225,7 +3245,7 @@ potential of water within a nanoporous SiO$_2$ structure.
 
 \subsubsection{Generation of the silica block}
 
-\noindent To begin this tutorial, select \guicmd{Start Tutorial 6} from the
+To begin this tutorial, select \guicmd{Start Tutorial 6} from the
 \guicmd{Tutorials} menu of \lammpsgui{} and follow the instructions.
 The editor should display the following content corresponding to \flecmd{generate.lmp}:
 \begin{lstlisting}
@@ -3395,21 +3415,21 @@ imposed deformation of the box along the $x$-axis (i.e.,~the horizontal axis).}
 
 \subsubsection{Adding water}
 
-\noindent To add the water molecules to the silica, we will employ
-the Monte Carlo method in the grand canonical ensemble (GCMC).  In short, the
-system is placed into contact with a virtual reservoir of a given chemical potential
-$\mu$, and multiple attempts to insert water molecules at random positions are
-made.  Each attempt is either accepted or rejected based on energy considerations.
-For further details, please refer to classical textbooks like Ref.~\citenum{frenkel2023understanding}.
+To add the water molecules to the silica, we will employ the Monte Carlo
+method in the grand canonical ensemble (GCMC).  In short, the system is
+placed into contact with a virtual reservoir of a given chemical
+potential $\mu$, and multiple attempts to insert water molecules at
+random positions are made.  Each attempt is either accepted or rejected
+based on energy considerations.  For further details, please refer to
+classical textbooks like Ref.~\citenum{frenkel2023understanding}.
 
 \paragraph{Using hydrid potentials}
 
-\noindent The first particularly of our system is that it
-combine water and silica, which necessitates the use
-of two force fields: Vashishta (for $\text{SiO}_2$), and
-TIP4P (for water).  Here, the TIP4P/2005 model is employed for the
-water~\cite{abascal2005general}.  Open the \flecmd{gcmc.lmp} file, which
-should contain the following lines:
+The first particularly of our system is that it combines water and
+silica, which necessitates the use of two force fields: Vashishta (for
+$\text{SiO}_2$), and TIP4P (for water).  Here, the TIP4P/2005 model is
+employed for the water~\cite{abascal2005general}.  Open the
+\flecmd{gcmc.lmp} file, which should contain the following lines:
 \begin{lstlisting}
 units metal
 boundary p p p
@@ -3640,21 +3660,24 @@ box thanks to the additional potential imposed during umbrella sampling.}
 \label{fig:US}
 \end{figure}
 
-\noindent The objective of this tutorial is to measure the free energy profile
-of particles through a barrier potential using two methods: free sampling and
-umbrella sampling~\cite{kastner2011umbrella, allen2017computer, frenkel2023understanding} (Fig.~\ref{fig:US}).
-To simplify the process and minimize computation time, the barrier potential will be
-imposed on the atoms using an additional force, mimicking the presence of a repulsive
-area in the middle of the simulation box without needing to simulate additional atoms.
-The procedure is valid for more complex systems and can be adapted to many other
-situations, such as measuring adsorption barriers near an interface or calculating
-translocation barriers through a membrane~\cite{wilson1997adsorption, makarov2009computer,
-gravelle2021adsorption, loche2022molecular, hayatifar2024probing}.
+The objective of this tutorial is to measure the free energy profile of
+particles through a barrier potential using two methods: free sampling
+and umbrella sampling~\cite{kastner2011umbrella, allen2017computer,
+  frenkel2023understanding} (Fig.~\ref{fig:US}).  To simplify the
+process and minimize computation time, the barrier potential will be
+imposed on the atoms using an additional force, mimicking the presence
+of a repulsive area in the middle of the simulation box without needing
+to simulate additional atoms.  The procedure is valid for more complex
+systems and can be adapted to many other situations, such as measuring
+adsorption barriers near an interface or calculating translocation
+barriers through a membrane~\cite{wilson1997adsorption,
+  makarov2009computer, gravelle2021adsorption, loche2022molecular,
+  hayatifar2024probing}.
 
 \subsubsection{Method 1: Free sampling}
-The most direct way to calculate a free energy profile is to extract the partition
-function from a classical (i.e.~unbiased) molecular dynamics simulation, and
-then estimate the Gibbs free energy by using
+The most direct way to calculate a free energy profile is to extract the
+partition function from a classical (i.e.~unbiased) molecular dynamics
+simulation, and then estimate the Gibbs free energy by using
 \begin{equation}
 \Delta G = -RT \ln(p/p_0),
 \label{eq:G}
@@ -3685,15 +3708,18 @@ pair_modify shift yes
 boundary p p p
 \end{lstlisting}
 Here, we begin by defining variables for the Lennard-Jones interaction
-$\sigma$ and $\epsilon$ and for the repulsive potential $U$, which are $U_0$, $\delta$, and $x_0$
-[see Eqs.\,(\ref{eq:U}-\ref{eq:F}) below].  The cut-off value of 3.822 was chosen
-to create a Weeks-Chandler-Andersen (WCA) potential, which is a truncated and
-purely repulsive LJ potential~\cite{weeks1971role}.  It was calculated
-as $2^{1/6} \sigma$.  The potential is also shifted to be
-equal to 0 at the cut-off using the \lmpcmd{pair\_modify} command.  The system of unit
-\lmpcmd{real}, in which energy is in kcal/mol, distance in Ångstrom, or time in
-femtosecond, has been chosen for practical reasons: the WHAM algorithm used in
-the second part of the tutorial automatically assumes the energy to be in kcal/mol.
+$\sigma$ and $\epsilon$ and for the repulsive potential
+$U$, which are $U_0$, $\delta$, and
+$x_0$ [see Eqs.\,(\ref{eq:U}-\ref{eq:F}) below].  The cut-off value of
+3.822 was chosen to create a Weeks-Chandler-Andersen (WCA) potential,
+which is a truncated and purely repulsive LJ
+potential~\cite{weeks1971role}.  It was calculated as $2^{1/6}
+\sigma$.  The potential is also shifted to be equal to 0 at the cut-off
+using the \lmpcmd{pair\_modify} command.  The unit system is
+\lmpcmd{real}, in which energy is in kcal/mol, distance in Ångströms, or
+time in femtosecond, has been chosen for practical reasons: the WHAM
+algorithm used in the second part of the tutorial automatically assumes
+the energy to be in kcal/mol.
 
 \paragraph{System creation and settings}
 
@@ -3875,7 +3901,7 @@ Here, to encourage one of the atoms to explore the central region of the box,
 we apply a potential $V$ and force it to move along the $x$-axis. The chosen path
 is called the axis of reaction. Several simulations (called windows) will be
 conducted with varying positions for the center of the applied biasing. The results
-will be analyzed using the weighted histogram analysis method (WHAM)~\cite{kumar1992weighted},
+will be analyzed using the weighted histogram analysis method (WHAM)~\cite{kumar1992weighted,kumar1995multidim},
 which allows for the removal of the biasing effect and ultimately deduces the
 unbiased free energy profile.
 
@@ -4000,13 +4026,15 @@ the different windows, leading to poor reconstruction of the free energy profile
 
 \paragraph{WHAM algorithm}
 
-To generate the free energy profile from the particle positions
-saved in the \flecmd{umbrella-sampling.i.dat} files,
-we use the WHAM algorithm as implemented by Marc Grossfield~\cite{grossfieldimplementation}.
-You can download it from \href{http://membrane.urmc.rochester.edu/?page_id=126}{Alan Grossfield}'s
-website.  The executable called \flecmd{wham} generated by following the instructions
-from the website must be placed next to \flecmd{umbrella-sampling.lmp}.  To apply
-the WHAM algorithm to our simulation, we need a metadata file containing:
+To generate the free energy profile from the particle positions saved in
+the \flecmd{umbrella-sampling.i.dat} files, we use the
+WHAM~\cite{kumar1992weighted,kumar1995multidim} algorithm as implemented
+by Marc Grossfield~\cite{grossfieldimplementation}.  You can download it
+from \href{http://membrane.urmc.rochester.edu/?page_id=126}{Alan
+  Grossfield}'s website.  The executable called \flecmd{wham} generated
+by following the instructions from the website must be placed next to
+\flecmd{umbrella-sampling.lmp}.  To apply the WHAM algorithm to our
+simulation, we need a metadata file containing:
 \begin{itemize}
 \item the paths to all the data files,
 \item the values of $x_\text{des}$,
@@ -4016,7 +4044,7 @@ Download the \href{\filepath tutorial7/umbrella-sampling.meta}{\dwlcmd{umbrella-
 and save it next to \flecmd{umbrella-sampling.lmp}.  Then, run the WHAM algorithm
 by typing the following command in the terminal:
 \begin{lstlisting}
-./wham -30 30 50 1e-8 119.8 0 \
+./wham units real -30 30 50 1e-8 119.8 0 \
     umbrella-sampling.meta umbrella-sampling.dat
 \end{lstlisting}
 where -30 and 30 are the boundaries, 50 is the number of bins, 1e-8 is the tolerance,

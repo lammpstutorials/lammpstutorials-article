@@ -9,6 +9,7 @@ units lj
 dimension 3
 atom_style atomic
 boundary p p p
+# 2) System definition
 
 # 2) System deﬁnition
 region simbox block -20 20 -20 20 -20 20
