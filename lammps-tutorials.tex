@@ -195,10 +195,10 @@
 
 \section{Introduction}
 
-Molecular Simulations (MS) can be used to model a large variety of
+Molecular simulations can be used to model a large variety of
 atomic and coarse-grained systems, including solids, fluids, polymers,
 and biomolecules, as well as complex interfaces and multi-component
-systems.  While various MS methods exist, Molecular Dynamics (MD) and
+systems.  While various molecular modeling methods exist, Molecular dynamics (MD) and
 Monte Carlo (MC) are most commonly used.  MD is the preferred method for
 obtaining the accurate dynamics of a system, as it relies on solving
 Newton's equations of motion.  For systems with many degrees of freedom
@@ -207,7 +207,7 @@ MD because it allows for efficiently exploring a configuration space
 without being confined by the accessible time scale.  MC involves
 performing random changes to the system configuration that are either
 accepted or rejected based on energy criteria
-\cite{frenkel2023understanding, allen2017computer}.  MS allows for
+\cite{frenkel2023understanding, allen2017computer}.  Molecular simulations allow for
 measuring a broad variety of properties, including structural properties
 (e.g.,~bond length distribution, coordination numbers, radial
 distribution functions), thermodynamic properties (e.g.,~temperature,
@@ -219,7 +219,7 @@ while others, available only through simulations, are often useful for
 interpreting experimental data~\cite{van2008molecular}.
 
 LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator)
-\cite{lammps_home} is a highly flexible and parallel open-source MS
+\cite{lammps_home} is a highly flexible and parallel open-source molecular simulation
 tool.  Over the years, a broad variety of particle interaction models
 have been implemented in LAMMPS, enabling it to model a wide range of
 systems, including atomic, polymeric, biological, metallic, reactive, granular,
@@ -236,9 +236,9 @@ extensively describes all available features~\cite{lammps_docs},
 navigating it can be challenging.  Much of the information may be
 unnecessary for common use cases, and the detailed manual can often feel
 overwhelming.  Beyond the intrinsic complexity of LAMMPS, performing
-accurate MS requires several complex, system-specific decisions
+accurate simulations requires several complex, system-specific decisions
 regarding the physics to be modeled, such as selecting the thermodynamic
-ensemble (e.g.,~micro-canonical, grand-canonical), determining the
+ensemble (e.g.,~microcanonical, grand canonical), determining the
 simulation duration, and choosing the sets of parameters describing the
 interactions between atoms (the so-called force field)
 \cite{wong2016good, van2018validation, prasad2018best}.  While these
@@ -262,7 +262,7 @@ run a simple MD simulation in the microcanonical (NVE) and canonical (NVT)
 ensembles.
 
 In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system
-is introduced, where atoms are connected by bonds: a small carbon
+is introduced in which atoms are connected by bonds: a small carbon
 nanotube.  The use of both classical and reactive force fields (here,
 OPLS-AA~\cite{jorgensenDevelopmentTestingOPLS1996} and
 AIREBO~\cite{stuart2000reactive}, respectively) is illustrated.  An
@@ -271,11 +271,11 @@ measured.  This tutorial also demonstrates the use of an external tool
 to visualize breaking bonds, and show the possibility to import
 LAMMPS-generated YAML log files into Python.
 
-In \hyperref[all-atom-label]{tutorial 3}, two components - liquid water
-(flexible three-point model) and a polymer molecule - are merged and
+In \hyperref[all-atom-label]{tutorial 3}, two components\textemdash liquid water
+(flexible three-point model) and a polymer molecule\textemdash are merged and
 equilibrated.  A long-range solver is used to handle the electrostatic
 interactions accurately, and the system is equilibrated in the
-isothermal-isobaric (NPT) ensemble; then a stretching force is applied
+isothermal-isobaric (NPT) ensemble; then, a stretching force is applied
 to the polymer.  Through this relatively complex solvated polymer
 system, the tutorial demonstrates how to use type labels to make
 molecule files more generic and easier to manage~\cite{typelabel_paper}.
@@ -296,7 +296,7 @@ method that allows the partial charges of atoms to adjust according to
 their local environment.
 
 In \hyperref[gcmc-silica-label]{tutorial 6}, a Monte Carlo simulation in
-the Grand Canonical ensemble is implemented to demonstrate how LAMMPS
+the grand canonical ensemble is implemented to demonstrate how LAMMPS
 can be used to simulate an open system that exchanges particles with a
 reservoir.
 
@@ -4125,10 +4125,10 @@ contains a periodic single-walled CNT.  Add the following line to \flecmd{mixing
 read_data CNT.data extra/special/per/atom 20
 \end{lstlisting}
 The CNT is approximately $1.1~\text{nm}$ in diameter and $1.6\,\text{nm}$ in length, oriented
-along the $x$-axis. The simulation box is as large as 5.2~nm in the two other dimensions,
+along the $x$-axis. The simulation box is initially 12.0~nm in the two other dimensions before densification,
 making it straightforward to fill the box with styrene.
-To add 200 styrene molecules to the simulation box, using the
-\href{\filepath tutorial8/styrene.mol}{\dwlcmd{styrene.mol}} file.
+To add 200 styrene molecules to the simulation box, we will use the
+\href{\filepath tutorialteams8/styrene.mol}{\dwlcmd{styrene.mol}} molectule template file.
 Include the following commands to \flecmd{mixing.lmp}:
 \begin{lstlisting}
 molecule styrene styrene.mol
