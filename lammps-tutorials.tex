@@ -2940,7 +2940,7 @@ dump_modify viz adiam Si 2.6 adiam O 2.3 backcolor white &
 Here, the atoms are colored by their charges \lmpcmd{q}, ranging from royal blue
 (when $q=-1\,\text{e}$) to orange-red (when $q=2\,\text{e}$).
 
-You can generate histograms of the charges for each atom type using
+We can generate histograms of the charges for each atom type using
 \lmpcmd{fix ave/histo} commands:
 \begin{lstlisting}
 fix myhis1 grpSi ave/histo 10 500 5000 -1.5 2.5 1000 v_vq &
@@ -2956,7 +2956,7 @@ fix myspec all reaxff/species 5 1 5 relax.species element Si O
 \end{lstlisting}
 Here, the information will be printed every 5 steps in a file called \flecmd{relax.species}.
 Let us perform a very short run using the anisotropic NPT command and relax the
-density of the system.
+density of the system:
 \begin{lstlisting}
 velocity all create 300.0 32028
 fix mynpt all npt temp 300.0 300.0 100 aniso 1.0 1.0 1000
@@ -2977,8 +2977,8 @@ to a rapid change in the system volume, which causes interatomic distances to
 shift quickly (Fig.~\ref{fig:SIO-charge}\,b).  The atoms with the
 most extreme charges are located at structural defects,
 such as dangling oxygen groups (Fig.~\ref{fig:SIO-slice}).
-Finally, the charge distribution $P(q)$ can be plotted using the charge values
-from the \flecmd{.histo} files (Fig.~\ref{fig:SIO-distribution}\,a).
+Finally, the generated \flecmd{.histo} files can be used to
+plot the probability distributions, $P(q)$ (see Fig.~\ref{fig:SIO-distribution}\,a).
 
 \begin{figure}
 \centering
@@ -3059,7 +3059,8 @@ by the \lmpcmd{fix deform}.
 \includegraphics[width=\linewidth]{SIO-deformed-charge}
 \caption{a) Average charge per atom of the silicon, $q_\text{Si}$, atoms as
 a function of time, $t$, during deformation of the $\text{SiO}_2$ system
-from \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  b) Temperature, $T$, of the
+from \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}. The break down of the
+silica structure occurs near $t = 11$\,ps.  b) Temperature, $T$, of the
 system as a function of $t$.}
 \label{fig:SIO-deformed-charge}
 \end{figure}
