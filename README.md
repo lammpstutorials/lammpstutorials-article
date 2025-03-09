@@ -7,14 +7,21 @@ list in "files.txt".
 -->
 
 
+
+<div align="center">
+
+# A Set of Tutorials for the LAMMPS Simulation Package
+
 [![DOI](https://zenodo.org/badge/314814105.svg)](https://zenodo.org/doi/10.5281/zenodo.14747799)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-blue.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![PDF](https://img.shields.io/badge/PDF-lammps--tutorials.pdf-blue.svg)](lammps-tutorials.pdf)
 
-# A Set of Tutorials for the LAMMPS Simulation Package
+</div>
 
-This article introduces a suite of tutorials designed to make learning LAMMPS
-more accessible to new users.
+<br>
+
+This repository contains the article introducing a suite of tutorials designed
+to make learning LAMMPS more accessible for new users.
 
 ## Tutorials
 
