@@ -772,12 +772,11 @@ fix mynve all nve
 timestep 0.005
 run 50000
 \end{lstlisting}
-The \lmpcmd{fix nve} command updates the positions and
-velocities of the atoms in the group \lmpcmd{all} at every step.  The
-group \lmpcmd{all} is a default group that contains every atom.  The
-last two lines specify the value of the \lmpcmd{timestep} and the number of
-steps for the \lmpcmd{run}, respectively, corresponding to a total
-duration of 250 time units.
+The \lmpcmd{fix nve} command updates the positions and velocities of the
+atoms in the group \lmpcmd{all} at every step.  The group \lmpcmd{all}
+is a default group that contains all atoms.  The last two lines specify
+the value of the \lmpcmd{timestep} and the number of steps for the
+\lmpcmd{run}, respectively, for a total duration of 250 time units.
 
 \begin{note}
   Since no other fix commands alter forces or velocities, and periodic
@@ -845,6 +844,15 @@ increases rapidly during molecular dynamics until it reaches
 a plateau value of about 1.5 (Fig.~\ref{fig:evolution-energy}\,d).
 
 \paragraph{Trajectory visualization}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{LJ-cylinder}
+\caption{Visualization of the improved binary mixture input after minimization
+  during \hyperref[lennard-jones-label]{Tutorial 1}.  Colors are the same as in
+  Fig.~\ref{fig:LJ}.}
+\label{fig:improved-min}
+\end{figure}
 
 So far, the simulation has been mostly monitored through the analysis of
 thermodynamic information.  To better follow the evolution of the system
@@ -955,15 +963,6 @@ You can view the contents of this file from \lammpsgui{}, by
 right-clicking on the file name in the editor and selecting the entry
 \guicmd{View file improved.min.data}.
 
-\begin{figure}
-\centering
-\includegraphics[width=0.55\linewidth]{LJ-cylinder}
-\caption{Visualization of the improved binary mixture input after minimization
-  during \hyperref[lennard-jones-label]{Tutorial 1}.  Colors are the same as in
-  Fig.~\ref{fig:LJ}.}
-\label{fig:improved-min}
-\end{figure}
-
 The created \flecmd{.data} file contains all the information necessary
 to restart the simulation, such as the number of atoms, the box size,
 the masses, and the pair coefficients.  This \flecmd{.data} file also
@@ -1062,6 +1061,17 @@ group grp_t1_in delete
 group grp_t2_out delete
 \end{lstlisting}
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{LJ-evolution}
+\caption{Evolution of the system from \hyperref[lennard-jones-label]{Tutorial 1}
+during mixing.  The three snapshots show respectively the system
+at $t=0$ (left panel), $t=75$ (middle panel), and $t=1500$ (right panel).  The
+atoms of type 1 are represented as small turquoise spheres and the atoms of type 2
+as large blue spheres.}
+\label{fig:evolution-population}
+\end{figure}
+
 Let us monitor the number of atoms of each type inside the cylinder as a
 function of time by creating the following equal-style variables:
 \begin{lstlisting}
@@ -1090,17 +1100,6 @@ compute command.  Compute commands are not automatically invoked; they
 require a ``consumer'' command that references the compute.  In this case, the
 first compute is referenced by the second, and we reference the second
 in a \lmpcmd{thermo\_style custom} command (see below).
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{LJ-evolution}
-\caption{Evolution of the system from \hyperref[lennard-jones-label]{Tutorial 1}
-during mixing.  The three snapshots show respectively the system
-at $t=0$ (left panel), $t=75$ (middle panel), and $t=1500$ (right panel).  The
-atoms of type 1 are represented as small turquoise spheres and the atoms of type 2
-as large blue spheres.}
-\label{fig:evolution-population}
-\end{figure}
 
 \begin{note}
 There is no need for a \lmpcmd{Settings}
@@ -1784,7 +1783,7 @@ hydrophilic polymer (PEG - polyethylene glycol) in a reservoir of water
 at the desired temperature and pressure, the polymer molecule is added
 and a constant stretching force is applied to both ends of the polymer.
 The evolution of the polymer length is measured as a function of time.
-The GROMOS 54A7 force field~\cite{schmid2011definition} is used for the
+The {GROMOS} 54A7 force field~\cite{schmid2011definition} is used for the
 PEG, the SPC/Fw model~\cite{wu2006flexible} is used for the water, and
 the long-range Coulomb interactions are solved using the PPPM
 solver~\cite{luty1996calculating}.  This tutorial was inspired by a
@@ -1820,18 +1819,21 @@ pair_style lj/cut/coul/long 10
 kspace_style ewald 1e-5
 special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 angle yes
 \end{lstlisting}
-With the unit style \lmpcmd{real}, masses are in grams per mole, distances in
-Å, time in femtoseconds, and energies in kcal/mole.  With the \lmpcmd{atom\_style full},
-each atom is a dot with a mass and a charge that can be linked by bonds, angles,
-dihedrals, and/or impropers.  The \lmpcmd{bond\_style},
-\lmpcmd{angle\_style}, and \lmpcmd{dihedral\_style} commands define the potentials
-for the bonds, angles, and dihedrals used in the simulation, here \lmpcmd{harmonic}.
-With the \lmpcmd{pair\_style} named \lmpcmd{lj/cut/coul/long}, atoms interact through
-both a Lennard-Jones (LJ) potential and Coulomb interactions.  The value of $10\,\text{\AA{}}$ is the cutoff,
-and the \lmpcmd{ewald} command defines the long-range solver for the Coulomb
-interactions~\cite{ewald1921berechnung}.  Finally, the \lmpcmd{special\_bonds} command, which was already seen in
-\hyperref[carbon-nanotube-label]{tutorial 2}, sets the LJ and Coulomb weighting
-factors for the interaction between neighboring atoms.
+With the unit style \lmpcmd{real}, masses are in g/mole, distances in Å,
+time in fs, and energies in kcal/mole.  With the \lmpcmd{atom\_style
+  full}, each atom is a dot with a mass and a charge that can be linked
+by bonds, angles, dihedrals, and/or impropers.  The
+\lmpcmd{bond\_style}, \lmpcmd{angle\_style}, and
+\lmpcmd{dihedral\_style} commands define the potentials for the bonds,
+angles, and dihedrals used in the simulation, here \lmpcmd{harmonic}.
+With the \lmpcmd{pair\_style} named \lmpcmd{lj/cut/coul/long}, atoms
+interact through both a Lennard-Jones (LJ) potential and Coulomb
+interactions.  The value of $10\,\text{\AA{}}$ is the cutoff, and the
+\lmpcmd{ewald} command defines the long-range solver for the Coulomb
+interactions~\cite{ewald1921berechnung}.  Finally, the
+\lmpcmd{special\_bonds} command, which was already seen in
+\hyperref[carbon-nanotube-label]{tutorial 2}, sets the LJ and Coulomb
+weighting factors for the interaction between neighboring atoms.
 
 Let us create a 3D simulation box of dimensions $6 \times 3 \times 3 \; \text{nm}^3$,
 and make space for 8 atom types (2 for the water, 6 for the polymer), 7 bond types
@@ -1848,11 +1850,10 @@ and 4 dihedral types (only for the polymer).  Copy the following lines into \fle
  extra/dihedral/per/atom 10 &
  extra/special/per/atom 14
 \end{lstlisting}
-The \lmpcmd{extra/x/per/atom} commands are here for
-memory allocation.  We will use a file named
-\href{\filepath tutorial3/parameters.inc}{\dwlcmd{parameters.inc}} that contains
-all the parameters (masses, interaction energies, bond equilibrium
-distances, etc).  In \flecmd{water.lmp}, add the following line:
+The \lmpcmd{extra/x/per/atom} commands reserve memory for adding bond topology
+data later. We use the file \href{\filepath tutorial3/parameters.inc}{\dwlcmd{parameters.inc}}
+to set all the parameters (masses, interaction energies, bond equilibrium
+distances, etc).  Thus add to \flecmd{water.lmp} the line:
 \begin{lstlisting}
 include parameters.inc
 \end{lstlisting}
@@ -1895,6 +1896,15 @@ next to \flecmd{water.lmp}.  This template contains the necessary
 structural information of a water molecule, such as the number of atoms,
 or the IDs of the atoms that are connected by bonds and angles.
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{PEG-density}
+\caption{a) Temperature, $T$, of the water reservoir from \hyperref[all-atom-label]{Tutorial 3}
+as a function of the time, $t$.  The horizontal dashed line is the target temperature of 300\,K.
+b) Evolution of the system density, $\rho$, with $t$.}
+\label{fig:PEG-density}
+\end{figure}
+
 Then, let us organize the atoms of types OW and HW of the water
 molecules in a group named \lmpcmd{H2O} and perform a small energy
 minimization.  The energy minimization is mandatory here because of the
@@ -1923,11 +1933,10 @@ the three dimensions of the box will be re-scaled simultaneously.
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{PEG-density}
-\caption{a) Temperature, $T$, of the water reservoir from \hyperref[all-atom-label]{Tutorial 3}
-as a function of the time, $t$.  The horizontal dashed line is the target temperature of 300\,K.
-b) Evolution of the system density, $\rho$, with $t$.}
-\label{fig:PEG-density}
+\includegraphics[width=\linewidth]{PEG-water}
+\caption{The water reservoir from \hyperref[all-atom-label]{Tutorial 3}
+after equilibration.  Oxygen atoms are in red, and hydrogen atoms are in white.}
+\label{fig:PEG-water}
 \end{figure}
 
 Let us output the system into images by adding the following commands to \flecmd{water.lmp}:
@@ -1981,21 +1990,13 @@ the compute, or the \lmpcmdnote{atom\_style}.  Use the \guicmd{Inspect Restart}
 option of the \lammpsgui{} to vizualize the content saved in \flecmd{water.restart}.
 \end{note}
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{PEG-water}
-\caption{The water reservoir from \hyperref[all-atom-label]{Tutorial 3}
-after equilibration.  Oxygen atoms are in red, and hydrogen atoms are in white.}
-\label{fig:PEG-water}
-\end{figure}
-
 \subsubsection{Solvating the PEG in water}
 
 Now that the water reservoir is equilibrated, we can safely add the PEG polymer
 to the water.  The PEG molecule topology was downloaded from the ATB repository
 \cite{malde2011automated, oostenbrink2004biomolecular}.  It has a formula
 $\text{C}_{16}\text{H}_{34}\text{O}_{9}$, and the parameters are taken from
-the GROMOS 54A7 force field~\cite{schmid2011definition} (Fig.~\ref{fig:PEG-in-vacuum}).
+the {GROMOS} 54A7 force field~\cite{schmid2011definition} (Fig.~\ref{fig:PEG-in-vacuum}).
 
 \begin{figure}
 \centering
@@ -2762,6 +2763,16 @@ experience any forces from the rest of the system.  Consequently, in the absence
 external forces, these atoms will conserve the initial velocities imposed by the
 two \lmpcmd{velocity} commands.
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{NANOSHEAR-profiles}
+\caption{Velocity profiles for water (blue) and walls (orange) along the $z$-axis as
+simulated in \hyperref[sheared-confined-label]{Tutorial 4}.}
+% The line is a linear fit assuming
+% that the pore size is $h = 1.8\,\text{nm}$.}
+\label{fig:NANOSHEAR-profiles}
+\end{figure}
+
 Finally, let us generate images of the systems and print the values of the
 forces exerted by the fluid on the walls, as given by \lmpcmd{f\_mysf1[1]}
 and \lmpcmd{f\_mysf2[1]}.  Add these lines to \flecmd{shearing.lmp}:
@@ -2797,26 +2808,19 @@ fix myac3 ions ave/chunk 10 15000 200000 &
 
 run 200000
 \end{lstlisting}
-Here, a bin size of $0.25\,\text{\AA{}}$ is used for the density profiles generated
-by the \lmpcmd{ave/chunk} commands, and three \flecmd{.dat} files are created for
-the water, the walls, and the ions, respectively.  With values of \lmpcmd{10 15000 200000},
-the velocity \lmpcmd{vx} will be evaluated every 10 steps during the final 150,000
-steps of the simulations.  The result will be averaged and printed only once at the 200,000\,th step.
+Here, a bin size of $0.25\,\text{\AA{}}$ is used for the density
+profiles generated by the \lmpcmd{ave/chunk} commands, and three
+\flecmd{.dat} files are created for the water, the walls, and the ions,
+respectively.  With values of \lmpcmd{10 15000 200000}, the velocity
+\lmpcmd{vx} will be evaluated every 10 steps during the final 150,000
+steps of the simulations.  The result will be averaged and printed only
+once at the 200,000\,th step.
+
 Run the simulation using LAMMPS.  The averaged velocity
 profile for the fluid is plotted in Fig.~\ref{fig:NANOSHEAR-profiles}.
 As expected for such Couette flow geometry, the fluid velocity increases
 linearly along $z$, and is equal to the walls velocities at the fluid-solid
 interfaces (no-slip boundary conditions).
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{NANOSHEAR-profiles}
-\caption{Velocity profiles for water (blue) and walls (orange) along the $z$-axis as
-simulated in \hyperref[sheared-confined-label]{Tutorial 4}.}
-% The line is a linear fit assuming
-% that the pore size is $h = 1.8\,\text{nm}$.}
-\label{fig:NANOSHEAR-profiles}
-\end{figure}
 
 From the force applied by the fluid on the solid, one can extract the stress
 within the fluid, which enables the measurement of its viscosity $\eta$
@@ -2939,6 +2943,16 @@ dump_modify viz adiam Si 2.6 adiam O 2.3 backcolor white &
 \end{lstlisting}
 Here, the atoms are colored by their charges \lmpcmd{q}, ranging from royal blue
 (when $q=-1\,\text{e}$) to orange-red (when $q=2\,\text{e}$).
+
+\begin{figure}
+\includegraphics[width=\linewidth]{SIO-deformed}
+\caption{Amorphous silicon oxide after deformation during
+\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  The atoms are colored by their
+charges.  Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of
+about $1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of
+about $-0.9 ~ \text{e}$ appear in blue.}
+\label{fig:SIO-deformed}
+\end{figure}
 
 We can generate histograms of the charges for each atom type using
 \lmpcmd{fix ave/histo} commands:
@@ -3087,16 +3101,6 @@ typically have different charges compared to bulk atoms (Fig.~\ref{fig:SIO-defor
 You can also see a sharp increase in temperature during the rupture of
 the material (Fig.~\ref{fig:SIO-deformed-charge}\,b).
 
-\begin{figure}
-\includegraphics[width=\linewidth]{SIO-deformed}
-\caption{Amorphous silicon oxide after deformation during
-\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  The atoms are colored by their
-charges.  Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of
-about $1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of
-about $-0.9 ~ \text{e}$ appear in blue.}
-\label{fig:SIO-deformed}
-\end{figure}
-
 You can examine the charge distribution after deformation, as well as during
 deformation (Fig.~\ref{fig:SIO-distribution}\,b).  As expected, the final
 charge distribution slightly differs from the previously calculated one.  If
@@ -3161,6 +3165,15 @@ your case, depending on the location of the crack.  A difference with the previo
 input is that three atom types are specified in the \lmpcmd{pair\_coeff} command, i.e.
 \lmpcmd{Si O H}.
 
+\begin{figure}
+\includegraphics[width=\linewidth]{SIO-decorated}
+\caption{Cracked silicon oxide after the addition of hydrogen atoms
+during \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  The atoms
+are colored by their charges, with the newly added hydrogen atoms appearing as small
+greenish spheres.}
+\label{fig:SIO-decorated}
+\end{figure}
+
 Then, let us adapt some familiar commands to measure the charges of all three
 types of atoms, and output the charge values into log files:
 \begin{lstlisting}
@@ -3202,6 +3215,7 @@ run 2000
 next a
 jump SELF loop
 \end{lstlisting}
+
 Run the simulation with LAMMPS.  When the simulation is over,
 it can be seen from the \flecmd{decorate.species} file that
 all the created hydrogen atoms reacted with the $\text{SiO}_{2}$ structure to
@@ -3213,15 +3227,6 @@ form surface groups (such as hydroxyl (-OH) groups).
 \end{lstlisting}
 At the end of the simulation, hydroxyl (-OH) groups can be seen at the interfaces
 (Fig.~\ref{fig:SIO-decorated}).
-
-\begin{figure}
-\includegraphics[width=\linewidth]{SIO-decorated}
-\caption{Cracked silicon oxide after the addition of hydrogen atoms
-during \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  The atoms
-are colored by their charges, with the newly added hydrogen atoms appearing as small
-greenish spheres.}
-\label{fig:SIO-decorated}
-\end{figure}
 
 \subsection{Tutorial 6: Water adsorption in silica}
 \label{gcmc-silica-label}
@@ -3286,6 +3291,15 @@ pair_coeff * * SiO.1990.vashishta Si O
 Ensure that the \href{\filepath tutorial6/SiO.1990.vashishta}{\dwlcmd{SiO.1990.vashishta}}
 file is located in the same directory as \flecmd{generate.lmp}.
 
+\begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{GCMC-generate}
+\caption{Amorphous silica ($\text{SiO}_2$) simulated
+during \hyperref[gcmc-silica-label]{Tutorial 6}.  Silicon atoms are
+represented in yellow, and oxygen atoms in red.}
+\label{fig:GCMC-snapshot}
+\end{figure}
+
 Next, add a \lmpcmd{dump image} command to \flecmd{generate.lmp} to follow the
 evolution of the system with time:
 \begin{lstlisting}
@@ -3333,14 +3347,6 @@ Here, an anisotropic barostat is used.
 Anisotropic barostats adjust the dimensions independently, which is
 generally suitable for a solid phase.
 
-Run the simulation using LAMMPS.  From the \guicmd{Charts} window, the temperature
-evolution can be observed, showing that it closely follows the desired annealing procedure (Fig.~\ref{fig:GCMC-dimension}\,a).
-The evolution of the box dimensions over time confirms that the box
-deformed during the last stage of the simulation
-(Fig.~\ref{fig:GCMC-dimension}\,b).  After the simulation completes, the final
-LAMMPS topology file called \flecmd{generate.data}
-will be located next to \flecmd{generate.lmp} (Fig.~\ref{fig:GCMC-snapshot}).
-
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{GCMC-dimension}
@@ -3351,14 +3357,13 @@ mark the transition between the different phases of the simulation.}
 \label{fig:GCMC-dimension}
 \end{figure}
 
-\begin{figure}
-\centering
-\includegraphics[width=0.9\linewidth]{GCMC-generate}
-\caption{Amorphous silica ($\text{SiO}_2$) simulated
-during \hyperref[gcmc-silica-label]{Tutorial 6}.  Silicon atoms are
-represented in yellow, and oxygen atoms in red.}
-\label{fig:GCMC-snapshot}
-\end{figure}
+Run the simulation using LAMMPS.  From the \guicmd{Charts} window, the temperature
+evolution can be observed, showing that it closely follows the desired annealing procedure (Fig.~\ref{fig:GCMC-dimension}\,a).
+The evolution of the box dimensions over time confirms that the box
+deformed during the last stage of the simulation
+(Fig.~\ref{fig:GCMC-dimension}\,b).  After the simulation completes, the final
+LAMMPS topology file called \flecmd{generate.data}
+will be located next to \flecmd{generate.lmp} (Fig.~\ref{fig:GCMC-snapshot}).
 
 \subsubsection{Cracking the silica}
 
@@ -3615,12 +3620,6 @@ thermo_style custom step temp etotal v_nO &
 
 run 25000
 \end{lstlisting}
-Running this simulation using LAMMPS, one can see that the number of molecules is increasing
-progressively.  When using the pressure argument, LAMMPS ignores the value of the
-chemical potential (here $\mu = -0.5\,\text{eV}$, which corresponds roughly to
-ambient conditions, i.e.~to a relative humidity $\text{RH} \approx 50\,\%$~\cite{gravelle2020multi}.)
-The large pressure value of 100\,bars was chosen to ensure that some successful
-insertions of molecules would occur during the short duration of this simulation.
 
 \begin{figure}
 \centering
@@ -3629,6 +3628,13 @@ insertions of molecules would occur during the short duration of this simulation
 as extracted from \hyperref[gcmc-silica-label]{Tutorial 6}.}
 \label{fig:GCMC-number}
 \end{figure}
+
+Running this simulation using LAMMPS, one can see that the number of molecules is increasing
+progressively.  When using the pressure argument, LAMMPS ignores the value of the
+chemical potential (here $\mu = -0.5\,\text{eV}$, which corresponds roughly to
+ambient conditions, i.e.~to a relative humidity $\text{RH} \approx 50\,\%$~\cite{gravelle2020multi}.)
+The large pressure value of 100\,bars was chosen to ensure that some successful
+insertions of molecules would occur during the short duration of this simulation.
 
 After a few GCMC steps, the number of molecules starts increasing.  Once the
 crack is filled with water molecules, the total number of molecules reaches a plateau
@@ -3652,15 +3658,6 @@ atoms in yellow, and the oxygen atoms of the solid in red.}
 \subsection{Tutorial 7: Free energy calculation}
 \label{umbrella-sampling-label}
 
-\begin{figure}
-\centering
-\includegraphics[width=0.7\linewidth]{US}
-\caption{System simulated during \hyperref[umbrella-sampling-label]{Tutorial 7}.
-The pink atom explores the energetically unfavorable central area of the simulation
-box thanks to the additional potential imposed during umbrella sampling.}
-\label{fig:US}
-\end{figure}
-
 The objective of this tutorial is to measure the free energy profile of
 particles through a barrier potential using two methods: free sampling
 and umbrella sampling~\cite{kastner2011umbrella, allen2017computer,
@@ -3674,6 +3671,15 @@ adsorption barriers near an interface or calculating translocation
 barriers through a membrane~\cite{wilson1997adsorption,
   makarov2009computer, gravelle2021adsorption, loche2022molecular,
   hayatifar2024probing}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{US}
+\caption{System simulated during \hyperref[umbrella-sampling-label]{Tutorial 7}.
+The pink atom explores the energetically unfavorable central area of the simulation
+box thanks to the additional potential imposed during umbrella sampling.}
+\label{fig:US}
+\end{figure}
 
 \subsubsection{Method 1: Free sampling}
 The most direct way to calculate a free energy profile is to extract the
@@ -3790,6 +3796,16 @@ atoms $N$, constant volume $V$, and a temperature $T$ that
 fluctuates around a target value.
 % SG: may be discuss the choice of constant "500" -> chosen for a relatiely weak coupling with thermostat (add a box?)
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{US-density-evolution}
+\caption{Evolution of the number of atoms $n_\text{center}$ in the central
+region \lmpcmd{mymes} as a function of time $t$ during equilibration.  The dark line
+is $n_\text{center} = 22 \exp(-t/160)+5$ and serves as a guide for the eyes.
+Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\AA{}}$.}
+\label{fig:US-density-evolution}
+\end{figure}
+
 To ensure that the equilibration time is sufficient, we will track the evolution of
 the number of atoms in the central - energetically unfavorable - region,
 referred to as \lmpcmd{mymes}, using the \lmpcmd{n\_center} variable:
@@ -3836,16 +3852,6 @@ run 2000000
 The step count is reset to 0 using \lmpcmd{reset\_timestep} to synchronize it
 with the output times of \lmpcmd{fix density/number}.  Run the simulation using
 LAMMPS.
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{US-density-evolution}
-\caption{Evolution of the number of atoms $n_\text{center}$ in the central
-region \lmpcmd{mymes} as a function of time $t$ during equilibration.  The dark line
-is $n_\text{center} = 22 \exp(-t/160)+5$ and serves as a guide for the eyes.
-Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\AA{}}$.}
-\label{fig:US-density-evolution}
-\end{figure}
 
 \paragraph{Data analysis}
 
