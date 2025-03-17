@@ -1819,8 +1819,8 @@ pair_style lj/cut/coul/long 10
 kspace_style ewald 1e-5
 special_bonds lj 0.0 0.0 0.5 coul 0.0 0.0 1.0 angle yes
 \end{lstlisting}
-With the unit style \lmpcmd{real}, masses are in g/mole, distances in Å,
-time in fs, and energies in kcal/mole.  With the \lmpcmd{atom\_style
+With the unit style \lmpcmd{real}, masses are in g/mol, distances in Å,
+time in fs, and energies in kcal/mol.  With the \lmpcmd{atom\_style
   full}, each atom is a dot with a mass and a charge that can be linked
 by bonds, angles, dihedrals, and/or impropers.  The
 \lmpcmd{bond\_style}, \lmpcmd{angle\_style}, and
@@ -2403,7 +2403,7 @@ mass Na+ 22.990
 mass Cl- 35.453
 mass WALL 26.9815
 \end{lstlisting}
-Each \lmpcmd{mass} command assigns a mass in grams/mole to an atom type.
+Each \lmpcmd{mass} command assigns a mass in g/mol to an atom type.
 The \flecmd{parameters.inc} file also contains the pair coefficients:
 \begin{lstlisting}
 pair_coeff O O 0.185199 3.1589
@@ -2414,7 +2414,7 @@ pair_coeff WALL WALL 11.697 2.574
 pair_coeff O WALL 0.4 2.86645
 \end{lstlisting}
 Each \lmpcmd{pair\_coeff} assigns the depth of the LJ potential (in
-kcal/mole), and the distance (in Ångströms) at which the
+kcal/mol), and the distance (in Ångströms) at which the
 particle-particle potential energy is 0.  As noted in previous
 tutorials, with the important exception of \lmpcmd{pair\_coeff O WALL},
 pairwise interactions were only assigned between atoms of identical
@@ -4038,7 +4038,7 @@ the different windows, leading to poor reconstruction of the free energy profile
 To generate the free energy profile from the particle positions saved in
 the \flecmd{umbrella-sampling.i.dat} files, we use the
 WHAM~\cite{kumar1992weighted,kumar1995multidim} algorithm as implemented
-by Marc Grossfield~\cite{grossfieldimplementation}.  You can download it
+by Alan Grossfield~\cite{grossfieldimplementation}.  You can download it
 from \href{http://membrane.urmc.rochester.edu/?page_id=126}{Alan
   Grossfield}'s website.  Make sure you download the WHAM code version
 2.1.0 or later which introduces the \lmpcmd{units} command-line option
