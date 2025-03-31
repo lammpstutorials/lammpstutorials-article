@@ -2453,7 +2453,7 @@ group ions union Na Cl
 group fluid union H2O ions
 \end{lstlisting}
 The \flecmd{groups.inc} file also defines the \lmpcmd{walltop} and \lmpcmd{wallbot}
-groups, which contain the WALL atoms located in the $z > 0$ and $z < 0$ regions, respectively::
+groups, which contain the WALL atoms located in the $z > 0$ and $z < 0$ regions, respectively:
 \begin{lstlisting}
 group wall type WALL
 region rtop block INF INF INF INF 0 INF
@@ -2834,7 +2834,7 @@ the fluid on the shearing wall, and $\dot{\gamma}$ the shear rate
 \cite{gravelle2021violations}.  Here, the shear rate is
 approximately $\dot{\gamma} = 20 \cdot 10^9\,\text{s}^{-1}$ (Fig.~\ref{fig:NANOSHEAR-profiles}),
 the average force on each wall is given by \lmpcmd{f\_mysf1[1]} and \lmpcmd{f\_mysf2[1]}
-and is approximately $2.7\,\mathrm{kcal/mol/\AA}$ in magnitude.  Using a surface area
+and is approximately $2.7\,\mathrm{kcal/mol/\AA{}}$ in magnitude.  Using a surface area
 for the walls of $A = 6 \cdot 10^{-18}\,\text{m}^2$, one obtains an estimate for
 the shear viscosity for the confined fluid of $\eta = 3.1\,\text{mPa.s}$ using Eq.~\eqref{eq:eta}.
 
@@ -4020,7 +4020,7 @@ jump SELF loop
 The \lmpcmd{spring} command imposes the additional harmonic potential $V$ with
 the previously defined spring constant $k$.  The center of the harmonic
 potential, $x_\text{des}$, successively takes values
-from $-28\,\text{\AA}$ to $28\,\text{\AA}$.  For each value of $x_\text{des}$,
+from $-28\,\text{\AA{}}$ to $28\,\text{\AA{}}$.  For each value of $x_\text{des}$,
 an equilibration step of 40\,ps is performed, followed by a step
 of 400\,ps during which the position of the particle of
 type 2 along the $x$-axis, $x_\text{ave}$, is saved in data files named \flecmd{umbrella-sampling.i.dat},
