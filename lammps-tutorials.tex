@@ -3718,15 +3718,15 @@ Here, we begin by defining variables for the Lennard-Jones interaction
 $\sigma$ and $\epsilon$ and for the repulsive potential
 $U$, which are $U_0$, $\delta$, and
 $x_0$ [see Eqs.\,(\ref{eq:U}-\ref{eq:F}) below].  The cut-off value of
-3.822 was chosen to create a Weeks-Chandler-Andersen (WCA) potential,
+$3.822~\mathrm{\AA{}}$ was chosen to create a Weeks-Chandler-Andersen (WCA) potential,
 which is a truncated and purely repulsive LJ
 potential~\cite{weeks1971role}.  It was calculated as $2^{1/6}
 \sigma$.  The potential is also shifted to be equal to 0 at the cut-off
-using the \lmpcmd{pair\_modify} command.  The unit system is
-\lmpcmd{real}, in which energy is in kcal/mol, distance in Ångströms, or
-time in femtosecond, has been chosen for practical reasons: the WHAM
-algorithm used in the second part of the tutorial automatically assumes
-the energy to be in kcal/mol.
+using the \lmpcmd{pair\_modify} command.  % The unit system is
+% \lmpcmd{real}, in which energy is in kcal/mol, distance in Ångströms, or
+%  practical reasons: the WHAM
+% algorithm used in the second part of the tutorial automatically assumes
+% the energy to be in kcal/mol.
 
 \paragraph{System creation and settings}
 

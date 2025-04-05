@@ -1,0 +1,182 @@
+LAMMPS (19 Nov 2024)
+# Python script (License CC BY 4.0)
+# By Simon Gravelle, Jacob R. Gissinger, and Axel Kohlmeyer
+# The DOI will be added upon publication
+# Find more on GitHub: https://github.com/lammpstutorials
+
+variable sigma equal 3.405
+variable epsilon equal 0.238
+variable U0 equal 1.5*${epsilon}
+variable U0 equal 1.5*0.238
+variable dlt equal 1.0
+variable x0 equal 10.0
+
+units real
+atom_style atomic
+pair_style lj/cut 3.822
+pair_modify shift yes
+boundary p p p
+
+region myreg block -50 50 -15 15 -50 50
+create_box 1 myreg
+Created orthogonal box = (-50 -15 -50) to (50 15 50)
+  2 by 1 by 4 MPI processor grid
+create_atoms 1 random 200 34134 myreg overlap 3 maxtry 50
+Created 200 atoms
+  using lattice units in orthogonal box = (-50 -15 -50) to (50 15 50)
+  create_atoms CPU = 0.004 seconds
+
+mass * 39.95
+pair_coeff * * ${epsilon} ${sigma}
+pair_coeff * * 0.238 ${sigma}
+pair_coeff * * 0.238 3.405
+
+variable U atom ${U0}*atan((x+${x0})/${dlt})-${U0}*atan((x-${x0})/${dlt})
+variable U atom 0.357*atan((x+${x0})/${dlt})-${U0}*atan((x-${x0})/${dlt})
+variable U atom 0.357*atan((x+10)/${dlt})-${U0}*atan((x-${x0})/${dlt})
+variable U atom 0.357*atan((x+10)/1)-${U0}*atan((x-${x0})/${dlt})
+variable U atom 0.357*atan((x+10)/1)-0.357*atan((x-${x0})/${dlt})
+variable U atom 0.357*atan((x+10)/1)-0.357*atan((x-10)/${dlt})
+variable U atom 0.357*atan((x+10)/1)-0.357*atan((x-10)/1)
+variable F atom ${U0}/((x-${x0})^2/${dlt}^2+1)/${dlt}-${U0}/((x+${x0})^2/${dlt}^2+1)/${dlt}
+variable F atom 0.357/((x-${x0})^2/${dlt}^2+1)/${dlt}-${U0}/((x+${x0})^2/${dlt}^2+1)/${dlt}
+variable F atom 0.357/((x-10)^2/${dlt}^2+1)/${dlt}-${U0}/((x+${x0})^2/${dlt}^2+1)/${dlt}
+variable F atom 0.357/((x-10)^2/1^2+1)/${dlt}-${U0}/((x+${x0})^2/${dlt}^2+1)/${dlt}
+variable F atom 0.357/((x-10)^2/1^2+1)/1-${U0}/((x+${x0})^2/${dlt}^2+1)/${dlt}
+variable F atom 0.357/((x-10)^2/1^2+1)/1-0.357/((x+${x0})^2/${dlt}^2+1)/${dlt}
+variable F atom 0.357/((x-10)^2/1^2+1)/1-0.357/((x+10)^2/${dlt}^2+1)/${dlt}
+variable F atom 0.357/((x-10)^2/1^2+1)/1-0.357/((x+10)^2/1^2+1)/${dlt}
+variable F atom 0.357/((x-10)^2/1^2+1)/1-0.357/((x+10)^2/1^2+1)/1
+fix myadf all addforce v_F 0.0 0.0 energy v_U
+
+fix mynve all nve
+fix mylgv all langevin 119.8 119.8 500 30917
+
+region mymes block -${x0} ${x0} INF INF INF INF
+region mymes block -10 ${x0} INF INF INF INF
+region mymes block -10 10 INF INF INF INF
+variable n_center equal count(all,mymes)
+thermo_style custom step temp etotal v_n_center
+thermo 2000
+
+dump viz all image 50000 myimage-*.ppm type type     shiny 0.1 box yes 0.01 view 180 90 zoom 6 size 1600 500 fsaa yes
+dump_modify viz backcolor white acolor 1 cyan adiam 1 3 boxcolor black
+
+timestep 2.0
+run 50000
+Generated 0 of 0 mixed pair_coeff terms from geometric mixing rule
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 5.822
+  ghost atom cutoff = 5.822
+  binsize = 2.911, bins = 35 11 35
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair lj/cut, perpetual
+      attributes: half, newton on
+      pair build: half/bin/atomonly/newton
+      stencil: half/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 3.578 | 3.578 | 3.578 Mbytes
+   Step          Temp          TotEng       v_n_center  
+         0   0              3.3007985      38           
+      2000   117.64194      70.75949       28           
+      4000   137.35381      81.621112      22           
+      6000   116.54539      69.818226      20           
+      8000   113.63918      68.164631      18           
+     10000   118.52285      70.877647      18           
+     12000   123.85582      73.842292      18           
+     14000   109.9703       65.703279      14           
+     16000   120.82285      72.25755       14           
+     18000   108.33886      64.524681      13           
+     20000   115.21169      68.850248      11           
+     22000   118.49711      70.37225       9            
+     24000   107.22622      63.660262      9            
+     26000   116.18392      68.943634      9            
+     28000   116.68734      69.51866       9            
+     30000   130.15216      77.864137      8            
+     32000   107.38823      63.85662       6            
+     34000   106.0111       63.185755      6            
+     36000   116.77557      69.771486      4            
+     38000   124.18233      73.909408      5            
+     40000   117.53508      70.194419      5            
+     42000   122.39215      72.76807       7            
+     44000   112.2496       66.588404      3            
+     46000   124.35523      73.856372      3            
+     48000   119.49872      71.000921      2            
+     50000   123.86891      73.635141      2            
+Loop time of 2.99971 on 8 procs for 50000 steps with 200 atoms
+
+Performance: 2880.277 ns/day, 0.008 hours/ns, 16668.270 timesteps/s, 3.334 Matom-step/s
+99.6% CPU use with 8 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0.013879   | 0.017599   | 0.025521   |   2.8 |  0.59
+Neigh   | 0.0077213  | 0.0090643  | 0.011322   |   1.2 |  0.30
+Comm    | 0.5561     | 0.58299    | 0.61167    |   2.7 | 19.43
+Output  | 0.075882   | 0.10652    | 0.15747    |   8.5 |  3.55
+Modify  | 1.4409     | 1.6346     | 1.9763     |  12.8 | 54.49
+Other   |            | 0.6489     |            |       | 21.63
+
+Nlocal:             25 ave          31 max          18 min
+Histogram: 1 0 1 1 2 0 0 1 0 2
+Nghost:         28.875 ave          35 max          21 min
+Histogram: 1 0 1 0 0 2 2 0 0 2
+Neighs:           6.75 ave          10 max           4 min
+Histogram: 1 2 0 2 0 0 1 0 0 2
+
+Total # of neighbors = 54
+Ave neighs/atom = 0.27
+Neighbor list builds = 550
+Dangerous builds = 0
+reset_timestep 0
+
+thermo 200000
+
+compute cc1 all chunk/atom bin/1d x 0.0 2.0
+fix myac all ave/chunk 100 20000 2000000     cc1 density/number file free-sampling.dat
+
+run 2000000
+Generated 0 of 0 mixed pair_coeff terms from geometric mixing rule
+Per MPI rank memory allocation (min/avg/max) = 4.078 | 4.078 | 4.079 Mbytes
+   Step          Temp          TotEng       v_n_center  
+         0   123.86891      73.635141      2            
+    200000   110.36313      65.593941      0            
+    400000   125.60235      74.580238      0            
+    600000   128.3825       76.517851      0            
+    800000   113.2533       67.587486      0            
+   1000000   114.5901       68.019345      1            
+   1200000   114.21786      68.182848      2            
+   1400000   129.48047      77.081696      1            
+   1600000   118.56028      70.522973      1            
+   1800000   119.68547      71.305319      1            
+   2000000   121.66318      72.743784      1            
+Loop time of 132.256 on 8 procs for 2000000 steps with 200 atoms
+
+Performance: 2613.124 ns/day, 0.009 hours/ns, 15122.243 timesteps/s, 3.024 Matom-step/s
+99.6% CPU use with 8 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0.66993    | 0.76042    | 0.96111    |   9.6 |  0.57
+Neigh   | 0.35816    | 0.38722    | 0.45838    |   4.9 |  0.29
+Comm    | 22.258     | 23.128     | 24.192     |  14.9 | 17.49
+Output  | 3.0882     | 4.658      | 7.4417     |  70.3 |  3.52
+Modify  | 66.997     | 70.977     | 78.552     |  46.9 | 53.67
+Other   |            | 32.34      |            |       | 24.46
+
+Nlocal:             25 ave          27 max          21 min
+Histogram: 1 0 0 0 0 1 3 0 1 2
+Nghost:         40.125 ave          52 max          35 min
+Histogram: 3 1 1 0 2 0 0 0 0 1
+Neighs:          9.125 ave          12 max           4 min
+Histogram: 1 0 0 0 0 2 1 1 2 1
+
+Total # of neighbors = 73
+Ave neighs/atom = 0.365
+Neighbor list builds = 22066
+Dangerous builds = 0
+Total wall time: 0:02:15
