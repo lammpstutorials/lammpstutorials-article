@@ -5,7 +5,6 @@
 # 1) input file templates and data files
 # the first file will be automatically loaded
 create.lmp
-minimize.lmp
 equilibrate.lmp
 shearing.lmp
 groups.inc
