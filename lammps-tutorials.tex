@@ -713,13 +713,13 @@ fresh, resetting the system and re-executing the script from the beginning.
 
 The potential energy, $U$, decreases from a positive value to a negative value
 (Figs.~\ref{fig:chart-log} and~\ref{fig:evolution-energy}\,a).  Note that
-during energy minization, the potential energy equals the total energy
+during energy minimization, the potential energy equals the total energy
 of the system, $E = U$, since the kinetic energy, $K$, is zero.  The
 initially positive potential energy is expected, as the atoms are
 created at random positions within the simulation box, with some in very
 close proximity to each other.  This proximity results in a large
 initial potential energy due to the repulsive branch of the
-Lennard-Jones potential [i.e.,~the term in $1/r^{12}$ in
+Lennard-Jones potential [i.e.,~the term $1/r^{12}$ in
 Eq.~\eqref{eq:LJ}].  As the energy minimization progresses, the energy
 decreases - first rapidly - then more gradually, before plateauing at a
 negative value.  This indicates that the atoms have moved to reasonable
@@ -761,7 +761,7 @@ command is introduced to specify the thermodynamic information LAMMPS should
 print during during \lmpcmd{PART B}.  This adjustment is made because, during
 molecular dynamics, the system exhibits a non-zero temperature $T$ (and
 consequently a non-zero kinetic energy $K$, keyword \lmpcmd{ke}), which are useful to monitor.
-The \lmpcmd{pe} keyword represents the potential energy of the system, $E$, such that
+The \lmpcmd{pe} keyword represents the potential energy of the system, $U$, such that
 $U + K = E$.
 
 Then, add a second \lmpcmd{Run} category by including the following
@@ -1601,7 +1601,9 @@ where $F_\text{cnt}$ is the force and $A_\text{cnt}$ the CNT surface area,
 as a function of the strain, $\Delta L_\text{cnt} = (L_\text{cnt}-L_\text{cnt-0}/L_\text{cnt-0})$, where
 $L_\text{cnt}$ is the CNT length and $L_\text{cnt-0}$ the CNT initial length,
 as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
-Here, the potential is OPLS-AA, and the CNT is unbreakable.}
+Here, the potential is OPLS-AA, and the CNT is unbreakable. \textcolor{blue}{The orange line
+shows the raw data, and the blue line represents a time-averaged curve.}
+}
 \label{fig:CNT-stress-strain-unbreakable}
 \end{figure}
 
@@ -1829,7 +1831,7 @@ angles, and dihedrals used in the simulation, here \lmpcmd{harmonic}.
 With the \lmpcmd{pair\_style} named \lmpcmd{lj/cut/coul/long}, atoms
 interact through both a Lennard-Jones (LJ) potential and Coulomb
 interactions.  The value of $10\,\text{\AA{}}$ is the cutoff, and the
-\lmpcmd{ewald} command defines the long-range solver for the Coulomb
+\lmpcmd{kspace\_style} command defines the long-range solver for the Coulomb
 interactions~\cite{ewald1921berechnung}.  Finally, the
 \lmpcmd{special\_bonds} command, which was already seen in
 \hyperref[carbon-nanotube-label]{tutorial 2}, sets the LJ and Coulomb
@@ -1959,13 +1961,13 @@ thermo 500
 thermo_style custom step temp etotal v_myvol v_rho
 \end{lstlisting}
 Here, several variables are defined and used for converting the units of the
-density in kg/mol:  The variable \lmpcmd{myoxy} represents the number of
+density in \textcolor{blue}{kg/m$^3$}:  The variable \lmpcmd{myoxy} represents the number of
 atoms divided by 3,  which corresponds to the number of molecules, $N_\text{H2O}$,
-and the variable \lmpcmd{myrho} is the density in kg/mol:
+and the variable \lmpcmd{myrho} is the density in \textcolor{blue}{kg/m$^3$}:
 \begin{equation}
-\rho = \dfrac{N_\text{H2O}}{V N_\text{A}},
+\rho = \dfrac{N_\text{H2O} M}{V N_\text{A}},
 \end{equation}
-where $V$ is the volume in m$^3$, $N_\text{A}$ the Avogadro number, and
+where $V$ is the volume in $\text{m}^3$, $N_\text{A}$ the Avogadro number, and
 $M = 0.018$\,kg/mol the molar mass of water.
 
 Finally, let us set the timestep to 1.0 fs, and run the simulation for 15~ps by
@@ -2578,7 +2580,7 @@ thermo_style custom step temp etotal press
 % is printed, and not the temperature of the entire system (which is less relevant
 % with frozen walls).
 
-Let us perform an energy minization by adding the following lines to \flecmd{equilibrate.lmp}:
+Let us perform an energy minimization by adding the following lines to \flecmd{equilibrate.lmp}:
 \begin{lstlisting}
 minimize 1.0e-6 1.0e-6 1000 1000
 reset_timestep 0
@@ -2700,7 +2702,9 @@ should be on the order of one nanosecond.
 \includegraphics[width=\linewidth]{NANOSHEAR-equilibration}
 \caption{a)~Pressure, $p$, of the nanosheared electrolyte system
 simulated in \hyperref[sheared-confined-label]{Tutorial 4} as a function of the
-time, $t$.  b)~Distance between the walls, $\Delta z$, as a function of $t$.}
+time, $t$.  b)~Distance between the walls, $\Delta z$, as a function of $t$.
+\textcolor{blue}{The orange line
+shows the raw data, and the blue line represents a time-averaged curve.}}
 \label{fig:NANOSHEAR-equilibration}
 \end{figure}
 
