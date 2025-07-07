@@ -2300,7 +2300,7 @@ of \lmpcmd{lj/cut/tip4p/long} instead of \lmpcmd{lj/cut/coul/long}, and \lmpcmd{
 instead of \lmpcmd{pppm}.  When using \lmpcmd{lj/cut/tip4p/long} and \lmpcmd{pppm/tip4p},
 the interactions resemble the conventional Lennard-Jones and Coulomb interactions,
 except that they are specifically designed for the four-point water model.  As a result,
-LAMMPS automatically creates a four-point water molecule, assigning type O
+LAMMPS automatically {\color{blue}adds the fourth point to the water molecules}, assigning type O
 atoms as oxygen and type H atoms as hydrogen.  The fourth massless atom (M) of the
 TIP4P water molecule does not have to be defined explicitly, and the value of
 $0.1546\,\text{\AA{}}$ corresponds to the O-M distance of the
@@ -2762,8 +2762,8 @@ velocity wallbot set -2e-4 NULL NULL
 velocity walltop set 2e-4 NULL NULL
 \end{lstlisting}
 The \lmpcmd{setforce} commands cancel the forces on \lmpcmd{walltop} and
-\lmpcmd{wallbot}.  As a result, the atoms in these two groups will not
-experience any forces from the rest of the system.  Consequently, in the absence of
+\lmpcmd{wallbot} {\color{blue}in the $x$ direction}.  As a result, the atoms in these two groups will not
+experience any forces {\color{blue}along $x$} from the rest of the system.  Consequently, in the absence of
 external forces, these atoms will conserve the initial velocities imposed by the
 two \lmpcmd{velocity} commands.
 
@@ -3435,7 +3435,7 @@ classical textbooks like Ref.~\citenum{frenkel2023understanding}.
 
 \paragraph{Using hydrid potentials}
 
-The first particularly of our system is that it combines water and
+The first {\color{blue}peculiarity} of our system is that it combines water and
 silica, which necessitates the use of two force fields: Vashishta (for
 $\text{SiO}_2$), and TIP4P (for water).  Here, the TIP4P/2005 model is
 employed for the water~\cite{abascal2005general}.  Open the
@@ -3996,7 +3996,7 @@ central part of the box (Fig.~\ref{fig:US-system-biased}).
 \caption{Snapshot of the system simulated during the umbrella sampling
 step of \hyperref[umbrella-sampling-label]{Tutorial 7}, showing type-1 atoms
 in cyan and the type-2 atom in red.  Only the type-2 atom explores the central part of the box,
-\lmpcmd{mymes}, due to the additional biasing potential $V$. Parmaeters are
+\lmpcmd{mymes}, due to the additional biasing potential $V$. {\color{blue}Parameters} are
 $U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\AA{}}$.}
 \label{fig:US-system-biased}
 \end{figure}
@@ -4004,7 +4004,7 @@ $U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\
 Now, we create a loop with 15 steps and progressively move the center of the
 bias potential by increments of 0.4\,nm.  Add the following lines to \flecmd{umbrella-sampling.lmp}:
 \begin{lstlisting}
-variable a loop 25
+variable a loop 15
 label loop
 
 variable xdes equal 4*${a}-32
@@ -4212,7 +4212,7 @@ write_data mixing.data
 For visualization purposes, the atoms from the CNT \lmpcmd{group} is moved
 to the center of the box using \lmpcmd{fix recenter}.
 As the time progresses, the system density,
-$\rho$, gradually converges toward the target value of $0.8$\,g/cm$^3$ (Fig.~\ref{fig:evolution-density}\,a).
+$\rho$, gradually converges toward the {\color{blue}target value of $0.9$\,g/cm$^3$} (Fig.~\ref{fig:evolution-density}\,a).
 Meanwhile, the total energy of the system initially evolves rapidly, reflecting the
 densification process, and then eventually stabilizes (Fig.~\ref{fig:evolution-density}\,b).
 The final state is shown in Fig.~\ref{fig:REACT}.
