@@ -644,7 +644,8 @@ The \lmpcmd{run 0 post no} command instructs LAMMPS to initialize forces and ene
 without actually running the simulation.  The \lmpcmd{post no} option disables
 the post-run summary and statistics output.
 
-You can now run LAMMPS.  The simulation should finish quickly, and with the default
+You can now run LAMMPS {\color{blue}(see subsection \ref{running-lammps-label}
+for details on running LAMMPS)}.  The simulation should finish quickly, and with the default
 settings, \lammpsgui{} will open two windows: one displaying the console
 output and another with a chart.  The \guicmd{Output} window will display information from
 the executed commands, including the total energy and pressure at step 0,
@@ -672,7 +673,8 @@ current system using its internal rendering library via the \lmpcmd{dump
 buttons available to adjust the view and rendering style.  The image
 shown in Fig.~\ref{fig:LJ} was created this way.  This will always
 capture the current state of the system.  Save the image for future
-comparisons.
+comparisons {\color{blue}by clicking the \guicmd{Save as} button 
+in the \guicmd{File} menu}.
 
 \paragraph{Energy minimization}
 
@@ -874,7 +876,8 @@ dump viz all image 100 myimage-*.ppm type type &
 dump_modify viz pad 9 boxcolor royalblue &
   backcolor white adiam 1 1.6 adiam 2 4.8
 \end{lstlisting}
-This command tells LAMMPS to generate NetPBM format images every 100
+{\color{blue}The `$\&$' is used to continue the commands on a new line.
+These commands tell} LAMMPS to generate NetPBM format images every 100
 steps.  The two \lmpcmd{type} keywords are for \lmpcmd{color} and
 \lmpcmd{diameter}, respectively.  Run the \flecmd{initial.lmp} using
 LAMMPS again, and a new window named \guicmd{Slide Show} will pop up.
@@ -1877,6 +1880,8 @@ molecule h2omol water.mol
 create_atoms 0 random 700 87910 NULL mol h2omol 454756 &
   overlap 1.0 maxtry 50
 \end{lstlisting}
+{\color{blue}The first parameter is 0, meaning that the atom IDs from
+the \flecmd{water.mol} file will be used.}
 The \lmpcmd{overlap 1.0} option of the \lmpcmd{create\_atoms} command ensures
 that no atoms are placed exactly in the same position, as this would cause the
 simulation to crash.  The \lmpcmd{maxtry 50} asks LAMMPS to try at most 50 times
@@ -1919,9 +1924,11 @@ reset_timestep 0
 \end{lstlisting}
 Resetting the step of the simulation to 0 using the
 \lmpcmd{reset\_timestep} command is optional.
-It is used here because the number of iterations performed by the \lmpcmd{minimize}
+{\color{blue}It is used here because the number of iterations performed by the \lmpcmd{minimize}
 command is usually not a round number, since the minimization stops when one of
-four criteria is reached.  We will use \lmpcmd{fix npt} to control the temperature
+four criteria is reached, which can disrupt the intended frequency
+of outputs such as \lmpcmd{dump} commands that depend on the timestep count.}
+We will use \lmpcmd{fix npt} to control the temperature
 and pressure of the molecules with a Nosé-Hoover thermostat and barostat,
 respectively~\cite{nose1984unified, hoover1985canonical, martyna1994constant}.
 Add the following line into \flecmd{water.lmp}:
@@ -4566,6 +4573,7 @@ which are typically expected to be in the same folder as the input file.
 %in the \textit{Preferences} dialog.
 
 \subsection{Running LAMMPS}
+\label{running-lammps-label}
 
 % mention no log file -> Output window -> Save to file
 % SG: the "no log file" is already specified in the "The Output Window" subsection, so may be unecessary?
