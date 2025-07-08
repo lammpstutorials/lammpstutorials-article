@@ -18,9 +18,6 @@ solution/parameters.inc
 solution/create.data
 solution/create.lmp
 solution/create.log
-solution/minimize.data
-solution/minimize.lmp
-solution/minimize.log
 solution/equilibrate.data
 solution/equilibrate.lmp
 solution/equilibrate.log
