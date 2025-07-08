@@ -8,8 +8,8 @@ units real
 atom_style full
 bond_style harmonic
 angle_style harmonic
-pair_style lj/cut/tip4p/long O H O−H H−O−H 0.1546 12.0
-kspace_style pppm/tip4p 1.0e−5
+pair_style lj/cut/tip4p/long O H O-H H-O-H 0.1546 12.0
+kspace_style pppm/tip4p 1.0e-5
 kspace_modify slab 3.0
 
 read_data equilibrate.data
