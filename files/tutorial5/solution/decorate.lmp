@@ -7,7 +7,7 @@ units real
 atom_style full
 
 read_data deform-mod.data
-displace_atoms all move −12 0 0 # optional
+displace_atoms all move -12 0 0 # optional
 
 pair_style reaxff NULL safezone 3.0 mincap 150
 pair_coeff * * reaxCHOFe.inc Si O H
