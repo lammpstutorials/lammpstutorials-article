@@ -9,9 +9,8 @@ units lj
 dimension 3
 atom_style atomic
 boundary p p p
-# 2) System definition
 
-# 2) System deﬁnition
+# 2) System definition
 region simbox block -20 20 -20 20 -20 20
 create_box 2 simbox
 create_atoms 1 random 1500 34134 simbox overlap 0.3
