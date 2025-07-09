@@ -43,8 +43,8 @@ dump_modify viz backcolor white &
   acolor HW white adiam HW 1
 
 compute ctH2O H2O temp
-compute_modify thermo_temp dynamic yes
-compute_modify ctH2O dynamic yes
+compute_modify thermo_temp dynamic/dof yes
+compute_modify ctH2O dynamic/dof yes
 fix mynvt1 H2O nvt temp 300 300 0.1
 fix_modify mynvt1 temp ctH2O
 fix mynvt2 SiO nvt temp 300 300 0.1

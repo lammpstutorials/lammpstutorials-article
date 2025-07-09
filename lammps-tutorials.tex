@@ -451,15 +451,15 @@ content:
 # 1) Initialization
 # 2) System definition
 # 3) Settings
-# 4) Visualization
+# 4) Monitoring
 # 5) Run
 \end{lstlisting}
 Everything that appears after a hash symbol ($\#$) is a comment
 and ignored by LAMMPS.  \lammpsgui{} will color such comments in red.
 These five categories are not required in every input script and do not
 necessarily need to be in that exact order.  For instance, the \lmpcmd{Settings}
-and the \lmpcmd{Visualization} categories could be inverted, or
-the \lmpcmd{Visualization} category could be omitted.  However, note that
+and the \lmpcmd{Monitoring} categories could be inverted, or
+the \lmpcmd{Monitoring} category could be omitted.  However, note that
 LAMMPS reads input files from top to bottom and processes each command
 \emph{immediately}.  Therefore, the \lmpcmd{Initialization} and
 \lmpcmd{System definition} categories must appear at the top of the
@@ -533,6 +533,12 @@ and selecting \guicmd{View Documentation for `units'}.  This action
 should prompt your web browser to open the corresponding URL for the
 online manual.  A screenshot of this context menu is shown in
 Fig.~\ref{fig:GUI-1}.
+
+\begin{note}
+    {\color{blue}Most LAMMPS commands have default settings that are applied if no value
+    is explicitly specified.  The defaults for each command are listed at the
+    bottom of its documentation page.}
+\end{note}
 
 \paragraph{System definition}
 
@@ -626,10 +632,10 @@ $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
 
 The system is now fully parameterized, and the input is ready to compute
 forces.  Let us complete the two remaining categories,
-\lmpcmd{Visualization} and \lmpcmd{Run}, by adding the following lines
+\lmpcmd{Monitoring} and \lmpcmd{Run}, by adding the following lines
 to \flecmd{initial.lmp}:
 \begin{lstlisting}
-# 4) Visualization
+# 4) Monitoring
 thermo 10
 thermo_style custom step etotal press
 # 5) Run
@@ -748,7 +754,7 @@ commands to the same input script, \flecmd{initial.lmp}.  Add the
 following lines immediately after the \lmpcmd{minimize} command:
 \begin{lstlisting}
 # PART B - MOLECULAR DYNAMICS
-# 4) Visualization
+# 4) Monitoring
 thermo 50
 thermo_style custom step temp etotal pe ke press
 \end{lstlisting}
@@ -865,7 +871,7 @@ and adjust the visualization to your liking using the available buttons.
 Now you can copy the commands used to create this visualization to the
 clipboard by either using the \guicmd{Ctrl-D} keyboard shortcut or
 selecting \guicmd{Copy dump image command} from the \guicmd{File} menu.
-This text can be pasted into the into the \lmpcmd{Visualization} section
+This text can be pasted into the into the \lmpcmd{Monitoring} section
 of \lmpcmd{PART B} of the \flecmd{initial.lmp} file.  This may look like
 the following:
 \begin{lstlisting}
@@ -920,7 +926,7 @@ mass 2 10.0
 pair_style lj/cut 4.0
 pair_coeff 1 1 1.0 1.0
 pair_coeff 2 2 0.5 3.0
-# 4) Visualization
+# 4) Monitoring
 thermo 10
 thermo_style custom step etotal press
 # 5) Run
@@ -1006,7 +1012,7 @@ atom_style atomic
 boundary p p p
 # 2) System definition
 # 3) Settings
-# 4) Visualization
+# 4) Monitoring
 # 5) Run
 \end{lstlisting}
 Since we read most of the information from the data file, we don't need
@@ -1112,7 +1118,7 @@ section, as the settings are taken from the \flecmd{.data} file.
 Finally, let us complete the script by adding the following lines to
 \flecmd{improved.md.lmp}:
 \begin{lstlisting}
-# 4) Visualization
+# 4) Monitoring
 thermo 1000
 thermo_style custom step temp pe ke etotal &
   press v_n1_in v_n2_in c_sumcoor12
@@ -1744,7 +1750,8 @@ where $F_\text{cnt}$ is the force and $A_\text{cnt}$ the CNT surface area,
 as a function of the strain, $\Delta L_\text{cnt} = (L_\text{cnt}-L_\text{cnt-0}/L_\text{cnt-0})$, where
 $L_\text{cnt}$ is the CNT length and $L_\text{cnt-0}$ the CNT initial length,
 as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
-Here, the potential is AIREBO, and the CNT is breakable.}
+Here, the potential is AIREBO, and the CNT is breakable.  \textcolor{blue}{The orange line
+shows the raw data, and the blue line represents a time-averaged curve.}}
 \label{fig:CNT-breakable-energy-stress}
 \end{figure}
 
