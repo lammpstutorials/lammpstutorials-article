@@ -495,6 +495,14 @@ boundary p p p
 \label{fig:GUI-1}
 \end{figure}
 
+\begin{note}
+  Strictly speaking, none of the four commands specified in the
+  Initialization section are mandatory, as they correspond to the
+  default settings for their respective global properties.  However,
+  explicitly specifying these defaults is considered good practice to
+  avoid confusion when sharing input files with other LAMMPS users.
+\end{note}
+
 The first line, \lmpcmd{units lj}, specifies the use of \emph{reduced}
 units, where all quantities are dimensionless.  This unit system is a
 popular choice for simulations that explore general statistical
@@ -518,21 +526,15 @@ configurations like \lmpcmd{boundary p p fm} valid for systems such as
 slab geometries.
 
 \begin{note}
-  Strictly speaking, none of the four commands specified in the
-  Initialization section are mandatory, as they correspond to the
-  default settings for their respective global properties.  However,
-  explicitly specifying these defaults is considered good practice to
-  avoid confusion when sharing input files with other LAMMPS users.
+    Each LAMMPS command is accompanied by extensive online documentation
+    that details the different options for that command.  From the
+    \lammpsgui{} editor buffer, you can access the documentation by
+    right-clicking on a line containing a command (e.g.,~\lmpcmd{units lj})
+    and selecting \guicmd{View Documentation for `units'}.  This action
+    should prompt your web browser to open the corresponding URL for the
+    online manual.  A screenshot of this context menu is shown in
+    Fig.~\ref{fig:GUI-1}.
 \end{note}
-
-Each LAMMPS command is accompanied by extensive online documentation
-that details the different options for that command.  From the
-\lammpsgui{} editor buffer, you can access the documentation by
-right-clicking on a line containing a command (e.g.,~\lmpcmd{units lj})
-and selecting \guicmd{View Documentation for `units'}.  This action
-should prompt your web browser to open the corresponding URL for the
-online manual.  A screenshot of this context menu is shown in
-Fig.~\ref{fig:GUI-1}.
 
 \begin{note}
     {\color{blue}Most LAMMPS commands have default settings that are applied if no value
@@ -567,6 +569,9 @@ The first line, \lmpcmd{region simbox (...)}, defines a region named
 from -20 to 20 units along all three spatial dimensions.  The second
 line, \lmpcmd{create\_box 2 simbox}, initializes a simulation box based
 on the region \lmpcmd{simbox} and reserves space for two types of atoms.
+{\color{blue}In LAMMPS, an atom \emph{type} represents a group of atoms that
+interact using the same set of force field parameters (here, the Lennard-Jones
+parameters).}
 
 \begin{note}
   From this point on, any command referencing an atom type larger than 2
@@ -577,7 +582,10 @@ on the region \lmpcmd{simbox} and reserves space for two types of atoms.
 \end{note}
 
 The third line, \lmpcmd{create\_atoms (\dots)}, generates 1500 atoms of
-type 1 at random positions within the \lmpcmd{simbox} region.  The
+type 1 at random positions within the \lmpcmd{simbox} region.  
+{\color{blue}Each atom created in LAMMPS is automatically assigned a unique
+atom ID, which serves as a numerical identifier to distinguish individual atoms
+throughout the simulation.} The
 integer 34134 is a seed for the internal random number generator, which
 can be changed to produce different sequences of random numbers and,
 consequently, different initial atom positions.  The fourth line adds
@@ -586,6 +594,12 @@ optional argument \lmpcmd{overlap 0.3}, which enforces a minimum
 distance of 0.3 units between the randomly placed atoms.  This
 constraint helps avoid ``close contacts'' between atoms, which can lead
 to excessively large forces and simulation instability.
+
+\begin{note}
+\textcolor{blue}{Another way to define a system in LAMMPS, besides \lmpcmd{create\_atoms}, is to
+import an existing topology with \lmpcmd{read\_data}, as shown
+in \hyperref[carbon-nanotube-label]{tutorial 2}.}
+\end{note}
 
 \paragraph{Settings}
 
@@ -625,7 +639,8 @@ By default, LAMMPS calculates the cross coefficients for different atom
 types using geometric average: $\epsilon_{ij} = \sqrt{\epsilon_{ii} \epsilon_{jj}}$,
 $\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$.  In the present case,
 $\epsilon_{12} = \sqrt{1.0 \times 0.5} = 0.707$, and
-$\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
+$\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$. {\color{blue}Other rules
+can be selected using the \lmpcmd{pair\_modify} command.}
 \end{note}
 
 \paragraph{Single-point energy}
@@ -649,6 +664,11 @@ defines the specific outputs, which in this case are the step number
 The \lmpcmd{run 0 post no} command instructs LAMMPS to initialize forces and energy
 without actually running the simulation.  The \lmpcmd{post no} option disables
 the post-run summary and statistics output.
+
+\begin{note}
+{\color{blue}The `thermodynamic information' printed by LAMMPS refers to instantaneous values
+of thermodynamic properties at the specified steps, not cumulative averages.
+\end{note}}
 
 You can now run LAMMPS {\color{blue}(see subsection \ref{running-lammps-label}
 for details on running LAMMPS)}.  The simulation should finish quickly, and with the default
@@ -1202,7 +1222,6 @@ the Nos\'e-Hoover or the Langevin thermostat.
   temperature for each type separately.
 \item Append an NVE run (i.e.~without any thermostat) and observe the energy levels.
 \end{itemize}
-
 
 \begin{figure}
 \centering
