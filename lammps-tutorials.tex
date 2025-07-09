@@ -2052,10 +2052,16 @@ the position $(0,~0,~0)$:
 \begin{lstlisting}
 fix myrct PEG recenter 0 0 0 shift all
 \end{lstlisting}
-Note that the \lmpcmd{recenter} command has no impact on the dynamics,
-it simply repositions the frame of reference so that any drift of the
-system is ignored, which can be convenient for visualizing and analyzing
-the system.
+
+\begin{note}
+    {\color{blue}
+    Note that the \lmpcmd{recenter} command has no impact on the dynamics,
+    it simply repositions the frame of reference so that any drift of the
+    system is ignored, which can be convenient for visualizing and analyzing
+    the system. However, be aware that using \lmpcmd{fix recenter} can sometimes
+    mask underlying issues in the simulation, such as net momentum or the so-called
+    ``flying ice cube syndrome''~\cite{wong2016good}.}
+\end{note}
 
 \noindent Let us create images of the systems:
 \begin{lstlisting}
