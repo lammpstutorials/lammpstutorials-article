@@ -11,7 +11,7 @@ variable x0 equal 10.0
 
 units real
 atom_style atomic
-pair_style lj/cut 3.822
+pair_style lj/cut $(2^(1/6)*v_sigma)
 pair_modify shift yes
 boundary p p p
 
