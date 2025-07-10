@@ -3316,7 +3316,7 @@ create_atoms Si random 240 5802 box overlap 2.0 maxtry 500
 create_atoms O random 480 1072 box overlap 2.0 maxtry 500
 \end{lstlisting}
 The \lmpcmd{create\_atoms} commands are used to place
-240 Si atoms, and 480 atoms, respectively.  This corresponds to
+240 Si atoms and 480 O atoms, respectively.  This corresponds to
 an initial density of approximately $2$\,g/cm$^3$, which is close
 to the expected final density of amorphous silica at 300\,K.
 
@@ -3691,14 +3691,16 @@ as extracted from \hyperref[gcmc-silica-label]{Tutorial 6}.}
 \label{fig:GCMC-number}
 \end{figure}
 
-Running this simulation using LAMMPS, one can see that the number of molecules is increasing
-progressively.  When using the pressure argument, LAMMPS ignores the value of the
+\begin{note}
+When using the pressure argument, LAMMPS ignores the value of the
 chemical potential (here $\mu = -0.5\,\text{eV}$, which corresponds roughly to
 ambient conditions, i.e.~to a relative humidity $\text{RH} \approx 50\,\%$~\cite{gravelle2020multi}.)
 The large pressure value of 100\,bars was chosen to ensure that some successful
 insertions of molecules would occur during the short duration of this simulation.
+\end{note}
 
-After a few GCMC steps, the number of molecules starts increasing.  Once the
+Running this simulation using LAMMPS, one can see that
+after a few GCMC steps, the number of molecules starts increasing.  Once the
 crack is filled with water molecules, the total number of molecules reaches a plateau
 (Figs.\,\ref{fig:GCMC-number}-\ref{fig:GCMC-solvated}).  The final number of
 molecules depends on the imposed pressure, temperature, and the interaction
@@ -3744,15 +3746,20 @@ box thanks to the additional potential imposed during umbrella sampling.}
 \end{figure}
 
 \subsubsection{Method 1: Free sampling}
-The most direct way to calculate a free energy profile is to extract the
-partition function from a classical (i.e.~unbiased) molecular dynamics
-simulation, and then estimate the Gibbs free energy by using
+%The most direct way to calculate a free energy profile is to extract the
+%partition function from a classical (i.e.~unbiased) molecular dynamics
+%simulation, and then estimate the Gibbs free energy by using
+{\color{blue} The most direct way to estimate a free energy profile is to sample
+the Boltzmann distribution using a classical (i.e.~unbiased) molecular dynamics
+simulation, and compute relative Gibbs free energies from the relative probabilities
+of states using}
 \begin{equation}
-\Delta G = -RT \ln(p/p_0),
+\Delta G = -RT \ln(\rho/\rho_0),
 \label{eq:G}
 \end{equation}
 where $\Delta G$ is the free energy difference, $R$ is the gas constant, $T$
-is the temperature, $p$ is the pressure, and $p_0$ is a reference pressure.
+is the temperature, % $p$ is the pressure, and $p_0$ is a reference pressure.
+{\color{blue}$\rho$ is the density, and $\rho_0$ is a reference density.}
 As an illustration, let us apply this method to a simple configuration
 that consists of a particles in a box in the presence of a
 position-dependent repulsive force that makes the center of the box a less
@@ -3925,9 +3932,11 @@ LAMMPS.
 Once the simulation is complete, the density profile from \flecmd{free-sampling.dat}
 shows that the density in the center of the box is
 about two orders of magnitude lower than inside the reservoir (Fig.~\ref{fig:US-density}\,a).
-Next, we plot $-R T \ln(\rho/\rho_\mathrm{bulk})$ (i.e.~Eq.~\eqref{eq:G} where
-the pressure ratio $p/p_\mathrm{bulk}$ is replaced by the density ratio
-$\rho/\rho_\mathrm{bulk}$, assuming the system behaves as an ideal gas) and compare it
+Next, we plot $-R T \ln(\rho/\rho_\mathrm{bulk})$, %(i.e.~Eq.~\eqref{eq:G} where
+%the pressure ratio $p/p_\mathrm{bulk}$ is replaced by the density ratio
+%$\rho/\rho_\mathrm{bulk}$, assuming the system behaves as an ideal gas)
+{\color{blue} where $\rho/\rho_\mathrm{bulk}$ is the the density ratio,}
+and compare it
 with the imposed potential $U$ from Eq.~\eqref{eq:U} (Fig.~\ref{fig:US-density}\,b).
 The reference density, $\rho_\text{bulk} = 0.0009~\text{\AA{}}^{-3}$,
 was estimated by measuring the density of the reservoir from the raw density
