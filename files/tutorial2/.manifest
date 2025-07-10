@@ -26,6 +26,7 @@ solution/unbreakable.inc
 solution/unbreakable.png
 solution/unbreakable.dat
 solution/unbreakable-yaml-reader.py
+solution/CH.airebo
 solution/breakable.lmp
 solution/breakable.data
 solution/breakable.yaml
