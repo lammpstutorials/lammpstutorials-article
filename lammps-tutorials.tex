@@ -451,15 +451,15 @@ content:
 # 1) Initialization
 # 2) System definition
 # 3) Settings
-# 4) Visualization
+# 4) Monitoring
 # 5) Run
 \end{lstlisting}
 Everything that appears after a hash symbol ($\#$) is a comment
 and ignored by LAMMPS.  \lammpsgui{} will color such comments in red.
 These five categories are not required in every input script and do not
 necessarily need to be in that exact order.  For instance, the \lmpcmd{Settings}
-and the \lmpcmd{Visualization} categories could be inverted, or
-the \lmpcmd{Visualization} category could be omitted.  However, note that
+and the \lmpcmd{Monitoring} categories could be inverted, or
+the \lmpcmd{Monitoring} category could be omitted.  However, note that
 LAMMPS reads input files from top to bottom and processes each command
 \emph{immediately}.  Therefore, the \lmpcmd{Initialization} and
 \lmpcmd{System definition} categories must appear at the top of the
@@ -495,6 +495,14 @@ boundary p p p
 \label{fig:GUI-1}
 \end{figure}
 
+\begin{note}
+  Strictly speaking, none of the four commands specified in the
+  Initialization section are mandatory, as they correspond to the
+  default settings for their respective global properties.  However,
+  explicitly specifying these defaults is considered good practice to
+  avoid confusion when sharing input files with other LAMMPS users.
+\end{note}
+
 The first line, \lmpcmd{units lj}, specifies the use of \emph{reduced}
 units, where all quantities are dimensionless.  This unit system is a
 popular choice for simulations that explore general statistical
@@ -518,21 +526,21 @@ configurations like \lmpcmd{boundary p p fm} valid for systems such as
 slab geometries.
 
 \begin{note}
-  Strictly speaking, none of the four commands specified in the
-  Initialization section are mandatory, as they correspond to the
-  default settings for their respective global properties.  However,
-  explicitly specifying these defaults is considered good practice to
-  avoid confusion when sharing input files with other LAMMPS users.
+    Each LAMMPS command is accompanied by extensive online documentation
+    that details the different options for that command.  From the
+    \lammpsgui{} editor buffer, you can access the documentation by
+    right-clicking on a line containing a command (e.g.,~\lmpcmd{units lj})
+    and selecting \guicmd{View Documentation for `units'}.  This action
+    should prompt your web browser to open the corresponding URL for the
+    online manual.  A screenshot of this context menu is shown in
+    Fig.~\ref{fig:GUI-1}.
 \end{note}
 
-Each LAMMPS command is accompanied by extensive online documentation
-that details the different options for that command.  From the
-\lammpsgui{} editor buffer, you can access the documentation by
-right-clicking on a line containing a command (e.g.,~\lmpcmd{units lj})
-and selecting \guicmd{View Documentation for `units'}.  This action
-should prompt your web browser to open the corresponding URL for the
-online manual.  A screenshot of this context menu is shown in
-Fig.~\ref{fig:GUI-1}.
+\begin{note}
+    {\color{blue}Most LAMMPS commands have default settings that are applied if no value
+    is explicitly specified.  The defaults for each command are listed at the
+    bottom of its documentation page.}
+\end{note}
 
 \paragraph{System definition}
 
@@ -561,6 +569,9 @@ The first line, \lmpcmd{region simbox (...)}, defines a region named
 from -20 to 20 units along all three spatial dimensions.  The second
 line, \lmpcmd{create\_box 2 simbox}, initializes a simulation box based
 on the region \lmpcmd{simbox} and reserves space for two types of atoms.
+{\color{blue}In LAMMPS, an atom \emph{type} represents a group of atoms that
+interact using the same set of force field parameters (here, the Lennard-Jones
+parameters).}
 
 \begin{note}
   From this point on, any command referencing an atom type larger than 2
@@ -571,7 +582,10 @@ on the region \lmpcmd{simbox} and reserves space for two types of atoms.
 \end{note}
 
 The third line, \lmpcmd{create\_atoms (\dots)}, generates 1500 atoms of
-type 1 at random positions within the \lmpcmd{simbox} region.  The
+type 1 at random positions within the \lmpcmd{simbox} region.  
+{\color{blue}Each atom created in LAMMPS is automatically assigned a unique
+atom ID, which serves as a numerical identifier to distinguish individual atoms
+throughout the simulation.} The
 integer 34134 is a seed for the internal random number generator, which
 can be changed to produce different sequences of random numbers and,
 consequently, different initial atom positions.  The fourth line adds
@@ -580,6 +594,12 @@ optional argument \lmpcmd{overlap 0.3}, which enforces a minimum
 distance of 0.3 units between the randomly placed atoms.  This
 constraint helps avoid ``close contacts'' between atoms, which can lead
 to excessively large forces and simulation instability.
+
+\begin{note}
+\textcolor{blue}{Another way to define a system in LAMMPS, besides \lmpcmd{create\_atoms}, is to
+import an existing topology with \lmpcmd{read\_data}, as shown
+in \hyperref[carbon-nanotube-label]{tutorial 2}.}
+\end{note}
 
 \paragraph{Settings}
 
@@ -619,17 +639,18 @@ By default, LAMMPS calculates the cross coefficients for different atom
 types using geometric average: $\epsilon_{ij} = \sqrt{\epsilon_{ii} \epsilon_{jj}}$,
 $\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$.  In the present case,
 $\epsilon_{12} = \sqrt{1.0 \times 0.5} = 0.707$, and
-$\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$.
+$\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$. {\color{blue}Other rules
+can be selected using the \lmpcmd{pair\_modify} command.}
 \end{note}
 
 \paragraph{Single-point energy}
 
 The system is now fully parameterized, and the input is ready to compute
 forces.  Let us complete the two remaining categories,
-\lmpcmd{Visualization} and \lmpcmd{Run}, by adding the following lines
+\lmpcmd{Monitoring} and \lmpcmd{Run}, by adding the following lines
 to \flecmd{initial.lmp}:
 \begin{lstlisting}
-# 4) Visualization
+# 4) Monitoring
 thermo 10
 thermo_style custom step etotal press
 # 5) Run
@@ -644,7 +665,13 @@ The \lmpcmd{run 0 post no} command instructs LAMMPS to initialize forces and ene
 without actually running the simulation.  The \lmpcmd{post no} option disables
 the post-run summary and statistics output.
 
-You can now run LAMMPS.  The simulation should finish quickly, and with the default
+\begin{note}
+{\color{blue}The `thermodynamic information' printed by LAMMPS refers to instantaneous values
+of thermodynamic properties at the specified steps, not cumulative averages.}
+\end{note}
+
+You can now run LAMMPS {\color{blue}(see subsection \ref{running-lammps-label}
+for details on running LAMMPS)}.  The simulation should finish quickly, and with the default
 settings, \lammpsgui{} will open two windows: one displaying the console
 output and another with a chart.  The \guicmd{Output} window will display information from
 the executed commands, including the total energy and pressure at step 0,
@@ -672,7 +699,8 @@ current system using its internal rendering library via the \lmpcmd{dump
 buttons available to adjust the view and rendering style.  The image
 shown in Fig.~\ref{fig:LJ} was created this way.  This will always
 capture the current state of the system.  Save the image for future
-comparisons.
+comparisons {\color{blue}by clicking the \guicmd{Save as} button 
+in the \guicmd{File} menu}.
 
 \paragraph{Energy minimization}
 
@@ -713,13 +741,13 @@ fresh, resetting the system and re-executing the script from the beginning.
 
 The potential energy, $U$, decreases from a positive value to a negative value
 (Figs.~\ref{fig:chart-log} and~\ref{fig:evolution-energy}\,a).  Note that
-during energy minization, the potential energy equals the total energy
+during energy minimization, the potential energy equals the total energy
 of the system, $E = U$, since the kinetic energy, $K$, is zero.  The
 initially positive potential energy is expected, as the atoms are
 created at random positions within the simulation box, with some in very
 close proximity to each other.  This proximity results in a large
 initial potential energy due to the repulsive branch of the
-Lennard-Jones potential [i.e.,~the term in $1/r^{12}$ in
+Lennard-Jones potential [i.e.,~the term $1/r^{12}$ in
 Eq.~\eqref{eq:LJ}].  As the energy minimization progresses, the energy
 decreases - first rapidly - then more gradually, before plateauing at a
 negative value.  This indicates that the atoms have moved to reasonable
@@ -746,7 +774,7 @@ commands to the same input script, \flecmd{initial.lmp}.  Add the
 following lines immediately after the \lmpcmd{minimize} command:
 \begin{lstlisting}
 # PART B - MOLECULAR DYNAMICS
-# 4) Visualization
+# 4) Monitoring
 thermo 50
 thermo_style custom step temp etotal pe ke press
 \end{lstlisting}
@@ -761,7 +789,7 @@ command is introduced to specify the thermodynamic information LAMMPS should
 print during during \lmpcmd{PART B}.  This adjustment is made because, during
 molecular dynamics, the system exhibits a non-zero temperature $T$ (and
 consequently a non-zero kinetic energy $K$, keyword \lmpcmd{ke}), which are useful to monitor.
-The \lmpcmd{pe} keyword represents the potential energy of the system, $E$, such that
+The \lmpcmd{pe} keyword represents the potential energy of the system, $U$, such that
 $U + K = E$.
 
 Then, add a second \lmpcmd{Run} category by including the following
@@ -863,7 +891,7 @@ and adjust the visualization to your liking using the available buttons.
 Now you can copy the commands used to create this visualization to the
 clipboard by either using the \guicmd{Ctrl-D} keyboard shortcut or
 selecting \guicmd{Copy dump image command} from the \guicmd{File} menu.
-This text can be pasted into the into the \lmpcmd{Visualization} section
+This text can be pasted into the into the \lmpcmd{Monitoring} section
 of \lmpcmd{PART B} of the \flecmd{initial.lmp} file.  This may look like
 the following:
 \begin{lstlisting}
@@ -874,7 +902,8 @@ dump viz all image 100 myimage-*.ppm type type &
 dump_modify viz pad 9 boxcolor royalblue &
   backcolor white adiam 1 1.6 adiam 2 4.8
 \end{lstlisting}
-This command tells LAMMPS to generate NetPBM format images every 100
+{\color{blue}The `$\&$' is used to continue the commands on a new line.
+These commands tell} LAMMPS to generate NetPBM format images every 100
 steps.  The two \lmpcmd{type} keywords are for \lmpcmd{color} and
 \lmpcmd{diameter}, respectively.  Run the \flecmd{initial.lmp} using
 LAMMPS again, and a new window named \guicmd{Slide Show} will pop up.
@@ -917,7 +946,7 @@ mass 2 10.0
 pair_style lj/cut 4.0
 pair_coeff 1 1 1.0 1.0
 pair_coeff 2 2 0.5 3.0
-# 4) Visualization
+# 4) Monitoring
 thermo 10
 thermo_style custom step etotal press
 # 5) Run
@@ -1003,7 +1032,7 @@ atom_style atomic
 boundary p p p
 # 2) System definition
 # 3) Settings
-# 4) Visualization
+# 4) Monitoring
 # 5) Run
 \end{lstlisting}
 Since we read most of the information from the data file, we don't need
@@ -1109,7 +1138,7 @@ section, as the settings are taken from the \flecmd{.data} file.
 Finally, let us complete the script by adding the following lines to
 \flecmd{improved.md.lmp}:
 \begin{lstlisting}
-# 4) Visualization
+# 4) Monitoring
 thermo 1000
 thermo_style custom step temp pe ke etotal &
   press v_n1_in v_n2_in c_sumcoor12
@@ -1193,7 +1222,6 @@ the Nos\'e-Hoover or the Langevin thermostat.
   temperature for each type separately.
 \item Append an NVE run (i.e.~without any thermostat) and observe the energy levels.
 \end{itemize}
-
 
 \begin{figure}
 \centering
@@ -1601,7 +1629,9 @@ where $F_\text{cnt}$ is the force and $A_\text{cnt}$ the CNT surface area,
 as a function of the strain, $\Delta L_\text{cnt} = (L_\text{cnt}-L_\text{cnt-0}/L_\text{cnt-0})$, where
 $L_\text{cnt}$ is the CNT length and $L_\text{cnt-0}$ the CNT initial length,
 as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
-Here, the potential is OPLS-AA, and the CNT is unbreakable.}
+Here, the potential is OPLS-AA, and the CNT is unbreakable. \textcolor{blue}{The orange line
+shows the raw data, and the blue line represents a time-averaged curve.}
+}
 \label{fig:CNT-stress-strain-unbreakable}
 \end{figure}
 
@@ -1739,7 +1769,8 @@ where $F_\text{cnt}$ is the force and $A_\text{cnt}$ the CNT surface area,
 as a function of the strain, $\Delta L_\text{cnt} = (L_\text{cnt}-L_\text{cnt-0}/L_\text{cnt-0})$, where
 $L_\text{cnt}$ is the CNT length and $L_\text{cnt-0}$ the CNT initial length,
 as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
-Here, the potential is AIREBO, and the CNT is breakable.}
+Here, the potential is AIREBO, and the CNT is breakable.  \textcolor{blue}{The orange line
+shows the raw data, and the blue line represents a time-averaged curve.}}
 \label{fig:CNT-breakable-energy-stress}
 \end{figure}
 
@@ -1829,7 +1860,7 @@ angles, and dihedrals used in the simulation, here \lmpcmd{harmonic}.
 With the \lmpcmd{pair\_style} named \lmpcmd{lj/cut/coul/long}, atoms
 interact through both a Lennard-Jones (LJ) potential and Coulomb
 interactions.  The value of $10\,\text{\AA{}}$ is the cutoff, and the
-\lmpcmd{ewald} command defines the long-range solver for the Coulomb
+\lmpcmd{kspace\_style} command defines the long-range solver for the Coulomb
 interactions~\cite{ewald1921berechnung}.  Finally, the
 \lmpcmd{special\_bonds} command, which was already seen in
 \hyperref[carbon-nanotube-label]{tutorial 2}, sets the LJ and Coulomb
@@ -1875,6 +1906,8 @@ molecule h2omol water.mol
 create_atoms 0 random 700 87910 NULL mol h2omol 454756 &
   overlap 1.0 maxtry 50
 \end{lstlisting}
+{\color{blue}The first parameter is 0, meaning that the atom IDs from
+the \flecmd{water.mol} file will be used.}
 The \lmpcmd{overlap 1.0} option of the \lmpcmd{create\_atoms} command ensures
 that no atoms are placed exactly in the same position, as this would cause the
 simulation to crash.  The \lmpcmd{maxtry 50} asks LAMMPS to try at most 50 times
@@ -1917,9 +1950,11 @@ reset_timestep 0
 \end{lstlisting}
 Resetting the step of the simulation to 0 using the
 \lmpcmd{reset\_timestep} command is optional.
-It is used here because the number of iterations performed by the \lmpcmd{minimize}
+{\color{blue}It is used here because the number of iterations performed by the \lmpcmd{minimize}
 command is usually not a round number, since the minimization stops when one of
-four criteria is reached.  We will use \lmpcmd{fix npt} to control the temperature
+four criteria is reached, which can disrupt the intended frequency
+of outputs such as \lmpcmd{dump} commands that depend on the timestep count.}
+We will use \lmpcmd{fix npt} to control the temperature
 and pressure of the molecules with a Nosé-Hoover thermostat and barostat,
 respectively~\cite{nose1984unified, hoover1985canonical, martyna1994constant}.
 Add the following line into \flecmd{water.lmp}:
@@ -1947,26 +1982,13 @@ dump_modify viz backcolor white &
   acolor OW red acolor HW white &
   adiam OW 3 adiam HW 1.5
 \end{lstlisting}
-Let us also extract the volume and density every 500 steps:
+Let us also extract the volume and density{\color{blue}, among others, every 500 steps:
 \begin{lstlisting}
-variable myvol equal vol
-variable myoxy equal count(H2O)/3
-variable NA equal 6.022e23
-variable Atom equal 1e-10
-variable M equal 0.018
-variable rho equal ${myoxy}*${M}/(v_myvol*${NA}*${Atom}^3)
 thermo 500
-thermo_style custom step temp etotal v_myvol v_rho
+thermo_style custom step temp etotal vol density
 \end{lstlisting}
-Here, several variables are defined and used for converting the units of the
-density in kg/mol:  The variable \lmpcmd{myoxy} represents the number of
-atoms divided by 3,  which corresponds to the number of molecules, $N_\text{H2O}$,
-and the variable \lmpcmd{myrho} is the density in kg/mol:
-\begin{equation}
-\rho = \dfrac{N_\text{H2O}}{V N_\text{A}},
-\end{equation}
-where $V$ is the volume in m$^3$, $N_\text{A}$ the Avogadro number, and
-$M = 0.018$\,kg/mol the molar mass of water.
+With the real units system, the volume is in Å$^3$, and
+the density is in g/cm$^3$}.
 
 Finally, let us set the timestep to 1.0 fs, and run the simulation for 15~ps by
 adding the following lines into \flecmd{water.lmp}:
@@ -2056,10 +2078,16 @@ the position $(0,~0,~0)$:
 \begin{lstlisting}
 fix myrct PEG recenter 0 0 0 shift all
 \end{lstlisting}
-Note that the \lmpcmd{recenter} command has no impact on the dynamics,
-it simply repositions the frame of reference so that any drift of the
-system is ignored, which can be convenient for visualizing and analyzing
-the system.
+
+\begin{note}
+    {\color{blue}
+    Note that the \lmpcmd{recenter} command has no impact on the dynamics,
+    it simply repositions the frame of reference so that any drift of the
+    system is ignored, which can be convenient for visualizing and analyzing
+    the system. However, be aware that using \lmpcmd{fix recenter} can sometimes
+    mask underlying issues in the simulation, such as net momentum or the so-called
+    ``flying ice cube syndrome''~\cite{wong2016good}.}
+\end{note}
 
 \noindent Let us create images of the systems:
 \begin{lstlisting}
@@ -2169,16 +2197,15 @@ gyration~\cite{fixmanRadiusGyrationPolymer1962a} and the angles of its dihedral
 constraints using the following commands:
 \begin{lstlisting}
 compute rgyr PEG gyration
-compute prop PEG property/local dtype
 compute dphi PEG dihedral/local phi
 \end{lstlisting}
 The radius of gyration can be directly printed with the \lmpcmd{thermo\_style} command:
 \begin{lstlisting}
 thermo_style custom step temp etotal c_rgyr
 thermo 250
-dump mydmp all local 100 pull.dat index c_dphi c_prop
+dump mydmp all local 100 pull.dat index c_dphi
 \end{lstlisting}
-By contrast with the radius of gyration (compute \lmpcmd{rgyr}), the dihedral angle  % SG: why is c_prop not printed?
+By contrast with the radius of gyration (compute \lmpcmd{rgyr}), the dihedral angle
 $\phi$ (compute \lmpcmd{dphi}) is returned as a vector by the \lmpcmd{compute dihedral/local}
 command and must be written to a file using the \lmpcmd{dump local} command.
 
@@ -2229,14 +2256,16 @@ Running the \flecmd{pull-with-tip.lmp} file using LAMMPS will generate a traject
 named \flecmd{pull.lammpstrj}, which can be opened in OVITO or VMD.
 
 \begin{note}
-  Since the trajectory dump file does not contain information about
+  Since the {\color{blue}default} trajectory dump file does not contain information about
   topology and elements, it is usually preferred to first write out a
   data file and import it directly (in the case of OVITO) or convert it
   to a PSF file (for VMD).  This allows the topology to be loaded before
   \emph{adding} the trajectory file to it.  When using \lammpsgui{},
   this process can be automated through the \guicmd{View in OVITO} or
   \guicmd{View in VMD} options in the \guicmd{Run} menu.  Afterwards
-  only the trajectory dump needs to be added.
+  only the trajectory dump needs to be added.  {\color{blue}Alternatively, the
+  \lmpcmd{dump custom} command can be combined with \lmpcmd{dump} command to
+  include element names in the dump file and simplify visualization.}
 \end{note}
 
 \subsection{Tutorial 4: Nanosheared electrolyte}
@@ -2290,7 +2319,11 @@ kspace_modify slab 3.0
 These lines are used to define the most basic parameters, including the
 atom, bond, and angle styles, as well as interaction
 potential.  Here, \lmpcmd{lj/cut/tip4p/long} imposes a Lennard-Jones potential with
-a cut-off at $12\,\text{\AA{}}$ and a long-range Coulomb potential.
+a cut-off at $12\,\text{\AA{}}$ and a long-range Coulomb potential.  {\color{blue}
+The parameters \lmpcmd{O}, \lmpcmd{H}, \lmpcmd{O-H}, and \lmpcmd{H-O-H} correspond
+respectively to the oxygens, hydrogens, O-H bonds, and H-O-H angle constraints of
+the water molecules; their definitions, provided by the \lmpcmd{labelmap} commands,
+will be clarified below.}
 
 So far, the commands are relatively similar to those in the previous tutorial,
 \hyperref[all-atom-label]{Polymer in water}, with two major differences: the use
@@ -2298,7 +2331,7 @@ of \lmpcmd{lj/cut/tip4p/long} instead of \lmpcmd{lj/cut/coul/long}, and \lmpcmd{
 instead of \lmpcmd{pppm}.  When using \lmpcmd{lj/cut/tip4p/long} and \lmpcmd{pppm/tip4p},
 the interactions resemble the conventional Lennard-Jones and Coulomb interactions,
 except that they are specifically designed for the four-point water model.  As a result,
-LAMMPS automatically creates a four-point water molecule, assigning type O
+LAMMPS automatically {\color{blue}adds the fourth point to the water molecules}, assigning type O
 atoms as oxygen and type H atoms as hydrogen.  The fourth massless atom (M) of the
 TIP4P water molecule does not have to be defined explicitly, and the value of
 $0.1546\,\text{\AA{}}$ corresponds to the O-M distance of the
@@ -2422,10 +2455,10 @@ types.  By default, LAMMPS calculates the pair coefficients for the
 interactions between atoms of different types (i and j) by using
 geometric average: $\epsilon_{ij} = \sqrt{\epsilon_{ii} \epsilon_{jj}}$,
 $\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$.  However, if the default
-value of $1.472\,\text{kcal/mol}$ was used for $\epsilon_\text{1-5}$,
+value of $1.472\,\text{kcal/mol}$ was used for $\epsilon_\text{O-WALL}$,
 the solid walls would be extremely hydrophilic, causing the water
 molecules to form dense layers.  As a comparison, the water-water energy
-$\epsilon_\text{1-1}$ is only $0.185199\,\text{kcal/mol}$.  Therefore,
+$\epsilon_\text{O-O}$ is only $0.185199\,\text{kcal/mol}$.  Therefore,
 to make the walls less hydrophilic, the value of
 $\epsilon_\text{O-WALL}$ was reduced.
 
@@ -2578,7 +2611,7 @@ thermo_style custom step temp etotal press
 % is printed, and not the temperature of the entire system (which is less relevant
 % with frozen walls).
 
-Let us perform an energy minization by adding the following lines to \flecmd{equilibrate.lmp}:
+Let us perform an energy minimization by adding the following lines to \flecmd{equilibrate.lmp}:
 \begin{lstlisting}
 minimize 1.0e-6 1.0e-6 1000 1000
 reset_timestep 0
@@ -2700,7 +2733,9 @@ should be on the order of one nanosecond.
 \includegraphics[width=\linewidth]{NANOSHEAR-equilibration}
 \caption{a)~Pressure, $p$, of the nanosheared electrolyte system
 simulated in \hyperref[sheared-confined-label]{Tutorial 4} as a function of the
-time, $t$.  b)~Distance between the walls, $\Delta z$, as a function of $t$.}
+time, $t$.  b)~Distance between the walls, $\Delta z$, as a function of $t$.
+\textcolor{blue}{The orange line
+shows the raw data, and the blue line represents a time-averaged curve.}}
 \label{fig:NANOSHEAR-equilibration}
 \end{figure}
 
@@ -2758,8 +2793,8 @@ velocity wallbot set -2e-4 NULL NULL
 velocity walltop set 2e-4 NULL NULL
 \end{lstlisting}
 The \lmpcmd{setforce} commands cancel the forces on \lmpcmd{walltop} and
-\lmpcmd{wallbot}.  As a result, the atoms in these two groups will not
-experience any forces from the rest of the system.  Consequently, in the absence of
+\lmpcmd{wallbot} {\color{blue}in the $x$ direction}.  As a result, the atoms in these two groups will not
+experience any forces {\color{blue}along $x$} from the rest of the system.  Consequently, in the absence of
 external forces, these atoms will conserve the initial velocities imposed by the
 two \lmpcmd{velocity} commands.
 
@@ -2917,7 +2952,9 @@ allocation issues, which sometimes can trigger segmentation faults and
 file, which should have been downloaded during the tutorial set up.  Finally, the
 \lmpcmd{fix qeq/reaxff} is used to perform charge equilibration~\cite{rappe1991charge},
 which occurs at every step.  The values 0.0 and 10.0 represent the
-low and the high cutoffs, respectively, and $1.0 \text{e} -6$ is the tolerance.
+low and the high cutoffs, respectively, and $1.0 \text{e} -6$ is the
+{\color{blue}tolerance, i.e., the precision to which the atomic charges are
+equilibrated during the charge equilibration process.}
 The \lmpcmd{maxiter} sets an upper limit to the number of attempts to
 equilibrate the charge.
 
@@ -3429,32 +3466,48 @@ random positions are made.  Each attempt is either accepted or rejected
 based on energy considerations.  For further details, please refer to
 classical textbooks like Ref.~\citenum{frenkel2023understanding}.
 
-\paragraph{Using hydrid potentials}
+% \paragraph{Using hydrid potentials}
 
-The first particularly of our system is that it combines water and
-silica, which necessitates the use of two force fields: Vashishta (for
-$\text{SiO}_2$), and TIP4P (for water).  Here, the TIP4P/2005 model is
-employed for the water~\cite{abascal2005general}.  Open the
-\flecmd{gcmc.lmp} file, which should contain the following lines:
+{\color{blue}
+\paragraph{Adapting the pair style}
+
+% The first {\color{blue}peculiarity} of our system is that it combines water and
+% silica, which necessitates the use of two force fields: Vashishta (for
+% $\text{SiO}_2$), and TIP4P (for water).  Here, the TIP4P/2005 model is
+% employed for the water~\cite{abascal2005general}.  Open the
+% \flecmd{gcmc.lmp} file, which should contain the following lines:
+For this next step, we need to define the parameters for the water molecules and
+the cross-interactions between water and silica. The TIP4P/2005 model is employed
+for the water~\cite{abascal2005general}, while no specific parameters are set
+for the silica itself. The atoms of the silica will remain frozen during this part.
+Only the cross-interactions between water and silica need
+to be defined. Open the \flecmd{gcmc.lmp} file, which should contain the following lines:
 \begin{lstlisting}
 units metal
 boundary p p p
 atom_style full
 neighbor 1.0 bin
 neigh_modify delay 1
-pair_style hybrid/overlay vashishta &
-    lj/cut/tip4p/long OW HW OW-HW HW-OW-HW 0.1546 10
+pair_style lj/cut/tip4p/long &
+    OW HW OW-HW HW-OW-HW 0.1546 10
 kspace_style pppm/tip4p 1.0e-5
 bond_style harmonic
 angle_style harmonic
 \end{lstlisting}
-Combining the two force fields, Vashishta and TIP4P/2005, is achieved
-using the \lmpcmd{hybrid/overlay} pair style.  The PPPM
-solver~\cite{luty1996calculating} is specified with the \lmpcmd{kspace}
+%Combining the two force fields, Vashishta and TIP4P/2005, is achieved
+%using the \lmpcmd{hybrid/overlay} pair style.
+The PPPM solver~\cite{luty1996calculating} is specified with the \lmpcmd{kspace}
 command, and is used to compute the long-range Coulomb interactions associated
 with \lmpcmd{tip4p/long}.  Finally, the style for the bonds
 and angles of the water molecules are defined; however, these specifications are
-not critical since TIP4P/2005 is a rigid water model.
+not critical since TIP4P/2005 is a rigid water model.}
+
+\begin{note}
+{\color{blue}In practice, it is possible to use both \lmpcmd{vashishta} and
+\lmpcmd{lj/cut/tip4p/long} pair styles by employing the \lmpcmd{pair\_style hybrid}
+command.  However, hybridizing force fields should be done with caution, as there
+is no guarantee that the resulting force field will produce meaningful results.}
+\end{note}
 
 The water molecule template called \href{\filepath tutorial6/H2O.mol}{\dwlcmd{H2O.mol}}
 must be downloaded and located next to \flecmd{gcmc.lmp}.
@@ -3528,25 +3581,32 @@ in the system.  Then, add the following \lmpcmd{pair\_coeff} (and
 \lmpcmd{bond\_coeff} and \lmpcmd{angle\_coeff}) commands
 to \flecmd{gcmc.lmp}:
 \begin{lstlisting}
-pair_coeff * * vashishta SiO.1990.vashishta Si O NULL NULL
-pair_coeff * * lj/cut/tip4p/long 0 0
-pair_coeff Si OW lj/cut/tip4p/long 0.0057 4.42
-pair_coeff O OW lj/cut/tip4p/long 0.0043 3.12
-pair_coeff OW OW lj/cut/tip4p/long 0.008 3.1589
-pair_coeff HW HW lj/cut/tip4p/long 0.0 0.0
+pair_coeff * * 0 0
+pair_coeff Si OW 0.0057 4.42
+pair_coeff O OW 0.0043 3.12
+pair_coeff OW OW 0.008 3.1589
+pair_coeff HW HW 0.0 0.0
 bond_coeff OW-HW 0 0.9572
 angle_coeff HW-OW-HW 0 104.52
 \end{lstlisting}
-The force field Vashishta applies only to \lmpcmd{Si} and \lmpcmd{O} of $\text{SiO}_2$,
-and not to the \lmpcmd{OW} and \lmpcmd{HW} of $\text{H}_2\text{O}$, thanks to the \lmpcmd{NULL} parameters
-used for atoms of types \lmpcmd{OW} and \lmpcmd{HW}.  Pair coefficients for the \lmpcmd{lj/cut/tip4p/long}
+% The force field Vashishta applies only to \lmpcmd{Si} and \lmpcmd{O} of $\text{SiO}_2$,
+% and not to the \lmpcmd{OW} and \lmpcmd{HW} of $\text{H}_2\text{O}$, thanks to the \lmpcmd{NULL} parameters
+% used for atoms of types \lmpcmd{OW} and \lmpcmd{HW}.
+Pair coefficients for the \lmpcmd{lj/cut/tip4p/long}
 potential are defined between O($\text{H}_2\text{O}$) and between H($\text{H}_2\text{O}$)
 atoms, as well as between O($\text{SiO}_2$)-O($\text{H}_2\text{O}$) and
-Si($\text{SiO}_2$)-O($\text{H}_2\text{O}$). Thus,  the fluid-fluid and the
+Si($\text{SiO}_2$)-O($\text{H}_2\text{O}$).  Thus, the fluid-fluid and the
 fluid-solid interactions will be adressed with by the \lmpcmd{lj/cut/tip4p/long} potential.
 The \lmpcmd{bond\_coeff} and \lmpcmd{angle\_coeff} commands set the \lmpcmd{OW-HW}
 bond length to 0.9572\,\AA, and the \lmpcmd{HW-OW-HW}
 angle to $104.52^\circ$, respectively~\cite{abascal2005general}.
+
+\begin{note}
+{\color{blue} The pair coefficients for interactions between Si($\text{SiO}_2$)
+and O($\text{SiO}_2$) are set by the first command, \lmpcmd{pair\_coeff * * 0 0},
+which effectively means that they do not interact. This is acceptable here because
+the silica atoms remain frozen during this part of the tutorial.}
+\end{note}
 
 Add the following lines to \flecmd{gcmc.lmp} as well:
 \begin{lstlisting}
@@ -3579,19 +3639,21 @@ To prepare for the GCMC simulation, let us add the
 following lines into \flecmd{gcmc.lmp}:
 \begin{lstlisting}
 compute ctH2O H2O temp
-compute_modify thermo_temp dynamic yes
-compute_modify ctH2O dynamic yes
-fix mynvt1 H2O nvt temp 300 300 0.1
-fix_modify mynvt1 temp ctH2O
-fix mynvt2 SiO nvt temp 300 300 0.1
+compute_modify thermo_temp dynamic/dof yes
+compute_modify ctH2O dynamic/dof yes
+fix mynvt H2O nvt temp 300 300 0.1
+fix_modify mynvt temp ctH2O
 timestep 0.001
 \end{lstlisting}
-Two different thermostats are used for $\text{SiO}_2$ and $\text{H}_2\text{O}$,
-respectively.  Using separate thermostats is usually better when the system contains
-two separate species, such as a solid and a liquid.  It is particularly important
-to use two thermostats here because the number of water molecules will fluctuate
-with time.  The \lmpcmd{compute\_modify} command with the \lmpcmd{dynamic yes}
-option for water is used to specify that the number of molecules will not be constant.
+% Two different thermostats are used for $\text{SiO}_2$ and $\text{H}_2\text{O}$,
+% respectively.  Using separate thermostats is usually better when the system contains
+% two separate species, such as a solid and a liquid.  It is particularly important
+% to use two thermostats here because the number of water molecules will fluctuate
+% with time.
+{\color{blue} Here, the \lmpcmd{fix nvt} applies only to the water molecules, so
+the atoms in the silica remain fixed.  The \lmpcmd{compute\_modify} command with
+the \lmpcmd{dynamic/dof yes} option is used for water to account for the fact
+that the number of molecules is not constant.}
 
 Finally, let us use the \lmpcmd{fix gcmc} and perform the grand canonical Monte
 Carlo steps.  Add the following lines into \flecmd{gcmc.lmp}:
@@ -3710,23 +3772,28 @@ variable x0 equal 10.0
 
 units real
 atom_style atomic
-pair_style lj/cut 3.822
+pair_style lj/cut $(2^(1/6)*v_sigma)
 pair_modify shift yes
 boundary p p p
 \end{lstlisting}
 Here, we begin by defining variables for the Lennard-Jones interaction
 $\sigma$ and $\epsilon$ and for the repulsive potential
 $U$, which are $U_0$, $\delta$, and
-$x_0$ [see Eqs.\,(\ref{eq:U}-\ref{eq:F}) below].  The cut-off value of
-3.822 was chosen to create a Weeks-Chandler-Andersen (WCA) potential,
-which is a truncated and purely repulsive LJ
-potential~\cite{weeks1971role}.  It was calculated as $2^{1/6}
-\sigma$.  The potential is also shifted to be equal to 0 at the cut-off
+$x_0$ [see Eqs.\,(\ref{eq:U}-\ref{eq:F}) below].  {\color{blue}The cut-off value of
+$ 2^{1/6} \sigma = 3.822$ was chosen to create a Weeks-Chandler-Andersen (WCA) potential,
+which is a truncated and purely repulsive LJ potential~\cite{weeks1971role}.}
+The potential is also shifted to be equal to 0 at the cut-off
 using the \lmpcmd{pair\_modify} command.  The unit system is
 \lmpcmd{real}, in which energy is in kcal/mol, distance in Ångströms, or
 time in femtosecond, has been chosen for practical reasons: the WHAM
 algorithm used in the second part of the tutorial automatically assumes
 the energy to be in kcal/mol.
+
+\begin{note}
+  {\color{blue}The syntax \texttt{\$(...)}, where a dollar sign is followed by parentheses, allows
+  you to evaluate a numeric formula immediately, without having to assign it
+  to a named variable first.}
+\end{note}
 
 \paragraph{System creation and settings}
 
@@ -3992,7 +4059,7 @@ central part of the box (Fig.~\ref{fig:US-system-biased}).
 \caption{Snapshot of the system simulated during the umbrella sampling
 step of \hyperref[umbrella-sampling-label]{Tutorial 7}, showing type-1 atoms
 in cyan and the type-2 atom in red.  Only the type-2 atom explores the central part of the box,
-\lmpcmd{mymes}, due to the additional biasing potential $V$. Parmaeters are
+\lmpcmd{mymes}, due to the additional biasing potential $V$. {\color{blue}Parameters} are
 $U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\AA{}}$.}
 \label{fig:US-system-biased}
 \end{figure}
@@ -4000,7 +4067,7 @@ $U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\
 Now, we create a loop with 15 steps and progressively move the center of the
 bias potential by increments of 0.4\,nm.  Add the following lines to \flecmd{umbrella-sampling.lmp}:
 \begin{lstlisting}
-variable a loop 25
+variable a loop 15
 label loop
 
 variable xdes equal 4*${a}-32
@@ -4208,7 +4275,7 @@ write_data mixing.data
 For visualization purposes, the atoms from the CNT \lmpcmd{group} is moved
 to the center of the box using \lmpcmd{fix recenter}.
 As the time progresses, the system density,
-$\rho$, gradually converges toward the target value of $0.8$\,g/cm$^3$ (Fig.~\ref{fig:evolution-density}\,a).
+$\rho$, gradually converges toward the {\color{blue}target value of $0.9$\,g/cm$^3$} (Fig.~\ref{fig:evolution-density}\,a).
 Meanwhile, the total energy of the system initially evolves rapidly, reflecting the
 densification process, and then eventually stabilizes (Fig.~\ref{fig:evolution-density}\,b).
 The final state is shown in Fig.~\ref{fig:REACT}.
@@ -4562,6 +4629,7 @@ which are typically expected to be in the same folder as the input file.
 %in the \textit{Preferences} dialog.
 
 \subsection{Running LAMMPS}
+\label{running-lammps-label}
 
 % mention no log file -> Output window -> Save to file
 % SG: the "no log file" is already specified in the "The Output Window" subsection, so may be unecessary?

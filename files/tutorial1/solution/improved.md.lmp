@@ -34,7 +34,7 @@ compute sumcoor12 grp_t1 reduce ave c_coor12
 
 # 3) Settings
 
-# 4) Visualization
+# 4) Monitoring
 thermo 1000
 thermo_style custom step temp pe ke etotal &
   press v_n1_in v_n2_in c_sumcoor12

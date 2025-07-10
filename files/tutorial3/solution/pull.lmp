@@ -31,17 +31,12 @@ fix mynvt all nvt temp 300 300 100
 fix myrct PEG recenter 0 0 0 shift all
 
 compute rgyr PEG gyration
-compute prop PEG property/local dtype
 compute dphi PEG dihedral/local phi
-#compute mphi PEG reduce ave c_dphi inputs local
 
-thermo_style custom step temp etotal c_rgyr # c_mphi
+thermo_style custom step temp etotal c_rgyr
 thermo 250
 
-dump mydmp all local 50 pull.dat index c_dphi c_prop
-
-# S.G.: a histogram would be ok if one could select only dihedral 2 
-# fix myhisto all ave/histo 100 120 15000 0 180 90 c_dphi file pull.dat ave running mode vector
+dump mydmp all local 50 pull.dat index c_dphi
 
 run 15000
 
