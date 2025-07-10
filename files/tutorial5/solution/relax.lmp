@@ -12,7 +12,7 @@ mass Si 28.0855
 mass O 15.999
 
 pair_style reaxff NULL safezone 3.0 mincap 150
-pair_coeff * * reaxCHOFe.inc Si O
+pair_coeff * * ffield.reax.CHOFe Si O
 fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 reaxff maxiter 400
 
 group grpSi type Si

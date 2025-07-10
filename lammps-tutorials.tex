@@ -2941,14 +2941,14 @@ environment.
 Next, copy the following three crucial lines into the \flecmd{relax.lmp} file:
 \begin{lstlisting}
 pair_style reaxff NULL safezone 3.0 mincap 150
-pair_coeff * * reaxCHOFe.inc Si O
+pair_coeff * * ffield.reax.CHOFe Si O
 fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 reaxff maxiter 400
 \end{lstlisting}
 In this case, the \lmpcmd{pair\_style reaxff} is used without a control file.  The
 \lmpcmd{safezone} and \lmpcmd{mincap} keywords are added to prevent
 allocation issues, which sometimes can trigger segmentation faults and
 \lmpcmd{bondchk} errors.  The \lmpcmd{pair\_coeff} command uses the
-\href{\filepath tutorial5/reaxCHOFe.inc}{\dwlcmd{reaxCHOFe.inc}}
+\href{\filepath tutorial5/ffield.reax.CHOFe}{\dwlcmd{ffield.reax.CHOFe}}
 file, which should have been downloaded during the tutorial set up.  Finally, the
 \lmpcmd{fix qeq/reaxff} is used to perform charge equilibration~\cite{rappe1991charge},
 which occurs at every step.  The values 0.0 and 10.0 represent the
@@ -3072,7 +3072,7 @@ atom_style full
 read_data relax.data
 
 pair_style reaxff NULL safezone 3.0 mincap 150
-pair_coeff * * reaxCHOFe.inc Si O
+pair_coeff * * ffield.reax.CHOFe Si O
 fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 reaxff maxiter 400
 
 group grpSi type Si
@@ -3192,7 +3192,7 @@ read_data deform-mod.data
 displace_atoms all move -12 0 0 # optional
 
 pair_style reaxff NULL safezone 3.0 mincap 150
-pair_coeff * * reaxCHOFe.inc Si O H
+pair_coeff * * ffield.reax.CHOFe Si O H
 fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 reaxff maxiter 400
 \end{lstlisting}
 The \lmpcmd{displace\_atoms} command is used to move the center of the
