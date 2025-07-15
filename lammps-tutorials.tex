@@ -801,16 +801,17 @@ timestep 0.005
 run 50000
 \end{lstlisting}
 The \lmpcmd{fix nve} command updates the positions and velocities of the
-atoms in the group \lmpcmd{all} at every step.  The group \lmpcmd{all}
-is a default group that contains all atoms.  The last two lines specify
+atoms in the group \lmpcmd{all} at every step.  {\color{blue}More specifically,
+this command integrates Newton's equations of motion using the velocity-Verlet algorithm.} 
+The group \lmpcmd{all} is a default group that contains all atoms.  The last two lines specify
 the value of the \lmpcmd{timestep} and the number of steps for the
 \lmpcmd{run}, respectively, for a total duration of 250 time units.
 
 \begin{note}
-  Since no other fix commands alter forces or velocities, and periodic
-  boundary conditions are applied in all directions, the MD simulation
-  will be performed in the microcanonical (NVE) ensemble, which
-  maintains a constant number of particles and a fixed box volume.  In
+  {\color{blue}Since the only command affecting forces and velocities in the
+  present script is \lmpcmd{fix nve}, and periodic boundary conditions are applied
+  in all directions,} the MD simulation will be performed in the microcanonical (NVE) ensemble, which
+  maintains a constant number of particles and a fixed box volume. In
   this ensemble, the system does not exchange energy with anything
   outside the simulation box.
 \end{note}
@@ -994,9 +995,9 @@ right-clicking on the file name in the editor and selecting the entry
 
 The created \flecmd{.data} file contains all the information necessary
 to restart the simulation, such as the number of atoms, the box size,
-the masses, and the pair coefficients.  This \flecmd{.data} file also
-contains the final positions of the atoms within the \lmpcmd{Atoms}
-section.  The first five columns of the \lmpcmd{Atoms} section
+the masses, and the pair coefficients.   {\color{blue}This \flecmd{.data} file also
+contains the final positions of the atoms, along with their IDs and types,
+within the \lmpcmd{Atoms} section.}  The first five columns of the \lmpcmd{Atoms} section
 correspond (from left to right) to the atom indexes (from 1 to the total
 number of atoms, 1150), the atom types (1 or 2 here), and the positions
 of the atoms $x$, $y$, $z$.  The last three columns are image flags that
@@ -1125,10 +1126,23 @@ compute sumcoor12 grp_t1 reduce ave c_coor12
 \end{lstlisting}
 The \lmpcmd{compute reduce ave} command is used to average the per-atom
 coordination number calculated by the \lmpcmd{coord/atom}
-compute command.  Compute commands are not automatically invoked; they
+compute command.  {\color{blue}Compute commands do not print or output
+anything by themselves, nor are they automatically executed;} they
 require a ``consumer'' command that references the compute.  In this case, the
 first compute is referenced by the second, and we reference the second
 in a \lmpcmd{thermo\_style custom} command (see below).
+
+\begin{note}
+{\color{blue}
+LAMMPS \lmpcmd{compute} commands can produce three kinds of data: scalars (single values), 
+vectors (one-dimensional arrays), or arrays (two-dimensional tables).  
+When referencing results of a compute, you can use indices: for example, 
+\lmpcmd{c\_mycompute} refers to the entire scalar, vector, or array, and
+\lmpcmd{c\_mycompute[1]} refers to its first element (in case of vector or array).  
+In general, ``consumer'' commands can only work with certain data types,
+check the documentation of each command to ensure compatibility.
+}
+\end{note}
 
 \begin{note}
 There is no need for a \lmpcmd{Settings}
@@ -1222,6 +1236,13 @@ the Nos\'e-Hoover or the Langevin thermostat.
   temperature for each type separately.
 \item Append an NVE run (i.e.~without any thermostat) and observe the energy levels.
 \end{itemize}
+
+\begin{note}
+{\color{blue}
+In contrast to the \lmpcmd{fix nve} command, which integrates Newton's equations
+of motion without any thermostatting, the \lmpcmd{fix nvt} command adds a Nosé-Hoover
+thermostat to control the system temperature.}
+\end{note}
 
 \begin{figure}
 \centering
@@ -1373,7 +1394,6 @@ angle_coeff 1 63 120
 dihedral_coeff 1 0 7.25 0 0
 improper_coeff 1 5 180
 \end{lstlisting}
-% AK: the english here reads a bit "quirky". Jake, any ideas as a native speaker?
 The \lmpcmd{pair\_coeff} command sets the parameters for non-bonded
 Lennard-Jones interactions atom type 1 to
 $\epsilon_{11} = 0.066 \, \text{kcal/mol}$ and
