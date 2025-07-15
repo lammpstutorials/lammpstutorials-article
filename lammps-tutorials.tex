@@ -1282,6 +1282,7 @@ illustrate the difference between conventional and reactive force
 fields, this tutorial is divided into two parts: in the first part, a
 conventional molecular force field (called
 OPLS-AA~\cite{jorgensenDevelopmentTestingOPLS1996}) is used and the
+{\color{blue}form of the bonded potential ensure that the}
 bonds between the atoms of the CNT are unbreakable.  In the second part,
 a reactive force field (called AIREBO~\cite{stuart2000reactive}) is
 used, which allows chemical bonds to break under large strain.
@@ -1308,7 +1309,9 @@ required for the second part of the tutorial.
 
 With most conventional molecular force fields, the chemical bonds between
 atoms are defined at the start of the simulation and remain fixed, regardless
-of the forces applied to the atoms.  These bonds are typically modeled as springs
+of the forces applied to the atoms.  {\color{blue}In this tutorial, these bonds
+are explicitly specified in the \lmpcmd{.data} file, which is read using the \lmpcmd{read\_data} command (see below).}
+Bonds are typically modeled as springs
 with equilibrium distances $r_0$ and force constants $k_\text{b}$:
 $U_\text{b} = k_\text{b} \left( r - r_0 \right)^2$.  Additionally, angular and
 dihedral constraints are often imposed to preserve the molecular structure
@@ -1335,7 +1338,7 @@ include unbreakable.inc
 run 0 post no
 \end{lstlisting}
 The chosen unit system is \lmpcmd{real} (therefore distances are in
-Ångströms (Å), times in femtoseconds (fs), and energies in kcal/mol), the
+Ångströms (Å), times in femtoseconds (fs), and energies in (kcal/mol)), the
 \lmpcmd{atom\_style} is \lmpcmd{molecular} (therefore atoms are point
 particles that can form bonds with each other), and the boundary
 conditions are fixed.  The boundary conditions do not matter here, as
@@ -1350,8 +1353,8 @@ The \lmpcmd{bond\_style}, \lmpcmd{angle\_style},
 \lmpcmd{dihedral\_style}, and \lmpcmd{improper\_style} commands specify
 the different potentials used to constrain the relative positions of the
 atoms.  The \lmpcmd{special\_bonds} command sets the weighting factors
-for the Lennard-Jones interactions between atoms directly connected by
-one bond, two bonds, and three bonds, respectively.  This is done for
+for the Lennard-Jones interactions {\color{blue}between atoms sitting one,
+two, or three bonds away from each other, respectively.}  This is done for
 convenience when parameterizing the force constants for bonds, angles, and
 so on.  By excluding the non-bonded (Lennard-Jones) interactions for
 these pairs, those interactions do not need to be considered when determining
@@ -1366,6 +1369,15 @@ identity of the atoms that are
 linked by \lmpcmd{bonds}, \lmpcmd{angles}, \lmpcmd{dihedrals}, and
 \lmpcmd{impropers} interactions. It was created using VMD and TopoTools
 \cite{kohlmeyer2017topotools}.
+
+\begin{note}
+{\color{blue}
+Bonds, angles, dihedrals, and impropers in LAMMPS are assigned types and IDs, just like atoms.
+The ID uniquely identifies each instance, while the type determines which parameters
+(from the \lmpcmd{bond\_coeff}, \lmpcmd{angle\_coeff}, etc. commands) are applied.
+In this tutorial, these types and IDs are specified in the \lmpcmd{.data} file
+read by the \lmpcmd{read\_data} command.}
+\end{note}
 
 \begin{note}
 The format details of the
@@ -1452,9 +1464,11 @@ set group cnt_top mol 1
 set group cnt_bot mol 2
 set group cnt_mid mol 3
 \end{lstlisting}
-With the three \lmpcmd{set} commands, we assign unique, otherwise unused
-molecule IDs to atoms in those three groups.  We will use this IDs later to
-assign different colors to these groups of atoms.
+With the three \lmpcmd{set} commands, we assign unique, otherwise unused molecule
+IDs to atoms in those three groups.  {\color{blue}A molecule ID is an
+integer that groups atoms into a `molecule' for bookkeeping purposes, and can be
+useful for tracking and post-processing.}  We will use these IDs later to assign
+different colors to these groups of atoms.
 
 \begin{figure}
 \centering
@@ -1516,6 +1530,13 @@ The \lmpcmd{fix nve} commands are applied to the atoms of \lmpcmd{cnt\_top} and
 from these groups are recalculated at every step.  The \lmpcmd{fix nvt} does the
 same for the \lmpcmd{cnt\_mid} group, while also applying a Nos\'e-Hoover thermostat
 with desired temperature of 300\,K~\cite{nose1984unified, hoover1985canonical}.
+
+\begin{note}
+{\color{blue}The Nosé-Hoover thermostat only controls the temperature of
+the atoms belonging to the specified \lmpcmd{cnt\_mid} group. Atoms outside
+this group are not affected by the thermostat.}
+\end{note}
+
 To restrain the motion of the atoms at the edges, let us add the following
 commands to \flecmd{unbreakable.lmp}:
 \begin{lstlisting}
@@ -1527,7 +1548,10 @@ velocity cnt_bot set 0 0 0
 The two \lmpcmd{setforce} commands cancel the forces applied on the atoms of the
 two edges, respectively.  The cancellation of the forces is done at every step,
 and along all 3 directions of space, $x$, $y$, and $z$, due to the use of
-\lmpcmd{0 0 0}.  The two \lmpcmd{velocity} commands set the initial velocities
+\lmpcmd{0 0 0}.  {\color{blue}Although the forces on these atoms is set to zero,
+the \lmpcmd{fix} still stores the forces acting on the group before
+cancellation, which can later be extracted for analysis (see below).} 
+The two \lmpcmd{velocity} commands set the initial velocities
 along $x$, $y$, and $z$ to 0 for the atoms of \lmpcmd{cnt\_top} and
 \lmpcmd{cnt\_bot}, respectively.  As a consequence of these last four commands,
 the atoms of the edges will remain immobile during the simulation (or at least
@@ -1984,7 +2008,8 @@ fix mynpt all npt temp 300 300 100 iso 1 1 1000
 The \lmpcmd{fix npt} allows us to impose both a temperature of $300\,\text{K}$
 (with a damping constant of $100\,\text{fs}$), and a pressure of 1 atmosphere
 (with a damping constant of $1000\,\text{fs}$).  With the \lmpcmd{iso} keyword,
-the three dimensions of the box will be re-scaled simultaneously.
+the three dimensions of the box will be re-scaled {\color{blue}isotropically,
+maintaining the same proportion in all directions.}
 
 \begin{figure}
 \centering
@@ -2337,7 +2362,7 @@ kspace_style pppm/tip4p 1.0e-5
 kspace_modify slab 3.0
 \end{lstlisting}
 These lines are used to define the most basic parameters, including the
-atom, bond, and angle styles, as well as interaction
+atom, bond, and angle styles, as well as {\color{blue}the non-bonded} interaction
 potential.  Here, \lmpcmd{lj/cut/tip4p/long} imposes a Lennard-Jones potential with
 a cut-off at $12\,\text{\AA{}}$ and a long-range Coulomb potential.  {\color{blue}
 The parameters \lmpcmd{O}, \lmpcmd{H}, \lmpcmd{O-H}, and \lmpcmd{H-O-H} correspond
@@ -2497,7 +2522,8 @@ the force constant of the angular harmonic potential to 0 and the equilibrium
 angle to $104.52^\circ$.
 
 Alongside \flecmd{parameters.inc}, the \flecmd{groups.inc} file contains
-several \lmpcmd{group} commands to selects atoms based on their types:
+several \lmpcmd{group} commands to \textcolor{blue}{define groups of atoms based
+on their types}:
 \begin{lstlisting}
 group H2O type O H
 group Na type Na+
@@ -2610,6 +2636,16 @@ to 0 (see the \flecmd{parameters.inc} file).
 % group \lmpcmd{fluid}, only the water molecules and ions will move.
 % The \lmpcmd{fix temp/berendsen} command rescales the velocities of the atoms
 % to ensure the system reaches the desired temperature of $1~\text{K}$.
+
+\begin{note}
+{\color{blue}
+LAMMPS provides several ways to maintain molecules rigid during a simulation. 
+The \lmpcmd{fix shake} command is appropriate for constraining bond lengths 
+and angles within small molecules like water. 
+However, it may fail for linear molecules like CO$_2$ or more complex rigid bodies. 
+In such cases, the \lmpcmd{fix rigid} family of commands can be used instead to
+treat entire molecules or groups of atoms as rigid bodies.}
+\end{note}
 
 Let us also create images of the system and control
 the printing of thermodynamic outputs by adding the following lines
