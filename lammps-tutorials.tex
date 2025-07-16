@@ -1112,6 +1112,13 @@ The equal-style \lmpcmd{variables} are expressions evaluated
 during the run and return a number.  Here, they are defined to count
 the number of atoms of a specific group within the \lmpcmd{cyl\_in} region.
 
+\begin{note}
+{\color{blue}The \lmpcmd{n1\_in} and \lmpcmd{n2\_in} defined above are
+equal-style variables, which evaluate a numerical expression using the
+\lmpcmd{count()} function.  Other common LAMMPS variable types include
+atom-style, index, and loop.}
+\end{note}
+
 In addition to counting the atoms in each region, we will also extract
 the coordination number of type 2 atoms around type 1 atoms.  The
 coordination number measures the number of type 2 atoms near
@@ -1452,6 +1459,13 @@ of the first atoms along $x$ plus 0.5~Å.  Then, three regions are defined,
 corresponding to the following: $x < x_\text{min}$, (\lmpcmd{rbot}, for region
 bottom), $x_\text{min} > x > x_\text{max}$ (\lmpcmd{rmid}, for region middle),
 and $x > x_\text{max}$ (\lmpcmd{rtop}, for region top).
+
+\begin{note}
+{\color{blue}
+So far, variables have been referenced dynamically during the run using
+the \lmpcmd{v\_} prefix, which evaluates the variable as it evolves over time.
+Here, a dollar sign (\$) is used to reference the variable at the time the script is read.}
+\end{note}
 
 Finally, let us define 3 groups of atoms corresponding to the atoms
 in each of the 3 regions by adding to \flecmd{unbreakable.lmp}
@@ -3378,8 +3392,8 @@ grand canonical Monte Carlo simulations to compute the adsorption of water
 molecules in cracked silica material (Fig.~\ref{fig:GCMC}).  This tutorial
 illustrates the use of the grand canonical ensemble in molecular simulation, an
 open ensemble where the number of atoms or molecules in the simulation box can vary.
-By employing the grand canonical ensemble, we will set the chemical
-potential of water within a nanoporous SiO$_2$ structure.
+By employing the grand canonical ensemble, {\color{blue}we simulate water in a nanoporous
+SiO$_2$ structure at a specified chemical potential.}
 
 \subsubsection{Generation of the silica block}
 
@@ -3492,7 +3506,7 @@ mark the transition between the different phases of the simulation.}
 Run the simulation using LAMMPS.  From the \guicmd{Charts} window, the temperature
 evolution can be observed, showing that it closely follows the desired annealing procedure (Fig.~\ref{fig:GCMC-dimension}\,a).
 The evolution of the box dimensions over time confirms that the box
-deformed during the last stage of the simulation
+{\color{blue}is deforming} during the last stage of the simulation
 (Fig.~\ref{fig:GCMC-dimension}\,b).  After the simulation completes, the final
 LAMMPS topology file called \flecmd{generate.data}
 will be located next to \flecmd{generate.lmp} (Fig.~\ref{fig:GCMC-snapshot}).
@@ -3535,11 +3549,18 @@ run 50000
 
 write_data cracking.data
 \end{lstlisting}
-The \lmpcmd{fix nvt} command is employed to control the temperature of the system.
+{\color{blue}The \lmpcmd{fix nvt} command integrates the Nosé-Hoover equations
+of motion and is employed to control the temperature of the system.}
 As observed from the generated images, the atoms
 progressively adjust to the changing box dimensions.  At some point,
 bonds begin to break, leading to the appearance of
 dislocations (Fig.~\ref{fig:GCMC-cracked}).
+
+\begin{note}
+{\color{blue}Although the Nosé-Hoover equations were originally formulated to sample the
+NVT ensemble, using the \lmpcmd{fix nvt} command does not guarantee that 
+a simulation actually samples the NVT ensemble.}
+\end{note}
 
 \begin{figure}
 \centering
@@ -3758,9 +3779,15 @@ fix fgcmc H2O gcmc 100 100 0 0 65899 300 -0.5 0.1 &
   mol h2omol tfac_insert ${tfac} shake shak &
   full_energy pressure 100
 \end{lstlisting}
+{\color{blue}The \lmpcmd{fix gcmc} command performs grand canonical Monte Carlo
+moves to insert, delete, or swap molecules. Here, 100 attempts are made every
+100 steps.  The \lmpcmd{mol h2omol} keyword specifies the
+molecule type being inserted/deleted, while \lmpcmd{shake shak} enforces rigid
+molecular constraints during these moves. With the \lmpcmd{pressure 100} keyword,
+a fictitious reservoir with a pressure of 100 atmospheres is used.}
 The \lmpcmd{tfac\_insert} option ensures the correct estimate for the temperature
 of the inserted water molecules by taking into account the internal degrees of
-freedom.  Here, 100 insertion and deletion attemps are made every 100 steps.
+freedom.
 
 \begin{note}
 At a pressure of $p = 100\,\text{bar}$, the chemical potential of water vapor at $T = 300\,\text{K}$
@@ -3777,6 +3804,8 @@ thermo_style custom step temp etotal v_nO &
 
 run 25000
 \end{lstlisting}
+{\color{blue}The \lmpcmd{f\_} keywords extract the Monte Carlo move statistics 
+output by the \lmpcmd{fix gcmc} command.}
 
 \begin{figure}
 \centering
@@ -3910,6 +3939,11 @@ mass * 39.95
 pair_coeff * * ${epsilon} ${sigma}
 \end{lstlisting}
 
+\begin{note}
+{\color{blue}In the \lmpcmd{pair\_coeff} command, the first two asterisks
+\lmpcmd{* *} indicate that the parameters apply to all atom types in the simulation.}
+\end{note}
+
 The variables $U_0$, $\delta$, and $x_0$, defined in the previous subsection, are
 used here to create the repulsive potential, restricting the atoms from exploring
 the center of the box:
@@ -4018,6 +4052,10 @@ fix myac all ave/chunk 100 20000 2000000 &
 
 run 2000000
 \end{lstlisting}
+{\color{blue}Here, the \lmpcmd{chunk/atom} command discretizes the simulation
+domain into spatial bins of size 2~\AA{} along the $x$ direction,
+and the \lmpcmd{ave/chunk} command computes and outputs the number density of
+atoms within each bin to the file \flecmd{free-sampling.dat}.}
 The step count is reset to 0 using \lmpcmd{reset\_timestep} to synchronize it
 with the output times of \lmpcmd{fix density/number}.  Run the simulation using
 LAMMPS.
@@ -4259,7 +4297,9 @@ REACTER protocol is used to simulate the polymerization of styrene monomers, and
 polymerization reaction is followed in time~\cite{gissinger2017polymer, gissinger2020reacter, gissinger2024molecular}.
 In contrast with AIREBO (\hyperref[carbon-nanotube-label]{Tutorial 2})
 and ReaxFF (\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}), the REACTER
-protocol relies on the use of a \textit{classical} force field.
+protocol relies on the use of a \textit{classical} force field
+{\color{blue}that does not inherently model bond formation or breaking, but
+instead couples with an external algorithm to simulate polymerization reactions.}
 
 \begin{figure}
 \centering
@@ -4293,6 +4333,8 @@ special_bonds lj/coul 0 0 1
 The \lmpcmd{class2} styles compute a 6/9 Lennard-Jones potential~\cite{sun1998compass}.
 The \textit{class2} bond, angle, dihedral, and improper styles are used as
 well, see the documentation for a description of their respective potentials.
+{\color{blue}The \lmpcmd{tail yes} option adds long-range van der Waals tail
+corrections to the energy and pressure.}
 The \lmpcmd{mix sixthpower} imposes the following mixing rule for the calculation
 of the cross coefficients:
 \begin{eqnarray}
@@ -4502,6 +4544,12 @@ corresponds to a reaction, e.g.,~a transformation of \lmpcmd{mol1} into \lmpcmd{
 based on the atom map \lmpcmd{M-M.rxnmap}.  Implementation details about each reaction,
 such as the reaction distance cutoffs and the frequency with which to search for
 reaction sties, are also specified in this command.
+
+\begin{note}
+{\color{blue}The \lmpcmd{fix nve/limit} command Newton's equations of motion
+while limiting the maximum displacement of atoms per timestep.  This is
+useful for preventing atoms from moving too far due to large forces.}
+\end{note}
 
 \begin{figure}
 \centering
