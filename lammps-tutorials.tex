@@ -2715,7 +2715,7 @@ images of the system, you will notice that the atoms and molecules are moving to
 
 \paragraph{System equilibration}
 
-Let us equilibrate further the entire system by letting both fluid and piston
+Let us equilibrate further the entire system by letting both fluid and {\color{blue}wall}
 relax at ambient temperature.  Here, the commands are written within the same
 \flecmd{equilibrate.lmp} file, right after the \lmpcmd{reset\_timestep} command.
 
@@ -2744,6 +2744,14 @@ dump_modify mydmp backcolor white &
 \end{lstlisting}
 The \lmpcmd{undump} command is used to cancel the previous \lmpcmd{dump} command.
 Then, a new \lmpcmd{dump} command with a larger dumping period is used.
+
+\begin{note}
+{\color{blue}
+Just like the \lmpcmd{undump} command can cancel an active \lmpcmd{dump}, other
+objects defined in a LAMMPS input script can be cancelled when no longer needed. 
+For example, you can use \lmpcmd{unfix} to remove a previously defined \lmpcmd{fix}, and
+\lmpcmd{uncompute} to delete a \lmpcmd{compute}.}
+\end{note}
 
 To monitor the system equilibration, let us print the distance between
 the two walls.  Add the following lines to \flecmd{equilibrate.lmp}:
@@ -2852,7 +2860,10 @@ The \lmpcmd{setforce} commands cancel the forces on \lmpcmd{walltop} and
 \lmpcmd{wallbot} {\color{blue}in the $x$ direction}.  As a result, the atoms in these two groups will not
 experience any forces {\color{blue}along $x$} from the rest of the system.  Consequently, in the absence of
 external forces, these atoms will conserve the initial velocities imposed by the
-two \lmpcmd{velocity} commands.
+two \lmpcmd{velocity} commands.  {\color{blue}As seen previously, although the
+forces on these atoms are set to zero, the \lmpcmd{fix setforce} still stores the
+forces acting on the group before cancellation, which can later be extracted
+for analysis (see below).}
 
 \begin{figure}
 \centering
@@ -2882,9 +2893,10 @@ thermo_modify temp Tfluid
 thermo_style custom step temp etotal f_mysf1[1] f_mysf2[1]
 \end{lstlisting}
 Let us also extract the density and velocity profiles using
-the \lmpcmd{chunk/atom} and \lmpcmd{ave/chunk} commands.  These commands are
-used to divide the system into bins and return the desired quantities, here the velocity
-along $x$ (\lmpcmd{vx}) within the bins.  Add the following lines to \flecmd{shearing.lmp}:
+the \lmpcmd{chunk/atom} and \lmpcmd{ave/chunk} commands.  {\color{blue}These
+commands discretize the simulation domain into spatial bins and compute and output
+average properties of the atoms belonging to each bin, here the velocity
+along $x$ (\lmpcmd{vx}) within the bins.}  Add the following lines to \flecmd{shearing.lmp}:
 \begin{lstlisting}
 compute cc1 H2O chunk/atom bin/1d z 0.0 0.25
 compute cc2 wall chunk/atom bin/1d z 0.0 0.25
@@ -2982,10 +2994,11 @@ Some basic parameters are defined (\lmpcmd{units} and \lmpcmd{atom\_style}),
 and a \lmpcmd{.data} file is imported by the \lmpcmd{read\_data} command.
 
 The initial topology given by \href{\filepath tutorial5/silica.data}{\dwlcmd{silica.data}}
-is a small amorphous silica structure.  This structure was created using a force field called
-Vashishta~\cite{vashishta1990interaction}.  If you open the \flecmd{silica.data}
-file, you will find in the \lmpcmd{Atoms} section that all silicon atoms have a
-charge of $q = 1.1\,\text{e}$, and all oxygen atoms have a charge of $q = -0.55\,\text{e}$.
+is a small amorphous silica structure.  {\color{blue}This structure was generated in a prior
+simulation using the Vashishta force field~\cite{vashishta1990interaction}.}
+If you open the \flecmd{silica.data} file, you will find in the \lmpcmd{Atoms}
+section that all silicon atoms have a charge of $q = 1.1\,\text{e}$, and all oxygen
+atoms have a charge of $q = -0.55\,\text{e}$.
 
 \begin{note}
 Assigning the same charge to all atoms of the same type is common with many
@@ -3013,6 +3026,15 @@ low and the high cutoffs, respectively, and $1.0 \text{e} -6$ is the
 equilibrated during the charge equilibration process.}
 The \lmpcmd{maxiter} sets an upper limit to the number of attempts to
 equilibrate the charge.
+
+\begin{note}
+{\color{blue}
+The \lmpcmd{pair\_style reaxff} command optionally accepts a control file,
+which defines control variables such as
+global parameters of the ReaxFF potential, as well as performance and output settings. 
+If no control file is provided, as in this tutorial, LAMMPS uses its default values,
+which correspond to those in Adri van Duin's original stand-alone ReaxFF code~\cite{van2001reaxff}.}
+\end{note}
 
 Next, add the following commands to the \flecmd{relax.lmp} file to track the
 evolution of the charges during the simulation:
@@ -3055,6 +3077,13 @@ fix myhis1 grpSi ave/histo 10 500 5000 -1.5 2.5 1000 v_vq &
 fix myhis2 grpO ave/histo 10 500 5000 -1.5 2.5 1000 v_vq &
   file relax-O.histo mode vector
 \end{lstlisting}
+{\color{blue}The \lmpcmd{fix ave/histo} command samples values
+over a group of atoms and builds a histogram over a specified range divided into
+bins.  In this tutorial, it is used to monitor the charge distributions
+of silicon and oxygen atoms.  The parameters \lmpcmd{10 500 5000} specify how often
+the histogram is updated and averaged, \lmpcmd{-1.5 2.5} set the value range, 
+\lmpcmd{1000} is the number of bins, and \lmpcmd{v\_vq} is the variable being histogrammed.}
+
 We can also use the \lmpcmd{fix reaxff/species} to evaluate what species are
 present within the simulation.  It will be useful later when the system is deformed,
 and bonds are broken:
@@ -3075,6 +3104,12 @@ write_data relax.data
 \end{lstlisting}
 Run the \flecmd{relax.lmp} file using LAMMPS.  As seen from \flecmd{relax.species},
 only one species is detected, called \lmpcmd{O384Si192}, representing the entire system.
+
+\begin{note}
+{\color{blue}With the \lmpcmd{aniso} keyword, the three dimensions of the simulation
+box can change independently.  This is particularly relevant for solids and other
+systems where anisotropic stresses may develop.}
+\end{note}
 
 As the simulation progresses, the charge of every atom fluctuates
 because it is adjusting to the local environment of the atom (Fig.~\ref{fig:SIO-charge}\,a).
@@ -3160,7 +3195,7 @@ fix mynvt all nvt temp 300.0 300.0 100
 timestep 0.5
 \end{lstlisting}
 Here, no barostat is used because the change in the box volume will be imposed
-by the \lmpcmd{fix deform}.
+by the \lmpcmd{fix deform}, {\color{blue}see below}.
 
 \begin{figure}
 \includegraphics[width=\linewidth]{SIO-deformed-charge}
@@ -3184,6 +3219,10 @@ run 25000
 
 write_data deform.data
 \end{lstlisting}
+{\color{blue}The \lmpcmd{fix deform} command applies a continuous deformation
+by elongating the simulation box along the x-axis at a constant engineering
+shear strain rate, specified by \lmpcmd{erate}, of $5 \times 10^{-5}~\text{fs}^{-1}$.}
+
 Run the \lmpcmd{deform.lmp} file using LAMMPS.  During the deformation, the charge
 values progressively evolve until the structure eventually breaks down.  After the
 structure breaks down, the charges equilibrate near new average values that differ
