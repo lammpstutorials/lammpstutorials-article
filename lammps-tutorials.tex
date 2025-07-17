@@ -251,8 +251,11 @@ simulations with LAMMPS.
 \subsection{Scope}
 
 This set of tutorials consists of eight tutorials arranged in order of
-increasing difficulty.  The novelties associated with each tutorial are
-briefly described below.
+increasing difficulty.  \textcolor{blue}{Although each tutorial can be 
+read independently, information introduced in earlier tutorials is 
+generally not repeated in detail in later ones. For this reason, we 
+recommend that beginners follow the tutorials in order.}  The novelties
+associated with each tutorial are briefly described below.
 
 In \hyperref[lennard-jones-label]{tutorial 1}, the structure of LAMMPS
 input files is illustrated through the creation of a simple atomic
@@ -295,7 +298,8 @@ reactions by dynamically adjusting atomic interactions
 method that allows the partial charges of atoms to adjust according to
 their local environment.
 
-In \hyperref[gcmc-silica-label]{tutorial 6}, a Monte Carlo simulation in
+{\color{blue}In \hyperref[gcmc-silica-label]{tutorial 6}, the adsorption of a fluid in
+silica pores is modeled.  To do so,} a Monte Carlo simulation in
 the grand canonical ensemble is implemented to demonstrate how LAMMPS
 can be used to simulate an open system that exchanges particles with a
 reservoir.
@@ -871,6 +875,13 @@ it reaches a plateau value of about -0.25.  The kinetic energy,
 $K$, is equal to zero during energy minimization and then
 increases rapidly during molecular dynamics until it reaches
 a plateau value of about 1.5 (Fig.~\ref{fig:evolution-energy}\,d).
+
+\begin{note}
+{\color{blue}All simulations presented in these tutorials are deliberately kept 
+short so they can be executed on a personal computer.  These runs are not intended 
+to produce statistically meaningful results, and should not be considered suitable 
+for publication (see for instance Ref.~\citenum{grossfield2009quantifying}).}
+\end{note}
 
 \paragraph{Trajectory visualization}
 
@@ -1888,6 +1899,15 @@ simulated during \hyperref[all-atom-label]{Tutorial 3}.  Water molecules are
 represented as a transparent continuum field for clarity.}
 \label{fig:PEG}
 \end{figure}
+
+\begin{note}
+{\color{blue}When mixing different force fields, as is done here with GROMOS 
+and SPC/Fw, users should exercise caution.  The choices made in these tutorials 
+prioritize progressive learning of LAMMPS functionality 
+over strict physical accuracy.  While GROMOS is commonly used with water 
+models from the SPC family~\cite{oostenbrink2004biomolecular}, 
+the inter-compatibility of force fields is not generally guaranteed.}
+\end{note}
 
 \subsubsection{Preparing the water reservoir}
 
@@ -3736,6 +3756,13 @@ fix shak H2O shake 1.0e-5 200 0 b OW-HW &
 The number of oxygen atoms from water molecules (i.e.~the number of molecules)
 is calculated by the \lmpcmd{nO} variable.  The SHAKE algorithm is used to
 maintain the shape of the water molecules over time~\cite{ryckaert1977numerical, andersen1983rattle}.
+
+\begin{note}
+{\color{blue}Here, a variable of type `atom' is used.  Such variable 
+defines a per-atom property, i.e., it evaluates the specified expression 
+separately for each atom.  This is often used to select atoms based on 
+their properties or types.}
+\end{note}
 
 Finally, let us create images
 of the system using \lmpcmd{dump image}:
