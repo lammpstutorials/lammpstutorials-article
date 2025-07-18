@@ -38,6 +38,8 @@
 \usepackage{newverbs}
 \usepackage[title]{appendix}
 \usepackage{csquotes}
+% without using the package here, \hyperref links have no effect.
+\usepackage{hyperref}
 
 \usepackage[
     type={CC},
@@ -257,14 +259,14 @@ generally not repeated in detail in later ones. For this reason, we
 recommend that beginners follow the tutorials in order.}  The novelties
 associated with each tutorial are briefly described below.
 
-In \hyperref[lennard-jones-label]{tutorial 1}, the structure of LAMMPS
+In \hyperref[lennard-jones-label]{Tutorial 1}, the structure of LAMMPS
 input files is illustrated through the creation of a simple atomic
 Lennard-Jones fluid system.  Basic LAMMPS commands are used to set up
 interactions between atoms, perform an energy minimization, and finally
 run a simple MD simulation in the microcanonical (NVE) and canonical (NVT)
 ensembles.
 
-In \hyperref[carbon-nanotube-label]{tutorial 2}, a more complex system
+In \hyperref[carbon-nanotube-label]{Tutorial 2}, a more complex system
 is introduced in which atoms are connected by bonds: a small carbon
 nanotube.  The use of both classical and reactive force fields (here,
 OPLS-AA~\cite{jorgensenDevelopmentTestingOPLS1996} and
@@ -274,7 +276,7 @@ measured.  This tutorial also demonstrates the use of an external tool
 to visualize breaking bonds, and show the possibility to import
 LAMMPS-generated YAML log files into Python.
 
-In \hyperref[all-atom-label]{tutorial 3}, two components\textemdash liquid water
+In \hyperref[all-atom-label]{Tutorial 3}, two components\textemdash liquid water
 (flexible three-point model) and a polymer molecule\textemdash are merged and
 equilibrated.  A long-range solver is used to handle the electrostatic
 interactions accurately, and the system is equilibrated in the
@@ -283,34 +285,34 @@ to the polymer.  Through this relatively complex solvated polymer
 system, the tutorial demonstrates how to use type labels to make
 molecule files more generic and easier to manage~\cite{gissinger2024type}.
 
-In \hyperref[sheared-confined-label]{tutorial 4}, an electrolyte is
+In \hyperref[sheared-confined-label]{Tutorial 4}, an electrolyte is
 confined between two walls, illustrating the specifics of simulating
 systems with fluid-solid interfaces.  With the rigid four-point
 TIP4P/2005~\cite{abascal2005general} water model, this tutorial uses a
-more complex water model than \hyperref[all-atom-label]{tutorial 3}.  A
+more complex water model than \hyperref[all-atom-label]{Tutorial 3}.  A
 non-equilibrium MD is performed by imposing shear on the fluid through
 moving the walls, and the fluid velocity profile is extracted.
 
-In \hyperref[reactive-silicon-dioxide-label]{tutorial 5}, the ReaxFF
+In \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}, the ReaxFF
 reactive force field is used, specifically designed to simulate chemical
 reactions by dynamically adjusting atomic interactions
 \cite{van2001reaxff}.  ReaxFF includes charge equilibration (QEq), a
 method that allows the partial charges of atoms to adjust according to
 their local environment.
 
-{\color{blue}In \hyperref[gcmc-silica-label]{tutorial 6}, the adsorption of a fluid in
+{\color{blue}In \hyperref[gcmc-silica-label]{Tutorial 6}, the adsorption of a fluid in
 silica pores is modeled.  To do so,} a Monte Carlo simulation in
 the grand canonical ensemble is implemented to demonstrate how LAMMPS
 can be used to simulate an open system that exchanges particles with a
 reservoir.
 
-In \hyperref[umbrella-sampling-label]{tutorial 7}, an advanced free
+In \hyperref[umbrella-sampling-label]{Tutorial 7}, an advanced free
 energy method called umbrella sampling is implemented.  By calculating
 an energy barrier, this tutorial describes a protocol
 for addressing energy landscapes that are difficult to sample using
 classical MD or MC methods.
 
-In \hyperref[bond-react-label]{tutorial 8}, a CNT embedded in
+In \hyperref[bond-react-label]{Tutorial 8}, a CNT embedded in
 nylon-6,6 polymer melt is simulated.  The
 REACTER protocol is used to model the polymerization of nylon, and the formation
 of water molecules is tracked over time~\cite{gissinger2020reacter}.
@@ -438,6 +440,16 @@ the microcanonical (NVE) and canonical (NVT) ensembles are performed,
 and basic quantities are calculated, including the potential and kinetic
 energies.
 
+\begin{figure}
+\centering
+\includegraphics[width=0.65\linewidth]{LJ-avatar}
+\caption{The binary mixture simulated in
+  \hyperref[lennard-jones-label]{Tutorial 1}, with the atoms of type 1
+  represented as small green spheres and lge atoms of type 2 as large
+  blue spheres.}
+\label{fig:LJ-avatar}
+\end{figure}
+
 \subsubsection{My first input}
 
 To run a simulation using LAMMPS, you need to write an input script
@@ -490,15 +502,6 @@ atom_style atomic
 boundary p p p
 \end{lstlisting}
 
-\begin{figure}
-\centering
-\includegraphics[width=0.85\linewidth]{GUI-1.png}
-\caption{Screenshot of the \lammpsgui{} \guicmd{Editor} window during
-  \hyperref[lennard-jones-label]{Tutorial 1}.  The pop-up menu is the
-  context menu for right-clicking on the \lmpcmd{units lj} command.}
-\label{fig:GUI-1}
-\end{figure}
-
 \begin{note}
   Strictly speaking, none of the four commands specified in the
   Initialization section are mandatory, as they correspond to the
@@ -529,33 +532,30 @@ boundaries, different options can be assigned to each dimension, making
 configurations like \lmpcmd{boundary p p fm} valid for systems such as
 slab geometries.
 
+% this reads better as a single note.
 \begin{note}
-    Each LAMMPS command is accompanied by extensive online documentation
-    that details the different options for that command.  From the
-    \lammpsgui{} editor buffer, you can access the documentation by
-    right-clicking on a line containing a command (e.g.,~\lmpcmd{units lj})
-    and selecting \guicmd{View Documentation for `units'}.  This action
-    should prompt your web browser to open the corresponding URL for the
-    online manual.  A screenshot of this context menu is shown in
-    Fig.~\ref{fig:GUI-1}.
-\end{note}
-
-\begin{note}
-    {\color{blue}Most LAMMPS commands have default settings that are applied if no value
-    is explicitly specified.  The defaults for each command are listed at the
-    bottom of its documentation page.}
+  Each LAMMPS command is accompanied by extensive online documentation
+  that {\color{blue} lists and discusses} the different options for that
+  command.  {\color{blue}Most LAMMPS commands also have default settings
+    that are applied if no value is explicitly specified.  The defaults
+    for each command are listed at the bottom of its documentation
+    page.}  From the \lammpsgui{} editor buffer, you can access the
+  documentation by right-clicking on a line containing a command
+  (e.g.,~\lmpcmd{units lj}) and selecting \guicmd{View Documentation for
+    `units'}.  This action should prompt your web browser to open the
+  corresponding URL for the online manual.  A screenshot of this context
+  menu is shown in Fig.~\ref{fig:GUI-1}.
 \end{note}
 
 \paragraph{System definition}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.55\linewidth]{LJ-avatar}
-\caption{The binary mixture simulated in
-  \hyperref[lennard-jones-label]{Tutorial 1}, with the atoms of type 1
-  represented as small green spheres and lge atoms of type 2 as large
-  blue spheres.}
-\label{fig:LJ-avatar}
+\includegraphics[width=\linewidth]{GUI-1.png}
+\caption{Screenshot of the \lammpsgui{} \guicmd{Editor} window during
+  \hyperref[lennard-jones-label]{Tutorial 1}.  The pop-up menu is the
+  context menu for right-clicking on the \lmpcmd{units lj} command.}
+\label{fig:GUI-1}
 \end{figure}
 
 The next step is to create the simulation box and populate it with
@@ -573,36 +573,50 @@ The first line, \lmpcmd{region simbox (...)}, defines a region named
 from -20 to 20 units along all three spatial dimensions.  The second
 line, \lmpcmd{create\_box 2 simbox}, initializes a simulation box based
 on the region \lmpcmd{simbox} and reserves space for two types of atoms.
-{\color{blue}In LAMMPS, an atom \emph{type} represents a group of atoms that
-interact using the same set of force field parameters (here, the Lennard-Jones
-parameters).}
+% {\color{blue}In LAMMPS, an atom \emph{type} represents a group of atoms that
+% interact using the same set of force field parameters (here, the Lennard-Jones
+% parameters).}
+{\color{blue}In LAMMPS, every atom is assigned an \emph{atom type}
+  property.  This property selects which force field parameters (here,
+  the Lennard-Jones parameters, $\epsilon_{ij}$ and $\sigma_{ij}$) are
+  applied to each pair of atoms via the \lmpcmd{pair\_coeff} command.
+  We discuss in \hyperref[carbon-nanotube-label]{Tutorial 2} how this
+  applies to many-body pair styles, and in
+  \hyperref[all-atom-label]{Tutorial 3} how this applies to Coulomb
+  interactions.}
 
 \begin{note}
-  From this point on, any command referencing an atom type larger than 2
-  will trigger an error.  While it is possible to allocate more atom
-  types than needed, you must assign a mass and provide force field
-  parameters for each atom type.  Failing to do so will cause LAMMPS to
-  terminate with an error.
+  From this point on, {\color{blue} the number of atom types is ``locked
+    in'', and} any command referencing an atom type larger than 2 will
+  trigger an error.  While it is possible to allocate more atom types
+  than needed, you must assign a mass and provide force field parameters
+  for each atom type.  Failing to do so will cause LAMMPS to terminate
+  with an error.
 \end{note}
 
 The third line, \lmpcmd{create\_atoms (\dots)}, generates 1500 atoms of
-type 1 at random positions within the \lmpcmd{simbox} region.  
-{\color{blue}Each atom created in LAMMPS is automatically assigned a unique
-atom ID, which serves as a numerical identifier to distinguish individual atoms
-throughout the simulation.} The
-integer 34134 is a seed for the internal random number generator, which
-can be changed to produce different sequences of random numbers and,
-consequently, different initial atom positions.  The fourth line adds
-100 atoms of type 2.  Both \lmpcmd{create\_atoms} commands use the
-optional argument \lmpcmd{overlap 0.3}, which enforces a minimum
-distance of 0.3 units between the randomly placed atoms.  This
-constraint helps avoid ``close contacts'' between atoms, which can lead
-to excessively large forces and simulation instability.
+type 1 at random positions within the \lmpcmd{simbox} region.
+{\color{blue}Each created atom in LAMMPS is automatically assigned a
+  unique atom ID, which serves as a numerical identifier to distinguish
+  individual atoms throughout the simulation.  Atom IDs by default have
+  the range from 1 to the total number of atoms, but this is not
+  enforced.  Deleting atoms, for example, causes ``holes'' in the list
+  of atom IDs.} The integer 34134 is a seed for the internal random
+number generator, which can be changed to produce different sequences of
+random numbers and, consequently, different initial atom positions.  The
+fourth line adds 100 atoms of type 2.  Both \lmpcmd{create\_atoms}
+commands use the optional argument \lmpcmd{overlap 0.3}, which enforces
+a minimum distance of 0.3 {\color{blue}length} units between the
+randomly placed atoms.  This constraint helps avoid ``close contacts''
+between atoms, which can lead to excessively large forces and simulation
+instability.
 
 \begin{note}
-\textcolor{blue}{Another way to define a system in LAMMPS, besides \lmpcmd{create\_atoms}, is to
-import an existing topology with \lmpcmd{read\_data}, as shown
-in \hyperref[carbon-nanotube-label]{tutorial 2}.}
+  \textcolor{blue}{Another way to define a system in LAMMPS, besides the
+    \lmpcmd{create\_atoms} commands, is to import an existing topology
+    with coordinates and other system, force field, and atom properties
+    using the \lmpcmd{read\_data} command, as shown in
+    \hyperref[carbon-nanotube-label]{Tutorial 2}.}
 \end{note}
 
 \paragraph{Settings}
@@ -627,27 +641,40 @@ E_{ij} (r) = 4 \epsilon_{ij} \left[ \left( \dfrac{\sigma_{ij}}{r} \right)^{12}
   - \left( \dfrac{\sigma_{ij}}{r} \right)^{6} \right], ~ \text{for} ~ r < r_c,
 \label{eq:LJ}
 \end{equation}
-where $r$ is the inter-particle distance, $\epsilon_{ij}$ is
-the depth of the potential well that determines the interaction strength, and
+where $r$ is the inter-particle distance, $\epsilon_{ij}$ is the depth
+of the potential well that determines the interaction strength, and
 $\sigma_{ij}$ is the distance at which the potential energy equals zero.
-The indexes $i$ and $j$ refer to pairs of particle types.
-The fourth line, \lmpcmd{pair\_coeff 1 1 1.0 1.0}, specifies the
-Lennard-Jones coefficients for interactions between pairs of atoms
-of type 1: the energy parameter $\epsilon_{11} = 1.0$ and
-the distance parameter $\sigma_{11} = 1.0$.  Similarly, the last line
-sets the Lennard-Jones coefficients for interactions between atoms
-of type 2, $\epsilon_{22} = 0.5$, and $\sigma_{22} = 3.0$.
+The indices $i$ and $j$ refer to pairs of atoms {\color{blue} with the
+  respective atom type value}.  The fourth line, \lmpcmd{pair\_coeff 1 1
+  1.0 1.0}, specifies the Lennard-Jones coefficients for interactions
+between pairs of atoms {\color{blue} that both have} atom type 1: the
+energy parameter $\epsilon_{11} = 1.0$ and the distance parameter
+$\sigma_{11} = 1.0$.  Similarly, the last line sets the Lennard-Jones
+coefficients for interactions between atoms of type 2,
+$\epsilon_{22} = 0.5$, and $\sigma_{22} = 3.0$.
 
 \begin{note}
-By default, LAMMPS calculates the cross coefficients for different atom
-types using geometric average: $\epsilon_{ij} = \sqrt{\epsilon_{ii} \epsilon_{jj}}$,
-$\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$.  In the present case,
-$\epsilon_{12} = \sqrt{1.0 \times 0.5} = 0.707$, and
-$\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$. {\color{blue}Other rules
-can be selected using the \lmpcmd{pair\_modify} command.}
+  By default, LAMMPS calculates the {\color{blue} mixed atom type} force
+  field coefficients for different atom types using geometric averages:
+  $\epsilon_{ij} = \sqrt{\epsilon_{ii} \epsilon_{jj}}$,
+  $\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$.  In the present case,
+  $\epsilon_{12} = \sqrt{1.0 \times 0.5} = 0.707$, and
+  $\sigma_{12} = \sqrt{1.0 \times 3.0} = 1.732$. {\color{blue}Other
+    rules can be selected using the \lmpcmd{pair\_modify} command.}
 \end{note}
 
 \paragraph{Single-point energy}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{LJ}
+\caption{The binary mixture simulated in \hyperref[lennard-jones-label]{Tutorial 1}.
+  This image was generated directly from the \lammpsgui{}.  Atoms of
+  type 1 are represented as small red spheres, atoms of type 2 as large
+  green spheres, and the edges of the simulation box are represented as blue sticks.}
+\label{fig:LJ}
+\end{figure}
 
 The system is now fully parameterized, and the input is ready to compute
 forces.  Let us complete the two remaining categories,
@@ -669,9 +696,13 @@ The \lmpcmd{run 0 post no} command instructs LAMMPS to initialize forces and ene
 without actually running the simulation.  The \lmpcmd{post no} option disables
 the post-run summary and statistics output.
 
-\begin{note}
-{\color{blue}The `thermodynamic information' printed by LAMMPS refers to instantaneous values
-of thermodynamic properties at the specified steps, not cumulative averages.}
+\begin{note} {\color{blue}The `thermodynamic information' printed by
+    LAMMPS using \lmpcmd{thermo\_style custom} keywords refers to
+    instantaneous values of those thermodynamic properties at the
+    specified steps, not cumulative averages.  But it is also possible
+    to reference a wide variety of custom data from compute styles, fix
+    styles, and variables which can be used for on-the-fly analysis
+    including cumulative and sliding window averages.}
 \end{note}
 
 You can now run LAMMPS {\color{blue}(see subsection \ref{running-lammps-label}
@@ -683,16 +714,6 @@ as specified by the thermodynamic data request.  Since no actual simulation
 steps were performed, the \guicmd{Charts} window will be empty.
 
 \paragraph{Snapshot Image}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.55\linewidth]{LJ}
-\caption{The binary mixture simulated in \hyperref[lennard-jones-label]{Tutorial 1}.
-  This image was generated directly from the \lammpsgui{}.  Atoms of
-  type 1 are represented as small red spheres, atoms of type 2 as large
-  green spheres, and the edges of the simulation box are represented as blue sticks.}
-\label{fig:LJ}
-\end{figure}
 
 At this point, you can create a snapshot image of the current system
 using the \guicmd{Image Viewer} window, which can be accessed by
@@ -714,15 +735,19 @@ following \lmpcmd{minimize} command:
 # 5) Run
 minimize 1.0e-6 1.0e-6 1000 10000
 \end{lstlisting}
-This tells LAMMPS to perform an energy minimization of the system.
-Specifically, LAMMPS will compute the forces on all atoms and then update their
-positions according to a selected algorithm, aiming to reduce
-the potential energy.  By default, LAMMPS uses the conjugate gradient (CG)
+This tells LAMMPS to perform an {\color{blue} iterative} energy
+minimization of the system.  Specifically, LAMMPS will compute the
+forces on all atoms and then update their positions according to a
+selected algorithm using the computed forces, aiming to reduce the
+potential energy.  By default, LAMMPS uses the conjugate gradient (CG)
 algorithm~\cite{hestenes1952methods}.  The simulation will stop as soon
-as the minimizer algorithm cannot find a way to lower the potential
-energy. % SG: I don't think that its true, its rather the algorithm
+as {\color{blue}one of the four minimizer criteria are met and LAMMPS
+  will output which stopping criterion ended the minimization and
+  and some system properties at the initial and the final step.}
+% SG: I don't think that its true, its rather the algorithm
 % will stop when one of the four criteria is met. Axel, what do you think?
 % I propose to replace by "when specific convergence criteria are met"
+% AK: yes this is correct.
 Note that, except for trivial systems, minimization algorithms will find a
 local minimum rather than the global minimum.
 
@@ -770,6 +795,17 @@ drop-down menu of the \guicmd{Charts} window.
 \end{note}
 
 \paragraph{Molecular dynamics}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{LJ-energy}
+\caption{(a) Potential energy, $U$, of the binary mixture as a function of the
+step during energy minimization in \hyperref[lennard-jones-label]{Tutorial 1}.
+(b) Potential energy, $U$, as a function of time during molecular dynamics in
+the NVT ensemble.  (c) Kinetic energy, $K$, during energy minimization.
+(d) Kinetic energy, $K$, during molecular dynamics.}
+\label{fig:evolution-energy}
+\end{figure}
 
 After energy minimization, any overlapping atoms are displaced, and
 the system is ready for a molecular dynamics simulation.  To continue
@@ -853,17 +889,6 @@ change it to perform statistically independent simulations.  In the
 presence of a thermostat, the MD simulation will be performed in the
 canonical or NVT ensemble.
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{LJ-energy}
-\caption{(a) Potential energy, $U$, of the binary mixture as a function of the
-step during energy minimization in \hyperref[lennard-jones-label]{Tutorial 1}.
-(b) Potential energy, $U$, as a function of time during molecular dynamics in
-the NVT ensemble.  (c) Kinetic energy, $K$, during energy minimization.
-(d) Kinetic energy, $K$, during molecular dynamics.}
-\label{fig:evolution-energy}
-\end{figure}
-
 Run the simulation again using \lammpsgui{}.  From the information
 printed in the \guicmd{Output} window, one can see that the temperature
 starts from 0 but rapidly reaches the requested value and
@@ -884,15 +909,6 @@ for publication (see for instance Ref.~\citenum{grossfield2009quantifying}).}
 \end{note}
 
 \paragraph{Trajectory visualization}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.55\linewidth]{LJ-cylinder}
-\caption{Visualization of the improved binary mixture input after minimization
-  during \hyperref[lennard-jones-label]{Tutorial 1}.  Colors are the same as in
-  Fig.~\ref{fig:LJ}.}
-\label{fig:improved-min}
-\end{figure}
 
 So far, the simulation has been mostly monitored through the analysis of
 thermodynamic information.  To better follow the evolution of the system
@@ -1016,6 +1032,15 @@ keep track of which atoms crossed the periodic boundary.  The exact
 format of each line in the \lmpcmd{Atoms} section depends on the choice
 of \lmpcmd{atom\_style}, which determines which per-atom data is set and
 stored internally in LAMMPS.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{LJ-cylinder}
+\caption{Visualization of the improved binary mixture input after minimization
+  during \hyperref[lennard-jones-label]{Tutorial 1}.  Colors are the same as in
+  Fig.~\ref{fig:LJ}.}
+\label{fig:improved-min}
+\end{figure}
 
 \begin{note}
 Instead of the \lmpcmdnote{write\_data} command, you can also use the
@@ -1150,16 +1175,26 @@ require a ``consumer'' command that references the compute.  In this case, the
 first compute is referenced by the second, and we reference the second
 in a \lmpcmd{thermo\_style custom} command (see below).
 
-\begin{note}
-{\color{blue}
-LAMMPS \lmpcmd{compute} commands can produce three kinds of data: scalars (single values), 
-vectors (one-dimensional arrays), or arrays (two-dimensional tables).  
-When referencing results of a compute, you can use indices: for example, 
-\lmpcmd{c\_mycompute} refers to the entire scalar, vector, or array, and
-\lmpcmd{c\_mycompute[1]} refers to its first element (in case of vector or array).  
-In general, ``consumer'' commands can only work with certain data types,
-check the documentation of each command to ensure compatibility.
-}
+\begin{note} {\color{blue} LAMMPS \lmpcmd{compute} commands can produce
+    a wide variety of data and one can identify the category from the
+    name of the compute style: global data (no suffix), local data
+    (/local suffix), per-atom data (/atom suffix), per-chunk data
+    (/chunk suffix), per-gridpoint data (/grid suffix).  In the example
+    above the \lmpcmd{compute coord/atom} produces per-atom data, which
+    is used as input for \lmpcmd{compute reduce} which returns global
+    data.  For global data three kinds of data exists: scalars (single
+    values), vectors (one-dimensional arrays), or arrays
+    (two-dimensional tables).  When referencing results of a compute,
+    you can use indices: for example, \lmpcmd{c\_mycompute} refers to
+    the entire scalar, vector, or array, and \lmpcmd{c\_mycompute[1]}
+    refers to its first element (in case of vector or array).  In some
+    cases also wildcards like ``*'' can be used to, for instance, refer to all elements
+    of a vector instead of having specify all elements individually.
+    In general, ``consumer'' commands (fix styles or dump styles,
+    variables, or other compute styles) can only work with certain data
+    types or need to have keywords set to select which data to use.
+    You need to check the documentation of each command to ensure
+    compatibility.}
 \end{note}
 
 \begin{note}
@@ -1204,15 +1239,6 @@ to a Gaussian distribution.  Another improvement is the \lmpcmd{zero
 random force applied to the atoms is equal to zero. These steps are
 important to prevent the system from starting to drift or move as a
 whole.
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{LJ-mixing}
-\caption{a)~Evolution of the numbers $N_\text{1, in}$ and $N_\text{2, in}$ of atoms
-of types 1 and 2, respectively, within the \lmpcmd{cyl\_in} region as functions
-of time $t$.  b)~Evolution of the coordination number $C_{1-2}$ (compute \lmpcmd{sumcoor12})
-between atoms of types 1 and 2.}
-\label{fig:mixing}
-\end{figure}
 
 \begin{note}
   A bulk system with periodic boundary conditions is expected to remain
@@ -1224,6 +1250,16 @@ between atoms of types 1 and 2.}
   very quickly.  This phenomenon is sometimes referred to as the
   ``flying ice cube syndrome''~\cite{wong2016good}.
 \end{note}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{LJ-mixing}
+\caption{a)~Evolution of the numbers $N_\text{1, in}$ and $N_\text{2, in}$ of atoms
+of types 1 and 2, respectively, within the \lmpcmd{cyl\_in} region as functions
+of time $t$.  b)~Evolution of the coordination number $C_{1-2}$ (compute \lmpcmd{sumcoor12})
+between atoms of types 1 and 2.}
+\label{fig:mixing}
+\end{figure}
 
 Run \flecmd{improved.md.lmp} and observe the mixing of the two populations
 over time (see also Fig.~\ref{fig:evolution-population}).  From the
@@ -1262,17 +1298,6 @@ of motion without any thermostatting, the \lmpcmd{fix nvt} command adds a Nosé-
 thermostat to control the system temperature.}
 \end{note}
 
-\begin{figure}
-\centering
-\includegraphics[width=0.55\linewidth]{LJ-coords}
-\caption{Snapshot of the binary mixture simulated
-  during \hyperref[lennard-jones-label]{Tutorial 1} with atoms of type 1
-  colored according to their computed $1-2$ coordination
-  number from the compute \lmpcmd{coor12}, ranging from turquoise,\lmpcmd{c\_coor12 = 0},
-  to yellow, \lmpcmd{c\_coor12 = 1}, and red, \lmpcmd{c\_coor12 = 2}.}
-\label{fig:coords-viz}
-\end{figure}
-
 Another useful experiment is coloring the atoms in the \guicmd{Slide Show}
 according to an observable, such as their respective coordination
 numbers.  To do this, replace the
@@ -1284,6 +1309,18 @@ dump viz all image 1000 myimage-*.ppm v_coor12 type &
 dump_modify viz adiam 1 1 adiam 2 3 backcolor white &
   amap -1 2 ca 0.0 4 min royalblue 0 turquoise 1 yellow max red
 \end{lstlisting}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{LJ-coords}
+\caption{Snapshot of the binary mixture simulated
+  during \hyperref[lennard-jones-label]{Tutorial 1} with atoms of type 1
+  colored according to their computed $1-2$ coordination
+  number from the compute \lmpcmd{coor12}, ranging from turquoise,\lmpcmd{c\_coor12 = 0},
+  to yellow, \lmpcmd{c\_coor12 = 1}, and red, \lmpcmd{c\_coor12 = 2}.}
+\label{fig:coords-viz}
+\end{figure}
+
 Run LAMMPS again.  Atoms of type 1 are now colored based on the value
 of \lmpcmd{c\_coor12}, which is mapped continuously from turquoise to yellow
 and red for atoms with the highest coordination (Fig.~\ref{fig:coords-viz}).
@@ -1300,10 +1337,11 @@ illustrate the difference between conventional and reactive force
 fields, this tutorial is divided into two parts: in the first part, a
 conventional molecular force field (called
 OPLS-AA~\cite{jorgensenDevelopmentTestingOPLS1996}) is used and the
-{\color{blue}form of the bonded potential ensure that the}
-bonds between the atoms of the CNT are unbreakable.  In the second part,
-a reactive force field (called AIREBO~\cite{stuart2000reactive}) is
-used, which allows chemical bonds to break under large strain.
+{\color{blue}form of the bonded potential ensure that the} bonds between
+the atoms of the CNT are unbreakable.  In the second part, a reactive,
+{\color{blue} many-body} force field (called
+AIREBO~\cite{stuart2000reactive}) is used, which allows chemical bonds
+to break under large strain.
 
 To set up this tutorial, select \guicmd{Start Tutorial 2} from the
 \guicmd{Tutorials} menu of \lammpsgui{} and follow the instructions.
@@ -1727,6 +1765,20 @@ AIREBO.  The following commands are setting up the AIREBO force field:
 pair_style airebo 3.0
 pair_coeff * * CH.airebo C
 \end{lstlisting}
+\begin{note} {\color{blue}The AIREBO force field is a many-body
+    potential where interactions are not only between pairs of atoms,
+    but also triples and quadruples representing angles and dihedral
+    interactions.  This means, that there are different rules for the
+    \lmpcmd{pair\_coeff} command: there must be only one command that
+    covers all permutations of atom types by using two '*' wildcards.
+    After the potential file follows a list of elements.  The element
+    names are used to look up the parameter sets in the potential file.
+    There must be a list with as many elements as atom types following
+    the filename.  Our system has only one atom type (1) and that is
+    mapped to the element 'C' in the \lmpcmd{pair\_coeff} command.
+    Which elements are supported is determined by the contents of the
+    potential file.  }
+\end{note}
 Here, \href{\filepath tutorial2/CH.airebo}{\dwlcmd{CH.airebo}} is the
 file containing the parameters for AIREBO, and must be placed next to
 \lmpcmd{breakable.lmp}.
@@ -1941,8 +1993,18 @@ interactions.  The value of $10\,\text{\AA{}}$ is the cutoff, and the
 \lmpcmd{kspace\_style} command defines the long-range solver for the Coulomb
 interactions~\cite{ewald1921berechnung}.  Finally, the
 \lmpcmd{special\_bonds} command, which was already seen in
-\hyperref[carbon-nanotube-label]{tutorial 2}, sets the LJ and Coulomb
+\hyperref[carbon-nanotube-label]{Tutorial 2}, sets the LJ and Coulomb
 weighting factors for the interaction between neighboring atoms.
+
+\begin{note} {\color{blue}When there are Coulomb interactions, there are
+    additional rules for the \lmpcmd{pair\_coeff} command to keep in
+    mind: The atom type assignments of atoms are only respected for the
+    LJ potential part.  For Coulomb there are no parameters outside the
+    cutoff and with a \lmpcmd{coul/long} pair style, that cutoff can
+    only be set globally for all atoms with the \lmpcmd{pair\_style}
+    command.  For the Coulomb interactions only the per-atom charge
+    matters and whether any \lmpcmd{special\_bonds} exclusions apply.}
+\end{note}
 
 Let us create a 3D simulation box of dimensions $6 \times 3 \times 3 \; \text{nm}^3$,
 and make space for 8 atom types (2 for the water, 6 for the polymer), 7 bond types
