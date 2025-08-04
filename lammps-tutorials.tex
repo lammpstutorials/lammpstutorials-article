@@ -351,8 +351,8 @@ and molecular simulations~\cite{sklogwiki_main_page}.
 
 \subsection{Software/system requirements}
 
-The LAMMPS stable release version 29Aug2024\_update2~\cite{lammps_code}
-and the matching \lammpsgui{} software version 1.6.12 are required to
+The LAMMPS stable release {\color{blue}version 22Jul2025}~\cite{lammps_code}
+and the matching \lammpsgui{} software {\color{blue}version 1.7.0} are required to
 follow the tutorials, as they include features that were first
 introduced in these versions.  For Linux (x86\_64 CPU), macOS (BigSur or
 later), and Windows (10 and 11) you can download a precompiled LAMMPS
@@ -4560,6 +4560,22 @@ The third reaction uses the prefix `P-P',
 Here, the file names for each reaction use the abbreviation `M' for monomer and `P'
 for polymer.
 
+\begin{note}
+{\color{blue}Molecule templates contain sections that are similar, but not quite
+the same, as a LAMMPS data file. The data stored in these molecule templates
+include atom coordinates, partial charges, molecule IDs, atom types, and interaction
+types for bonds, angles, dihedrals and impropers. The map file contains information
+about the reaction. The first mandatory section of the map file begins with the
+keyword “InitiatorIDs” and lists the two atom IDs of the initiator atom pair in
+the pre-reacted molecule template. The second mandatory section begins with the
+keyword “Equivalences” and lists a one-to-one correspondence between atom IDs of
+the pre- and post-reacted templates. Some atoms in the pre-reacted template that
+are not reacting may have missing topology with respect to the simulation. For
+example, the pre-reacted template may contain an atom that, in the simulation,
+is currently connected to the rest of a long polymer chain. These are referred to
+as edge atoms, and are also specified in the map file in the “EdgeIDs” section.}
+\end{note}
+
 \subsubsection{Simulating the reaction}
 
 The first step, before simulating the reaction, is to import the previously
@@ -4760,7 +4776,7 @@ to use the Flatpak bundle.  Download the bundle file
 install it using the following command:
 \begin{lstlisting}[language=tcl]
 flatpak install --user \
-    LAMMPS-Linux-x86_64-GUI-29Aug2024_update2.flatpak
+    LAMMPS-Linux-x86_64-GUI-22Jul2025.flatpak
 \end{lstlisting}
 This will integrate \lammpsgui{} into your desktop environment
 (e.g.,~GNOME, KDE, XFCE) where it should appear in the ``Applications''
@@ -4846,7 +4862,7 @@ reformatted.  Consistent formatting can improve the readability of
 input files, especially long and complex ones.
 
 If the file in the editor has unsaved changes, the word
-``\*modified\*'' will appear in the window title.  The current input
+``*modified*'' will appear in the window title.  The current input
 buffer can be saved by selecting ``Save'' or ``Save As...'' from the
 ``File'' menu.  You can also click the ``Save'' icon on the left side
 of the status bar, or use the \texttt{Ctrl-S} keyboard shortcut.
