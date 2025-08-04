@@ -752,13 +752,14 @@ Note that, except for trivial systems, minimization algorithms will find a
 local minimum rather than the global minimum.
 
 Run the minimization and observe that \lammpsgui{} captures the output
-and update the chart in real time (see Fig.~\ref{fig:chart-log}).  This run executes quickly (depending
-on your computer's capabilities), but \lammpsgui{} may fail to capture some
-of the thermodynamic data.  In that
-case, use the \guicmd{Preferences} dialog to reduce the data update
-interval and switch to single-threaded, unaccelerated execution in the
-\guicmd{Accelerators} tab.  You can repeat the run; each new attempt will start
-fresh, resetting the system and re-executing the script from the beginning.
+and update the chart in real time (see Fig.~\ref{fig:chart-log}).  This
+run executes quickly (depending on your computer's capabilities)
+{\color{blue}and thus} \lammpsgui{} may fail to capture some of the
+thermodynamic data.  In that case, use the \guicmd{Preferences} dialog
+to reduce the data update interval and switch to single-threaded,
+unaccelerated execution in the \guicmd{Accelerators} tab.  You can
+repeat the run; each new attempt will start fresh, resetting the system
+and re-executing the script from the beginning.
 
 \begin{figure}
 \centering
@@ -782,17 +783,17 @@ decreases - first rapidly - then more gradually, before plateauing at a
 negative value.  This indicates that the atoms have moved to reasonable
 distances from one another.
 
-Create and save a snapshot image of the simulation state after the
-minimization, and compare it to the initial image.  You should observe
-that the atoms are ``clumping together'' as they move toward positions
-of lower potential energy.
-
 \begin{note}
 Since the \lmpcmd{thermo\_style} command also includes the \lmpcmd{press}
 keyword, you can switch from plotting the total energy to
 displaying the pressure by selecting \guicmd{Press} in the \guicmd{Select data}
 drop-down menu of the \guicmd{Charts} window.
 \end{note}
+
+Create and save a snapshot image of the simulation state after the
+minimization, and compare it to the initial image.  You should observe
+that the atoms are ``clumping together'' as they move toward positions
+of lower potential energy.
 
 \paragraph{Molecular dynamics}
 
@@ -826,7 +827,7 @@ system.  The \lmpcmd{thermo} command is called a second time to
 update the output frequency from 10 to 50 as soon as \lmpcmd{PART B} of
 the simulation starts.  In addition, a new \lmpcmd{thermo\_style}
 command is introduced to specify the thermodynamic information LAMMPS should
-print during during \lmpcmd{PART B}.  This adjustment is made because, during
+print during during \lmpcmd{PART B.}  This adjustment is made because, during
 molecular dynamics, the system exhibits a non-zero temperature $T$ (and
 consequently a non-zero kinetic energy $K$, keyword \lmpcmd{ke}), which are useful to monitor.
 The \lmpcmd{pe} keyword represents the potential energy of the system, $U$, such that
@@ -841,19 +842,21 @@ timestep 0.005
 run 50000
 \end{lstlisting}
 The \lmpcmd{fix nve} command updates the positions and velocities of the
-atoms in the group \lmpcmd{all} at every step.  {\color{blue}More specifically,
-this command integrates Newton's equations of motion using the velocity-Verlet algorithm.} 
-The group \lmpcmd{all} is a default group that contains all atoms.  The last two lines specify
-the value of the \lmpcmd{timestep} and the number of steps for the
+atoms in the group \lmpcmd{all} at every step.  {\color{blue}More
+  specifically, this command integrates Newton's equations of motion
+  using the velocity-Verlet algorithm.}  The group \lmpcmd{all} is a
+default group that contains all atoms.  The last two lines specify the
+value of the \lmpcmd{timestep} and the number of steps for the
 \lmpcmd{run}, respectively, for a total duration of 250 time units.
 
 \begin{note}
-  {\color{blue}Since the only command affecting forces and velocities in the
-  present script is \lmpcmd{fix nve}, and periodic boundary conditions are applied
-  in all directions,} the MD simulation will be performed in the microcanonical (NVE) ensemble, which
-  maintains a constant number of particles and a fixed box volume. In
-  this ensemble, the system does not exchange energy with anything
-  outside the simulation box.
+  {\color{blue}Since the \emph{only} command affecting forces
+    and velocities in the present script is \lmpcmd{fix nve}, \emph{and}
+    periodic boundary conditions are applied in all directions,} the MD
+  simulation will be performed in the microcanonical (NVE) {\color{blue}
+    statistical mechanical} ensemble, which maintains a constant number
+  of particles and a fixed box volume. In this ensemble, the system does
+  not exchange energy with anything outside the simulation box.
 \end{note}
 
 Run the simulation using LAMMPS.  Initially, there is no equilibrium
@@ -930,10 +933,11 @@ dump viz all image 100 myimage-*.ppm type type &
 dump_modify viz pad 9 boxcolor royalblue &
   backcolor white adiam 1 1.6 adiam 2 4.8
 \end{lstlisting}
-{\color{blue}The `$\&$' is used to continue the commands on a new line.
-These commands tell} LAMMPS to generate NetPBM format images every 100
+{\color{blue}The `$\&$' characters at the end are used to extend the
+  commands across multiple lines. These two commands tell} LAMMPS to
+generate NetPBM format images every 100
 steps.  The two \lmpcmd{type} keywords are for \lmpcmd{color} and
-\lmpcmd{diameter}, respectively.  Run the \flecmd{initial.lmp} using
+\lmpcmd{diameter,} respectively.  Run the \flecmd{initial.lmp} using
 LAMMPS again, and a new window named \guicmd{Slide Show} will pop up.
 It will show each image created by the \lmpcmd{dump image} as it is
 created. After the simulation is finished (or stopped), the slideshow
@@ -1035,7 +1039,7 @@ stored internally in LAMMPS.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.55\linewidth]{LJ-cylinder}
+\includegraphics[width=0.75\linewidth]{LJ-cylinder}
 \caption{Visualization of the improved binary mixture input after minimization
   during \hyperref[lennard-jones-label]{Tutorial 1}.  Colors are the same as in
   Fig.~\ref{fig:LJ}.}
