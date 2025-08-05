@@ -3706,10 +3706,12 @@ classical textbooks like Ref.~\citenum{frenkel2023understanding}.
 % $\text{SiO}_2$), and TIP4P (for water).  Here, the TIP4P/2005 model is
 % employed for the water~\cite{abascal2005general}.  Open the
 % \flecmd{gcmc.lmp} file, which should contain the following lines:
-For this next step, we need to define the parameters for the water molecules and
-the cross-interactions between water and silica. The TIP4P/2005 model is employed
-for the water~\cite{abascal2005general}, while no specific parameters are set
-for the silica itself. The atoms of the silica will remain frozen during this part.
+For this next step, we need to {\color{blue} specify the force field used 
+to model the interactions in the system}. The TIP4P/2005 model is employed
+for the water~\cite{abascal2005general}, while no {\color{blue} interaction
+within silica is defined, as it will be seen farther below}. 
+{\color{blue} This is because the} atoms of the silica will 
+remain frozen during this part {\color{blue}of the simulation}.
 Only the cross-interactions between water and silica need
 to be defined. Open the \flecmd{gcmc.lmp} file, which should contain the following lines:
 \begin{lstlisting}
@@ -3728,8 +3730,9 @@ angle_style harmonic
 %using the \lmpcmd{hybrid/overlay} pair style.
 The PPPM solver~\cite{luty1996calculating} is specified with the \lmpcmd{kspace}
 command, and is used to compute the long-range Coulomb interactions associated
-with \lmpcmd{tip4p/long}.  Finally, the style for the bonds
-and angles of the water molecules are defined; however, these specifications are
+with \lmpcmd{tip4p/long}.  Finally, the {\color{blue} form of} the bond
+and angle{\color{blue} potentials} of the water molecules are defined; however, 
+{\color{blue} as previously discussed,} these specifications are
 not critical since TIP4P/2005 is a rigid water model.}
 
 \begin{note}
@@ -3809,7 +3812,7 @@ After reading the data file and defining the \lmpcmd{h2omol} molecule from the \
 file, the \lmpcmd{create\_atoms} command is used to include three water molecules
 in the system.  Then, add the following \lmpcmd{pair\_coeff} (and
 \lmpcmd{bond\_coeff} and \lmpcmd{angle\_coeff}) commands
-to \flecmd{gcmc.lmp}:
+to \flecmd{gcmc.lmp} {\color{blue}in order to specify the potential parameters}:
 \begin{lstlisting}
 pair_coeff * * 0 0
 pair_coeff Si OW 0.0057 4.42
@@ -3822,8 +3825,8 @@ angle_coeff HW-OW-HW 0 104.52
 % The force field Vashishta applies only to \lmpcmd{Si} and \lmpcmd{O} of $\text{SiO}_2$,
 % and not to the \lmpcmd{OW} and \lmpcmd{HW} of $\text{H}_2\text{O}$, thanks to the \lmpcmd{NULL} parameters
 % used for atoms of types \lmpcmd{OW} and \lmpcmd{HW}.
-Pair coefficients for the \lmpcmd{lj/cut/tip4p/long}
-potential are defined between O($\text{H}_2\text{O}$) and between H($\text{H}_2\text{O}$)
+Pair coefficients for the {\color{blue}potentials underlying the} \lmpcmd{lj/cut/tip4p/long} 
+{\color{blue}style} are defined between O($\text{H}_2\text{O}$) and between H($\text{H}_2\text{O}$)
 atoms, as well as between O($\text{SiO}_2$)-O($\text{H}_2\text{O}$) and
 Si($\text{SiO}_2$)-O($\text{H}_2\text{O}$).  Thus, the fluid-fluid and the
 fluid-solid interactions will be adressed with by the \lmpcmd{lj/cut/tip4p/long} potential.
@@ -3848,7 +3851,8 @@ fix shak H2O shake 1.0e-5 200 0 b OW-HW &
   a HW-OW-HW mol h2omol
 \end{lstlisting}
 The number of oxygen atoms from water molecules (i.e.~the number of molecules)
-is calculated by the \lmpcmd{nO} variable.  The SHAKE algorithm is used to
+is calculated by the \lmpcmd{nO} variable.  {\color{blue}As already discussed in other
+tutorials, the} SHAKE algorithm is used to
 maintain the shape of the water molecules over time~\cite{ryckaert1977numerical, andersen1983rattle}.
 
 \begin{note}
@@ -3934,7 +3938,7 @@ thermo_style custom step temp etotal v_nO &
 run 25000
 \end{lstlisting}
 {\color{blue}The \lmpcmd{f\_} keywords extract the Monte Carlo move statistics
-output by the \lmpcmd{fix gcmc} command.}
+{\color{blue} which is computed (and can be extracted)} by the \lmpcmd{fix gcmc} command.}
 
 \begin{figure}
 \centering
