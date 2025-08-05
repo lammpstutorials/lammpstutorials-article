@@ -391,18 +391,19 @@ OVITO~\cite{ovito_home,stukowski2009visualization}.
 
 \lammpsgui{} is a graphical text editor, enhanced for editing LAMMPS
 input files and linked to the LAMMPS library, allowing it to run LAMMPS
-directly.  The text editor functions similarly to other graphical
+directly.  The text editor {\color{blue}is similar} to other graphical
 editors, such as Notepad or Gedit, but offers the following enhancements
-specifically for LAMMPS:
+for {\color{blue} running} LAMMPS:
 \begin{itemize}
   \item Wizard dialogs to set up these tutorials
   \item Auto-completion of LAMMPS commands and options
   \item Context-sensitive online help
   \item Syntax highlighting for LAMMPS input files
   \item Syntax-aware line indentation
+  \item {\color{blue}Editor switches working directory to that of input file}
   \item Visualization using LAMMPS' built-in renderer
   \item Start and stop simulations via mouse or keyboard
-  \item Monitoring of simulation progress
+  \item Monitoring of simulation progress {\color{blue} and parallelization}
   \item Dynamic capture of LAMMPS output in a text window
   \item Automatic plotting of thermodynamic data during runs
   \item Capture of ``dump image'' outputs for animations
@@ -1695,7 +1696,7 @@ $0.001\,\text{\AA{}/fs}$.
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{CNT-unbreakable-length-energy}
+\includegraphics[width=\linewidth]{CNT-unbreakable-length-energy}\\[-2ex]
 \caption{a) Evolution of the length $L_\text{cnt}$ of the CNT with time,
 as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
 The CNT starts deforming at $t = 5\,\text{ps}$, and $L_\text{cnt-0}$ is the
@@ -1738,7 +1739,7 @@ curve, see Fig.~\ref{fig:CNT-stress-strain-unbreakable}.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.55\linewidth]{CNT-unbreakable-stress-strain}
+\includegraphics[width=0.55\linewidth]{CNT-unbreakable-stress-strain}\\[-2ex]
 \caption{Stress applied on the CNT during deformation, $F_\text{cnt}/A_\text{cnt}$,
 where $F_\text{cnt}$ is the force and $A_\text{cnt}$ the CNT surface area,
 as a function of the strain, $\Delta L_\text{cnt} = (L_\text{cnt}-L_\text{cnt-0}/L_\text{cnt-0})$, where
@@ -1891,7 +1892,7 @@ $5\,\% < \Delta L_\text{cnt} < 25\,\%$.
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{CNT-breakable-stress-energy}
+\includegraphics[width=\linewidth]{CNT-breakable-stress-energy}\\[-2ex]
 \caption{a) Evolution of the total energy $E$ of the CNT with time $t$.
 b) Stress applied on the CNT during deformation, $F_\text{cnt}/A_\text{cnt}$,
 where $F_\text{cnt}$ is the force and $A_\text{cnt}$ the CNT surface area,
@@ -2079,7 +2080,7 @@ or the IDs of the atoms that are connected by bonds and angles.
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{PEG-density}
+\includegraphics[width=\linewidth]{PEG-density}\\[-2ex]
 \caption{a) Temperature, $T$, of the water reservoir from \hyperref[all-atom-label]{Tutorial 3}
 as a function of the time, $t$.  The horizontal dashed line is the target temperature of 300\,K.
 b) Evolution of the system density, $\rho$, with $t$.}
@@ -2656,6 +2657,16 @@ to delete about $15~\%$ of the water molecules:
 delete_atoms random fraction 0.15 yes H2O NULL 482793 mol yes
 \end{lstlisting}
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{NANOSHEAR-system}
+\caption{Side view of the system.  Periodic images are represented in darker colors.
+Water molecules are in red and white, $\text{Na}^+$ ions in purple, $\text{Cl}^-$
+ions in lime, and wall atoms in gray.  Note the absence of atomic defect at the
+cell boundaries.}
+\label{fig:NANOSHEAR-system}
+\end{figure}
+
 To create an image of the system, add the following \lmpcmd{dump} image
 into \flecmd{create.lmp} (see also Fig.~\ref{fig:NANOSHEAR-system}):
 \begin{lstlisting}
@@ -2675,23 +2686,14 @@ run 0
 
 write_data create.data nocoeff
 \end{lstlisting}
-The \lmpcmd{run 0} command runs the simulation for 0 steps, which {\color{blue} serves} for
-creating the system and saving its state.  The \lmpcmd{write\_data} command
+The \lmpcmd{run 0} command {\color{blue}initializes} the simulation {\color{blue}but
+  does not advance positions or velocities which is required for cleanly saving the
+state}.  The \lmpcmd{write\_data} command
 generates a file called \lmpcmd{system.data} containing the information required
 to restart the simulation from the final configuration produced by this input
 file.  With the \lmpcmd{nocoeff} option, the parameters from the force field are
 not included in the \flecmd{.data} file.  Run the \flecmd{create.lmp} file using LAMMPS,
 and a file named \flecmd{create.data} will be created alongside \flecmd{create.lmp}.
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{NANOSHEAR-system}
-\caption{Side view of the system.  Periodic images are represented in darker colors.
-Water molecules are in red and white, $\text{Na}^+$ ions in purple, $\text{Cl}^-$
-ions in lime, and wall atoms in gray.  Note the absence of atomic defect at the
-cell boundaries.}
-\label{fig:NANOSHEAR-system}
-\end{figure}
 
 \paragraph{Energy minimization}
 
@@ -2703,10 +2705,9 @@ before starting the actual molecular dynamics simulation.
 % like that performed in the first tutorial; \hyperref[lennard-jones-label]{Lennard-Jones fluid}.
 % Instead, we will conduct a molecular dynamics simulation, employing certain techniques
 % to prevent the system from exploding due to overlapping atoms.
-
 Open the \flecmd{equilibrate.lmp} file that was downloaded alongside
-\flecmd{create.lmp} during the tutorial setup.  {\color{blue} Simiarly
-to before, it} contains the following lines:
+\flecmd{create.lmp} during the tutorial setup.  {\color{blue}Same as
+before, it} contains the following lines:
 \begin{lstlisting}
 boundary p p f
 units real
@@ -2854,6 +2855,17 @@ dump_modify mydmp backcolor white &
 The \lmpcmd{undump} command is used to cancel the previous \lmpcmd{dump} command.
 Then, a new \lmpcmd{dump} command with a larger dumping period is used.
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{NANOSHEAR-equilibration}\\[-2ex]
+\caption{a)~Pressure, $p$, of the nanosheared electrolyte system
+simulated in \hyperref[sheared-confined-label]{Tutorial 4} as a function of the
+time, $t$.  b)~Distance between the walls, $\Delta z$, as a function of $t$.
+\textcolor{blue}{The orange line
+shows the raw data, and the blue line represents a time-averaged curve.}}
+\label{fig:NANOSHEAR-equilibration}
+\end{figure}
+
 \begin{note}
 {\color{blue}
 Just like the \lmpcmd{undump} command can cancel an active \lmpcmd{dump}, other
@@ -2876,17 +2888,6 @@ The first two variables extract the centers of mass of the two walls.  The
 \lmpcmd{deltaz} variable is then used to calculate the difference between the two
 variables \lmpcmd{walltopz} and \lmpcmd{wallbotz}, i.e.~the distance between the
 two centers of mass of the walls.
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{NANOSHEAR-equilibration}\\[-2ex]
-\caption{a)~Pressure, $p$, of the nanosheared electrolyte system
-simulated in \hyperref[sheared-confined-label]{Tutorial 4} as a function of the
-time, $t$.  b)~Distance between the walls, $\Delta z$, as a function of $t$.
-\textcolor{blue}{The orange line
-shows the raw data, and the blue line represents a time-averaged curve.}}
-\label{fig:NANOSHEAR-equilibration}
-\end{figure}
 
 Finally, let us run the simulation for 30~ps by adding a \lmpcmd{run} command
 to \flecmd{equilibrate.lmp}:
@@ -3632,15 +3633,6 @@ thermo 250
 thermo_style custom step temp etotal vol density
 \end{lstlisting}
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{GCMC-cracked}
-\caption{Block of silica from \hyperref[gcmc-silica-label]{Tutorial 6}
-after deformation.  Silicon atoms are represented in yellow,
-and oxygen atoms in red.  The crack was induced by the
-imposed deformation of the box along the $x$-axis (i.e.,~the horizontal axis).}
-\label{fig:GCMC-cracked}
-\end{figure}
 Let us progressively increase the size of the box in the $x$ direction,
 forcing the silica to deform and eventually crack.  To achive this,
 the \lmpcmd{fix deform} command is used, with a rate
@@ -3666,6 +3658,15 @@ dislocations (Fig.~\ref{fig:GCMC-cracked}).
 NVT ensemble, using the \lmpcmd{fix nvt} command does not guarantee that
 a simulation actually samples the NVT ensemble.}
 \end{note}
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{GCMC-cracked}
+\caption{Block of silica from \hyperref[gcmc-silica-label]{Tutorial 6}
+after deformation.  Silicon atoms are represented in yellow,
+and oxygen atoms in red.  The crack was induced by the
+imposed deformation of the box along the $x$-axis (i.e.,~the horizontal axis).}
+\label{fig:GCMC-cracked}
+\end{figure}
 
 \subsubsection{Adding water}
 
@@ -3917,6 +3918,16 @@ run 25000
 {\color{blue}The \lmpcmd{f\_} keywords extract the Monte Carlo move statistics
 output by the \lmpcmd{fix gcmc} command.}
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{GCMC-solvated}
+\caption{Snapshot of the silica system after the adsorption of water molecules
+during \hyperref[gcmc-silica-label]{Tutorial 6}.
+The oxygen atoms of the water molecules are represented in cyan, the silicon
+atoms in yellow, and the oxygen atoms of the solid in red.}
+\label{fig:GCMC-solvated}
+\end{figure}
+
 \begin{note}
 When using the pressure argument, LAMMPS ignores the value of the
 chemical potential (here $\mu = -0.5\,\text{eV}$, which corresponds roughly to
@@ -3934,16 +3945,6 @@ between water and silica (i.e.~its hydrophilicity).  Note that GCMC simulations
 of such dense phases are usually slow to converge due to the very low probability
 of successfully inserting a molecule.  Here, the short simulation duration was
 made possible by the use of a high pressure.
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{GCMC-solvated}
-\caption{Snapshot of the silica system after the adsorption of water molecules
-during \hyperref[gcmc-silica-label]{Tutorial 6}.
-The oxygen atoms of the water molecules are represented in cyan, the silicon
-atoms in yellow, and the oxygen atoms of the solid in red.}
-\label{fig:GCMC-solvated}
-\end{figure}
 
 \subsection{Tutorial 7: Free energy calculation}
 \label{umbrella-sampling-label}
