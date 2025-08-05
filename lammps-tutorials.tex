@@ -96,9 +96,13 @@
 \renewcommand{\floatpagefraction}{0.8} % At least 80% of a page must be used by floats
 \renewcommand{\textfraction}{0.1} % At least 10% of a page must contain text
 
-\newcommand{\lmpcmd}[1]{\hspace{0pt}\colorbox{listing}{\textcolor{command}{\small{#1}}}\hspace{0pt}} % lammps command
+% AK: I removed the \hspace{0pt} from \lmpcmd{} since otherwise a following comma
+% or full stop may wrap to the next line.
+\newcommand{\lmpcmd}[1]{\colorbox{listing}{\textcolor{command}{\small{#1}}}} % lammps command
+%\newcommand{\lmpcmd}[1]{\hspace{0pt}\colorbox{listing}{\textcolor{command}{\small{#1}}}\hspace{0pt}} % lammps command
 % \newcommand{\lmpcmd}[1]{\hspace{0pt}\colorbox{listing}{\textcolor{command}{\texttt{#1}}}\hspace{0pt}} % lammps command
-\newcommand{\lmpcmdnote}[1]{\hspace{0pt}\colorbox{note_listing}{\textcolor{command}{\small{#1}}}\hspace{0pt}} % lammps command inside note
+\newcommand{\lmpcmdnote}[1]{\colorbox{note_listing}{\textcolor{command}{\small{#1}}}} % lammps command inside note
+% \newcommand{\lmpcmdnote}[1]{\hspace{0pt}\colorbox{note_listing}{\textcolor{command}{\small{#1}}}\hspace{0pt}} % lammps command inside note
 \newcommand{\flrcmd}[1]{\textcolor{command}{\texttt{#1}}} % folder in monopace
 \newcommand{\flecmd}[1]{\textcolor{command}{\texttt{#1}}} % files name in monopace
 \newcommand{\guicmd}[1]{\textcolor{command}{\texttt{«#1»}}} % LAMMPS-GUI commands in French quotation monopace
@@ -820,18 +824,18 @@ thermo 50
 thermo_style custom step temp etotal pe ke press
 \end{lstlisting}
 
-Since LAMMPS reads inputs from top to bottom, these lines will
-be executed \emph{after} the energy minimization.  Therefore,
-there is no need to re-initialize or re-define the
-system.  The \lmpcmd{thermo} command is called a second time to
-update the output frequency from 10 to 50 as soon as \lmpcmd{PART B} of
-the simulation starts.  In addition, a new \lmpcmd{thermo\_style}
-command is introduced to specify the thermodynamic information LAMMPS should
-print during during \lmpcmd{PART B.}  This adjustment is made because, during
-molecular dynamics, the system exhibits a non-zero temperature $T$ (and
-consequently a non-zero kinetic energy $K$, keyword \lmpcmd{ke}), which are useful to monitor.
-The \lmpcmd{pe} keyword represents the potential energy of the system, $U$, such that
-$U + K = E$.
+Since LAMMPS reads inputs from top to bottom, these lines will be
+executed \emph{after} the energy minimization.  Therefore, there is no
+need to re-initialize or re-define the system.  The \lmpcmd{thermo}
+command is called a second time to update the output frequency from 10
+to 50 as soon as \lmpcmd{PART B} of the simulation starts.  In addition,
+a new \lmpcmd{thermo\_style} command is introduced to specify the
+thermodynamic information LAMMPS should print during during \lmpcmd{PART
+  B}.  This adjustment is made because, during molecular dynamics, the
+system exhibits a non-zero temperature $T$ (and consequently a non-zero
+kinetic energy $K$, keyword \lmpcmd{ke}), which are useful to monitor.
+The \lmpcmd{pe} keyword represents the potential energy of the system,
+$U$, such that $U + K = E$.
 
 Then, add a second \lmpcmd{Run} category by including the following
 lines in \lmpcmd{PART B} of \flecmd{initial.lmp}:
@@ -937,7 +941,7 @@ dump_modify viz pad 9 boxcolor royalblue &
   commands across multiple lines. These two commands tell} LAMMPS to
 generate NetPBM format images every 100
 steps.  The two \lmpcmd{type} keywords are for \lmpcmd{color} and
-\lmpcmd{diameter,} respectively.  Run the \flecmd{initial.lmp} using
+\lmpcmd{diameter}, respectively.  Run the \flecmd{initial.lmp} using
 LAMMPS again, and a new window named \guicmd{Slide Show} will pop up.
 It will show each image created by the \lmpcmd{dump image} as it is
 created. After the simulation is finished (or stopped), the slideshow
