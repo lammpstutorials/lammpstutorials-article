@@ -2513,7 +2513,8 @@ $\text{Cl}^-$), and the atoms from the walls.  The simulation contains 1 type of
 and 1 type of angle (both required by the water molecules).
 The parameters for these bond and angle constraints will be given later.  The \lmpcmd{extra/ (...)}
 keywords are for memory allocation.  Finally, the \lmpcmd{labelmap} commands assign
-alphanumeric type labels to each numeric atom type, bond type, and angle type.
+alphanumeric type labels to each numeric atom type, bond type, and angle type{\color{blue}, a concept
+already introduced in previous tutorials}.
 
 Now, we can add atoms to the system.  First, let us create two sub-regions corresponding
 respectively to the two solid walls, and create a larger region from the union of the
@@ -2540,7 +2541,7 @@ create_atoms 0 region rliquid mol h2omol 482793
 \end{lstlisting}
 Within the last three lines, a \lmpcmd{region} named \lmpcmd{rliquid} is
 created based on the last defined lattice, \lmpcmd{fcc 4.04}.  \lmpcmd{rliquid}
-will be used for depositing the water molecules.  The \lmpcmd{molecule} command
+will be used for {\color{blue} introducing} the water molecules.  The \lmpcmd{molecule} command
 opens up the molecule template called \flecmd{water.mol}, and names the
 associated molecule \lmpcmd{h2omol}.  The new molecules are placed on the
 \lmpcmd{fcc 4.04} lattice by the \lmpcmd{create\_atoms} command.  The first
