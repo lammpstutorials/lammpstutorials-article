@@ -801,17 +801,6 @@ of lower potential energy.
 
 \paragraph{Molecular dynamics}
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{LJ-energy}
-\caption{(a) Potential energy, $U$, of the binary mixture as a function of the
-step during energy minimization in \hyperref[lennard-jones-label]{Tutorial 1}.
-(b) Potential energy, $U$, as a function of time during molecular dynamics in
-the NVT ensemble.  (c) Kinetic energy, $K$, during energy minimization.
-(d) Kinetic energy, $K$, during molecular dynamics.}
-\label{fig:evolution-energy}
-\end{figure}
-
 After energy minimization, any overlapping atoms are displaced, and
 the system is ready for a molecular dynamics simulation.  To continue
 from the result of the minimization step, append the MD simulation
@@ -895,6 +884,17 @@ random number generator used inside of \lmpcmd{fix langevin}; you can
 change it to perform statistically independent simulations.  In the
 presence of a thermostat, the MD simulation will be performed in the
 canonical or NVT ensemble.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{LJ-energy}
+\caption{(a) Potential energy, $U$, of the binary mixture as a function of the
+step during energy minimization in \hyperref[lennard-jones-label]{Tutorial 1}.
+(b) Potential energy, $U$, as a function of time during molecular dynamics in
+the NVT ensemble.  (c) Kinetic energy, $K$, during energy minimization.
+(d) Kinetic energy, $K$, during molecular dynamics.}
+\label{fig:evolution-energy}
+\end{figure}
 
 Run the simulation again using \lammpsgui{}.  From the information
 printed in the \guicmd{Output} window, one can see that the temperature
@@ -988,7 +988,6 @@ thermo_style custom step etotal press
 # 5) Run
 minimize 1.0e-6 1.0e-6 1000 10000
 \end{lstlisting}
-
 We want to create the atoms of types 1 and 2 in two separate
 regions.  To achieve this, we need to add two \lmpcmd{region} commands and then
 reintroduce the \lmpcmd{create\_atoms} commands, this time using the new
@@ -1021,7 +1020,6 @@ write_data improved.min.data
   the final state of the energy minimization step, eliminating the need
   to repeat the system creation and minimization.
 \end{note}
-
 Run the \flecmd{improved.min.lmp} file using \lammpsgui{}.  At the end
 of the simulation, a file called \flecmd{improved.min.data} is created.
 You can view the contents of this file from \lammpsgui{}, by
@@ -1040,15 +1038,6 @@ keep track of which atoms crossed the periodic boundary.  The exact
 format of each line in the \lmpcmd{Atoms} section depends on the choice
 of \lmpcmd{atom\_style}, which determines which per-atom data is set and
 stored internally in LAMMPS.
-
-\begin{figure}
-\centering
-\includegraphics[width=0.75\linewidth]{LJ-cylinder}
-\caption{Visualization of the improved binary mixture input after minimization
-  during \hyperref[lennard-jones-label]{Tutorial 1}.  Colors are the same as in
-  Fig.~\ref{fig:LJ}.}
-\label{fig:improved-min}
-\end{figure}
 
 \begin{note}
 Instead of the \lmpcmdnote{write\_data} command, you can also use the
@@ -1091,6 +1080,15 @@ lines to \flecmd{improved.md.lmp}:
 pair_style lj/cut 4.0
 read_data improved.min.data
 \end{lstlisting}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{LJ-cylinder}
+\caption{Visualization of the improved binary mixture input after minimization
+  during \hyperref[lennard-jones-label]{Tutorial 1}.  Colors are the same as in
+  Fig.~\ref{fig:LJ}.}
+\label{fig:improved-min}
+\end{figure}
 
 By visualizing the system (see Fig.~\ref{fig:improved-min}), you may
 have noticed that some atoms left their original region during
@@ -1135,17 +1133,6 @@ group grp_t1_in delete
 group grp_t2_out delete
 \end{lstlisting}
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{LJ-evolution}
-\caption{Evolution of the system from \hyperref[lennard-jones-label]{Tutorial 1}
-during mixing.  The three snapshots show respectively the system
-at $t=0$ (left panel), $t=75$ (middle panel), and $t=1500$ (right panel).  The
-atoms of type 1 are represented as small turquoise spheres and the atoms of type 2
-as large blue spheres.}
-\label{fig:evolution-population}
-\end{figure}
-
 Let us monitor the number of atoms of each type inside the cylinder as a
 function of time by creating the following equal-style variables:
 \begin{lstlisting}
@@ -1159,8 +1146,8 @@ the number of atoms of a specific group within the \lmpcmd{cyl\_in} region.
 \begin{note}
 {\color{blue}The \lmpcmd{n1\_in} and \lmpcmd{n2\_in} defined above are
 equal-style variables, which evaluate a numerical expression using the
-\lmpcmd{count()} function.  Other common LAMMPS variable types include
-atom-style, index, and loop.}
+\lmpcmd{count()} function.  Other LAMMPS variable styles include
+atom, index, file, loop, string, and vector.}
 \end{note}
 
 In addition to counting the atoms in each region, we will also extract
@@ -1183,7 +1170,8 @@ require a ``consumer'' command that references the compute.  In this case, the
 first compute is referenced by the second, and we reference the second
 in a \lmpcmd{thermo\_style custom} command (see below).
 
-\begin{note} {\color{blue} LAMMPS \lmpcmd{compute} commands can produce
+\begin{note}
+  {\color{blue} LAMMPS \lmpcmd{compute} commands can produce
     a wide variety of data and one can identify the category from the
     name of the compute style: global data (no suffix), local data
     (/local suffix), per-atom data (/atom suffix), per-chunk data
@@ -1209,6 +1197,17 @@ in a \lmpcmd{thermo\_style custom} command (see below).
 There is no need for a \lmpcmd{Settings}
 section, as the settings are taken from the \flecmd{.data} file.
 \end{note}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{LJ-evolution}
+\caption{Evolution of the system from \hyperref[lennard-jones-label]{Tutorial 1}
+during mixing.  The three snapshots show respectively the system
+at $t=0$ (left panel), $t=75$ (middle panel), and $t=1500$ (right panel).  The
+atoms of type 1 are represented as small turquoise spheres and the atoms of type 2
+as large blue spheres.}
+\label{fig:evolution-population}
+\end{figure}
 
 Finally, let us complete the script by adding the following lines to
 \flecmd{improved.md.lmp}:
@@ -1248,6 +1247,16 @@ random force applied to the atoms is equal to zero. These steps are
 important to prevent the system from starting to drift or move as a
 whole.
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{LJ-mixing}\\[-2ex]
+\caption{a)~Evolution of the numbers $N_\text{1, in}$ and $N_\text{2, in}$ of atoms
+of types 1 and 2, respectively, within the \lmpcmd{cyl\_in} region as functions
+of time $t$.  b)~Evolution of the coordination number $C_{1-2}$ (compute \lmpcmd{sumcoor12})
+between atoms of types 1 and 2.}
+\label{fig:mixing}
+\end{figure}
+
 \begin{note}
   A bulk system with periodic boundary conditions is expected to remain
   in place.  Accordingly, when computing the temperature from the
@@ -1258,17 +1267,6 @@ whole.
   very quickly.  This phenomenon is sometimes referred to as the
   ``flying ice cube syndrome''~\cite{wong2016good}.
 \end{note}
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{LJ-mixing}
-\caption{a)~Evolution of the numbers $N_\text{1, in}$ and $N_\text{2, in}$ of atoms
-of types 1 and 2, respectively, within the \lmpcmd{cyl\_in} region as functions
-of time $t$.  b)~Evolution of the coordination number $C_{1-2}$ (compute \lmpcmd{sumcoor12})
-between atoms of types 1 and 2.}
-\label{fig:mixing}
-\end{figure}
-
 Run \flecmd{improved.md.lmp} and observe the mixing of the two populations
 over time (see also Fig.~\ref{fig:evolution-population}).  From the
 variables \lmpcmd{n1\_in} and \lmpcmd{n2\_in}, you can track the number
@@ -1299,6 +1297,17 @@ the Nos\'e-Hoover or the Langevin thermostat.
 \item Append an NVE run (i.e.~without any thermostat) and observe the energy levels.
 \end{itemize}
 
+\begin{figure}
+\centering
+\includegraphics[width=0.50\linewidth]{LJ-coords}
+\caption{Snapshot of the binary mixture simulated
+  during \hyperref[lennard-jones-label]{Tutorial 1} with atoms of type 1
+  colored according to their computed $1-2$ coordination
+  number from the compute \lmpcmd{coor12}, ranging from turquoise,\lmpcmd{c\_coor12 = 0},
+  to yellow, \lmpcmd{c\_coor12 = 1}, and red, \lmpcmd{c\_coor12 = 2}.}
+\label{fig:coords-viz}
+\end{figure}
+
 \begin{note}
 {\color{blue}
 In contrast to the \lmpcmd{fix nve} command, which integrates Newton's equations
@@ -1317,18 +1326,6 @@ dump viz all image 1000 myimage-*.ppm v_coor12 type &
 dump_modify viz adiam 1 1 adiam 2 3 backcolor white &
   amap -1 2 ca 0.0 4 min royalblue 0 turquoise 1 yellow max red
 \end{lstlisting}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.55\linewidth]{LJ-coords}
-\caption{Snapshot of the binary mixture simulated
-  during \hyperref[lennard-jones-label]{Tutorial 1} with atoms of type 1
-  colored according to their computed $1-2$ coordination
-  number from the compute \lmpcmd{coor12}, ranging from turquoise,\lmpcmd{c\_coor12 = 0},
-  to yellow, \lmpcmd{c\_coor12 = 1}, and red, \lmpcmd{c\_coor12 = 2}.}
-\label{fig:coords-viz}
-\end{figure}
-
 Run LAMMPS again.  Atoms of type 1 are now colored based on the value
 of \lmpcmd{c\_coor12}, which is mapped continuously from turquoise to yellow
 and red for atoms with the highest coordination (Fig.~\ref{fig:coords-viz}).
@@ -1338,6 +1335,14 @@ all assigned a value of -1, and will therefore always be colored their default b
 \subsection{Tutorial 2: Pulling on a carbon nanotube}
 \label{carbon-nanotube-label}
 
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{CNT}
+\caption{The carbon nanotube (CNT) simulated during
+\hyperref[carbon-nanotube-label]{Tutorial 2}.}
+\label{fig:CNT}
+\end{figure}
+
 In this tutorial, the system of interest is a small, single-walled
 carbon nanotube (CNT) in an empty box (Fig.~\ref{fig:CNT}).  The CNT is
 strained by imposing a constant velocity on the edge atoms.  To
@@ -1345,9 +1350,9 @@ illustrate the difference between conventional and reactive force
 fields, this tutorial is divided into two parts: in the first part, a
 conventional molecular force field (called
 OPLS-AA~\cite{jorgensenDevelopmentTestingOPLS1996}) is used and the
-{\color{blue}form of the bonded potential ensure that the} bonds between
-the atoms of the CNT are unbreakable.  In the second part, a reactive,
-{\color{blue} many-body} force field (called
+{\color{blue}functional form of the bonded potential ensures that the}
+bonds between the atoms of the CNT are unbreakable.  In the second part,
+a reactive, {\color{blue} many-body} force field (called
 AIREBO~\cite{stuart2000reactive}) is used, which allows chemical bonds
 to break under large strain.
 
@@ -1361,25 +1366,20 @@ the CNT topology and geometry, named \flecmd{unbreakable.data}, a
 parameters file named \flecmd{unbreakable.inc}, as well as the scripts
 required for the second part of the tutorial.
 
-\begin{figure}
-\centering
-\includegraphics[width=0.55\linewidth]{CNT}
-\caption{The carbon nanotube (CNT) simulated during
-\hyperref[carbon-nanotube-label]{Tutorial 2}.}
-\label{fig:CNT}
-\end{figure}
-
 \subsubsection{Unbreakable bonds}
 
-With most conventional molecular force fields, the chemical bonds between
-atoms are defined at the start of the simulation and remain fixed, regardless
-of the forces applied to the atoms.  {\color{blue}In this tutorial, these bonds
-are explicitly specified in the \lmpcmd{.data} file, which is read using the \lmpcmd{read\_data} command (see below).}
-Bonds are typically modeled as springs
-with equilibrium distances $r_0$ and force constants $k_\text{b}$:
-$U_\text{b} = k_\text{b} \left( r - r_0 \right)^2$.  Additionally, angular and
-dihedral constraints are often imposed to preserve the molecular structure
-by maintaining the relative orientations of neighboring atoms.
+With most conventional molecular force fields, the chemical bonds
+between atoms are defined at the start of the simulation and remain
+fixed, regardless of the forces applied to the atoms.  {\color{blue}In
+  this tutorial, these bonds are explicitly specified in the
+  \lmpcmd{.data} file, which is read using the \lmpcmd{read\_data}
+  command (see below).}
+Bonds are typically modeled as springs {\color{blue}following Hooke's
+law} with equilibrium distances $r_0$ and force constants $k_\text{b}$:
+$U_\text{b} = k_\text{b} \left( r - r_0 \right)^2$.  Additionally,
+angular and dihedral {\color{blue}interactions} are often imposed to
+preserve the molecular structure by maintaining the relative
+orientations of neighboring atoms.
 
 \paragraph{The LAMMPS input}
 
@@ -1518,10 +1518,11 @@ bottom), $x_\text{min} > x > x_\text{max}$ (\lmpcmd{rmid}, for region middle),
 and $x > x_\text{max}$ (\lmpcmd{rtop}, for region top).
 
 \begin{note}
-{\color{blue}
-So far, variables have been referenced dynamically during the run using
-the \lmpcmd{v\_} prefix, which evaluates the variable as it evolves over time.
-Here, a dollar sign (\$) is used to reference the variable at the time the script is read.}
+  {\color{blue} So far, variables have been referenced
+    dynamically during the run using the \lmpcmd{v\_} prefix, which
+    evaluates the variable as it evolves over time.  Here, a dollar sign
+    (\$) is used to expand the variable immediately at the time the input
+    script is read.}
 \end{note}
 
 Finally, let us define 3 groups of atoms corresponding to the atoms
@@ -1585,8 +1586,8 @@ velocity cnt_mid create 300 48455 mom yes rot yes
 \end{lstlisting}
 Re-setting the atom IDs is necessary before using the \lmpcmd{velocity} command
 when atoms were deleted, which is done here with the \lmpcmd{reset\_atoms} command.
-The \lmpcmd{velocity} command gives initial velocities to the atoms of the middle
-group \lmpcmd{cnt\_mid}, ensuring an initial temperature of $T = 300\,\text{K}$
+The \lmpcmd{velocity} command {\color{blue}assigns random} initial velocities to the atoms of the middle
+group \lmpcmd{cnt\_mid} {\color{blue} from a uniform distribution}, ensuring an initial temperature of $T = 300\,\text{K}$
 for these atoms.
 
 Let us specify the thermalization and the dynamics of the system.  Add the following
@@ -1605,10 +1606,10 @@ with desired temperature of 300\,K~\cite{nose1984unified, hoover1985canonical}.
 \begin{note}
 {\color{blue}The Nosé-Hoover thermostat only controls the temperature of
 the atoms belonging to the specified \lmpcmd{cnt\_mid} group. Atoms outside
-this group are not affected by the thermostat.}
+this group are not affected.}
 \end{note}
 
-To restrain the motion of the atoms at the edges, let us add the following
+To {\color{blue}immobilize} the atoms at the edges, let us add the following
 commands to \flecmd{unbreakable.lmp}:
 \begin{lstlisting}
 fix mysf1 cnt_top setforce 0 0 0
@@ -1619,8 +1620,8 @@ velocity cnt_bot set 0 0 0
 The two \lmpcmd{setforce} commands cancel the forces applied on the atoms of the
 two edges, respectively.  The cancellation of the forces is done at every step,
 and along all 3 directions of space, $x$, $y$, and $z$, due to the use of
-\lmpcmd{0 0 0}.  {\color{blue}Although the forces on these atoms is set to zero,
-the \lmpcmd{fix} still stores the forces acting on the group before
+\lmpcmd{0 0 0}.  {\color{blue}Although the force on these atoms is set to zero,
+the \lmpcmd{fix} stores the force vector acting on the group \emph{before}
 cancellation, which can later be extracted for analysis (see below).} 
 The two \lmpcmd{velocity} commands set the initial velocities
 along $x$, $y$, and $z$ to 0 for the atoms of \lmpcmd{cnt\_top} and
@@ -1629,13 +1630,12 @@ the atoms of the edges will remain immobile during the simulation (or at least
 they would if no other command was applied to them).
 
 \begin{note}
-The \lmpcmdnote{velocity set}
-command imposes the velocity of a group of atoms at the start of a run but does
-not enforce the velocity during the entire simulation.  When \lmpcmdnote{velocity set}
-is used in combination with \lmpcmdnote{setforce 0 0 0}, as is the case here, the
-atoms won't feel any force during the entire simulation.  According to the Newton
-equation, no force means no acceleration, meaning that the initial velocity
-will persist during the entire simulation, thus producing a constant velocity motion.
+  The \lmpcmdnote{velocity set} command {\color{blue}adjusts} the velocities of
+  a group of atoms {\color{blue}immediately} but {\color{blue}has no effect}
+  \emph{during} the simulation.  When \lmpcmdnote{velocity set} is used
+  in combination with \lmpcmdnote{setforce 0 0 0}, as is the case here, the
+  initial velocity will persist during the entire simulation, thus producing
+  a constant velocity {\color{blue} motion or no motion at all}.
 \end{note}
 
 \paragraph{Outputs}
@@ -1775,7 +1775,7 @@ pair_coeff * * CH.airebo C
 \end{lstlisting}
 \begin{note} {\color{blue}The AIREBO force field is a many-body
     potential where interactions are not only between pairs of atoms,
-    but also triples and quadruples representing angles and dihedral
+    but also triples and quadruples representing angle and dihedral
     interactions.  This means, that there are different rules for the
     \lmpcmd{pair\_coeff} command: there must be only one command that
     covers all permutations of atom types by using two '*' wildcards.
@@ -1814,6 +1814,14 @@ here, a larger distance of 120~Å was used for the box size along
 the $x$-axis, to allow for larger deformation of the CNT.
 
 \paragraph{Start the simulation}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{CNT-deformed-breakable}
+\caption{CNT with broken bonds.  This image was generated using
+VMD~\cite{vmd_home,humphrey1996vmd} with the \guicmd{DynamicBonds} representation.}
+\label{fig:CNT-deformed-breakable}
+\end{figure}
 
 Here, let us perform a similar deformation as the previous one.
 In \lmpcmd{breakable.lmp}, replace the \lmpcmd{run 0 post no} line with:
@@ -1867,14 +1875,6 @@ run 30000
 \end{lstlisting}
 Run the simulation.  Some bonds are expected to break before the end of the
 simulation (Fig.~\ref{fig:CNT-deformed-breakable}).
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{CNT-deformed-breakable}
-\caption{CNT with broken bonds.  This image was generated using
-VMD~\cite{vmd_home,humphrey1996vmd} with the \guicmd{DynamicBonds} representation.}
-\label{fig:CNT-deformed-breakable}
-\end{figure}
 
 Looking at the evolution of the energy, one can see that the total
 energy $E$ is initially increasing with the deformation.  When bonds
