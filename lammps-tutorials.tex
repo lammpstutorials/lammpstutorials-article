@@ -4366,7 +4366,8 @@ next a
 jump SELF loop
 \end{lstlisting}
 {\color{blue} The definition of a variable of loop style serves the same purpose
-as in Tutorial 5, and we highlight here the particular utility of using its value
+as in (\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}), and we highlight 
+here the particular utility of using its value
 to distinguish the files written by the \lmpcmd{fix ave_/time} command for the
 different bias potentials.}
 The \lmpcmd{spring} command imposes the additional harmonic potential $V$ with
@@ -4475,7 +4476,8 @@ special_bonds lj/coul 0 0 1
 \end{lstlisting}
 The \lmpcmd{class2} styles compute a 6/9 Lennard-Jones potential~\cite{sun1998compass}.
 The \textit{class2} bond, angle, dihedral, and improper styles are used as
-well, see the documentation for a description of their respective potentials.
+well, see the documentation for a description of the respective {\color{blue} potential 
+form they, each, prescribe}.  
 {\color{blue}The \lmpcmd{tail yes} option adds long-range van der Waals tail
 corrections to the energy and pressure.}
 The \lmpcmd{mix sixthpower} imposes the following mixing rule for the calculation
@@ -4508,10 +4510,11 @@ Finally, let us use the \lmpcmd{minimize} command to reduce the potential energy
 minimize 1.0e-4 1.0e-6 100 1000
 reset_timestep 0
 \end{lstlisting}
+{\color{blue}These commands should be familiar from previous tutorials.}  
 
 Then, let us densify the system to a target value of $0.9~\text{g/cm}^3$
-by manually shrinking the simulation box at a constant rate.  The dimension parallel
-to the CNT axis is maintained fixed because the CNT is periodic in that direction.
+by {\color{blue}imposing the} shrinking {\color{blue}of} the simulation box at a constant rate.  
+The dimension parallel to the CNT axis is maintained fixed because the CNT is periodic in that direction.
 Add the following commands to \flecmd{mixing.lmp}:
 % SG: I removed the loop local, unless its important? But if it is, we have to
 % explain what it does and why it was chosen here.
@@ -4529,7 +4532,8 @@ thermo_style custom step temp pe etotal press density
 run 9000
 \end{lstlisting}
 The \lmpcmd{fix halt} command is used to stop the box shrinkage once the
-target density is reached.
+target density is reached{\color{blue}, and the other commands should be
+familiar from previous tutorials}.
 
 For the next stage of the simulation, we will use \lmpcmd{dump image} to
 output images every 200 steps:
@@ -4561,7 +4565,8 @@ run 10000
 
 write_data mixing.data
 \end{lstlisting}
-For visualization purposes, the atoms from the CNT \lmpcmd{group} is moved
+For visualization purposes, the atoms {\color{blue} of} 
+the CNT \lmpcmd{group} {\color{blue}are} moved
 to the center of the box using \lmpcmd{fix recenter}.
 As the time progresses, the system density,
 $\rho$, gradually converges toward the {\color{blue}target value of $0.9$\,g/cm$^3$} (Fig.~\ref{fig:evolution-density}\,a).
@@ -4695,10 +4700,18 @@ fix rxn all bond/react &
   react R2 all 1 0 3.0 mol3 mol4 M-P.rxnmap &
   react R3 all 1 0 5.0 mol5 mol6 P-P.rxnmap
 \end{lstlisting}
+% CA: can someone confirm my changes added in this paragraph? I am unsure of them
+% as I literally just figured it out to write them. (PS: I just realized that some
+% of it may be redundant with the note, but I would still leave it as the reader
+% will have the full information.
 With the \lmpcmd{stabilization} keyword, the \lmpcmd{bond/react} command will
 stabilize the atoms involved in the reaction using the \lmpcmd{nve/limit}
-command with a maximum displacement of $0.03\,\mathrm{\AA{}}$.  By default,
-each reaction is stabilized for 60 time steps.  Each \lmpcmd{react} keyword
+command with a maximum displacement of $0.03\,\mathrm{\AA{}}$.  
+{\color{blue}The \lmpcmd{nve/limit} is a command that functions similar to the
+\lmpcmd{nve} in terms of equation of motion implied, but has a constraint on
+how close atoms will be. In this case, it will be summoned internally within
+LAMMS as the \lmpcmd{bond/react} appears.}  
+By default, each reaction is stabilized for 60 time steps.  Each \lmpcmd{react} keyword
 corresponds to a reaction, e.g.,~a transformation of \lmpcmd{mol1} into \lmpcmd{mol2}
 based on the atom map \lmpcmd{M-M.rxnmap}.  Implementation details about each reaction,
 such as the reaction distance cutoffs and the frequency with which to search for
@@ -4728,7 +4741,8 @@ the group \mbox{\lmpcmd{all}.}  Instead, the group of atoms not currently
 undergoing stabilization is named by appending `\_REACT' to the user-provided prefix.
 \end{note}
 
-Add the following commands to \flecmd{polymerize.lmp} to operate in the NVT ensemble
+Add the following commands to \flecmd{polymerize.lmp} to 
+{\color{blue} carry out the dynamics using a Nosé-Hoover thermostat}
 while ensuring that the CNT remains centered in the simulation box:
 \begin{lstlisting}
 fix mynvt statted_grp_REACT nvt temp 530 530 100
@@ -4741,7 +4755,8 @@ thermo_style custom step temp press density f_rxn[*]
 run 25000
 \end{lstlisting}
 Here, the \lmpcmd{thermo custom} command is used
-to print the cumulative reaction counts from \lmpcmd{fix rxn}.
+to print the cumulative reaction counts {\color{blue}which are calculated by} \lmpcmd{fix rxn}
+{\color{blue}and thus can be extracted from it}.
 Run the simulation using LAMMPS.  As the simulation progresses, polymer chains are
 observed forming (Fig.~\ref{fig:REACT-final}).  During this reaction process, the
 temperature of the system remains well-controlled (Fig.~\ref{fig:evolution-reacting}\,a),
