@@ -2466,13 +2466,13 @@ kspace_style pppm/tip4p 1.0e-5
 kspace_modify slab 3.0
 \end{lstlisting}
 These lines are used to define the most basic parameters, including the
-{\color{blue}atom style, the form of the bond and angle potentials and the non-bonded 
-interactions}.  Here, \lmpcmd{lj/cut/tip4p/long} imposes a Lennard-Jones potential with
-a cut-off at $12\,\text{\AA{}}$ and a long-range Coulomb potential.  {\color{blue}
-The parameters \lmpcmd{O}, \lmpcmd{H}, \lmpcmd{O-H}, and \lmpcmd{H-O-H} correspond
-respectively to the oxygens, hydrogens, O-H bonds, and H-O-H angle constraints of
-the water molecules; their definitions, provided by the \lmpcmd{labelmap} commands,
-will be clarified below.}
+{\color{blue}atom style, the form of the non-bonded, bond and angle potentials as well as
+other specifics about the non-boned interactions}.  Here, \lmpcmd{lj/cut/tip4p/long} 
+imposes a Lennard-Jones potential with a cut-off at $12\,\text{\AA{}}$ and a long-range 
+Coulomb potential.  {\color{blue} The parameters \lmpcmd{O}, \lmpcmd{H}, \lmpcmd{O-H}, 
+and \lmpcmd{H-O-H} correspond respectively to the oxygens, hydrogens, O-H bonds, and 
+H-O-H angle constraints of the water molecules; their definitions, provided by the 
+\lmpcmd{labelmap} commands, will be clarified below.}
 
 So far, the commands are relatively similar to those in the previous tutorial,
 \hyperref[all-atom-label]{Polymer in water}, with two major differences: the use
@@ -2620,8 +2620,9 @@ angle_coeff H-O-H 0 104.52
 The \lmpcmd{bond\_coeff} command, used here for the O-H bond of the water
 molecule, sets both the spring constant of the harmonic potential and the
 equilibrium bond distance of $0.9572~\text{\AA{}}$.  The constant can be 0 for a
-rigid water molecule because the SHAKE algorithm will maintain the rigid
-structure of the water molecule (see below)~\cite{ryckaert1977numerical, andersen1983rattle}.
+rigid water molecule because the SHAKE algorithm, {\color{blue} which will be summoned
+later in the script using a command line,} will {\color{blue} fix the intramolecular
+structure} of the water {\color{blue} molecules} (see below)~\cite{ryckaert1977numerical, andersen1983rattle}.
 Similarly, the \lmpcmd{angle\_coeff} command for the H-O-H angle of the water molecule sets
 the force constant of the angular harmonic potential to 0 and the equilibrium
 angle to $104.52^\circ$.
@@ -2674,7 +2675,7 @@ run 0
 
 write_data create.data nocoeff
 \end{lstlisting}
-The \lmpcmd{run 0} command runs the simulation for 0 steps, which is sufficient for
+The \lmpcmd{run 0} command runs the simulation for 0 steps, which {\color{blue} serves} for
 creating the system and saving its state.  The \lmpcmd{write\_data} command
 generates a file called \lmpcmd{system.data} containing the information required
 to restart the simulation from the final configuration produced by this input
@@ -2704,7 +2705,8 @@ before starting the actual molecular dynamics simulation.
 % to prevent the system from exploding due to overlapping atoms.
 
 Open the \flecmd{equilibrate.lmp} file that was downloaded alongside
-\flecmd{create.lmp} during the tutorial setup.  It contains the following lines:
+\flecmd{create.lmp} during the tutorial setup.  {\color{blue} Simiarly
+to before, it} contains the following lines:
 \begin{lstlisting}
 boundary p p f
 units real
@@ -2826,8 +2828,8 @@ Let us equilibrate further the entire system by letting both fluid and {\color{b
 relax at ambient temperature.  Here, the commands are written within the same
 \flecmd{equilibrate.lmp} file, right after the \lmpcmd{reset\_timestep} command.
 
-Let us update the positions of all the atoms and use a Nosé-Hoover
-thermostat.  Add the following lines to \flecmd{equilibrate.lmp}:
+{\color{blue} Let us do a molecular dynamics simulation using the Nosé-Hoover
+thermostat.}  Add the following lines to \flecmd{equilibrate.lmp}:
 \begin{lstlisting}
 fix mynvt all nvt temp 300 300 100
 fix myshk H2O shake 1.0e-5 200 0 b O-H a H-O-H
