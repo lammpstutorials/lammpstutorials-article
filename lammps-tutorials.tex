@@ -2992,7 +2992,7 @@ thermo_modify temp Tfluid
 thermo_style custom step temp etotal f_mysf1[1] f_mysf2[1]
 \end{lstlisting}
 Let us also extract the density and velocity profiles using
-the \lmpcmd{chunk/atom} and \lmpcmd{ave/chunk} commands.  {\color{blue}These
+the \lmpcmd{chunk/atom} and \lmpcmd{ave/chunk} commands.  {\color{blue}When deployed as below, these
 commands discretize the simulation domain into spatial bins and compute and output
 average properties of the atoms belonging to each bin, here the velocity
 along $x$ (\lmpcmd{vx}) within the bins.}  Add the following lines to \flecmd{shearing.lmp}:
@@ -3104,7 +3104,8 @@ Some basic parameters are defined (\lmpcmd{units} and \lmpcmd{atom\_style}),
 and a \lmpcmd{.data} file is imported by the \lmpcmd{read\_data} command.
 
 The initial topology given by \href{\filepath tutorial5/silica.data}{\dwlcmd{silica.data}}
-is a small amorphous silica structure.  {\color{blue}This structure was generated in a prior
+{\color{blue} corresponds to} a small amorphous silica structure.  
+{\color{blue}This structure was generated in a prior
 simulation using the Vashishta force field~\cite{vashishta1990interaction}.}
 If you open the \flecmd{silica.data} file, you will find in the \lmpcmd{Atoms}
 section that all silicon atoms have a charge of $q = 1.1\,\text{e}$, and all oxygen
@@ -3123,7 +3124,8 @@ pair_style reaxff NULL safezone 3.0 mincap 150
 pair_coeff * * ffield.reax.CHOFe Si O
 fix myqeq all qeq/reaxff 1 0.0 10.0 1.0e-6 reaxff maxiter 400
 \end{lstlisting}
-In this case, the \lmpcmd{pair\_style reaxff} is used without a control file.  The
+In this case, the \lmpcmd{pair\_style reaxff} is used without a control file 
+{\color{blue}(see note below)}.  The
 \lmpcmd{safezone} and \lmpcmd{mincap} keywords are added to prevent
 allocation issues, which sometimes can trigger segmentation faults and
 \lmpcmd{bondchk} errors.  The \lmpcmd{pair\_coeff} command uses the
@@ -3155,6 +3157,10 @@ variable qSi equal charge(grpSi)/count(grpSi)
 variable qO equal charge(grpO)/count(grpO)
 variable vq atom q
 \end{lstlisting}
+{\color{blue} The definition of the equal style variables qSi and qO
+make use of functions pre-defined within LAMMPS that allow calculating 
+the total charge of atoms belonging to a group (charge()) and the total
+number of atoms in the group (count()).  }
 To print the averaged charges \lmpcmd{qSi} and \lmpcmd{qO} using the
 \lmpcmd{thermo\_style} command, and create images of the system.  Add the
 following lines to \flecmd{relax.lmp}:
@@ -3438,8 +3444,10 @@ dump_modify viz adiam Si 2.6 adiam O 2.3 adiam H 1.0 &
 fix myspec all reaxff/species 5 1 5 decorate.species &
   element Si O H
 \end{lstlisting}
+{\color{blue} The commands above are, once again, similar to the ones of the previous script.}  
 Here, the $+1 \mathrm{e}{-10}$ was added to the denominator of the \lmpcmd{variable qH}
-to avoid dividing by 0 at the beginning of the simulation.  Finally, let us
+to avoid dividing by 0 at the beginning of the simulation{\color{blue}, as no hydrogen
+atoms exists in the simulation domain yet}.  Finally, let us
 create a loop with 10 steps, and create two hydrogen atoms at random locations at
 every step:
 \begin{lstlisting}
@@ -3488,7 +3496,7 @@ grand canonical Monte Carlo simulations to compute the adsorption of water
 molecules in cracked silica material (Fig.~\ref{fig:GCMC}).  This tutorial
 illustrates the use of the grand canonical ensemble in molecular simulation, an
 open ensemble where the number of atoms or molecules in the simulation box can vary.
-By employing the grand canonical ensemble, {\color{blue}we simulate water in a nanoporous
+By {\color{blue}using this combination, we simulate water in a nanoporous
 SiO$_2$ structure at a specified chemical potential.}
 
 \subsubsection{Generation of the silica block}
@@ -3520,12 +3528,13 @@ mass O 15.9994
 create_atoms Si random 240 5802 box overlap 2.0 maxtry 500
 create_atoms O random 480 1072 box overlap 2.0 maxtry 500
 \end{lstlisting}
-The \lmpcmd{create\_atoms} commands are used to place
+{\color{blue}In line with what is done in previous tutorials, the} 
+\lmpcmd{create\_atoms} commands are used to place
 240 Si atoms and 480 O atoms, respectively.  This corresponds to
 an initial density of approximately $2$\,g/cm$^3$, which is close
 to the expected final density of amorphous silica at 300\,K.
 
-Now, specify the pair coefficients by indicating that the first atom type
+Now, specify the {\color{blue} potential parameters} by indicating that the first atom type
 is \lmpcmd{Si} and the second is \lmpcmd{O}:
 \begin{lstlisting}
 pair_coeff * * SiO.1990.vashishta Si O
@@ -3575,6 +3584,10 @@ to $T = 300\,\text{K}$, is implemented as follows:
 fix mynvt all nvt temp 6000 300 0.1
 run 30000
 \end{lstlisting}
+{\color{blue} In this case, the initial and final target temperatures 
+set for the Nose-Hoover thermostat is different, causing it to evolve
+linearly within the number of timesteps evoked in the \lmpcmd{run} 
+command.  }
 In the third step, the system is equilibrated at the final desired
 conditions, $T = 300\,\text{K}$ and $p = 1\,\text{atm}$,
 using an anisotropic pressure coupling:
@@ -3587,7 +3600,8 @@ run 10000
 write_data generate.data
 \end{lstlisting}
 Here, an anisotropic barostat is used.
-Anisotropic barostats adjust the dimensions independently, which is
+{\color{blue}As previously mentioned, a}nisotropic 
+barostats adjust the dimensions independently, which is
 generally suitable for a solid phase.
 
 Run the simulation using LAMMPS.  From the \guicmd{Charts} window, the temperature
@@ -3595,8 +3609,9 @@ evolution can be observed, showing that it closely follows the desired annealing
 The evolution of the box dimensions over time confirms that the box
 {\color{blue}is deforming} during the last stage of the simulation
 (Fig.~\ref{fig:GCMC-dimension}\,b).  After the simulation completes, the final
-LAMMPS topology file called \flecmd{generate.data}
-will be located next to \flecmd{generate.lmp} (Fig.~\ref{fig:GCMC-snapshot}).
+{\color{blue} microstate attained during the dynamics and the system topology
+will be written to a} LAMMPS {\color{blue} data }file called \flecmd{generate.data} 
+{\color{blue}which} will be located next to \flecmd{generate.lmp} (Fig.~\ref{fig:GCMC-snapshot}).
 
 \begin{figure}
 \centering
@@ -3654,8 +3669,9 @@ run 50000
 
 write_data cracking.data
 \end{lstlisting}
-{\color{blue}The \lmpcmd{fix nvt} command integrates the Nosé-Hoover equations
-of motion and is employed to control the temperature of the system.}
+{\color{blue}As discussed, the \lmpcmd{fix nvt} command integrates the Nosé-Hoover equations
+of motion as originally derived to sample the NVT ensemble, 
+which allows controlling the temperature of the system.}
 As observed from the generated images, the atoms
 progressively adjust to the changing box dimensions.  At some point,
 bonds begin to break, leading to the appearance of
@@ -3671,11 +3687,13 @@ a simulation actually samples the NVT ensemble.}
 
 To add the water molecules to the silica, we will employ the Monte Carlo
 method in the grand canonical ensemble (GCMC).  In short, the system is
-placed into contact with a virtual reservoir of a given chemical
-potential $\mu$, and multiple attempts to insert water molecules at
-random positions are made.  Each attempt is either accepted or rejected
-based on energy considerations.  For further details, please refer to
-classical textbooks like Ref.~\citenum{frenkel2023understanding}.
+placed into contact with a virtual reservoir {\color{blue} containing pure 
+water at a given thermodynamic state}, and multiple attempts to insert 
+water molecules at random positions are made.  {\color{blue} In the grand 
+canonical ensemble, each} attempt is either accepted or rejected based on 
+{\color{blue} internal} energy {\color{blue} and chemical potential, $\mu$} 
+considerations.  For further details, please refer to
+classical textbooks like Ref.~\citenum{frenkel2023understanding}. 
 
 % \paragraph{Using hydrid potentials}
 
