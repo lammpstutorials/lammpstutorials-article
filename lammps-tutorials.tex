@@ -257,9 +257,9 @@ simulations with LAMMPS.
 \subsection{Scope}
 
 This set of tutorials consists of eight tutorials arranged in order of
-increasing difficulty.  \textcolor{blue}{Although each tutorial can be 
-read independently, information introduced in earlier tutorials is 
-generally not repeated in detail in later ones. For this reason, we 
+increasing difficulty.  \textcolor{blue}{Although each tutorial can be
+read independently, information introduced in earlier tutorials is
+generally not repeated in detail in later ones. For this reason, we
 recommend that beginners follow the tutorials in order.}  The novelties
 associated with each tutorial are briefly described below.
 
@@ -728,7 +728,7 @@ current system using its internal rendering library via the \lmpcmd{dump
 buttons available to adjust the view and rendering style.  The image
 shown in Fig.~\ref{fig:LJ} was created this way.  This will always
 capture the current state of the system.  Save the image for future
-comparisons {\color{blue}by clicking the \guicmd{Save as} button 
+comparisons {\color{blue}by clicking the \guicmd{Save as} button
 in the \guicmd{File} menu}.
 
 \paragraph{Energy minimization}
@@ -909,9 +909,9 @@ increases rapidly during molecular dynamics until it reaches
 a plateau value of about 1.5 (Fig.~\ref{fig:evolution-energy}\,d).
 
 \begin{note}
-{\color{blue}All simulations presented in these tutorials are deliberately kept 
-short so they can be executed on a personal computer.  These runs are not intended 
-to produce statistically meaningful results, and should not be considered suitable 
+{\color{blue}All simulations presented in these tutorials are deliberately kept
+short so they can be executed on a personal computer.  These runs are not intended
+to produce statistically meaningful results, and should not be considered suitable
 for publication (see for instance Ref.~\citenum{grossfield2009quantifying}).}
 \end{note}
 
@@ -1622,7 +1622,7 @@ two edges, respectively.  The cancellation of the forces is done at every step,
 and along all 3 directions of space, $x$, $y$, and $z$, due to the use of
 \lmpcmd{0 0 0}.  {\color{blue}Although the force on these atoms is set to zero,
 the \lmpcmd{fix} stores the force vector acting on the group \emph{before}
-cancellation, which can later be extracted for analysis (see below).} 
+cancellation, which can later be extracted for analysis (see below).}
 The two \lmpcmd{velocity} commands set the initial velocities
 along $x$, $y$, and $z$ to 0 for the atoms of \lmpcmd{cnt\_top} and
 \lmpcmd{cnt\_bot}, respectively.  As a consequence of these last four commands,
@@ -1961,11 +1961,11 @@ represented as a transparent continuum field for clarity.}
 \end{figure}
 
 \begin{note}
-{\color{blue}When mixing different force fields, as is done here with GROMOS 
-and SPC/Fw, users should exercise caution.  The choices made in these tutorials 
-prioritize progressive learning of LAMMPS functionality 
-over strict physical accuracy.  While GROMOS is commonly used with water 
-models from the SPC family~\cite{oostenbrink2004biomolecular}, 
+{\color{blue}When mixing different force fields, as is done here with GROMOS
+and SPC/Fw, users should exercise caution.  The choices made in these tutorials
+prioritize progressive learning of LAMMPS functionality
+over strict physical accuracy.  While GROMOS is commonly used with water
+models from the SPC family~\cite{oostenbrink2004biomolecular},
 the inter-compatibility of force fields is not generally guaranteed.}
 \end{note}
 
@@ -2004,14 +2004,14 @@ interactions~\cite{ewald1921berechnung}.  Finally, the
 \hyperref[carbon-nanotube-label]{Tutorial 2}, sets the LJ and Coulomb
 weighting factors for the interaction between neighboring atoms.
 
-\begin{note} {\color{blue}When there are Coulomb interactions, there are
-    additional rules for the \lmpcmd{pair\_coeff} command to keep in
-    mind: The atom type assignments of atoms are only respected for the
-    LJ potential part.  For Coulomb there are no parameters outside the
-    cutoff and with a \lmpcmd{coul/long} pair style, that cutoff can
-    only be set globally for all atoms with the \lmpcmd{pair\_style}
-    command.  For the Coulomb interactions only the per-atom charge
-    matters and whether any \lmpcmd{special\_bonds} exclusions apply.}
+\begin{note} {\color{blue}With Coulomb interactions, additional rules
+    for the \lmpcmd{pair\_coeff} command apply: (a) the atom type values
+    only matter for assignment of LJ potential parameters; (b) for Coulomb
+    there are no parameters outside the cutoff, and with a
+    \lmpcmd{coul/long} pair style, that cutoff can only be set globally
+    for all atoms with the \lmpcmd{pair\_style}  command;  (c) for the
+    Coulomb interactions only the per-atom charge matters and whether
+    any \lmpcmd{special\_bonds} exclusions apply.}
 \end{note}
 
 Let us create a 3D simulation box of dimensions $6 \times 3 \times 3 \; \text{nm}^3$,
@@ -2234,7 +2234,7 @@ fix myrct PEG recenter 0 0 0 shift all
     it simply repositions the frame of reference so that any drift of the
     system is ignored, which can be convenient for visualizing and analyzing
     the system. However, be aware that using \lmpcmd{fix recenter} can sometimes
-    mask underlying issues in the simulation, such as net momentum or the so-called
+    mask underlying issues in the simulation, such as a net momentum or the so-called
     ``flying ice cube syndrome''~\cite{wong2016good}.}
 \end{note}
 
@@ -2332,7 +2332,7 @@ fix myrct PEG recenter 0 0 0 shift all
 
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{PEG-distance}
+\includegraphics[width=\linewidth]{PEG-distance}\\[-2ex]
 \caption{a) Evolution of
 the radius of gyration $R_\text{gyr}$ of the PEG molecule
 from \hyperref[all-atom-label]{Tutorial 3}, with the force
@@ -2743,12 +2743,14 @@ to 0 (see the \flecmd{parameters.inc} file).
 
 \begin{note}
 {\color{blue}
-LAMMPS provides several ways to maintain molecules rigid during a simulation. 
-The \lmpcmd{fix shake} command is appropriate for constraining bond lengths 
-and angles within small molecules like water. 
-However, it may fail for linear molecules like CO$_2$ or more complex rigid bodies. 
-In such cases, the \lmpcmd{fix rigid} family of commands can be used instead to
-treat entire molecules or groups of atoms as rigid bodies.}
+LAMMPS provides several ways to keep molecules rigid during a simulation.
+The \lmpcmd{fix shake} command is appropriate and efficient for constraining
+individual bonds or bonds and angles within small molecules like water while using
+a per-atom time integration fix command like \lmpcmd{fix nve} or \lmpcmd{fix nvt}.
+However, it fails for linear molecules like CO$_2$ or constraining larger or more
+complex objects.
+In such cases, the \lmpcmd{fix rigid} family of commands can be used to perform
+time integration for translation and rotation of groups of atoms as rigid bodies.}
 \end{note}
 
 Let us also create images of the system and control
@@ -2852,7 +2854,7 @@ Then, a new \lmpcmd{dump} command with a larger dumping period is used.
 \begin{note}
 {\color{blue}
 Just like the \lmpcmd{undump} command can cancel an active \lmpcmd{dump}, other
-objects defined in a LAMMPS input script can be cancelled when no longer needed. 
+objects defined in a LAMMPS input script can be cancelled when no longer needed.
 For example, you can use \lmpcmd{unfix} to remove a previously defined \lmpcmd{fix}, and
 \lmpcmd{uncompute} to delete a \lmpcmd{compute}.}
 \end{note}
@@ -2871,6 +2873,17 @@ The first two variables extract the centers of mass of the two walls.  The
 \lmpcmd{deltaz} variable is then used to calculate the difference between the two
 variables \lmpcmd{walltopz} and \lmpcmd{wallbotz}, i.e.~the distance between the
 two centers of mass of the walls.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{NANOSHEAR-equilibration}\\[-2ex]
+\caption{a)~Pressure, $p$, of the nanosheared electrolyte system
+simulated in \hyperref[sheared-confined-label]{Tutorial 4} as a function of the
+time, $t$.  b)~Distance between the walls, $\Delta z$, as a function of $t$.
+\textcolor{blue}{The orange line
+shows the raw data, and the blue line represents a time-averaged curve.}}
+\label{fig:NANOSHEAR-equilibration}
+\end{figure}
 
 Finally, let us run the simulation for 30~ps by adding a \lmpcmd{run} command
 to \flecmd{equilibrate.lmp}:
@@ -2896,22 +2909,11 @@ temperature~\cite{mills1955remeasurement}, one finds that the equilibration
 should be on the order of one nanosecond.
 \end{note}
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{NANOSHEAR-equilibration}
-\caption{a)~Pressure, $p$, of the nanosheared electrolyte system
-simulated in \hyperref[sheared-confined-label]{Tutorial 4} as a function of the
-time, $t$.  b)~Distance between the walls, $\Delta z$, as a function of $t$.
-\textcolor{blue}{The orange line
-shows the raw data, and the blue line represents a time-averaged curve.}}
-\label{fig:NANOSHEAR-equilibration}
-\end{figure}
-
 \subsubsection{Imposed shearing}
 
 From the equilibrated configuration, let us impose a lateral motion on the two
 walls and shear the electrolyte.  Open the last input file named \flecmd{shearing.lmp}.
-It starts with the following lines:
+It starts {\color{blue}as follows}:
 \begin{lstlisting}
 boundary p p f
 units real
@@ -2969,16 +2971,6 @@ forces on these atoms are set to zero, the \lmpcmd{fix setforce} still stores th
 forces acting on the group before cancellation, which can later be extracted
 for analysis (see below).}
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{NANOSHEAR-profiles}
-\caption{Velocity profiles for water (blue) and walls (orange) along the $z$-axis as
-simulated in \hyperref[sheared-confined-label]{Tutorial 4}.}
-% The line is a linear fit assuming
-% that the pore size is $h = 1.8\,\text{nm}$.}
-\label{fig:NANOSHEAR-profiles}
-\end{figure}
-
 Finally, let us generate images of the systems and print the values of the
 forces exerted by the fluid on the walls, as given by \lmpcmd{f\_mysf1[1]}
 and \lmpcmd{f\_mysf2[1]}.  Add these lines to \flecmd{shearing.lmp}:
@@ -3021,11 +3013,21 @@ profiles generated by the \lmpcmd{ave/chunk} commands, and three
 respectively.  With values of \lmpcmd{10 15000 200000}, the velocity
 \lmpcmd{vx} will be evaluated every 10 steps during the final 150,000
 steps of the simulations.  The result will be averaged and printed only
-once at the 200,000\,th step.
+once at the 200,000\textsuperscript{th} step.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{NANOSHEAR-profiles}\\[-2ex]
+\caption{Velocity profiles for water (blue) and walls (orange) along the $z$-axis as
+simulated in \hyperref[sheared-confined-label]{Tutorial 4}.}
+% The line is a linear fit assuming
+% that the pore size is $h = 1.8\,\text{nm}$.}
+\label{fig:NANOSHEAR-profiles}
+\end{figure}
 
 Run the simulation using LAMMPS.  The averaged velocity
 profile for the fluid is plotted in Fig.~\ref{fig:NANOSHEAR-profiles}.
-As expected for such Couette flow geometry, the fluid velocity increases
+As expected for such a Couette flow geometry, the fluid velocity increases
 linearly along $z$, and is equal to the walls velocities at the fluid-solid
 interfaces (no-slip boundary conditions).
 
@@ -3041,15 +3043,16 @@ the fluid on the shearing wall, and $\dot{\gamma}$ the shear rate
 \cite{gravelle2021violations}.  Here, the shear rate is
 approximately $\dot{\gamma} = 20 \cdot 10^9\,\text{s}^{-1}$ (Fig.~\ref{fig:NANOSHEAR-profiles}),
 the average force on each wall is given by \lmpcmd{f\_mysf1[1]} and \lmpcmd{f\_mysf2[1]}
-and is approximately $2.7\,\mathrm{kcal/mol/\AA{}}$ in magnitude.  Using a surface area
+and is approximately $2.7\,\mathrm{kcal/mol/\AA{}}$. % in magnitude.
+Using a surface area
 for the walls of $A = 6 \cdot 10^{-18}\,\text{m}^2$, one obtains an estimate for
-the shear viscosity for the confined fluid of $\eta = 3.1\,\text{mPa.s}$ using Eq.~\eqref{eq:eta}.
+the shear viscosity for the confined fluid of $\eta = 3.1\,\mathrm{mPa\cdot s}$ using Eq.~\eqref{eq:eta}.
 
 \begin{note}
 The viscosity calculated at such a high shear rate may differ from the expected
 \emph{bulk} value.  In general, it is recommended to use a lower value for the
-shear rate.  Note that for lower shear rates, the ratio of noise-to-signal is
-larger, and longer simulations are needed.  Another important point to consider
+shear rate.  Note that for lower shear rates, the signal-to-noise ratio is
+smaller, and longer simulations are needed.  Another point to consider
 is that the viscosity of a fluid next to a solid surface is typically larger
 than in bulk due to interaction with the walls~\cite{wolde-kidanInterplayInterfacialViscosity2021}.
 Therefore, one expects the present simulation to yield a viscosity that is slightly
@@ -3108,7 +3111,7 @@ atoms have a charge of $q = -0.55\,\text{e}$.
 Assigning the same charge to all atoms of the same type is common with many
 force fields, including the force fields used in the previous tutorials.  This
 changes once ReaxFF is used: the charge of each atom will adjust to its local
-environment.
+environment {\color{blue}through charge equilibration}.
 \end{note}
 
 Next, copy the following three crucial lines into the \flecmd{relax.lmp} file:
@@ -3135,7 +3138,7 @@ equilibrate the charge.
 {\color{blue}
 The \lmpcmd{pair\_style reaxff} command optionally accepts a control file,
 which defines control variables such as
-global parameters of the ReaxFF potential, as well as performance and output settings. 
+global parameters of the ReaxFF potential, as well as performance and output settings.
 If no control file is provided, as in this tutorial, LAMMPS uses its default values,
 which correspond to those in Adri van Duin's original stand-alone ReaxFF code~\cite{van2001reaxff}.}
 \end{note}
@@ -3163,16 +3166,6 @@ dump_modify viz adiam Si 2.6 adiam O 2.3 backcolor white &
 Here, the atoms are colored by their charges \lmpcmd{q}, ranging from royal blue
 (when $q=-1\,\text{e}$) to orange-red (when $q=2\,\text{e}$).
 
-\begin{figure}
-\includegraphics[width=\linewidth]{SIO-deformed}
-\caption{Amorphous silicon oxide after deformation during
-\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  The atoms are colored by their
-charges.  Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of
-about $1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of
-about $-0.9 ~ \text{e}$ appear in blue.}
-\label{fig:SIO-deformed}
-\end{figure}
-
 We can generate histograms of the charges for each atom type using
 \lmpcmd{fix ave/histo} commands:
 \begin{lstlisting}
@@ -3185,8 +3178,18 @@ fix myhis2 grpO ave/histo 10 500 5000 -1.5 2.5 1000 v_vq &
 over a group of atoms and builds a histogram over a specified range divided into
 bins.  In this tutorial, it is used to monitor the charge distributions
 of silicon and oxygen atoms.  The parameters \lmpcmd{10 500 5000} specify how often
-the histogram is updated and averaged, \lmpcmd{-1.5 2.5} set the value range, 
+the histogram is updated and averaged, \lmpcmd{-1.5 2.5} set the value range,
 \lmpcmd{1000} is the number of bins, and \lmpcmd{v\_vq} is the variable being histogrammed.}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{SIO-charge}\\[-2ex]
+\caption{a) Average charge per atom of the silicon, $q_\text{Si}$, atoms as
+a function of time, $t$, during equilibration of the $\text{SiO}_2$ system
+from \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  b) Volume of the
+system, $V$, as a function of $t$.}
+\label{fig:SIO-charge}
+\end{figure}
 
 We can also use the \lmpcmd{fix reaxff/species} to evaluate what species are
 present within the simulation.  It will be useful later when the system is deformed,
@@ -3227,16 +3230,6 @@ Finally, the generated \flecmd{.histo} files can be used to
 plot the probability distributions, $P(q)$ (see Fig.~\ref{fig:SIO-distribution}\,a).
 
 \begin{figure}
-\centering
-\includegraphics[width=\linewidth]{SIO-charge}
-\caption{a) Average charge per atom of the silicon, $q_\text{Si}$, atoms as
-a function of time, $t$, during equilibration of the $\text{SiO}_2$ system
-from \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  b) Volume of the
-system, $V$, as a function of $t$.}
-\label{fig:SIO-charge}
-\end{figure}
-
-\begin{figure}
 \includegraphics[width=\linewidth]{SIO-slice}
 \caption{A slice of the amorphous silica simulated during
 \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}, where atoms are colored by their charges.
@@ -3244,15 +3237,6 @@ Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of about
 $1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of about
 $-0.9~\text{e}$ appear in blue.}
 \label{fig:SIO-slice}
-\end{figure}
-
-\begin{figure}
-\includegraphics[width=\linewidth]{SIO-distribution}
-\caption{a) Probability distributions of charge of silicon (positive, blue) and oxygen
-(negative, orange) atoms during the equilibration of the $\text{SiO}_2$ system
-from \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  b) Same probability distributions
-as in panel (a) after the deformation.}
-\label{fig:SIO-distribution}
 \end{figure}
 
 \subsubsection{Deform the structure}
@@ -3292,6 +3276,15 @@ fix myspec all reaxff/species 5 1 5 deform.species element Si O
 The only difference with the previous \flecmd{relax.lmp} file is the path to
 the \flecmd{relax.data} file.
 
+\begin{figure}
+\includegraphics[width=\linewidth]{SIO-distribution}\\[-4ex]
+\caption{a) Probability distributions of charge of silicon (positive, blue) and oxygen
+(negative, orange) atoms during the equilibration of the $\text{SiO}_2$ system
+from \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  b) Same probability distributions
+as in panel (a) after the deformation.}
+\label{fig:SIO-distribution}
+\end{figure}
+
 Next, let us use \lmpcmd{fix nvt} instead of \lmpcmd{fix npt} to apply a
 Nosé-Hoover thermostat without a barostat:
 \begin{lstlisting}
@@ -3302,7 +3295,7 @@ Here, no barostat is used because the change in the box volume will be imposed
 by the \lmpcmd{fix deform}, {\color{blue}see below}.
 
 \begin{figure}
-\includegraphics[width=\linewidth]{SIO-deformed-charge}
+\includegraphics[width=\linewidth]{SIO-deformed-charge}\\[-4ex]
 \caption{a) Average charge per atom of the silicon, $q_\text{Si}$, atoms as
 a function of time, $t$, during deformation of the $\text{SiO}_2$ system
 from \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}. The break down of the
@@ -3351,6 +3344,16 @@ should look like this:
 \end{lstlisting}
 Sometimes, $\text{O}_2$ molecules are formed during the deformation.  If this occurs,
 a new column \lmpcmd{O2} appears in the \flecmd{deform.species} file.
+
+\begin{figure}
+\includegraphics[width=\linewidth]{SIO-deformed}
+\caption{Amorphous silicon oxide after deformation during
+\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  The atoms are colored by their
+charges.  Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of
+about $1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of
+about $-0.9 ~ \text{e}$ appear in blue.}
+\label{fig:SIO-deformed}
+\end{figure}
 
 \subsubsection{Decorate the surface}
 
@@ -3529,11 +3532,12 @@ file is located in the same directory as \flecmd{generate.lmp}.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth]{GCMC-generate}
-\caption{Amorphous silica ($\text{SiO}_2$) simulated
-during \hyperref[gcmc-silica-label]{Tutorial 6}.  Silicon atoms are
-represented in yellow, and oxygen atoms in red.}
-\label{fig:GCMC-snapshot}
+\includegraphics[width=\linewidth]{GCMC-dimension}\\[-2ex]
+\caption{a) Temperature, $T$, as a function of time, $t$, during the annealing
+of the silica system from \hyperref[gcmc-silica-label]{Tutorial 6}.
+b) System density, $\rho$, during the annealing process.  The vertical dashed lines
+mark the transition between the different phases of the simulation.}
+\label{fig:GCMC-dimension}
 \end{figure}
 
 Next, add a \lmpcmd{dump image} command to \flecmd{generate.lmp} to follow the
@@ -3583,16 +3587,6 @@ Here, an anisotropic barostat is used.
 Anisotropic barostats adjust the dimensions independently, which is
 generally suitable for a solid phase.
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{GCMC-dimension}
-\caption{a) Temperature, $T$, as a function of time, $t$, during the annealing
-of the silica system from \hyperref[gcmc-silica-label]{Tutorial 6}.
-b) System density, $\rho$, during the annealing process.  The vertical dashed lines
-mark the transition between the different phases of the simulation.}
-\label{fig:GCMC-dimension}
-\end{figure}
-
 Run the simulation using LAMMPS.  From the \guicmd{Charts} window, the temperature
 evolution can be observed, showing that it closely follows the desired annealing procedure (Fig.~\ref{fig:GCMC-dimension}\,a).
 The evolution of the box dimensions over time confirms that the box
@@ -3600,6 +3594,15 @@ The evolution of the box dimensions over time confirms that the box
 (Fig.~\ref{fig:GCMC-dimension}\,b).  After the simulation completes, the final
 LAMMPS topology file called \flecmd{generate.data}
 will be located next to \flecmd{generate.lmp} (Fig.~\ref{fig:GCMC-snapshot}).
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\linewidth]{GCMC-generate}
+\caption{Amorphous silica ($\text{SiO}_2$) simulated
+during \hyperref[gcmc-silica-label]{Tutorial 6}.  Silicon atoms are
+represented in yellow, and oxygen atoms in red.}
+\label{fig:GCMC-snapshot}
+\end{figure}
 
 \subsubsection{Cracking the silica}
 
@@ -3626,6 +3629,15 @@ thermo 250
 thermo_style custom step temp etotal vol density
 \end{lstlisting}
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{GCMC-cracked}
+\caption{Block of silica from \hyperref[gcmc-silica-label]{Tutorial 6}
+after deformation.  Silicon atoms are represented in yellow,
+and oxygen atoms in red.  The crack was induced by the
+imposed deformation of the box along the $x$-axis (i.e.,~the horizontal axis).}
+\label{fig:GCMC-cracked}
+\end{figure}
 Let us progressively increase the size of the box in the $x$ direction,
 forcing the silica to deform and eventually crack.  To achive this,
 the \lmpcmd{fix deform} command is used, with a rate
@@ -3648,19 +3660,9 @@ dislocations (Fig.~\ref{fig:GCMC-cracked}).
 
 \begin{note}
 {\color{blue}Although the Nosé-Hoover equations were originally formulated to sample the
-NVT ensemble, using the \lmpcmd{fix nvt} command does not guarantee that 
+NVT ensemble, using the \lmpcmd{fix nvt} command does not guarantee that
 a simulation actually samples the NVT ensemble.}
 \end{note}
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{GCMC-cracked}
-\caption{Block of silica from \hyperref[gcmc-silica-label]{Tutorial 6}
-after deformation.  Silicon atoms are represented in yellow,
-and oxygen atoms in red.  The crack was induced by the
-imposed deformation of the box along the $x$-axis (i.e.,~the horizontal axis).}
-\label{fig:GCMC-cracked}
-\end{figure}
 
 \subsubsection{Adding water}
 
@@ -3828,9 +3830,9 @@ is calculated by the \lmpcmd{nO} variable.  The SHAKE algorithm is used to
 maintain the shape of the water molecules over time~\cite{ryckaert1977numerical, andersen1983rattle}.
 
 \begin{note}
-{\color{blue}Here, a variable of type `atom' is used.  Such variable 
-defines a per-atom property, i.e., it evaluates the specified expression 
-separately for each atom.  This is often used to select atoms based on 
+{\color{blue}Here, a variable of type `atom' is used.  Such variable
+defines a per-atom property, i.e., it evaluates the specified expression
+separately for each atom.  This is often used to select atoms based on
 their properties or types.}
 \end{note}
 
@@ -3868,6 +3870,14 @@ the atoms in the silica remain fixed.  The \lmpcmd{compute\_modify} command with
 the \lmpcmd{dynamic/dof yes} option is used for water to account for the fact
 that the number of molecules is not constant.}
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{GCMC-number}\\[-2ex]
+\caption{Number of water molecules, $N_\text{H2O}$, as a function of time, $t$,
+as extracted from \hyperref[gcmc-silica-label]{Tutorial 6}.}
+\label{fig:GCMC-number}
+\end{figure}
+
 Finally, let us use the \lmpcmd{fix gcmc} and perform the grand canonical Monte
 Carlo steps.  Add the following lines into \flecmd{gcmc.lmp}:
 \begin{lstlisting}
@@ -3901,16 +3911,8 @@ thermo_style custom step temp etotal v_nO &
 
 run 25000
 \end{lstlisting}
-{\color{blue}The \lmpcmd{f\_} keywords extract the Monte Carlo move statistics 
+{\color{blue}The \lmpcmd{f\_} keywords extract the Monte Carlo move statistics
 output by the \lmpcmd{fix gcmc} command.}
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{GCMC-number}
-\caption{Number of water molecules, $N_\text{H2O}$, as a function of time, $t$,
-as extracted from \hyperref[gcmc-silica-label]{Tutorial 6}.}
-\label{fig:GCMC-number}
-\end{figure}
 
 \begin{note}
 When using the pressure argument, LAMMPS ignores the value of the
@@ -4185,17 +4187,6 @@ $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\
 \label{fig:US-system-unbiased}
 \end{figure}
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{US-density}
-\caption{a) Fluid density, $\rho$, along the $x$ direction.
-b) Potential, $U$, as a function of $x$ measured using free sampling (blue disks)
-compared to the imposed potential given in Eq.~\eqref{eq:U} (dark line).
-Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, $x_0 = 10~\text{\AA{}}$,
-and the measured reference density in the reservoir is $\rho_\text{bulk} = 0.0009~\text{\AA{}}^{-3}$.} % SG: check units of rho bulk
-\label{fig:US-density}
-\end{figure}
-
 \paragraph{The limits of free sampling}
 
 Increasing the value of $U_0$ reduces the average number of atoms in the central
@@ -4219,6 +4210,17 @@ biasing. The results will be analyzed using the weighted histogram
 analysis method (WHAM)~\cite{kumar1992weighted,kumar1995multidim}, which
 allows for the removal of the biasing effect and ultimately deduces the
 unbiased free energy profile.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{US-density}\\[-2ex]
+\caption{a) Fluid density, $\rho$, along the $x$ direction.
+b) Potential, $U$, as a function of $x$ measured using free sampling (blue disks)
+compared to the imposed potential given in Eq.~\eqref{eq:U} (dark line).
+Here, $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, $x_0 = 10~\text{\AA{}}$,
+and the measured reference density in the reservoir is $\rho_\text{bulk} = 0.0009~\text{\AA{}}^{-3}$.} % SG: check units of rho bulk
+\label{fig:US-density}
+\end{figure}
 
 \paragraph{LAMMPS input script}
 
