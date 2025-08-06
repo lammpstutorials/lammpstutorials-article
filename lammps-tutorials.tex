@@ -2327,18 +2327,6 @@ timestep 1.0
 fix mynvt all nvt temp 300 300 100
 fix myrct PEG recenter 0 0 0 shift all
 \end{lstlisting}
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{PEG-distance}\\[-2ex]
-\caption{a) Evolution of
-the radius of gyration $R_\text{gyr}$ of the PEG molecule
-from \hyperref[all-atom-label]{Tutorial 3}, with the force
-applied starting at $t = 15\,\text{ps}$.  b) Histograms of the dihedral angles of type 1
-in the absence (orange) and in the presence (blue) of the applied force.}
-\label{fig:PEG-distance}
-\end{figure}
-
 To investigate the stretching of the PEG molecule, let us compute its radius of
 gyration~\cite{fixmanRadiusGyrationPolymer1962a} and the angles of its dihedral
 constraints using the following commands:
@@ -2355,6 +2343,17 @@ dump mydmp all local 100 pull.dat index c_dphi
 By contrast with the radius of gyration (compute \lmpcmd{rgyr}), the dihedral angle
 $\phi$ (compute \lmpcmd{dphi}) is returned as a vector by the \lmpcmd{compute dihedral/local}
 command and must be written to a file using the \lmpcmd{dump local} command.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{PEG-distance}\\[-2ex]
+\caption{a) Evolution of
+the radius of gyration $R_\text{gyr}$ of the PEG molecule
+from \hyperref[all-atom-label]{Tutorial 3}, with the force
+applied starting at $t = 15\,\text{ps}$.  b) Histograms of the dihedral angles of type 1
+in the absence (orange) and in the presence (blue) of the applied force.}
+\label{fig:PEG-distance}
+\end{figure}
 
 Finally, let us simulate 15 picoseconds without any external force:
 \begin{lstlisting}
@@ -2854,17 +2853,6 @@ dump_modify mydmp backcolor white &
 The \lmpcmd{undump} command is used to cancel the previous \lmpcmd{dump} command.
 Then, a new \lmpcmd{dump} command with a larger dumping period is used.
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{NANOSHEAR-equilibration}\\[-2ex]
-\caption{a)~Pressure, $p$, of the nanosheared electrolyte system
-simulated in \hyperref[sheared-confined-label]{Tutorial 4} as a function of the
-time, $t$.  b)~Distance between the walls, $\Delta z$, as a function of $t$.
-\textcolor{blue}{The orange line
-shows the raw data, and the blue line represents a time-averaged curve.}}
-\label{fig:NANOSHEAR-equilibration}
-\end{figure}
-
 \begin{note}
 {\color{blue}
 Just like the \lmpcmd{undump} command can cancel an active \lmpcmd{dump}, other
@@ -2887,6 +2875,17 @@ The first two variables extract the centers of mass of the two walls.  The
 \lmpcmd{deltaz} variable is then used to calculate the difference between the two
 variables \lmpcmd{walltopz} and \lmpcmd{wallbotz}, i.e.~the distance between the
 two centers of mass of the walls.
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{NANOSHEAR-equilibration}\\[-2ex]
+\caption{a)~Pressure, $p$, of the nanosheared electrolyte system
+simulated in \hyperref[sheared-confined-label]{Tutorial 4} as a function of the
+time, $t$.  b)~Distance between the walls, $\Delta z$, as a function of $t$.
+\textcolor{blue}{The orange line
+shows the raw data, and the blue line represents a time-averaged curve.}}
+\label{fig:NANOSHEAR-equilibration}
+\end{figure}
 
 Finally, let us run the simulation for 30~ps by adding a \lmpcmd{run} command
 to \flecmd{equilibrate.lmp}:
@@ -3118,6 +3117,16 @@ changes once ReaxFF is used: the charge of each atom will adjust to its local
 environment {\color{blue}through charge equilibration}.
 \end{note}
 
+\begin{figure}
+\includegraphics[width=\linewidth]{SIO-slice}
+\caption{A slice of the amorphous silica simulated during
+\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}, where atoms are colored by their charges.
+Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of about
+$1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of about
+$-0.9~\text{e}$ appear in blue.}
+\label{fig:SIO-slice}
+\end{figure}
+
 Next, copy the following three crucial lines into the \flecmd{relax.lmp} file:
 \begin{lstlisting}
 pair_style reaxff NULL safezone 3.0 mincap 150
@@ -3147,7 +3156,6 @@ global parameters of the ReaxFF potential, as well as performance and output set
 If no control file is provided, as in this tutorial, LAMMPS uses its default values,
 which correspond to those in Adri van Duin's original stand-alone ReaxFF code~\cite{van2001reaxff}.}
 \end{note}
-
 Next, add the following commands to the \flecmd{relax.lmp} file to track the
 evolution of the charges during the simulation:
 \begin{lstlisting}
@@ -3190,16 +3198,6 @@ of silicon and oxygen atoms.  The parameters \lmpcmd{10 500 5000} specify how of
 the histogram is updated and averaged, \lmpcmd{-1.5 2.5} set the value range,
 \lmpcmd{1000} is the number of bins, and \lmpcmd{v\_vq} is the variable being histogrammed.}
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{SIO-charge}\\[-2ex]
-\caption{a) Average charge per atom of the silicon, $q_\text{Si}$, atoms as
-a function of time, $t$, during equilibration of the $\text{SiO}_2$ system
-from \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  b) Volume of the
-system, $V$, as a function of $t$.}
-\label{fig:SIO-charge}
-\end{figure}
-
 We can also use the \lmpcmd{fix reaxff/species} to evaluate what species are
 present within the simulation.  It will be useful later when the system is deformed,
 and bonds are broken:
@@ -3221,6 +3219,18 @@ write_data relax.data
 Run the \flecmd{relax.lmp} file using LAMMPS.  As seen from \flecmd{relax.species},
 only one species is detected, called \lmpcmd{O384Si192}, representing the entire system.
 
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{SIO-charge}\\[-2ex]
+\caption{a) Average charge per atom of the silicon, $q_\text{Si}$, atoms as
+a function of time, $t$, during equilibration of the $\text{SiO}_2$ system
+from \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  b) Volume of the
+system, $V$, as a function of $t$.}
+\label{fig:SIO-charge}
+\end{figure}
+
+
 \begin{note}
 {\color{blue}With the \lmpcmd{aniso} keyword, the three dimensions of the simulation
 box can change independently.  This is particularly relevant for solids and other
@@ -3239,13 +3249,12 @@ Finally, the generated \flecmd{.histo} files can be used to
 plot the probability distributions, $P(q)$ (see Fig.~\ref{fig:SIO-distribution}\,a).
 
 \begin{figure}
-\includegraphics[width=\linewidth]{SIO-slice}
-\caption{A slice of the amorphous silica simulated during
-\hyperref[reactive-silicon-dioxide-label]{Tutorial 5}, where atoms are colored by their charges.
-Dangling oxygen groups appear in greenish, bulk Si atoms with a charge of about
-$1.8~\text{e}$  appear in red/orange, and bulk O atoms with a charge of about
-$-0.9~\text{e}$ appear in blue.}
-\label{fig:SIO-slice}
+\includegraphics[width=\linewidth]{SIO-distribution}\\[-4ex]
+\caption{a) Probability distributions of charge of silicon (positive, blue) and oxygen
+(negative, orange) atoms during the equilibration of the $\text{SiO}_2$ system
+from \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  b) Same probability distributions
+as in panel (a) after the deformation.}
+\label{fig:SIO-distribution}
 \end{figure}
 
 \subsubsection{Deform the structure}
@@ -3284,15 +3293,6 @@ fix myspec all reaxff/species 5 1 5 deform.species element Si O
 \end{lstlisting}
 The only difference with the previous \flecmd{relax.lmp} file is the path to
 the \flecmd{relax.data} file.
-
-\begin{figure}
-\includegraphics[width=\linewidth]{SIO-distribution}\\[-4ex]
-\caption{a) Probability distributions of charge of silicon (positive, blue) and oxygen
-(negative, orange) atoms during the equilibration of the $\text{SiO}_2$ system
-from \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  b) Same probability distributions
-as in panel (a) after the deformation.}
-\label{fig:SIO-distribution}
-\end{figure}
 
 Next, let us use \lmpcmd{fix nvt} instead of \lmpcmd{fix npt} to apply a
 Nosé-Hoover thermostat without a barostat:
@@ -3465,7 +3465,6 @@ run 2000
 next a
 jump SELF loop
 \end{lstlisting}
-
 Run the simulation with LAMMPS.  When the simulation is over,
 it can be seen from the \flecmd{decorate.species} file that
 all the created hydrogen atoms reacted with the $\text{SiO}_{2}$ structure to
