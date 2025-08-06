@@ -3585,7 +3585,7 @@ fix mynvt all nvt temp 6000 300 0.1
 run 30000
 \end{lstlisting}
 {\color{blue} In this case, the initial and final target temperatures
-set for the Nose-Hoover thermostat is different, causing it to evolve
+set for the Nos\'e-Hoover thermostat is different, causing it to evolve
 linearly within the number of timesteps evoked in the \lmpcmd{run}
 command.  }
 In the third step, the system is equilibrated at the final desired
@@ -3695,7 +3695,6 @@ classical textbooks like Ref.~\citenum{frenkel2023understanding}.
 
 % \paragraph{Using hydrid potentials}
 
-{\color{blue}
 \paragraph{Adapting the pair style}
 
 % The first {\color{blue}peculiarity} of our system is that it combines water and
@@ -3725,11 +3724,11 @@ angle_style harmonic
 \end{lstlisting}
 %Combining the two force fields, Vashishta and TIP4P/2005, is achieved
 %using the \lmpcmd{hybrid/overlay} pair style.
-The PPPM solver~\cite{luty1996calculating} is specified with the \lmpcmd{kspace}
+{\color{blue}The PPPM solver~\cite{luty1996calculating} is specified with the \lmpcmd{kspace}
 command, and is used to compute the long-range Coulomb interactions associated
 with \lmpcmd{tip4p/long}.  Finally, the {\color{blue} form of} the bond
-and angle{\color{blue} potentials} of the water molecules are defined; however,
-{\color{blue} as previously discussed,} these specifications are
+and angle potentials of the water molecules are defined; however,
+as previously discussed, these specifications are
 not critical since TIP4P/2005 is a rigid water model.}
 
 \begin{note}
