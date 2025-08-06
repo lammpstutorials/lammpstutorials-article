@@ -651,7 +651,7 @@ where $r$ is the inter-particle distance, $\epsilon_{ij}$ is the depth
 of the potential well that determines the interaction strength, and
 $\sigma_{ij}$ is the distance at which the potential energy equals zero.
 The indices $i$ and $j$ refer to pairs of atoms {\color{blue} with the
-  respective atom type value}.  The fourth line, \lmpcmd{pair\_coeff 1 1
+  corresponding atom types}.  The fourth line, \lmpcmd{pair\_coeff 1 1
   1.0 1.0}, specifies the Lennard-Jones coefficients for interactions
 between pairs of atoms {\color{blue} that both have} atom type 1: the
 energy parameter $\epsilon_{11} = 1.0$ and the distance parameter
@@ -660,7 +660,7 @@ coefficients for interactions between atoms of type 2,
 $\epsilon_{22} = 0.5$, and $\sigma_{22} = 3.0$.
 
 \begin{note}
-  By default, LAMMPS calculates the {\color{blue} mixed atom type} force
+  By default, LAMMPS calculates the {\color{blue} mixed} force
   field coefficients for different atom types using geometric averages:
   $\epsilon_{ij} = \sqrt{\epsilon_{ii} \epsilon_{jj}}$,
   $\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$.  In the present case,
@@ -703,11 +703,11 @@ the post-run summary and statistics output.
 
 \begin{note} {\color{blue}The `thermodynamic information' printed by
     LAMMPS using \lmpcmd{thermo\_style custom} keywords refers to
-    instantaneous values of those thermodynamic properties at the
-    specified steps, not cumulative averages.  But it is also possible
-    to reference a wide variety of custom data from compute styles, fix
-    styles, and variables which can be used for on-the-fly analysis
-    including cumulative and sliding window averages.}
+    instantaneous values of the specified thermodynamic properties
+    at each output step, not cumulative averages.  However, LAMMPS also
+    allows to reference a wide variety of custom data from compute styles, fix
+    styles, and variables.  These can be used for on-the-fly analysis,
+    including cumulative and sliding-window averages.}
 \end{note}
 
 You can now run LAMMPS {\color{blue}(see subsection \ref{running-lammps-label}
@@ -746,13 +746,9 @@ forces on all atoms and then update their positions according to a
 selected algorithm using the computed forces, aiming to reduce the
 potential energy.  By default, LAMMPS uses the conjugate gradient (CG)
 algorithm~\cite{hestenes1952methods}.  The simulation will stop as soon
-as {\color{blue}one of the four minimizer criteria are met and LAMMPS
-  will output which stopping criterion ended the minimization and
-  and some system properties at the initial and the final step.}
-% SG: I don't think that its true, its rather the algorithm
-% will stop when one of the four criteria is met. Axel, what do you think?
-% I propose to replace by "when specific convergence criteria are met"
-% AK: yes this is correct.
+as {\color{blue}one of the four minimizer criteria is met.  LAMMPS
+  will then report which stopping criterion was satisfied, along with
+  selected system properties at both the initial and final steps.}
 Note that, except for trivial systems, minimization algorithms will find a
 local minimum rather than the global minimum.
 
@@ -1177,7 +1173,7 @@ in a \lmpcmd{thermo\_style custom} command (see below).
     name of the compute style: global data (no suffix), local data
     (/local suffix), per-atom data (/atom suffix), per-chunk data
     (/chunk suffix), per-gridpoint data (/grid suffix).  In the example
-    above the \lmpcmd{compute coord/atom} produces per-atom data, which
+    above, the \lmpcmd{compute coord/atom} produces per-atom data, which
     is used as input for \lmpcmd{compute reduce} which returns global
     data.  For global data three kinds of data exists: scalars (single
     values), vectors (one-dimensional arrays), or arrays
@@ -4108,6 +4104,7 @@ lines to \flecmd{free-energy.lmp}:
 % into several variables
 % CA: I think we can remove the & (to avoid confusion) and warn the reader about the
 % continuation of the formula.
+% SG: its tricky because in principle all commands from here can be copy-pasted... 
 \begin{lstlisting}
 variable U atom ${U0}*atan((x+${x0})/${dlt})&
     -${U0}*atan((x-${x0})/${dlt})
@@ -4126,14 +4123,12 @@ When combining these two commands, the MD simulation operates
 in the NVT ensemble, maintaining a constant number of
 atoms $N$, constant volume $V$, and a temperature $T$ that
 fluctuates around a target value.
-% SG: may be discuss the choice of constant "500" -> chosen for a relatiely weak coupling with thermostat (add a box?)
-% CA: I can propose something that can be put in a yellow box. Feel free to uncomment the lines below and modify it if you want to.
-% {\color{blue}You can find proposed in the LAMMPS documentation
-% values of 100x and 1000x the value of the timestep for the damping
-% constants of the thermostats and barostats. Here, a smaller
-% value is used in order to have the temperature of the system
-% relaxed to the target value more often.}
-% PS: I am not defining the damping constants because you had already done it in one of the firsts tutorials.
+
+\begin{note}
+{\color{blue}LAMMPS documentation suggests using damping constants for thermostats 
+that are approximately 100 times the timestep value.  In this case, a value of 500 
+is used, resulting in a relatively weak coupling to the thermostat.}
+\end{note}
 
 \begin{figure}
 \centering
