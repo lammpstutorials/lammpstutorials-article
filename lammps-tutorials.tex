@@ -1372,8 +1372,9 @@ fixed, regardless of the forces applied to the atoms.  {\color{blue}In
   \lmpcmd{.data} file, which is read using the \lmpcmd{read\_data}
   command (see below).}
 Bonds are typically modeled as springs {\color{blue}following Hooke's
-law} with equilibrium distances $r_0$ and force constants $k_\text{b}$:
-$U_\text{b} = k_\text{b} \left( r - r_0 \right)^2$.  Additionally,
+law with equilibrium distances $r_0$, force constants $k_\text{b}$,
+and bond potential energy
+$U_\text{b} = k_\text{b} \left( r - r_0 \right)^2$.}  Additionally,
 angular and dihedral {\color{blue}interactions} are often imposed to
 preserve the molecular structure by maintaining the relative
 orientations of neighboring atoms.
@@ -1771,18 +1772,18 @@ pair_style airebo 3.0
 pair_coeff * * CH.airebo C
 \end{lstlisting}
 \begin{note} {\color{blue}The AIREBO force field is a many-body
-    potential where interactions are not only between pairs of atoms,
+    potential, where interactions are not only between pairs of atoms,
     but also triples and quadruples representing angle and dihedral
-    interactions.  This means, that there are different rules for the
+    interactions.  This means that there are different rules for the
     \lmpcmd{pair\_coeff} command: there must be only one command that
     covers all permutations of atom types by using two '*' wildcards.
-    After the potential file follows a list of elements.  The element
+    After the potential file follows a list of elements.  These element
     names are used to look up the parameter sets in the potential file.
     There must be a list with as many elements as atom types following
-    the filename.  Our system has only one atom type (1) and that is
+    the filename.  In our system, there is only one atom type (1), which is
     mapped to the element 'C' in the \lmpcmd{pair\_coeff} command.
     Which elements are supported is determined by the contents of the
-    potential file.  }
+    potential file.}
 \end{note}
 Here, \href{\filepath tutorial2/CH.airebo}{\dwlcmd{CH.airebo}} is the
 file containing the parameters for AIREBO, and must be placed next to
@@ -2002,13 +2003,13 @@ interactions~\cite{ewald1921berechnung}.  Finally, the
 weighting factors for the interaction between neighboring atoms.
 
 \begin{note} {\color{blue}With Coulomb interactions, additional rules
-    for the \lmpcmd{pair\_coeff} command apply: (a) the atom type values
-    only matter for assignment of LJ potential parameters; (b) for Coulomb
-    there are no parameters outside the cutoff, and with a
+    apply to the \lmpcmd{pair\_coeff} command: (a) atom type values
+    only matter for assignment of LJ potential parameters; (b) for Coulomb interactions,
+    there are no parameters outside the cutoff, and when using a
     \lmpcmd{coul/long} pair style, that cutoff can only be set globally
-    for all atoms with the \lmpcmd{pair\_style}  command;  (c) for the
-    Coulomb interactions only the per-atom charge matters and whether
-    any \lmpcmd{special\_bonds} exclusions apply.}
+    for all atoms with the \lmpcmd{pair\_style}  command;  (c) for
+    Coulomb interactions, only the per-atom charge and any
+    \lmpcmd{special\_bonds} exclusions are relevant.}
 \end{note}
 
 Let us create a 3D simulation box of dimensions $6 \times 3 \times 3 \; \text{nm}^3$,
@@ -2462,9 +2463,9 @@ pair_style lj/cut/tip4p/long O H O-H H-O-H 0.1546 12.0
 kspace_style pppm/tip4p 1.0e-5
 kspace_modify slab 3.0
 \end{lstlisting}
-These lines are used to define the most basic parameters, including the
-{\color{blue}atom style, the form of the non-bonded, bond and angle potentials as well as
-other specifics about the non-boned interactions}.  Here, \lmpcmd{lj/cut/tip4p/long}
+These lines are used to define the most basic parameters, including the 
+{\color{blue}atom style, the forms of the non-bonded, bond, and angle potentials, 
+as well as other specifics of the non-bonded interactions}. Here, \lmpcmd{lj/cut/tip4p/long}
 imposes a Lennard-Jones potential with a cut-off at $12\,\text{\AA{}}$ and a long-range
 Coulomb potential.  {\color{blue} The parameters \lmpcmd{O}, \lmpcmd{H}, \lmpcmd{O-H},
 and \lmpcmd{H-O-H} correspond respectively to the oxygens, hydrogens, O-H bonds, and
@@ -2510,8 +2511,8 @@ $\text{Cl}^-$), and the atoms from the walls.  The simulation contains 1 type of
 and 1 type of angle (both required by the water molecules).
 The parameters for these bond and angle constraints will be given later.  The \lmpcmd{extra/ (...)}
 keywords are for memory allocation.  Finally, the \lmpcmd{labelmap} commands assign
-alphanumeric type labels to each numeric atom type, bond type, and angle type{\color{blue}, a concept
-already introduced in previous tutorials}.
+alphanumeric type labels to each numeric atom type, bond type, and angle type{\color{blue},
+concepts already introduced in previous tutorials.}
 
 Now, we can add atoms to the system.  First, let us create two sub-regions corresponding
 respectively to the two solid walls, and create a larger region from the union of the
@@ -2536,7 +2537,7 @@ region rliquid block INF INF INF INF -2 2
 molecule h2omol water.mol
 create_atoms 0 region rliquid mol h2omol 482793
 \end{lstlisting}
-Within the last three lines, a \lmpcmd{region} named \lmpcmd{rliquid} is
+Within the last three lines, a region named \lmpcmd{rliquid} is
 created based on the last defined lattice, \lmpcmd{fcc 4.04}.  \lmpcmd{rliquid}
 will be used for {\color{blue} introducing} the water molecules.  The \lmpcmd{molecule} command
 opens up the molecule template called \flecmd{water.mol}, and names the
