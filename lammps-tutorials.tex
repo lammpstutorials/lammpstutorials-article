@@ -350,7 +350,7 @@ tutorials, users can also refer to \textit{Basic Concepts for Simple and
 \cite{barrat2003basic}, as well as \textit{Theory of Simple Liquids:
   with Applications to Soft Matter} by Jean-Pierre Hansen and Ian Ranald
 McDonald~\cite{hansen2013theory}.  For more resources, the SklogWiki
-platform provies a wide range of information on statistical mechanics
+platform provides a wide range of information on statistical mechanics
 and molecular simulations~\cite{sklogwiki_main_page}.
 
 \subsection{Software/system requirements}
@@ -359,11 +359,11 @@ The LAMMPS stable release {\color{blue}version 22Jul2025}~\cite{lammps_code}
 and the matching \lammpsgui{} software {\color{blue}version 1.7.0} are required to
 follow the tutorials, as they include features that were first
 introduced in these versions.  For Linux (x86\_64 CPU), macOS (BigSur or
-later), and Windows (10 and 11) you can download a precompiled LAMMPS
+later), and Windows (10 and 11) you can download a pre-compiled LAMMPS
 package from the LAMMPS release page on
 GitHub~\cite{lammps_github_release}.  Select a package with `GUI' in the
 file name, which includes both, \lammpsgui{} and the LAMMPS command-line
-executable.  These precompiled packages are designed to be portable, and
+executable.  These pre-compiled packages are designed to be portable, and
 therefore omit support for parallel execution with MPI.  Instructions
 for installing \lammpsgui{} and using its most relevant features for the
 tutorials are provided in
@@ -450,7 +450,7 @@ energies.
 \includegraphics[width=0.65\linewidth]{LJ-avatar}
 \caption{The binary mixture simulated in
   \hyperref[lennard-jones-label]{Tutorial 1}, with the atoms of type 1
-  represented as small green spheres and lge atoms of type 2 as large
+  represented as small green spheres and the atoms of type 2 as large
   blue spheres.}
 \label{fig:LJ-avatar}
 \end{figure}
@@ -1160,8 +1160,8 @@ compute coor12 grp_t1 coord/atom cutoff 2 group grp_t2
 compute sumcoor12 grp_t1 reduce ave c_coor12
 \end{lstlisting}
 The \lmpcmd{compute reduce ave} command is used to average the per-atom
-coordination number calculated by the \lmpcmd{coord/atom}
-compute command.  {\color{blue}Compute commands do not print or output
+coordination number calculated by the \lmpcmd{compute coord/atom}
+command.  {\color{blue}Compute commands do not print or output
 anything by themselves, nor are they automatically executed;} they
 require a ``consumer'' command that references the compute.  In this case, the
 first compute is referenced by the second, and we reference the second
@@ -1435,9 +1435,9 @@ linked by \lmpcmd{bonds}, \lmpcmd{angles}, \lmpcmd{dihedrals}, and
 \begin{note}
 {\color{blue}
 Bonds, angles, dihedrals, and impropers in LAMMPS are assigned types and IDs, just like atoms.
-The ID uniquely identifies each instance, while the type determines which parameters
+The ID uniquely identifies each interaction instance, while the type determines which parameters
 (from the \lmpcmd{bond\_coeff}, \lmpcmd{angle\_coeff}, etc. commands) are applied.
-In this tutorial, these types and IDs are specified in the \lmpcmd{.data} file
+In this tutorial, these types and IDs are specified in the \lmpcmd{.data} file and
 read by the \lmpcmd{read\_data} command.}
 \end{note}
 
@@ -1487,8 +1487,8 @@ Rather than copying the contents of the file into the input, we
 incorporate it using the \lmpcmd{include} command.  Using \lmpcmd{include} allows
 us to conveniently reuse the parameter settings
 in other inputs or switch them with others.  This will become more general
-when using type labels, which is shown in the next
-tutorial~\cite{gissinger2024type}.
+when using type labels~\cite{gissinger2024type}, which is shown in the next
+tutorial.
 \end{note}
 
 \paragraph{Prepare the initial state}
@@ -4699,7 +4699,7 @@ fix rxn all bond/react &
 % of it may be redundant with the note, but I would still leave it as the reader
 % will have the full information.
 With the \lmpcmd{stabilization} keyword, the \lmpcmd{fix bond/react} command will
-stabilize the atoms involved in the reaction using the \lmpcmd{nve/limit}
+stabilize the atoms involved in the reaction using the \lmpcmd{fix nve/limit}
 command with a maximum displacement of $0.03\,\mathrm{\AA{}}$.
 {\color{blue}The \lmpcmd{fix nve/limit} command functions similar to
 \lmpcmd{fix nve}, but restricts how far atoms can move in a single time step, even with
@@ -4807,7 +4807,7 @@ use the ``Command'' key (\cmd) in place of the
 
 \subsection{Installation}
 
-Precompiled versions of \lammpsgui{} are available for Linux, {macOS},
+Pre-compiled versions of \lammpsgui{} are available for Linux, {macOS},
 and Windows on the LAMMPS GitHub Release
 page~\cite{lammps_github_release}.  The Linux version is provided in two
 formats: as compressed tar archive (.tar.gz) and as a Flatpak
