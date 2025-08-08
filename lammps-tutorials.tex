@@ -1918,12 +1918,11 @@ to update the status of the bonds during the simulation:
 fix break all bond/break 1000 1 2.5
 fix form all bond/create/angle 1000 1 1 2.0 1 aconstrain 90.0 180
 \end{lstlisting}
-
 This ``hack'' works because AIREBO does not pay any attention to bonded
 interactions and computes the bond topology dynamically inside the pair
 style.  Thus adding bonds of bond style \lmpcmd{zero} does not add any
-interactions but allow the visualization of them with \lmpcmd{dump
-  image}.  It is, however needed to change the \lmpcmd{special\_bonds}
+interactions but allows the visualization of them with \lmpcmd{dump
+  image}.  It is required to change the \lmpcmd{special\_bonds}
 setting to disable any neighbor list exclusions as they are common for
 force fields with explicit bonds.
 \begin{lstlisting}
@@ -1949,15 +1948,6 @@ publication by Liese and coworkers, in which molecular dynamics
 simulations are compared with force spectroscopy experiments, see
 Ref.\,~\citenum{liese2017hydration}.
 
-\begin{figure}
-\centering
-\includegraphics[width=0.55\linewidth]{PEG}
-\caption{The polymer molecule (PEG - polyethylene glycol) solvated in water as
-simulated during \hyperref[all-atom-label]{Tutorial 3}.  Water molecules are
-represented as a transparent continuum field for clarity.}
-\label{fig:PEG}
-\end{figure}
-
 \begin{note}
 {\color{blue}When mixing different force fields, as is done here with GROMOS
 and SPC/Fw, users should exercise caution.  The choices made in these tutorials
@@ -1968,6 +1958,15 @@ the inter-compatibility of force fields is not generally guaranteed.}
 \end{note}
 
 \subsubsection{Preparing the water reservoir}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{PEG}
+\caption{The polymer molecule (PEG - polyethylene glycol) solvated in water as
+simulated during \hyperref[all-atom-label]{Tutorial 3}.  Water molecules are
+represented as a transparent continuum field for clarity.}
+\label{fig:PEG}
+\end{figure}
 
 In this tutorial, the water reservoir is first prepared in the absence of the polymer.
 A rectangular box of water is created and equilibrated at ambient temperature and
@@ -2012,7 +2011,7 @@ weighting factors for the interaction between neighboring atoms.
     \lmpcmd{special\_bonds} exclusions are relevant.}
 \end{note}
 
-Let us create a 3D simulation box of dimensions $6 \times 3 \times 3 \; \text{nm}^3$,
+\noindent Let us create a 3D simulation box of dimensions $6 \times 3 \times 3 \; \text{nm}^3$,
 and make space for 8 atom types (2 for the water, 6 for the polymer), 7 bond types
 (1 for the water, 6 for the polymer), 8 angle types (1 for the water, 7 for the polymer),
 and 4 dihedral types (only for the polymer).  Copy the following lines into \flecmd{water.lmp}:
@@ -2044,7 +2043,7 @@ include parameters.inc
   maps are used for the bond types, angle types, and dihedral types.
 \end{note}
 
-Let us create water molecules.  To do so, let us import a molecule template called
+\noindent Let us create water molecules.  To do so, let us import a molecule template called
 \flecmd{water.mol} and then randomly create 700 molecules.  Add the following
 lines into \flecmd{water.lmp}:
 \begin{lstlisting}
