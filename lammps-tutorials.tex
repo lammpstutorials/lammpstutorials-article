@@ -3731,7 +3731,8 @@ not critical since TIP4P/2005 is a rigid water model.}
 
 \begin{note}
 {\color{blue}In practice, it is possible to use both \lmpcmd{vashishta} and
-\lmpcmd{lj/cut/tip4p/long} pair styles by employing the \lmpcmd{pair\_style hybrid}
+  \lmpcmd{lj/cut/tip4p/long} pair styles at the same time by employing the
+  \lmpcmd{pair\_style hybrid}
 command.  However, hybridizing force fields should be done with caution, as there
 is no guarantee that the resulting force field will produce meaningful results.}
 \end{note}
@@ -4157,7 +4158,7 @@ dump_modify viz backcolor white acolor 1 cyan &
 A \lmpcmd{dump image} command was also added for system visualization.
 {\color{blue} The other commands should also be familiar from previous tutorials.}
 
-Finally, let us perform an equilibration of 50000 steps,
+\noindent Finally, let us perform an equilibration of 50000 steps,
 using a timestep of $2\,\text{fs}$, corresponding to a total duration of $100\,\text{ps}$:
 \begin{lstlisting}
 timestep 2.0
@@ -4193,6 +4194,17 @@ LAMMPS.
 
 \paragraph{Data analysis}
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{US-system-unbiased}
+\caption{Snapshot of the system simulated during the free sampling
+step of \hyperref[umbrella-sampling-label]{Tutorial 7}.
+The atoms density is the lowest in the central
+part of the box, \lmpcmd{mymes}.  Here,
+$U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\AA{}}$.}
+\label{fig:US-system-unbiased}
+\end{figure}
+
 Once the simulation is complete, the density profile from \flecmd{free-sampling.dat}
 shows that the density in the center of the box is
 about two orders of magnitude lower than inside the reservoir (Fig.~\ref{fig:US-density}\,a).
@@ -4207,17 +4219,6 @@ was estimated by measuring the density of the reservoir from the raw density
 profiles.  The agreement between the MD results and the imposed energy profile
 is excellent, despite some noise in the central part, where fewer data points
 are available due to the repulsive potential.
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{US-system-unbiased}
-\caption{Snapshot of the system simulated during the free sampling
-step of \hyperref[umbrella-sampling-label]{Tutorial 7}.
-The atoms density is the lowest in the central
-part of the box, \lmpcmd{mymes}.  Here,
-$U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\AA{}}$.}
-\label{fig:US-system-unbiased}
-\end{figure}
 
 \paragraph{The limits of free sampling}
 
@@ -4381,6 +4382,17 @@ the different windows, leading to poor reconstruction of the free energy profile
 
 \paragraph{WHAM algorithm}
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{US-free-energy}
+\caption{The potential, $U$, as a function of $x$, measured using umbrella
+sampling during \hyperref[umbrella-sampling-label]{Tutorial 7} (blue disks),
+is compared to the imposed potential given in Eq.~\eqref{eq:U}
+(dark line).  Parameters are $U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$,
+and $x_0 = 10~\text{\AA{}}$.}
+\label{fig:US-freenergy}
+\end{figure}
+
 To generate the free energy profile from the particle positions saved in
 the \flecmd{umbrella-sampling.i.dat} files, we use the
 WHAM~\cite{kumar1992weighted,kumar1995multidim} algorithm as implemented
@@ -4413,17 +4425,6 @@ with the imposed potential $U$, showing excellent agreement
 the very short calculation time and the high value for the energy barrier.
 Achieving similar results through free sampling would require performing extremely
 long and computationally expensive simulations.
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{US-free-energy}
-\caption{The potential, $U$, as a function of $x$, measured using umbrella
-sampling during \hyperref[umbrella-sampling-label]{Tutorial 7} (blue disks),
-is compared to the imposed potential given in Eq.~\eqref{eq:U}
-(dark line).  Parameters are $U_0 = 2.38~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$,
-and $x_0 = 10~\text{\AA{}}$.}
-\label{fig:US-freenergy}
-\end{figure}
 
 \subsection{Tutorial 8: Reactive Molecular Dynamics}
 \label{bond-react-label}
