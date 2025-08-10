@@ -2725,7 +2725,8 @@ The only difference from the previous input is that, instead of creating a new
 box and new atoms, we open the previously created \flecmd{create.data} file.
 
 Now, let us use the SHAKE algorithm to maintain the shape of the
-water molecules~\cite{ryckaert1977numerical, andersen1983rattle}.
+water molecules~\cite{ryckaert1977numerical, andersen1983rattle}
+{\color{blue} by adding the following line to the script}.
 \begin{lstlisting}
 fix myshk H2O shake 1.0e-5 200 0 b O-H a H-O-H kbond 2000
 \end{lstlisting}
