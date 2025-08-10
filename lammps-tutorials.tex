@@ -849,15 +849,15 @@ value of the \lmpcmd{timestep} and the number of steps for the
   not exchange energy with anything outside the simulation box.
 \end{note}
 
-Run the simulation using LAMMPS.  Initially, there is no equilibrium
-between potential and kinetic energy, as the potential energy
+Run the simulation using LAMMPS.  Initially, {\color{blue} the system is
+not equilibrated}, as the potential energy
 decreases while the kinetic energy increases.  After approximately
 40\,000 steps, the values for both kinetic and potential energy
 plateau, indicating that the system has reached equilibrium, with
 the total energy fluctuating around a certain constant value.
 
-Now, we change the \lmpcmd{Run} section to (note the smaller number of
-MD steps):
+Now, we change the {\color{blue} second} \lmpcmd{Run} section to 
+(note the smaller number of MD steps):
 \begin{lstlisting}
 # 5) Run
 fix mynve all nve
@@ -1092,7 +1092,8 @@ have noticed that some atoms left their original region during
 minimization.  To start the simulation from a clean slate, with only
 atoms of type 2 inside the cylinder and atoms of type 1 outside the
 cylinder, let us delete the misplaced atoms by adding the following
-commands to \flecmd{improved.md.lmp}:
+commands to {\color{blue}the \lmpcmd{System definition} section of 
+the} \flecmd{improved.md.lmp}:
 
 \begin{lstlisting}
 region cyl_in cylinder z 0 0 10 INF INF side in
