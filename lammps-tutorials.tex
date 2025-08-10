@@ -3714,10 +3714,9 @@ to be defined. Open the \flecmd{gcmc.lmp} file, which should contain the followi
 units metal
 boundary p p p
 atom_style full
-neighbor 1.0 bin
-neigh_modify delay 1
-pair_style lj/cut/tip4p/long &
-    OW HW OW-HW HW-OW-HW 0.1546 10
+% neighbor 1.0 bin
+% neigh_modify delay 1
+pair_style {\color{blue}hybrid/overlay vashishta} lj/cut/tip4p/long OW HW OW-HW HW-OW-HW 0.1546 10
 kspace_style pppm/tip4p 1.0e-5
 bond_style harmonic
 angle_style harmonic
