@@ -1027,6 +1027,15 @@ You can view the contents of this file from \lammpsgui{}, by
 right-clicking on the file name in the editor and selecting the entry
 \guicmd{View file improved.min.data}.
 
+\begin{figure}
+\centering
+\includegraphics[width=0.65\linewidth]{LJ-cylinder}
+\caption{Visualization of the improved binary mixture input after minimization
+  during \hyperref[lennard-jones-label]{Tutorial 1}.  Colors are the same as in
+  Fig.~\ref{fig:LJ}.}
+\label{fig:improved-min}
+\end{figure}
+
 The created \flecmd{.data} file contains all the information necessary
 to restart the simulation, such as the number of atoms, the box size,
 the masses, and the pair coefficients.   {\color{blue}This \flecmd{.data} file also
@@ -1081,15 +1090,6 @@ lines to \flecmd{improved.md.lmp}:
 pair_style lj/cut 4.0
 read_data improved.min.data
 \end{lstlisting}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.55\linewidth]{LJ-cylinder}
-\caption{Visualization of the improved binary mixture input after minimization
-  during \hyperref[lennard-jones-label]{Tutorial 1}.  Colors are the same as in
-  Fig.~\ref{fig:LJ}.}
-\label{fig:improved-min}
-\end{figure}
 
 By visualizing the system (see Fig.~\ref{fig:improved-min}), you may
 have noticed that some atoms left their original region during
@@ -1195,22 +1195,8 @@ in a \lmpcmd{thermo\_style custom} command (see below).
     compatibility.}
 \end{note}
 
-\begin{note}
-There is no need for a \lmpcmd{Settings}
-section, as the settings are taken from the \flecmd{.data} file.
-\end{note}
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{LJ-evolution}
-\caption{Evolution of the system from \hyperref[lennard-jones-label]{Tutorial 1}
-during mixing.  The three snapshots show respectively the system
-at $t=0$ (left panel), $t=75$ (middle panel), and $t=1500$ (right panel).  The
-atoms of type 1 are represented as small turquoise spheres and the atoms of type 2
-as large blue spheres.}
-\label{fig:evolution-population}
-\end{figure}
-
+There is no need for a \lmpcmd{Settings} section, as the settings are
+taken from the \flecmd{.data} file.
 Finally, let us complete the script by adding the following lines to
 \flecmd{improved.md.lmp}:
 \begin{lstlisting}
@@ -1248,15 +1234,15 @@ to a Gaussian distribution.  Another improvement is the \lmpcmd{zero
 random force applied to the atoms is equal to zero. These steps are
 important to prevent the system from starting to drift or move as a
 whole.
-
 \begin{figure}
 \centering
-\includegraphics[width=\linewidth]{LJ-mixing}\\[-2ex]
-\caption{a)~Evolution of the numbers $N_\text{1, in}$ and $N_\text{2, in}$ of atoms
-of types 1 and 2, respectively, within the \lmpcmd{cyl\_in} region as functions
-of time $t$.  b)~Evolution of the coordination number $C_{1-2}$ (compute \lmpcmd{sumcoor12})
-between atoms of types 1 and 2.}
-\label{fig:mixing}
+\includegraphics[width=\linewidth]{LJ-evolution}
+\caption{Evolution of the system from \hyperref[lennard-jones-label]{Tutorial 1}
+during mixing.  The three snapshots show respectively the system
+at $t=0$ (left panel), $t=75$ (middle panel), and $t=1500$ (right panel).  The
+atoms of type 1 are represented as small turquoise spheres and the atoms of type 2
+as large blue spheres.}
+\label{fig:evolution-population}
 \end{figure}
 
 \begin{note}
@@ -1283,6 +1269,17 @@ between atoms of types 1 and 2 increases from about $0.01$ to $0.04$
 more particles of type 1 come into contact with particles of type 2, as
 expected during mixing.  This can be observed using the entry
 \guicmd{c\_sumcoor12} in the \guicmd{Charts} drop-down menu.
+
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{LJ-mixing}\\[-2ex]
+\caption{a)~Evolution of the numbers $N_\text{1, in}$ and $N_\text{2, in}$ of atoms
+of types 1 and 2, respectively, within the \lmpcmd{cyl\_in} region as functions
+of time $t$.  b)~Evolution of the coordination number $C_{1-2}$ (compute \lmpcmd{sumcoor12})
+between atoms of types 1 and 2.}
+\label{fig:mixing}
+\end{figure}
 
 \paragraph{Experiments}
 
@@ -1337,14 +1334,6 @@ all assigned a value of -1, and will therefore always be colored their default b
 \subsection{Tutorial 2: Pulling on a carbon nanotube}
 \label{carbon-nanotube-label}
 
-\begin{figure}
-\centering
-\includegraphics[width=0.55\linewidth]{CNT}
-\caption{The carbon nanotube (CNT) simulated during
-\hyperref[carbon-nanotube-label]{Tutorial 2}.}
-\label{fig:CNT}
-\end{figure}
-
 In this tutorial, the system of interest is a small, single-walled
 carbon nanotube (CNT) in an empty box (Fig.~\ref{fig:CNT}).  The CNT is
 strained by imposing a constant velocity on the edge atoms.  To
@@ -1357,6 +1346,13 @@ bonds between the atoms of the CNT are unbreakable.  In the second part,
 a reactive, {\color{blue} many-body} force field (called
 AIREBO~\cite{stuart2000reactive}) is used, which allows chemical bonds
 to break under large strain.
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{CNT}
+\caption{The carbon nanotube (CNT) simulated during
+\hyperref[carbon-nanotube-label]{Tutorial 2}.}
+\label{fig:CNT}
+\end{figure}
 
 To set up this tutorial, select \guicmd{Start Tutorial 2} from the
 \guicmd{Tutorials} menu of \lammpsgui{} and follow the instructions.
@@ -1643,6 +1639,17 @@ they would if no other command was applied to them).
 
 \paragraph{Outputs}
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{CNT-unbreakable-length-energy}\\[-2ex]
+\caption{a) Evolution of the length $L_\text{cnt}$ of the CNT with time,
+as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
+The CNT starts deforming at $t = 5\,\text{ps}$, and $L_\text{cnt-0}$ is the
+CNT initial length.  b) Evolution of the total energy $E$ of the system
+with time $t$.  Here, the potential is OPLS-AA, and the CNT is unbreakable.}
+\label{fig:CNT-unbreakable-LE}
+\end{figure}
+
 Next, to measure the strain and stress applied to the CNT, let us create a
 variable for the distance $L_\text{cnt}$ between the two edges,
 as well as a variable $F_\text{cnt}$ for the force applied on the edges:
@@ -1682,6 +1689,19 @@ frozen parts with an effective temperature of 0\,K, which makes the average
 temperature of the entire system less relevant.  The \lmpcmd{thermo\_modify}
 command also imposes the use of the YAML format that can easily be read by
 Python (see below).
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{CNT-unbreakable-stress-strain}\\[-2ex]
+\caption{Stress applied on the CNT during deformation, $F_\text{cnt}/A_\text{cnt}$,
+where $F_\text{cnt}$ is the force and $A_\text{cnt}$ the CNT surface area,
+as a function of the strain, $\Delta L_\text{cnt} = (L_\text{cnt}-L_\text{cnt-0}/L_\text{cnt-0})$, where
+$L_\text{cnt}$ is the CNT length and $L_\text{cnt-0}$ the CNT initial length,
+as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
+Here, the potential is OPLS-AA, and the CNT is unbreakable. \textcolor{blue}{The orange line
+shows the raw data, and the blue line represents a time-averaged curve.}
+}
+\label{fig:CNT-stress-strain-unbreakable}
+\end{figure}
 
 Let us impose a constant velocity deformation on the CNT
 by combining the \lmpcmd{velocity set} command with previously defined
@@ -1695,17 +1715,6 @@ run 10000
 \end{lstlisting}
 The chosen velocity for the deformation is $100\,\text{m/s}$, or
 $0.001\,\text{\AA{}/fs}$.
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{CNT-unbreakable-length-energy}\\[-2ex]
-\caption{a) Evolution of the length $L_\text{cnt}$ of the CNT with time,
-as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
-The CNT starts deforming at $t = 5\,\text{ps}$, and $L_\text{cnt-0}$ is the
-CNT initial length.  b) Evolution of the total energy $E$ of the system
-with time $t$.  Here, the potential is OPLS-AA, and the CNT is unbreakable.}
-\label{fig:CNT-unbreakable-LE}
-\end{figure}
 
 Run the simulation using LAMMPS.  As can be seen from the variable $L_\text{cnt}$, the length
 of the CNT increases linearly over time for $t > 5\,\text{ps}$ (Fig.~\ref{fig:CNT-unbreakable-LE}\,a),
@@ -1739,21 +1748,15 @@ information from the second MD run.  The data extracted from
 the \flecmd{unbreakable.yaml} file can then be used to plot the stress-strain
 curve, see Fig.~\ref{fig:CNT-stress-strain-unbreakable}.
 
+\subsubsection{Breakable bonds}
+
 \begin{figure}
 \centering
-\includegraphics[width=0.55\linewidth]{CNT-unbreakable-stress-strain}\\[-2ex]
-\caption{Stress applied on the CNT during deformation, $F_\text{cnt}/A_\text{cnt}$,
-where $F_\text{cnt}$ is the force and $A_\text{cnt}$ the CNT surface area,
-as a function of the strain, $\Delta L_\text{cnt} = (L_\text{cnt}-L_\text{cnt-0}/L_\text{cnt-0})$, where
-$L_\text{cnt}$ is the CNT length and $L_\text{cnt-0}$ the CNT initial length,
-as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
-Here, the potential is OPLS-AA, and the CNT is unbreakable. \textcolor{blue}{The orange line
-shows the raw data, and the blue line represents a time-averaged curve.}
-}
-\label{fig:CNT-stress-strain-unbreakable}
+\includegraphics[width=\linewidth]{CNT-deformed-breakable}
+\caption{CNT with broken bonds.  This image was generated using
+VMD~\cite{vmd_home,humphrey1996vmd} with the \guicmd{DynamicBonds} representation.}
+\label{fig:CNT-deformed-breakable}
 \end{figure}
-
-\subsubsection{Breakable bonds}
 
 When using a conventional molecular force field, as we have just done,
 the bonds between the atoms are non-breakable.  Let us perform a similar
@@ -1818,14 +1821,6 @@ the $x$-axis, to allow for larger deformation of the CNT.
 
 \paragraph{Start the simulation}
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{CNT-deformed-breakable}
-\caption{CNT with broken bonds.  This image was generated using
-VMD~\cite{vmd_home,humphrey1996vmd} with the \guicmd{DynamicBonds} representation.}
-\label{fig:CNT-deformed-breakable}
-\end{figure}
-
 Here, let us perform a similar deformation as the previous one.
 In \lmpcmd{breakable.lmp}, replace the \lmpcmd{run 0 post no} line with:
 \begin{lstlisting}
@@ -1867,6 +1862,20 @@ but that after a few steps, it reaches the target value.
 
 \paragraph{Launch the deformation}
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{CNT-breakable-stress-energy}\\[-2ex]
+\caption{a) Evolution of the total energy $E$ of the CNT with time $t$.
+b) Stress applied on the CNT during deformation, $F_\text{cnt}/A_\text{cnt}$,
+where $F_\text{cnt}$ is the force and $A_\text{cnt}$ the CNT surface area,
+as a function of the strain, $\Delta L_\text{cnt} = (L_\text{cnt}-L_\text{cnt-0}/L_\text{cnt-0})$, where
+$L_\text{cnt}$ is the CNT length and $L_\text{cnt-0}$ the CNT initial length,
+as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
+Here, the potential is AIREBO, and the CNT is breakable.  \textcolor{blue}{The orange line
+shows the raw data, and the blue line represents a time-averaged curve.}}
+\label{fig:CNT-breakable-energy-stress}
+\end{figure}
+
 After equilibration, let us set the velocity of the edges equal to
 $75~\text{m/s}$ (or $0.75~\text{\AA{}/ps}$) and run for a longer duration than
 previously.  Add the following lines into \flecmd{breakable.lmp}:
@@ -1891,20 +1900,6 @@ curve reveals a linear (elastic) regime where
 $F_\text{cnt} \propto \Delta L_\text{cnt}$ for
 $\Delta L_\text{cnt} < 5\,\%$, and a non-linear (plastic) regime for
 $5\,\% < \Delta L_\text{cnt} < 25\,\%$.
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{CNT-breakable-stress-energy}\\[-2ex]
-\caption{a) Evolution of the total energy $E$ of the CNT with time $t$.
-b) Stress applied on the CNT during deformation, $F_\text{cnt}/A_\text{cnt}$,
-where $F_\text{cnt}$ is the force and $A_\text{cnt}$ the CNT surface area,
-as a function of the strain, $\Delta L_\text{cnt} = (L_\text{cnt}-L_\text{cnt-0}/L_\text{cnt-0})$, where
-$L_\text{cnt}$ is the CNT length and $L_\text{cnt-0}$ the CNT initial length,
-as simulated during \hyperref[carbon-nanotube-label]{Tutorial 2}.
-Here, the potential is AIREBO, and the CNT is breakable.  \textcolor{blue}{The orange line
-shows the raw data, and the blue line represents a time-averaged curve.}}
-\label{fig:CNT-breakable-energy-stress}
-\end{figure}
 
 \paragraph{Tip: bonds representation with AIREBO}
 \label{tip-dynamic-bonds}
@@ -1939,6 +1934,15 @@ special_bonds lj/coul 1.0 1.0 1.0
 \subsection{Tutorial 3: Polymer in water}
 \label{all-atom-label}
 
+\begin{figure}
+\centering
+\includegraphics[width=0.55\linewidth]{PEG}
+\caption{The polymer molecule (PEG - polyethylene glycol) solvated in water as
+simulated during \hyperref[all-atom-label]{Tutorial 3}.  Water molecules are
+represented as a transparent continuum field for clarity.}
+\label{fig:PEG}
+\end{figure}
+
 The goal of this tutorial is to use LAMMPS to solvate a small
 hydrophilic polymer (PEG - polyethylene glycol) in a reservoir of water
 (Fig.~\ref{fig:PEG}).  Once the water reservoir is properly equilibrated
@@ -1963,15 +1967,6 @@ the inter-compatibility of force fields is not generally guaranteed.}
 \end{note}
 
 \subsubsection{Preparing the water reservoir}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.55\linewidth]{PEG}
-\caption{The polymer molecule (PEG - polyethylene glycol) solvated in water as
-simulated during \hyperref[all-atom-label]{Tutorial 3}.  Water molecules are
-represented as a transparent continuum field for clarity.}
-\label{fig:PEG}
-\end{figure}
 
 In this tutorial, the water reservoir is first prepared in the absence of the polymer.
 A rectangular box of water is created and equilibrated at ambient temperature and
@@ -2988,6 +2983,16 @@ forces on these atoms are set to zero, the \lmpcmd{fix setforce} still stores th
 forces acting on the group before cancellation, which can later be extracted
 for analysis (see below).}
 
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{NANOSHEAR-profiles}\\[-2ex]
+\caption{Velocity profiles for water (blue) and walls (orange) along the $z$-axis as
+simulated in \hyperref[sheared-confined-label]{Tutorial 4}.}
+% The line is a linear fit assuming
+% that the pore size is $h = 1.8\,\text{nm}$.}
+\label{fig:NANOSHEAR-profiles}
+\end{figure}
+
 Finally, let us generate images of the systems and print the values of the
 forces exerted by the fluid on the walls, as given by \lmpcmd{f\_mysf1[1]}
 and \lmpcmd{f\_mysf2[1]}.  Add these lines to \flecmd{shearing.lmp}:
@@ -3032,16 +3037,6 @@ respectively.  With values of \lmpcmd{10 15000 200000}, the velocity
 steps of the simulations.  The result will be averaged and printed only
 once at the 200,000\textsuperscript{th} step.
 
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{NANOSHEAR-profiles}\\[-2ex]
-\caption{Velocity profiles for water (blue) and walls (orange) along the $z$-axis as
-simulated in \hyperref[sheared-confined-label]{Tutorial 4}.}
-% The line is a linear fit assuming
-% that the pore size is $h = 1.8\,\text{nm}$.}
-\label{fig:NANOSHEAR-profiles}
-\end{figure}
-
 Run the simulation using LAMMPS.  The averaged velocity
 profile for the fluid is plotted in Fig.~\ref{fig:NANOSHEAR-profiles}.
 As expected for such a Couette flow geometry, the fluid velocity increases
@@ -3079,6 +3074,16 @@ higher than what would be measured in the absence of walls.
 \subsection{Tutorial 5: Reactive silicon dioxide}
 \label{reactive-silicon-dioxide-label}
 
+The objective of this tutorial is to demonstrate how the reactive force field ReaxFF
+can be used to calculate the partial charges of a system undergoing deformation, as well as
+the formation and breaking of chemical bonds~\cite{van2001reaxff, zou2012investigation}.
+The system simulated in this tutorial is a block of silicon dioxide $\text{SiO}_2$ (Fig.~\ref{fig:SIO})
+which is deformed until it ruptures.  Particular attention is given to the evolution
+of atomic charges during deformation, with a focus on tracking chemical reactions
+resulting from the deformation over time.
+
+\subsubsection{Prepare and relax}
+
 \begin{figure}
 \centering
 \includegraphics[width=0.55\linewidth]{SIO}
@@ -3089,16 +3094,6 @@ atoms as large orange spheres, and oxygen atoms as blue spheres of intermediate
 size.}
 \label{fig:SIO}
 \end{figure}
-
-The objective of this tutorial is to demonstrate how the reactive force field ReaxFF
-can be used to calculate the partial charges of a system undergoing deformation, as well as
-the formation and breaking of chemical bonds~\cite{van2001reaxff, zou2012investigation}.
-The system simulated in this tutorial is a block of silicon dioxide $\text{SiO}_2$ (Fig.~\ref{fig:SIO})
-which is deformed until it ruptures.  Particular attention is given to the evolution
-of atomic charges during deformation, with a focus on tracking chemical reactions
-resulting from the deformation over time.
-
-\subsubsection{Prepare and relax}
 
 The first step is to relax the structure with ReaxFF, which which will be achieved using
 molecular dynamics.  To ensure the system equilibrates properly, we will monitor certain
@@ -3213,7 +3208,17 @@ of silicon and oxygen atoms.  The parameters \lmpcmd{10 500 5000} specify how of
 the histogram is updated and averaged, \lmpcmd{-1.5 2.5} set the value range,
 \lmpcmd{1000} is the number of bins, and \lmpcmd{v\_vq} is the variable being histogrammed.}
 
-We can also use the \lmpcmd{fix reaxff/species} to evaluate what species are
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{SIO-charge}\\[-2ex]
+\caption{a) Average charge per atom of the silicon, $q_\text{Si}$, atoms as
+a function of time, $t$, during equilibration of the $\text{SiO}_2$ system
+from \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  b) Volume of the
+system, $V$, as a function of $t$.}
+\label{fig:SIO-charge}
+\end{figure}
+
+We can also use \lmpcmd{fix reaxff/species} to evaluate what species are
 present within the simulation.  It will be useful later when the system is deformed,
 and bonds are broken:
 \begin{lstlisting}
@@ -3235,17 +3240,6 @@ write_data relax.data nofix
 print a data file without extra sections from the \lmpcmd{reaxff/species} command.}
 Run the \flecmd{relax.lmp} file using LAMMPS.  As seen from \flecmd{relax.species},
 only one species is detected, called \lmpcmd{O384Si192}, representing the entire system.
-
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{SIO-charge}\\[-2ex]
-\caption{a) Average charge per atom of the silicon, $q_\text{Si}$, atoms as
-a function of time, $t$, during equilibration of the $\text{SiO}_2$ system
-from \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}.  b) Volume of the
-system, $V$, as a function of $t$.}
-\label{fig:SIO-charge}
-\end{figure}
-
 
 \begin{note}
 {\color{blue}With the \lmpcmd{aniso} keyword, the three dimensions of the simulation
@@ -4906,7 +4900,6 @@ Files can also be opened from the ``File'' menu.  You can select a
 file through a dialog and then open it.  Additionally, a history of
 the last five opened files is maintained, with entries to open them directly.
 Finally, the \texttt{Ctrl-O} keyboard shortcut can also be used to open a file.
-
 When integrated into a desktop environment, it is also possible to open
 files with a ``.lmp'' extension or use drag-and-drop.
 
