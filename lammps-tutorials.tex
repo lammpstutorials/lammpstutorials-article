@@ -4285,7 +4285,7 @@ variable k equal 0.5
 
 units real
 atom_style atomic
-pair_style lj/cut 3.822
+pair_style lj/cut $(2^(1/6)*v_sigma)
 pair_modify shift yes
 boundary p p p
 \end{lstlisting}
@@ -4327,7 +4327,7 @@ umbrella sampling run:
 \begin{lstlisting}
 thermo 5000
 
-dump viz all image 50000 myimage-*.ppm type type &
+dump viz all image 5000 myimage-*.ppm type type &
     shiny 0.1 box yes 0.01 view 180 90 zoom 6 &
     size 1600 500 fsaa yes
 dump_modify viz backcolor white acolor 1 cyan &
@@ -4776,7 +4776,8 @@ of two polymer chains (Rxn~3).}
 \section*{Author Contributions}
 
 S.G. conceived and wrote the original online tutorials and underlying Sphinx documentation
-for \href{https://lammpstutorials.github.io}{lammpstutorials.github.io}.
+for \href{https://lammpstutorials.github.io}{lammpstutorials.github.io}.  {\color{blue}C.A. tested
+the tutorials extensively, providing feedback that improved their clarity, accuracy, and usability.}
 J.G. is the principal author of \lmpcmd{fix bond/react} and \lmpcmd{type labels}
 support in LAMMPS.  He revised the tutorials to incorporate type labels and wrote Tutorial 8.
 A.K. developed the \lammpsgui{} software and assisted in revising the
