@@ -35,7 +35,7 @@ variable n_center equal count(all,mymes)
 thermo_style custom step temp etotal v_n_center
 thermo 2000
 
-dump viz all image 50000 myimage-*.ppm type type &
+dump viz all image 5000 myimage-*.ppm type type &
     shiny 0.1 box yes 0.01 view 180 90 zoom 6 size 1600 500 fsaa yes
 dump_modify viz backcolor white acolor 1 cyan adiam 1 3 boxcolor black
 
