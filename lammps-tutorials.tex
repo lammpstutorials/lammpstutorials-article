@@ -2418,6 +2418,16 @@ named \flecmd{pull.lammpstrj}, which can be opened in OVITO or VMD.
   include element names in the dump file and simplify visualization.}
 \end{note}
 
+\begin{note}
+{\color{blue}
+Microstates collected during a simulation in the form of a trajectory
+can be analyzed within LAMMPS using the \lmpcmd{rerun} command.  This is
+particularly useful, for example, for computing properties not set up in
+the original simulation without having to run it again.  A possible use of
+the \lmpcmd{rerun} command is estimating the self-diffusion coefficient
+by using the \lmpcmd{compute msd} command~\cite{frenkel2023understanding}.}
+\end{note}
+
 \subsection{Tutorial 4: Nanosheared electrolyte}
 \label{sheared-confined-label}
 
@@ -4228,9 +4238,9 @@ are available due to the repulsive potential.
 \paragraph{The limits of free sampling}
 
 Increasing the value of $U_0$ reduces the average number of atoms in the central
-region, making it difficult to achieve a high-resolution free energy profile.
-For example, running the same simulation with $U_0 = 10 \epsilon$,
-corresponding to $U_0 \approx 10 k_\text{B} T$, results in no atoms exploring
+region, making it difficult to achieve a high-resolution free energy profile
+{\color{blue} within reasonable simulation times}.  For example, running the same
+simulation with $U_0 = 10 \epsilon$, corresponding to $U_0 \approx 10 k_\text{B} T$, results in no atoms exploring
 the central part of the simulation box during the simulation.
 In such a case, employing an enhanced sampling method is recommended, as done in the next section.
 
@@ -4699,10 +4709,6 @@ fix rxn all bond/react &
   react R2 all 1 0 3.0 mol3 mol4 M-P.rxnmap &
   react R3 all 1 0 5.0 mol5 mol6 P-P.rxnmap
 \end{lstlisting}
-% CA: can someone confirm my changes added in this paragraph? I am unsure of them
-% as I literally just figured it out to write them. (PS: I just realized that some
-% of it may be redundant with the note, but I would still leave it as the reader
-% will have the full information.
 With the \lmpcmd{stabilization} keyword, the \lmpcmd{fix bond/react} command will
 stabilize the atoms involved in the reaction using the \lmpcmd{fix nve/limit}
 command with a maximum displacement of $0.03\,\mathrm{\AA{}}$.
@@ -4710,10 +4716,9 @@ command with a maximum displacement of $0.03\,\mathrm{\AA{}}$.
 \lmpcmd{fix nve}, but restricts how far atoms can move in a single time step, even with
 very large forces.}
 By default, each reaction is stabilized for 60 time steps.  Each \lmpcmd{react} keyword
-corresponds to a reaction, e.g.,~a transformation of \lmpcmd{mol1} into \lmpcmd{mol2}
-based on the atom map \lmpcmd{M-M.rxnmap}.  Implementation details about each reaction,
-such as the reaction distance cutoffs and the frequency with which to search for
-reaction sites, are also specified in this command.
+corresponds to a reaction, e.g.,~a transformation of \lmpcmd{mol1} into \lmpcmd{mol2}. 
+Implementation details about each reaction, such as the reaction distance cutoffs
+and the frequency with which to search for reaction sites, are also specified in this command.
 
 \begin{figure}
 \centering
