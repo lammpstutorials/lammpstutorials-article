@@ -39,4 +39,4 @@ fix mydef all deform 1 x erate 5e-5
 
 run 25000
 
-write_data deform.data
+write_data deform.data nofix
