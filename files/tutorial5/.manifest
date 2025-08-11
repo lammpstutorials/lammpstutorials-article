@@ -10,7 +10,7 @@ decorate.lmp
 silica.data
 
 # 2) support files
-reaxCHOFe.inc
+ffield.reax.CHOFe
 
 # 3) solution files
 # only downloaded on request
