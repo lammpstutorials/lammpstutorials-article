@@ -1,6 +1,6 @@
 # Python Script
 # Licensed under CC BY 4.0
-# By Simon Gravelle, Jacob R. Gissinger, and Axel Kohlmeyer
+# By Simon Gravelle, Cecilia M. S. Alvares, Jacob R. Gissinger, and Axel Kohlmeyer
 # Please cite doi.org/10.48550/arXiv.2503.14020
 # Find more on GitHub: https://github.com/lammpstutorials
 
@@ -16,7 +16,7 @@ FILE_TYPES = {
 
 HEADER_BODY = [
     "# Licensed under CC BY 4.0\n",
-    "# By Simon Gravelle, Jacob R. Gissinger, and Axel Kohlmeyer\n",
+    "# By Simon Gravelle, Cecilia M. S. Alvares, Jacob R. Gissinger, and Axel Kohlmeyer\n",
     "# Please cite doi.org/10.48550/arXiv.2503.14020\n",
     "# Find more on GitHub: https://github.com/lammpstutorials\n",
 ]
