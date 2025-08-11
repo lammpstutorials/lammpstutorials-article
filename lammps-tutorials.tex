@@ -3229,11 +3229,12 @@ timestep 0.5
 
 run 5000
 
-write_data relax.data
+write_data relax.data nofix
 \end{lstlisting}
+{\color{blue}The \lmpcmd{write\_data} command is used with the \lmpcmd{nofix} keyword to
+print a data file without extra sections from the \lmpcmd{reaxff/species} command.}
 Run the \flecmd{relax.lmp} file using LAMMPS.  As seen from \flecmd{relax.species},
 only one species is detected, called \lmpcmd{O384Si192}, representing the entire system.
-
 
 \begin{figure}
 \centering
@@ -3338,7 +3339,7 @@ fix mydef all deform 1 x erate 5e-5
 
 run 25000
 
-write_data deform.data
+write_data deform.data nofix
 \end{lstlisting}
 {\color{blue}The \lmpcmd{fix deform} command applies a continuous deformation
 by elongating the simulation box along the x-axis at a constant engineering
@@ -4028,7 +4029,7 @@ favorable area to explore.
 
 To begin this tutorial, select \guicmd{Start Tutorial 7} from the
 \guicmd{Tutorials} menu of \lammpsgui{} and follow the instructions.
-The editor should display the following content corresponding to \flecmd{free-energy.lmp}:
+The editor should display the following content corresponding to \flecmd{free-sampling.lmp}:
 \begin{lstlisting}
 variable sigma equal 3.405
 variable epsilon equal 0.238
@@ -4064,7 +4065,7 @@ the energy to be in kcal/mol.
 \paragraph{System creation and settings}
 
 Let us define the simulation box and randomly add atoms by addying the
-following lines to \flecmd{free-energy.lmp}:
+following lines to \flecmd{free-sampling.lmp}:
 \begin{lstlisting}
 region myreg block -50 50 -15 15 -50 50
 create_box 1 myreg
@@ -4112,7 +4113,7 @@ $U_0 = 0.36~\text{kcal/mol}$, $\delta = 1.0~\text{\AA{}}$, and $x_0 = 10~\text{\
 
 We impose the force $F(x)$ to the atoms in the simulation
 using the \lmpcmd{fix addforce} command.  Add the following
-lines to \flecmd{free-energy.lmp}:
+lines to \flecmd{free-sampling.lmp}:
 % SG: apparently variable can't be cutted in 2 lines, either warn the reader, or find
 % a way to write these commands on the entire width of the page, or divide the variables
 % into several variables
@@ -4164,7 +4165,7 @@ variable n_center equal count(all,mymes)
 thermo_style custom step temp etotal v_n_center
 thermo 10000
 
-dump viz all image 50000 myimage-*.ppm type type &
+dump viz all image 5000 myimage-*.ppm type type &
     shiny 0.1 box yes 0.01 view 180 90 zoom 6 &
     size 1600 500 fsaa yes
 dump_modify viz backcolor white acolor 1 cyan &
@@ -4187,7 +4188,7 @@ central region, $n_\mathrm{center}$, reaches its equilibrium value after approxi
 
 Once the system is equilibrated, we will record the density profile of
 the atoms along the $x$-axis using the \lmpcmd{ave/chunk} command.
-Add the following line to \flecmd{free-energy.lmp}:
+Add the following line to \flecmd{free-sampling.lmp}:
 \begin{lstlisting}
 reset_timestep 0
 
@@ -4230,7 +4231,7 @@ Next, we plot $-R T \ln(\rho/\rho_\mathrm{bulk})$, %(i.e.~Eq.~\eqref{eq:G} where
 and compare it
 with the imposed potential $U$ from Eq.~\eqref{eq:U} (Fig.~\ref{fig:US-density}\,b).
 The reference density, $\rho_\text{bulk} = 0.0009~\text{\AA{}}^{-3}$,
-was estimated by measuring the density of the reservoir from the raw density
+was estimated by measuring the density of the reservoir from the density
 profiles.  The agreement between the MD results and the imposed energy profile
 is excellent, despite some noise in the central part, where fewer data points
 are available due to the repulsive potential.
