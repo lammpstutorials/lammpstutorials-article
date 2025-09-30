@@ -3708,13 +3708,12 @@ boundary p p p
 atom_style full
 neighbor 1.0 bin
 neigh_modify delay 1
-pair_style lj/cut/tip4p/long OW HW OW-HW HW-OW-HW 0.1546 10
+pair_style lj/cut/tip4p/long OW HW OW-HW HW-OW-HW &
+    0.1546 10
 kspace_style pppm/tip4p 1.0e-5
 bond_style harmonic
 angle_style harmonic
 \end{lstlisting}
-%Combining the two force fields, Vashishta and TIP4P/2005, is achieved
-%using the \lmpcmd{hybrid/overlay} pair style.
 The PPPM solver~\cite{luty1996calculating} is specified with the \lmpcmd{kspace}
 command, and is used to compute the long-range Coulomb interactions associated
 with \lmpcmd{tip4p/long}.  Finally, the form of the bond
@@ -3810,9 +3809,6 @@ pair_coeff HW HW 0.0 0.0
 bond_coeff OW-HW 0 0.9572
 angle_coeff HW-OW-HW 0 104.52
 \end{lstlisting}
-% The force field Vashishta applies only to \lmpcmd{Si} and \lmpcmd{O} of $\text{SiO}_2$,
-% and not to the \lmpcmd{OW} and \lmpcmd{HW} of $\text{H}_2\text{O}$, thanks to the \lmpcmd{NULL} parameters
-% used for atoms of types \lmpcmd{OW} and \lmpcmd{HW}.
 Pair coefficients for the \lmpcmd{lj/cut/tip4p/long} pair style are
 defined between O($\text{H}_2\text{O}$) and between H($\text{H}_2\text{O}$)
 atoms, as well as between O($\text{SiO}_2$)-O($\text{H}_2\text{O}$) and
