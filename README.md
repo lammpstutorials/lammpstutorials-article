@@ -66,7 +66,7 @@ If you use this project in your work, please cite:
 
 ```bibtex
 @article{GravelleAlvaresGissingerKohlmeyer2025,
-  title        = {A Set of Tutorials for the {LAMMPS} Simulation Package},
+  title        = {A Set of Tutorials for the {LAMMPS} Simulation Package [Article v1.0]},
   author       = {Simon Gravelle and Cecilia M. S. Alvares and Jacob R. Gissinger and Axel Kohlmeyer},
   journal      = {LiveCoMS},
   volume       = {6},

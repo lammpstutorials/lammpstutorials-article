@@ -1,7 +1,8 @@
 # Python Script
 # Licensed under CC BY 4.0
+# A Set of Tutorials for the LAMMPS Simulation Package (LiveCoMS, 2025)
 # By Simon Gravelle, Cecilia M. S. Alvares, Jacob R. Gissinger, and Axel Kohlmeyer
-# Please cite doi.org/10.48550/arXiv.2503.14020
+# Please cite doi.org/10.33011/livecoms.6.1.3037
 # Find more on GitHub: https://github.com/lammpstutorials
 
 import os
@@ -16,8 +17,9 @@ FILE_TYPES = {
 
 HEADER_BODY = [
     "# Licensed under CC BY 4.0\n",
+    "# A Set of Tutorials for the LAMMPS Simulation Package [Article v1.0] (LiveCoMS, 2025)\n",
     "# By Simon Gravelle, Cecilia M. S. Alvares, Jacob R. Gissinger, and Axel Kohlmeyer\n",
-    "# Please cite doi.org/10.48550/arXiv.2503.14020\n",
+    "# Please cite doi.org/10.33011/livecoms.6.1.3037\n",
     "# Find more on GitHub: https://github.com/lammpstutorials\n",
 ]
 
