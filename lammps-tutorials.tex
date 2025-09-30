@@ -4455,7 +4455,7 @@ improper_style class2
 pair_modify tail yes mix sixthpower
 special_bonds lj/coul 0 0 1
 \end{lstlisting}
-The \lmpcmd{class2} \lmpcmd{pair_styles} compute a 6/9 Lennard-Jones potential~\cite{sun1998compass}.
+The \lmpcmd{class2} \lmpcmd{pair\_styles} compute a 6/9 Lennard-Jones potential~\cite{sun1998compass}.
 The \textit{class2} bond, angle, dihedral, and improper styles are used as
 well, see the documentation for a description of the respective potential
 form they, each, prescribe.
@@ -4721,7 +4721,7 @@ thermo_style custom step temp press density f_rxn[*]
 
 run 25000
 \end{lstlisting}
-Here, the \lmpcmd{thermo_style custom} command is used
+Here, the \lmpcmd{thermo\_style custom} command is used
 to print the cumulative reaction counts which are calculated by \lmpcmd{fix rxn}
 and thus can be extracted from it.
 Run the simulation using LAMMPS.  As the simulation progresses, polymer chains are
