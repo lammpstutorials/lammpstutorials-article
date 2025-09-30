@@ -179,7 +179,7 @@
   accessible to a larger audience, the ``black box'' nature of such
   software packages and wide array of options and features can make it
   challenging to use them correctly, particularly for beginners in the
-  topic of MD simulations.  LAMMPS is one such versatile molecular
+  topic of simulations.  LAMMPS is one such versatile molecular
   simulation code, designed for modeling particle-based systems across a
   broad range of materials science and computational chemistry
   applications, including atomistic, coarse-grained, mesoscale,
@@ -302,9 +302,9 @@ non-equilibrium MD is performed by imposing shear on the fluid through
 moving the walls, and the fluid velocity profile is extracted.
 
 In \hyperref[reactive-silicon-dioxide-label]{Tutorial 5}, the ReaxFF
-reactive force field is used, specifically designed to simulate chemical
+reactive force field, which is specifically designed to simulate chemical
 reactions by dynamically adjusting atomic interactions
-\cite{van2001reaxff}.  ReaxFF includes charge equilibration (QEq), a
+\cite{van2001reaxff}, is used.  ReaxFF includes charge equilibration (QEq), a
 method that allows the partial charges of atoms to adjust according to
 their local environment.
 
@@ -661,8 +661,8 @@ coefficients for interactions between atoms of type 2,
 $\epsilon_{22} = 0.5$, and $\sigma_{22} = 3.0$.
 
 \begin{note}
-  By default, LAMMPS calculates the mixed force
-  field coefficients for different atom types using geometric averages:
+  By default, LAMMPS calculates the mixed Lennard-Jones
+  coefficients for pairs of atoms having distinct atom types using geometric averages:
   $\epsilon_{ij} = \sqrt{\epsilon_{ii} \epsilon_{jj}}$,
   $\sigma_{ij} = \sqrt{\sigma_{ii} \sigma_{jj}}$.  In the present case,
   $\epsilon_{12} = \sqrt{1.0 \times 0.5} = 0.707$, and
@@ -712,7 +712,7 @@ the post-run summary and statistics output.
 \end{note}
 
 You can now run LAMMPS (see subsection \ref{running-lammps-label}
-for details on running LAMMPS).  The simulation should finish quickly, and with the default
+for details on running LAMMPS).  The simulation should finish quickly, and, with the default
 settings, \lammpsgui{} will open two windows: one displaying the console
 output and another with a chart.  The \guicmd{Output} window will display information from
 the executed commands, including the total energy and pressure at step 0,
@@ -773,7 +773,7 @@ and re-executing the script from the beginning.
 
 The potential energy, $U$, decreases from a positive value to a negative value
 (Figs.~\ref{fig:chart-log} and~\ref{fig:evolution-energy}\,a).  Note that
-during energy minimization, the potential energy equals the total energy
+during the energy minimization, the potential energy equals the total energy
 of the system, $E = U$, since the kinetic energy, $K$, is zero.  The
 initially positive potential energy is expected, as the atoms are
 created at random positions within the simulation box, with some in very
@@ -799,7 +799,7 @@ of lower potential energy.
 
 \paragraph{Molecular dynamics}
 
-After energy minimization, any overlapping atoms are displaced, and
+After the energy minimization, any overlapping atoms are displaced, and
 the system is ready for a molecular dynamics simulation.  To continue
 from the result of the minimization step, append the MD simulation
 commands to the same input script, \flecmd{initial.lmp}.  Add the
@@ -1002,7 +1002,7 @@ create_atoms 2 random 150 12756 cyl_in
 \end{lstlisting}
 The \lmpcmd{side in} and \lmpcmd{side out} keywords are used to define
 regions representing the inside and outside of the cylinder of radius
-10 length units.  Then, append a sixth section titled \lmpcmd{Save system} at the end
+10 length units, respectively.  Then, append a sixth section titled \lmpcmd{Save system} at the end
 of the file, ensuring that the \lmpcmd{write\_data} command is placed \emph{after}
 the \lmpcmd{minimize} command:
 \begin{lstlisting}
@@ -1175,7 +1175,7 @@ in a \lmpcmd{thermo\_style custom} command (see below).
   a wide variety of data and one can identify the category from the
   name of the compute style: global data (no suffix), local data
   (/local suffix), per-atom data (/atom suffix), per-chunk data
-  (/chunk suffix), per-gridpoint data (/grid suffix).  In the example
+  (/chunk suffix), per-grid data (/grid suffix).  In the example
   above, the \lmpcmd{compute coord/atom} produces per-atom data, which
   is used as input for \lmpcmd{compute reduce} which returns global
   data.  For global data three kinds of data exists: scalars (single
@@ -1183,11 +1183,11 @@ in a \lmpcmd{thermo\_style custom} command (see below).
   (two-dimensional tables).  When referencing results of a compute,
   you can use indices: for example, \lmpcmd{c\_mycompute} refers to
   the entire scalar, vector, or array, and \lmpcmd{c\_mycompute[1]}
-  refers to its first element (in case of vector or array).  In some
+  refers to its first element or column (in case of vector or array).  In some
   cases also wildcards like ``*'' can be used to, for instance, refer to all elements
   of a vector instead of having specify all elements individually.
-  In general, ``consumer'' commands (fix styles or dump styles,
-  variables, or other compute styles) can only work with certain data
+  In general, ``consumer'' commands (\lmpcmd{fix} styles or \lmpcmd{dump} styles,
+  \lmpcmd{variables}, or other \lmpcmd{compute} styles) can only work with certain data
   types or need to have keywords set to select which data to use.
   You need to check the documentation of each command to ensure
   compatibility.
@@ -1466,15 +1466,15 @@ dihedral_coeff 1 0 7.25 0 0
 improper_coeff 1 5 180
 \end{lstlisting}
 The \lmpcmd{pair\_coeff} command sets the parameters for non-bonded
-Lennard-Jones interactions atom type 1 to
+Lennard-Jones interactions between atoms type 1 to
 $\epsilon_{11} = 0.066 \, \text{kcal/mol}$ and
 $\sigma_{11} = 3.4 \, \text{\AA{}}$.  The \lmpcmd{bond\_coeff} provides
 the equilibrium distance $r_0= 1.4 \, \text{\AA{}}$ and the
 spring constant $k_\text{b} = 469 \, \text{kcal/mol/\AA{}}^2$ for the
-harmonic potential imposed between two neighboring carbon atoms.  The potential
+harmonic potential imposed between two bonded carbon atoms.  The potential
 is given by $U_\text{b} = k_\text{b} ( r - r_0)^2$.  The
 \lmpcmd{angle\_coeff} gives the equilibrium angle $\theta_0$ and
-constant for the potential between three neighboring atoms :
+constant for the potential between atoms forming an angle:
 $U_\theta = k_\theta ( \theta - \theta_0)^2$.  The
 \lmpcmd{dihedral\_coeff} and \lmpcmd{improper\_coeff} define the potentials
 for the constraints between 4 atoms.
@@ -1941,7 +1941,7 @@ represented as a transparent continuum field for clarity.}
 \end{figure}
 
 The goal of this tutorial is to use LAMMPS to solvate a small
-hydrophilic polymer (PEG - polyethylene glycol) in a reservoir of water
+hydrophilic polymer molecule (PEG - polyethylene glycol) in a reservoir of water
 (Fig.~\ref{fig:PEG}).  Once the water reservoir is properly equilibrated
 at the desired temperature and pressure, the polymer molecule is added
 and a constant stretching force is applied to both ends of the polymer.
@@ -2049,7 +2049,7 @@ molecule h2omol water.mol
 create_atoms 0 random 700 87910 NULL mol h2omol 454756 &
   overlap 1.0 maxtry 50
 \end{lstlisting}
-The first parameter is 0, meaning that the atom IDs from
+The first parameter is 0, meaning that the atom types from
 the \flecmd{water.mol} file will be used.
 The \lmpcmd{overlap 1.0} option of the \lmpcmd{create\_atoms} command ensures
 that no atoms are placed exactly in the same position, as this would cause the
@@ -2543,11 +2543,11 @@ create_atoms 0 region rliquid mol h2omol 482793
 \end{lstlisting}
 Within the last three lines, a region named \lmpcmd{rliquid} is
 created based on the last defined lattice, \lmpcmd{fcc 4.04}.  \lmpcmd{rliquid}
-will be used for introducing the water molecules.  The \lmpcmd{molecule} command
+will be used for introducing the water molecules in the simulation domain.  The \lmpcmd{molecule} command
 opens up the molecule template called \flecmd{water.mol}, and names the
 associated molecule \lmpcmd{h2omol}.  The new molecules are placed on the
 \lmpcmd{fcc 4.04} lattice by the \lmpcmd{create\_atoms} command.  The first
-parameter is 0, meaning that the atom IDs from the \flecmd{water.mol} file
+parameter is 0, meaning that the atom types from the \flecmd{water.mol} file
 will be used.  The number \lmpcmd{482793} is a seed that is required by LAMMPS,
 it can be any positive integer.
 
@@ -2874,9 +2874,9 @@ variable deltaz equal v_walltopz-v_wallbotz
 thermo 250
 thermo_style custom step temp etotal press v_deltaz
 \end{lstlisting}
-The first two variables extract the centers of mass of the two walls.  The
+The first two variables extract the z coordinate of the centers of mass of the two walls.  The
 \lmpcmd{deltaz} variable is then used to calculate the difference between the two
-variables \lmpcmd{walltopz} and \lmpcmd{wallbotz}, i.e.~the distance between the
+variables \lmpcmd{walltopz} and \lmpcmd{wallbotz}, i.e.~the distance in the z direction between the
 two centers of mass of the walls.
 
 \begin{figure}
@@ -2968,7 +2968,7 @@ velocity walltop set 2e-4 NULL NULL
 \end{lstlisting}
 The \lmpcmd{setforce} commands cancel the forces on \lmpcmd{walltop} and
 \lmpcmd{wallbot} in the $x$ direction.  As a result, the atoms in these two groups will not
-experience any forces along $x$ from the rest of the system.  Consequently, in the absence of
+experience any forces along $x$ from their interaction with rest of the system.  Consequently, in the absence of
 external forces, these atoms will conserve the initial velocities imposed by the
 two \lmpcmd{velocity} commands.  As seen previously, although the
 forces on these atoms are set to zero, the \lmpcmd{fix setforce} still stores the
@@ -3102,7 +3102,7 @@ read_data silica.data
 \end{lstlisting}
 So far, the input is very similar to what was seen in the previous tutorials.
 Some basic parameters are defined (\lmpcmd{units} and \lmpcmd{atom\_style}),
-and a \lmpcmd{.data} file is imported by the \lmpcmd{read\_data} command.
+and a \flecmd{.data} file is imported by the \lmpcmd{read\_data} command.
 
 The initial topology given by \href{\filepath tutorial5/silica.data}{\dwlcmd{silica.data}}
 corresponds to a small amorphous silica structure.
@@ -3530,7 +3530,7 @@ create_atoms O random 480 1072 box overlap 2.0 maxtry 500
 \end{lstlisting}
 In line with what is done in previous tutorials, the
 \lmpcmd{create\_atoms} commands are used to place
-240 Si atoms and 480 O atoms, respectively.  This corresponds to
+240 Si atoms and 480 O atoms, respectively, in the region previously defined.  This corresponds to
 an initial density of approximately $2$\,g/cm$^3$, which is close
 to the expected final density of amorphous silica at 300\,K.
 
@@ -3571,23 +3571,23 @@ thermo_style custom step temp etotal vol density
 Finally, let us implement the annealing procedure which
 consists of three consecutive runs.  This procedure was inspired
 by Ref.\,\cite{della1992molecular}.  First, to melt the system,
-a $10\,\text{ps}$ phase at $T = 6000\,\text{K}$ is performed:
+a $10\,\text{ps}$ run at $T = 6000\,\text{K}$ is performed:
 \begin{lstlisting}
 velocity all create 6000 8289 rot yes dist gaussian
 fix mynvt all nvt temp 6000 6000 0.1
 timestep 0.001
 run 10000
 \end{lstlisting}
-Next, a second phase, during which the system is cooled down from $T = 6000\,\text{K}$
+Next, a second run, during which the system is cooled down from $T = 6000\,\text{K}$
 to $T = 300\,\text{K}$, is implemented as follows:
 \begin{lstlisting}
 fix mynvt all nvt temp 6000 300 0.1
 run 30000
 \end{lstlisting}
-n this case, the initial and final target temperatures
+In this case, the initial and final target temperatures
 set for the Nos\'e-Hoover thermostat is different, causing it to evolve
 linearly within the number of timesteps evoked in the \lmpcmd{run} command.
-In the third step, the system is equilibrated at the final desired
+In the third run, the system is equilibrated at the final desired
 conditions, $T = 300\,\text{K}$ and $p = 1\,\text{atm}$,
 using an anisotropic pressure coupling:
 \begin{lstlisting}
@@ -3844,7 +3844,7 @@ tutorials, the SHAKE algorithm is used to
 maintain the shape of the water molecules over time~\cite{ryckaert1977numerical, andersen1983rattle}.
 
 \begin{note}
-  Here, a variable of type `atom' is used.  Such variable
+  Here, a variable of style `atom' is used.  Such variable
   defines a per-atom property, i.e., it evaluates the specified expression
   separately for each atom.  This is often used to select atoms based on
   their properties or types.
@@ -3992,7 +3992,7 @@ of states using
 where $\Delta G$ is the free energy difference, $R$ is the gas constant, $T$
 is the temperature, % $p$ is the pressure, and $p_0$ is a reference pressure.
 $\rho$ is the density, and $\rho_0$ is a reference density.
-As an illustration, let us apply this method to a simple configuration
+As an illustration, let us apply this method to a simple system
 that consists of a particles in a box in the presence of a
 position-dependent repulsive force that makes the center of the box a less
 favorable area to explore.
@@ -4015,8 +4015,8 @@ pair_style lj/cut $(2^(1/6)*v_sigma)
 pair_modify shift yes
 boundary p p p
 \end{lstlisting}
-Here, we begin by defining variables for the Lennard-Jones interaction
-$\sigma$ and $\epsilon$ and for the repulsive potential
+Here, we begin by defining variables for the Lennard-Jones parameters
+($\sigma$ and $\epsilon$) and for the repulsive potential parameters
 $U$, which are $U_0$, $\delta$, and
 $x_0$ [see Eqs.\,(\ref{eq:U}-\ref{eq:F}) below].  The cut-off value of
 $ 2^{1/6} \sigma = 3.822$ was chosen to create a Weeks-Chandler-Andersen (WCA) potential,
@@ -4174,10 +4174,10 @@ run 2000000
 \end{lstlisting}
 Here, the \lmpcmd{chunk/atom} command discretizes the simulation
 domain into spatial bins of size 2~\AA{} along the $x$ direction,
-and the \lmpcmd{ave/chunk} command outputs the number density of
+and the \lmpcmd{fix ave/chunk} command outputs the number density of
 atoms within each bin to the file \flecmd{free-sampling.dat}.
 The step count is reset to 0 using \lmpcmd{reset\_timestep} to synchronize it
-with the output times of \lmpcmd{fix density/number}.  Run the simulation using
+with the output times of \lmpcmd{fix ave/chunk}.  Run the simulation using
 LAMMPS.
 
 \paragraph{Data analysis}
@@ -4261,7 +4261,7 @@ pair_modify shift yes
 boundary p p p
 \end{lstlisting}
 The first difference from the previous case is the larger value
-for the repulsive potential $U_0$, which makes the central area
+for the repulsive potential parameter $U_0$, which makes the central area
 of the system very unlikely to be visited by free particles.  The second
 difference is the introduction of the variable $k$, which will be used for
 the biasing potential.
@@ -4455,7 +4455,7 @@ improper_style class2
 pair_modify tail yes mix sixthpower
 special_bonds lj/coul 0 0 1
 \end{lstlisting}
-The \lmpcmd{class2} styles compute a 6/9 Lennard-Jones potential~\cite{sun1998compass}.
+The \lmpcmd{class2} \lmpcmd{pair_styles} compute a 6/9 Lennard-Jones potential~\cite{sun1998compass}.
 The \textit{class2} bond, angle, dihedral, and improper styles are used as
 well, see the documentation for a description of the respective potential
 form they, each, prescribe.
@@ -4721,7 +4721,7 @@ thermo_style custom step temp press density f_rxn[*]
 
 run 25000
 \end{lstlisting}
-Here, the \lmpcmd{thermo custom} command is used
+Here, the \lmpcmd{thermo_style custom} command is used
 to print the cumulative reaction counts which are calculated by \lmpcmd{fix rxn}
 and thus can be extracted from it.
 Run the simulation using LAMMPS.  As the simulation progresses, polymer chains are
