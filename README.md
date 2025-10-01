@@ -10,7 +10,7 @@ list in "files.txt".
 
 <div align="center">
 
-# A Set of Tutorials for the LAMMPS Simulation Package
+# A Set of Tutorials for the LAMMPS Simulation Package [Article V1.0]
 
 [![DOI](https://zenodo.org/badge/314814105.svg)](https://zenodo.org/doi/10.5281/zenodo.14747799)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-blue.svg)](https://creativecommons.org/licenses/by/4.0/)
@@ -20,8 +20,8 @@ list in "files.txt".
 
 <br>
 
-This repository contains the article introducing a suite of tutorials designed
-to make learning LAMMPS more accessible for new users.
+This repository contains the sources for [the article](https://livecomsjournal.org/index.php/livecoms/article/view/v6i1e3037/3091)
+introducing a suite of tutorials designed to make learning LAMMPS more accessible for new users.
 
 ## Tutorials
 
@@ -47,17 +47,20 @@ within the solution repository located in each tutorial folder.
 
 ## PDF
 
-Access here the last version of
-[lammps-tutorials.pdf](lammps-tutorials.pdf), or clone this repository
+Access here the last version of the PDF,
+[published-version-v1.0.pdf](releases/published-version-v1.0.pdf), or clone this repository
 and compile the `.tex` file yourself by typing in a terminal:
 ```
 make
 ```
-This will generate the `.pdf` version of the tutorial. Ensure you have LaTeX and the necessary dependencies installed on your system before attempting to compile.
+Ensure you have LaTeX and the necessary dependencies installed on your system
+before attempting to compile.
 
 ## Contributing
 
-We welcome contributions to improve the tutorials. If you encounter any issues, have suggestions, or want to ask questions, please open an issue in this repository. You can also contribute by submitting a pull request to improve the tutorials or fix any bugs.
+We welcome contributions to improve the tutorials. If you encounter any issues, have suggestions,
+or want to ask questions, please open an issue in this repository. You can also contribute
+by submitting a pull request to improve the tutorials or fix any bugs.
 Your feedback and contributions help make the tutorials more useful for everyone.
 
 ## Citing this work
@@ -66,7 +69,7 @@ If you use this project in your work, please cite:
 
 ```bibtex
 @article{GravelleAlvaresGissingerKohlmeyer2025,
-  title        = {A Set of Tutorials for the {LAMMPS} Simulation Package [Article v1.0]},
+  title        = {A Set of Tutorials for the {LAMMPS} Simulation Package},
   author       = {Simon Gravelle and Cecilia M. S. Alvares and Jacob R. Gissinger and Axel Kohlmeyer},
   journal      = {LiveCoMS},
   volume       = {6},
@@ -79,7 +82,9 @@ If you use this project in your work, please cite:
 
 ## License
 
-This project is licensed under the Creative Commons Attribution 4.0 International License. This license covers all the input [**files/**](files/) and tutorial content. For more details, see the [LICENSE](LICENSE) file.
+This project is licensed under the Creative Commons Attribution 4.0 International
+License. This license covers all the input [**files/**](files/) and tutorial content.
+For more details, see the [LICENSE](LICENSE) file.
 
 ## Authors
 
@@ -97,10 +102,9 @@ This project is licensed under the Creative Commons Attribution 4.0 Internationa
 
 ## Acknowledgements
 
-- Simon Gravelle acknowledges funding from the European Union's Horizon 2020
-  research and innovation programme under the Marie Skłodowska-Curie grant
-  agreement N°101065060.
-- Axel Kohlmeyer acknowledges financial support from Sandia National Laboratories
-  under POs 2149742 and 2407526.
+Simon Gravelle acknowledges funding from the European Union's Horizon 2020
+research and innovation programme under the Marie Skłodowska-Curie grant
+agreement N°101065060. Axel Kohlmeyer acknowledges financial support from
+Sandia National Laboratories under POs 2149742 and 2407526.
 
 
