@@ -12,6 +12,7 @@ list in "files.txt".
 
 # A Set of Tutorials for the LAMMPS Simulation Package [Article V1.0]
 
+[![DOI](https://img.shields.io/badge/DOI-10.33011%2Flivecoms.6.1.3037-blue)](https://doi.org/10.33011/livecoms.6.1.3037)
 [![DOI](https://zenodo.org/badge/314814105.svg)](https://zenodo.org/doi/10.5281/zenodo.14747799)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-blue.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![PDF](https://img.shields.io/badge/PDF-lammps--tutorials.pdf-blue.svg)](lammps-tutorials.pdf)
