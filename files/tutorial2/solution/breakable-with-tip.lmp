@@ -14,7 +14,7 @@ angle_style harmonic
 dihedral_style opls
 improper_style harmonic
 read_data unbreakable.data extra/bond/per/atom 10 extra/special/per/atom 10
-include parameters.inc
+include unbreakable.inc
 
 pair_style airebo 3.0 1 1
 pair_coeff * * CH.airebo C

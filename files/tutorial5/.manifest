@@ -29,7 +29,7 @@ solution/deform-O.histo
 solution/deform.png
 solution/deform-Si.histo
 solution/deform.species
-solution/reaxCHOFe.inc
+solution/ffield.reax.CHOFe
 solution/relax.data
 solution/relax.lmp
 solution/relax.log
